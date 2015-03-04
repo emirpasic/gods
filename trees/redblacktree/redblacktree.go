@@ -23,7 +23,6 @@ package redblacktree
 
 import (
 	"github.com/emirpasic/gods/utils"
-	"log"
 )
 
 type Color bool
@@ -166,14 +165,20 @@ func (node *Node) grandparent() *Node {
 }
 
 func (node *Node) uncle() *Node {
-	grandparent := node.grandparent()
-	switch {
-	case grandparent == nil:
+	if node == nil || node.parent == nil || node.parent.parent == nil {
 		return nil
-	case node.parent == grandparent.left:
-		return grandparent.right
-	default:
-		return grandparent.left
+	}
+	return node.parent.sibling()
+}
+
+func (node *Node) sibling() *Node {
+	if node == nil || node.parent == nil {
+		return nil
+	}
+	if node == node.parent.left {
+		return node.parent.right
+	} else {
+		return node.parent.left
 	}
 }
 
@@ -230,10 +235,13 @@ func (tree *Tree) insertCase2(node *Node) {
 }
 
 func (tree *Tree) insertCase3(node *Node) {
-	log.Printf("%#v\n", node)
-	if node.uncle().color == RED {
+	uncle := node.uncle()
+	if uncle == nil {
+		return
+	}
+	if uncle.color == RED {
 		node.parent.color = BLACK
-		node.uncle().color = BLACK
+		uncle.color = BLACK
 		node.grandparent().color = RED
 		tree.insertCase1(node.grandparent())
 	} else {
@@ -257,24 +265,19 @@ func (tree *Tree) insertCase5(node *Node) {
 	node.grandparent().color = RED
 	if node == node.parent.left && node.parent == node.grandparent().left {
 		tree.rotateRight(node.grandparent())
-	} else {
+	} else if node == node.parent.right && node.parent == node.grandparent().right {
 		tree.rotateLeft(node.grandparent())
 	}
 }
 
 func (node *Node) maximumNode() *Node {
+	if node == nil {
+		return nil
+	}
 	for node.right != nil {
 		node = node.right
 	}
 	return node
-}
-
-func (node *Node) sibling() *Node {
-	if node == node.parent.left {
-		return node.parent.right
-	} else {
-		return node.parent.left
-	}
 }
 
 func (tree *Tree) deleteCase1(node *Node) {
