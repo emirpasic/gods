@@ -1,4 +1,4 @@
-# gods
+# GoDS
 Go Data Structures
 
 
