@@ -18,10 +18,12 @@ with this distribution for more information.
 
 // Implementation of Red-black tree.
 // Used by TreeSet and TreeMap.
+// Structure is not thread safe.
 // References: http://en.wikipedia.org/wiki/Red%E2%80%93black_tree
 package redblacktree
 
 import (
+	"fmt"
 	"github.com/emirpasic/gods/utils"
 )
 
@@ -121,24 +123,59 @@ func (tree *Tree) Remove(key interface{}) {
 		node.value = pred.value
 		node = pred
 	}
-	if node.right == nil {
-		child = node.left
-	} else {
-		child = node.right
-	}
-	if node.color == BLACK {
-		node.color = child.color
-		tree.deleteCase1(node)
-	}
-	tree.replaceNode(node, child)
-	if node.parent == nil && child != nil {
-		child.color = BLACK
+	if node.left == nil || node.right == nil {
+		if node.right == nil {
+			child = node.left
+		} else {
+			child = node.right
+		}
+		if node.color == BLACK {
+			node.color = child.color
+			tree.deleteCase1(node)
+		}
+		tree.replaceNode(node, child)
+		if node.parent == nil && child != nil {
+			child.color = BLACK
+		}
 	}
 }
 
 // Returns true if tree does not contain any nodes
 func (tree *Tree) IsEmpty() bool {
 	return tree.root == nil
+}
+
+func (tree *Tree) String() string {
+	if !tree.IsEmpty() {
+		levels := make(map[int][]*Node)
+		lastLevel := 0
+		levels[lastLevel] = append(levels[lastLevel], tree.root)
+		for len(levels[lastLevel]) > 0 {
+			for _, node := range levels[lastLevel] {
+				if node.left != nil {
+					levels[lastLevel+1] = append(levels[lastLevel+1], node.left)
+				}
+				if node.right != nil {
+					levels[lastLevel+1] = append(levels[lastLevel+1], node.right)
+				}
+			}
+			lastLevel += 1
+		}
+		str := "tree\n"
+
+		for i := 0; i < lastLevel; i++ {
+			for _, node := range levels[i] {
+				str +=  fmt.Sprintf("%s", node)
+			}
+			str += "\n"
+		}
+		return str
+	}
+	return "tree\n"
+}
+
+func (node *Node) String() string {
+	return fmt.Sprintf("(%v)", node.key)
 }
 
 func (tree *Tree) lookup(key interface{}) *Node {
@@ -347,10 +384,10 @@ func (tree *Tree) deleteCase5(node *Node) {
 func (tree *Tree) deleteCase6(node *Node) {
 	node.sibling().color = node.parent.color
 	node.parent.color = BLACK
-	if node == node.parent.left {
+	if node == node.parent.left && node.sibling().right.color == RED {
 		node.sibling().right.color = BLACK
 		tree.rotateLeft(node.parent)
-	} else {
+	} else if node.sibling().left.color == RED {
 		node.sibling().left.color = BLACK
 		tree.rotateRight(node.parent)
 	}
