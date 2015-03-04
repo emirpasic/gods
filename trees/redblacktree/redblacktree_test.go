@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestPut(t *testing.T) {
+func TestPutGet(t *testing.T) {
 
 	tree := NewWithIntComparator()
 
@@ -12,7 +12,7 @@ func TestPut(t *testing.T) {
 	tree.Put(4, "d")
 	tree.Put(1, "x")
 	tree.Put(2, "b")
-	tree.Put(1, "a")
+	tree.Put(1, "a") //overwrite
 
 	// key,expectedValue,expectedFound
 	tests := [][]interface{}{

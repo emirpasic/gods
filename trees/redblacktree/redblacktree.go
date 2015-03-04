@@ -16,7 +16,8 @@ License along with this library. See the file LICENSE included
 with this distribution for more information.
 */
 
-// Implementation of Red-black tree
+// Implementation of Red-black tree.
+// Used by TreeSet and TreeMap.
 // References: http://en.wikipedia.org/wiki/Red%E2%80%93black_tree
 package redblacktree
 
@@ -104,6 +105,15 @@ func (tree *Tree) Get(key interface{}) (interface{}, bool) {
 		return node.value, true
 	}
 	return nil, false
+}
+
+func (tree *Tree) Remove(key interface{}) {
+
+}
+
+// Returns true if tree does not contain any nodes
+func (tree *Tree) IsEmpty() bool {
+	return tree.root == nil
 }
 
 func (tree *Tree) lookup(key interface{}) *Node {
