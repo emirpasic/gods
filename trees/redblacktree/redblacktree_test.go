@@ -8,6 +8,7 @@ func TestPutGet(t *testing.T) {
 
 	tree := NewWithIntComparator()
 
+	tree.Put(5, "e")
 	tree.Put(3, "c")
 	tree.Put(4, "d")
 	tree.Put(1, "x")
