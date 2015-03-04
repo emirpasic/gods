@@ -1,9 +1,12 @@
 package utils
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestIntComparator(t *testing.T) {
 
+	// i1,i2,expected
 	tests := [][]interface{}{
 		{1, 1, 0},
 		{1, 2, -1},
@@ -25,6 +28,7 @@ func TestIntComparator(t *testing.T) {
 
 func TestStringComparator(t *testing.T) {
 
+	// s1,s2,expected
 	tests := [][]interface{}{
 		{"a", "a", 0},
 		{"a", "b", -1},
@@ -37,6 +41,43 @@ func TestStringComparator(t *testing.T) {
 
 	for _, test := range tests {
 		actual := StringComparator(test[0], test[1])
+		expected := test[2]
+		if actual != expected {
+			t.Errorf("Got %v expected %v", actual, expected)
+		}
+	}
+}
+
+func TestCustomComparator(t *testing.T) {
+
+	type Custom struct {
+		id   int
+		name string
+	}
+
+	byID := func(a, b interface{}) int {
+		c1 := a.(Custom)
+		c2 := b.(Custom)
+		switch {
+		case c1.id > c2.id:
+			return 1
+		case c1.id < c2.id:
+			return -1
+		default:
+			return 0
+		}
+	}
+
+	// o1,o2,expected
+	tests := [][]interface{}{
+		{Custom{1, "a"}, Custom{1, "a"}, 0},
+		{Custom{1, "a"}, Custom{2, "b"}, -1},
+		{Custom{2, "b"}, Custom{1, "a"}, 1},
+		{Custom{1, "a"}, Custom{1, "b"}, 0},
+	}
+
+	for _, test := range tests {
+		actual := byID(test[0], test[1])
 		expected := test[2]
 		if actual != expected {
 			t.Errorf("Got %v expected %v", actual, expected)
