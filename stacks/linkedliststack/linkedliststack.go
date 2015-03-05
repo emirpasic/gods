@@ -84,6 +84,12 @@ func (stack *Stack) Size() int {
 	return stack.size
 }
 
+// Removes all elements from the stack.
+func (stack *Stack) Clear() {
+	stack.top = nil
+	stack.size = 0
+}
+
 func (stack *Stack) String() string {
 	str := "LinkedListStack\n"
 	element := stack.top

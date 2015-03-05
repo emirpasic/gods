@@ -88,6 +88,12 @@ func (stack *Stack) Size() int {
 	return stack.top + 1
 }
 
+// Removes all elements from the stack.
+func (stack *Stack) Clear() {
+	stack.top = -1
+	stack.items = []interface{}{}
+}
+
 func (stack *Stack) String() string {
 	str := "ArrayStack\n"
 	values := []string{}
