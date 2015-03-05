@@ -87,7 +87,7 @@ func (tree *Tree) Put(key interface{}, value interface{}) {
 			case compare > 0:
 				if node.right == nil {
 					node.right = insertedNode
-					break
+					loop = false
 				} else {
 					node = node.right
 				}
