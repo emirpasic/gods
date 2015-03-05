@@ -25,8 +25,13 @@ package linkedliststack
 
 import (
 	"fmt"
+	"github.com/emirpasic/gods/stacks"
 	"strings"
 )
+
+func assertInterfaceImplementation() {
+	var _ stacks.Interface = (*Stack)(nil)
+}
 
 type Stack struct {
 	top  *element
