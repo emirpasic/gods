@@ -80,7 +80,7 @@ func (stack *Stack) Size() int {
 }
 
 func (stack *Stack) String() string {
-	str := "RedBlackTree\n"
+	str := "LinkedListStack\n"
 	element := stack.top
 	elementsValues := []string{}
 	for element != nil {
