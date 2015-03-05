@@ -35,6 +35,7 @@ const (
 
 type Tree struct {
 	root       *Node
+	size       int
 	comparator utils.Comparator
 }
 
@@ -96,6 +97,7 @@ func (tree *Tree) Put(key interface{}, value interface{}) {
 		insertedNode.parent = node
 	}
 	tree.insertCase1(insertedNode)
+	tree.size += 1
 }
 
 // Searches the node in the tree by key and returns its value or nil if key is not found in tree.
@@ -138,11 +140,17 @@ func (tree *Tree) Remove(key interface{}) {
 			child.color = BLACK
 		}
 	}
+	tree.size -= 1
 }
 
 // Returns true if tree does not contain any nodes
 func (tree *Tree) IsEmpty() bool {
 	return tree.root == nil
+}
+
+// Returns number of nodes in the tree.
+func (tree *Tree) Size() int {
+	return tree.size
 }
 
 func (tree *Tree) String() string {
