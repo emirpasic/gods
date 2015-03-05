@@ -36,6 +36,10 @@ func TestRedBlackTree(t *testing.T) {
 	tree.Put(2, "b")
 	tree.Put(1, "a") //overwrite
 
+	if actualValue := tree.Size(); actualValue != 7 {
+		t.Errorf("Got %v expected %v", actualValue, 7)
+	}
+
 	// key,expectedValue,expectedFound
 
 	tests1 := [][]interface{}{
@@ -62,6 +66,11 @@ func TestRedBlackTree(t *testing.T) {
 	tree.Remove(6)
 	tree.Remove(7)
 	tree.Remove(8)
+	tree.Remove(5)
+
+	if actualValue := tree.Size(); actualValue != 4 {
+		t.Errorf("Got %v expected %v", actualValue, 7)
+	}
 
 	tests2 := [][]interface{}{
 		{1, "a", true},
