@@ -16,17 +16,16 @@ License along with this library. See the file LICENSE included
 with this distribution for more information.
 */
 
-// Implementation of order map backed by red-black tree.
-// Elements are ordered by key in the map.
+// Implementation of unorder map backed by a hash table.
+// Elements are unordered in the map.
 // Structure is not thread safe.
 // References: http://en.wikipedia.org/wiki/Associative_array
 
-package treemap
+package hashmap
 
 import (
+	"fmt"
 	"github.com/emirpasic/gods/maps"
-	rbt "github.com/emirpasic/gods/trees/redblacktree"
-	"github.com/emirpasic/gods/utils"
 )
 
 func assertInterfaceImplementation() {
@@ -34,70 +33,70 @@ func assertInterfaceImplementation() {
 }
 
 type Map struct {
-	tree *rbt.Tree
+	m map[interface{}]interface{}
 }
 
-// Instantiates a tree map with the custom comparator.
-func NewWith(comparator utils.Comparator) *Map {
-	return &Map{tree: rbt.NewWith(comparator)}
+// Instantiates a hash map.
+func New() *Map {
+	return &Map{m: make(map[interface{}]interface{})}
 }
 
-// Instantiates a tree map with the IntComparator, i.e. keys are of type int.
-func NewWithIntComparator() *Map {
-	return &Map{tree: rbt.NewWithIntComparator()}
-}
-
-// Instantiates a tree map with the StringComparator, i.e. keys are of type string.
-func NewWithStringComparator() *Map {
-	return &Map{tree: rbt.NewWithStringComparator()}
-}
-
-// Inserts key-value pair into the map.
-// Key should adhere to the comparator's type assertion, otherwise method panics.
+// Inserts element into the map.
 func (m *Map) Put(key interface{}, value interface{}) {
-	m.tree.Put(key, value)
+	m.m[key] = value
 }
 
-// Searches the element in the map by key and returns its value or nil if key is not found in tree.
+// Searches the elemnt in the map by key and returns its value or nil if key is not found in map.
 // Second return parameter is true if key was found, otherwise false.
-// Key should adhere to the comparator's type assertion, otherwise method panics.
 func (m *Map) Get(key interface{}) (value interface{}, found bool) {
-	return m.tree.Get(key)
+	value, found = m.m[key]
+	return
 }
 
 // Remove the element from the map by key.
-// Key should adhere to the comparator's type assertion, otherwise method panics.
 func (m *Map) Remove(key interface{}) {
-	m.tree.Remove(key)
+	delete(m.m, key)
 }
 
 // Returns true if map does not contain any elements
 func (m *Map) Empty() bool {
-	return m.tree.Empty()
+	return m.Size() == 0
 }
 
 // Returns number of elements in the map.
 func (m *Map) Size() int {
-	return m.tree.Size()
+	return len(m.m)
 }
 
-// Returns all keys in-order
+// Returns all keys (random order).
 func (m *Map) Keys() []interface{} {
-	return m.tree.Keys()
+	keys := make([]interface{}, m.Size())
+	count := 0
+	for key, _ := range m.m {
+		keys[count] = key
+		count += 1
+	}
+	return keys
 }
 
-// Returns all values in-order based on the key.
+// Returns all values (random order).
 func (m *Map) Values() []interface{} {
-	return m.tree.Values()
+	values := make([]interface{}, m.Size())
+	count := 0
+	for _, value := range m.m {
+		values[count] = value
+		count += 1
+	}
+	return values
 }
 
 // Removes all elements from the map.
 func (m *Map) Clear() {
-	m.tree.Clear()
+	m.m = make(map[interface{}]interface{})
 }
 
 func (m *Map) String() string {
-	str := "TreeMap\n"
-	str += m.tree.String()
+	str := "HashMap\n"
+	str += fmt.Sprintf("%v", m.m)
 	return str
 }

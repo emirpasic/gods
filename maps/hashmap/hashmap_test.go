@@ -16,16 +16,16 @@ License along with this library. See the file LICENSE included
 with this distribution for more information.
 */
 
-package treemap
+package hashmap
 
 import (
 	"fmt"
 	"testing"
 )
 
-func TestTreeMap(t *testing.T) {
+func TestHashMap(t *testing.T) {
 
-	m := NewWithIntComparator()
+	m := New()
 
 	// insertions
 	m.Put(5, "e")
@@ -43,12 +43,12 @@ func TestTreeMap(t *testing.T) {
 	}
 
 	// test Keys()
-	if actualValue, expactedValue := fmt.Sprintf("%d%d%d%d%d%d%d", m.Keys()...), "1234567"; actualValue != expactedValue {
+	if actualValue, expactedValue := m.Keys(), []interface{}{1, 2, 3, 4, 5, 6, 7}; !sameElements(actualValue, expactedValue) {
 		t.Errorf("Got %v expected %v", actualValue, expactedValue)
 	}
 
 	// test Values()
-	if actualValue, expactedValue := fmt.Sprintf("%s%s%s%s%s%s%s", m.Values()...), "abcdefg"; actualValue != expactedValue {
+	if actualValue, expactedValue := m.Values(), []interface{}{"a", "b", "c", "d", "e", "f", "g"}; !sameElements(actualValue, expactedValue) {
 		t.Errorf("Got %v expected %v", actualValue, expactedValue)
 	}
 
@@ -79,16 +79,15 @@ func TestTreeMap(t *testing.T) {
 	m.Remove(8)
 	m.Remove(5)
 
-	// Test Keys()
-	if actualValue, expactedValue := fmt.Sprintf("%d%d%d%d", m.Keys()...), "1234"; actualValue != expactedValue {
+	// test Keys()
+	if actualValue, expactedValue := m.Keys(), []interface{}{1, 2, 3, 4}; !sameElements(actualValue, expactedValue) {
 		t.Errorf("Got %v expected %v", actualValue, expactedValue)
 	}
 
 	// test Values()
-	if actualValue, expactedValue := fmt.Sprintf("%s%s%s%s", m.Values()...), "abcd"; actualValue != expactedValue {
+	if actualValue, expactedValue := m.Values(), []interface{}{"a", "b", "c", "d"}; !sameElements(actualValue, expactedValue) {
 		t.Errorf("Got %v expected %v", actualValue, expactedValue)
 	}
-
 	// Test Size()
 	if actualValue := m.Size(); actualValue != 4 {
 		t.Errorf("Got %v expected %v", actualValue, 7)
@@ -150,4 +149,23 @@ func TestTreeMap(t *testing.T) {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
 
+}
+
+func sameElements(a []interface{}, b []interface{}) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for _, av := range a {
+		found := false
+		for _, bv := range b {
+			if av == bv {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return false
+		}
+	}
+	return true
 }

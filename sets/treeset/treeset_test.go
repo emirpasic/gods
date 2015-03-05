@@ -23,7 +23,7 @@ import (
 	"testing"
 )
 
-func TestHashSet(t *testing.T) {
+func TestTreeSet(t *testing.T) {
 
 	set := NewWithIntComparator()
 
