@@ -1,8 +1,25 @@
+/*
+Copyright (c) Emir Pasic, All rights reserved.
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 3.0 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library. See the file LICENSE included
+with this distribution for more information.
+*/
+
 package redblacktree
 
 import (
 	"testing"
-	"log"
 )
 
 func TestRedBlackTree(t *testing.T) {
@@ -20,6 +37,7 @@ func TestRedBlackTree(t *testing.T) {
 	tree.Put(1, "a") //overwrite
 
 	// key,expectedValue,expectedFound
+
 	tests1 := [][]interface{}{
 		{1, "a", true},
 		{2, "b", true},
@@ -40,10 +58,7 @@ func TestRedBlackTree(t *testing.T) {
 	}
 
 	// removals
-	log.Println(tree)
 	tree.Remove(5)
-	log.Println(tree)
-
 	tree.Remove(6)
 	tree.Remove(7)
 	tree.Remove(8)
