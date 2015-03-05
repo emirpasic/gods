@@ -20,6 +20,7 @@ with this distribution for more information.
 // Used by TreeSet and TreeMap.
 // Structure is not thread safe.
 // References: http://en.wikipedia.org/wiki/Red%E2%80%93black_tree
+
 package redblacktree
 
 import (
@@ -103,7 +104,7 @@ func (tree *Tree) Put(key interface{}, value interface{}) {
 // Searches the node in the tree by key and returns its value or nil if key is not found in tree.
 // Second return parameter is true if key was found, otherwise false.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
-func (tree *Tree) Get(key interface{}) (interface{}, bool) {
+func (tree *Tree) Get(key interface{}) (value interface{}, found bool) {
 	node := tree.lookup(key)
 	if node != nil {
 		return node.value, true
@@ -144,8 +145,8 @@ func (tree *Tree) Remove(key interface{}) {
 }
 
 // Returns true if tree does not contain any nodes
-func (tree *Tree) IsEmpty() bool {
-	return tree.root == nil
+func (tree *Tree) Empty() bool {
+	return tree.size == 0
 }
 
 // Returns number of nodes in the tree.
@@ -155,7 +156,7 @@ func (tree *Tree) Size() int {
 
 func (tree *Tree) String() string {
 	str := "RedBlackTree\n"
-	if !tree.IsEmpty() {
+	if !tree.Empty() {
 		output(tree.root, "", true, &str)
 	}
 	return str
