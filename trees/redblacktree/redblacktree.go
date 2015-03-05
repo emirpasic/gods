@@ -164,13 +164,19 @@ func (tree *Tree) Keys() []interface{} {
 	return keys
 }
 
-// Returns all values in-order based on the key
+// Returns all values in-order based on the key.
 func (tree *Tree) Values() []interface{} {
 	values := make([]interface{}, tree.size)
 	for i, node := range tree.inOrder() {
 		values[i] = node.value
 	}
 	return values
+}
+
+// Removes all nodes from the tree.
+func (tree *Tree) Clear() {
+	tree.root = nil
+	tree.size = 0
 }
 
 func (tree *Tree) String() string {

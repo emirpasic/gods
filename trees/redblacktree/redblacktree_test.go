@@ -141,4 +141,13 @@ func TestRedBlackTree(t *testing.T) {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
 
+	tree.Put(1, "a")
+	tree.Put(2, "b")
+	tree.Clear()
+
+	// Test Empty()
+	if actualValue := tree.Empty(); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+
 }
