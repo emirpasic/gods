@@ -25,6 +25,7 @@ package linkedliststack
 
 import (
 	"fmt"
+	"strings"
 )
 
 type Stack struct {
@@ -68,10 +69,12 @@ func (stack *Stack) Peek() (value interface{}, ok bool) {
 	return nil, false
 }
 
+// Returns true if stack does not contain any elements.
 func (stack *Stack) Empty() bool {
 	return stack.size == 0
 }
 
+// Returns number of elements within the stack.
 func (stack *Stack) Size() int {
 	return stack.size
 }
@@ -81,12 +84,12 @@ func (stack *Stack) String() string {
 	element := stack.top
 	elementsValues := []string{}
 	for element != nil {
-		elementsValues = append(elementsValues, fmt.Sprintf("%v ", element.value))
+		elementsValues = append(elementsValues, fmt.Sprintf("%v", element.value))
 		element = element.next
 	}
 	for i, j := 0, len(elementsValues)-1; i < j; i, j = i+1, j-1 {
 		elementsValues[i], elementsValues[j] = elementsValues[j], elementsValues[i]
 	}
-	str += fmt.Sprintf("#v", elementsValues)
+	str += strings.Join(elementsValues, ", ")
 	return str
 }
