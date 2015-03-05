@@ -50,7 +50,7 @@ func NewWithIntComparator() *Set {
 	return &Set{tree: rbt.NewWithIntComparator()}
 }
 
-// Instantiates a new empty sete with the StringComparator, i.e. keys are of type string.
+// Instantiates a new empty set with the StringComparator, i.e. keys are of type string.
 func NewWithStringComparator() *Set {
 	return &Set{tree: rbt.NewWithStringComparator()}
 }
