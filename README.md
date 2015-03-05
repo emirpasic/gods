@@ -50,6 +50,8 @@ Collections and data structures found in other languages: Java Collections, C++ 
 
 There is often a tug of war between speed and memory when crafting algorithms. We choose to optimize for speed in most cases within reasonable limits on memory consumption.
 
+Thread safety is not a concern of this project, this should be handled at a higher level.
+
 ## Testing and Benchmarking
 
 `go test -v -bench . -benchmem  -benchtime 1s ./...`
