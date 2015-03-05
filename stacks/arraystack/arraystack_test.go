@@ -72,8 +72,8 @@ func TestArrayStack(t *testing.T) {
 }
 
 func BenchmarkArrayStack(b *testing.B) {
-	// Slow in comparison to the LinkedListStack
-	// BenchmarkArrayStack         50  31760994 ns/op  8540863 B/op  2010 allocs/op
+	// Faster in comparison to the LinkedListStack
+	// BenchmarkArrayStack       5000    325010 ns/op    71648 B/op  1009 allocs/op
 	// BenchmarkLinkedListStack  5000    390812 ns/op    40016 B/op  2001 allocs/op
 	for i := 0; i < b.N; i++ {
 		stack := New()

@@ -30,7 +30,7 @@ Collections and data structures found in other languages: Java Collections, C++ 
 
 **Memory efficient algorithms**: 
   
-  - Avoiding to keep consume memory by using optimal algorithms and data structures for the given set of problems.
+  - Avoiding to consume memory by using optimal algorithms and data structures for the given set of problems, e.g. red-black tree in case of TreeMap to avoid keeping redundant sorted array of keys in memory.
 
 **Easy to use library**: 
   
