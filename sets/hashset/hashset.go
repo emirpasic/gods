@@ -24,8 +24,13 @@ package hashset
 
 import (
 	"fmt"
+	"github.com/emirpasic/gods/sets"
 	"strings"
 )
+
+func assertInterfaceImplementation() {
+	var _ sets.Interface = (*Set)(nil)
+}
 
 type Set struct {
 	items map[interface{}]struct{}
