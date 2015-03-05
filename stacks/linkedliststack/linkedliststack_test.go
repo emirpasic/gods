@@ -19,7 +19,6 @@ with this distribution for more information.
 package linkedliststack
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -35,8 +34,6 @@ func TestLinkedListStack(t *testing.T) {
 	stack.Push(1)
 	stack.Push(2)
 	stack.Push(3)
-
-	fmt.Println(stack)
 
 	if actualValue := stack.Empty(); actualValue != false {
 		t.Errorf("Got %v expected %v", actualValue, false)

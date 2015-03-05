@@ -19,6 +19,7 @@ with this distribution for more information.
 package redblacktree
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -36,12 +37,22 @@ func TestRedBlackTree(t *testing.T) {
 	tree.Put(2, "b")
 	tree.Put(1, "a") //overwrite
 
+	// Test Size()
 	if actualValue := tree.Size(); actualValue != 7 {
 		t.Errorf("Got %v expected %v", actualValue, 7)
 	}
 
-	// key,expectedValue,expectedFound
+	// test Keys()
+	if actualValue, expactedValue := fmt.Sprintf("%d%d%d%d%d%d%d", tree.Keys()...), "1234567"; actualValue != expactedValue {
+		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	}
 
+	// test Values()
+	if actualValue, expactedValue := fmt.Sprintf("%s%s%s%s%s%s%s", tree.Values()...), "abcdefg"; actualValue != expactedValue {
+		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	}
+
+	// key,expectedValue,expectedFound
 	tests1 := [][]interface{}{
 		{1, "a", true},
 		{2, "b", true},
@@ -68,6 +79,17 @@ func TestRedBlackTree(t *testing.T) {
 	tree.Remove(8)
 	tree.Remove(5)
 
+	// Test Keys()
+	if actualValue, expactedValue := fmt.Sprintf("%d%d%d%d", tree.Keys()...), "1234"; actualValue != expactedValue {
+		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	}
+
+	// test Values()
+	if actualValue, expactedValue := fmt.Sprintf("%s%s%s%s", tree.Values()...), "abcd"; actualValue != expactedValue {
+		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	}
+
+	// Test Size()
 	if actualValue := tree.Size(); actualValue != 4 {
 		t.Errorf("Got %v expected %v", actualValue, 7)
 	}
@@ -89,6 +111,34 @@ func TestRedBlackTree(t *testing.T) {
 		if actualValue != test[1] || actualFound != test[2] {
 			t.Errorf("Got %v expected %v", actualValue, test[1])
 		}
+	}
+
+	// removals
+	tree.Remove(1)
+	tree.Remove(4)
+	tree.Remove(2)
+	tree.Remove(3)
+	tree.Remove(2)
+	tree.Remove(2)
+
+	// Test Keys()
+	if actualValue, expactedValue := fmt.Sprintf("", tree.Keys()...), ""; actualValue != expactedValue {
+		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	}
+
+	// test Values()
+	if actualValue, expactedValue := fmt.Sprintf("", tree.Values()...), ""; actualValue != expactedValue {
+		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	}
+
+	// Test Size()
+	if actualValue := tree.Size(); actualValue != 0 {
+		t.Errorf("Got %v expected %v", actualValue, 0)
+	}
+
+	// Test Empty()
+	if actualValue := tree.Empty(); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
 	}
 
 }
