@@ -27,25 +27,25 @@ import (
 	"github.com/emirpasic/gods/utils"
 )
 
-type Color bool
+type color bool
 
 const (
-	BLACK, RED Color = true, false
+	black, red color = true, false
 )
 
 type Tree struct {
-	root       *Node
+	root       *node
 	size       int
 	comparator utils.Comparator
 }
 
-type Node struct {
+type node struct {
 	key    interface{}
 	value  interface{}
-	color  Color
-	left   *Node
-	right  *Node
-	parent *Node
+	color  color
+	left   *node
+	right  *node
+	parent *node
 }
 
 // Instantiates a red-black tree with the custom comparator.
@@ -66,7 +66,7 @@ func NewWithStringComparator() *Tree {
 // Inserts node into the tree.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (tree *Tree) Put(key interface{}, value interface{}) {
-	insertedNode := &Node{key: key, value: value, color: RED}
+	insertedNode := &node{key: key, value: value, color: red}
 	if tree.root == nil {
 		tree.root = insertedNode
 	} else {
@@ -114,7 +114,7 @@ func (tree *Tree) Get(key interface{}) (interface{}, bool) {
 // Remove the node from the tree by key.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (tree *Tree) Remove(key interface{}) {
-	var child *Node
+	var child *node
 	node := tree.lookup(key)
 	if node == nil {
 		return
@@ -131,13 +131,13 @@ func (tree *Tree) Remove(key interface{}) {
 		} else {
 			child = node.right
 		}
-		if node.color == BLACK {
-			node.color = color(child)
+		if node.color == black {
+			node.color = nodeColor(child)
 			tree.deleteCase1(node)
 		}
 		tree.replaceNode(node, child)
 		if node.parent == nil && child != nil {
-			child.color = BLACK
+			child.color = black
 		}
 	}
 	tree.size -= 1
@@ -161,11 +161,11 @@ func (tree *Tree) String() string {
 	return str
 }
 
-func (node *Node) String() string {
+func (node *node) String() string {
 	return fmt.Sprintf("%v", node.key)
 }
 
-func output(node *Node, prefix string, isTail bool, str *string) {
+func output(node *node, prefix string, isTail bool, str *string) {
 	if node.right != nil {
 		newPrefix := prefix
 		if isTail {
@@ -193,7 +193,7 @@ func output(node *Node, prefix string, isTail bool, str *string) {
 	}
 }
 
-func (tree *Tree) lookup(key interface{}) *Node {
+func (tree *Tree) lookup(key interface{}) *node {
 	node := tree.root
 	for node != nil {
 		compare := tree.comparator(key, node.key)
@@ -209,21 +209,21 @@ func (tree *Tree) lookup(key interface{}) *Node {
 	return nil
 }
 
-func (node *Node) grandparent() *Node {
+func (node *node) grandparent() *node {
 	if node != nil && node.parent != nil {
 		return node.parent.parent
 	}
 	return nil
 }
 
-func (node *Node) uncle() *Node {
+func (node *node) uncle() *node {
 	if node == nil || node.parent == nil || node.parent.parent == nil {
 		return nil
 	}
 	return node.parent.sibling()
 }
 
-func (node *Node) sibling() *Node {
+func (node *node) sibling() *node {
 	if node == nil || node.parent == nil {
 		return nil
 	}
@@ -234,7 +234,7 @@ func (node *Node) sibling() *Node {
 	}
 }
 
-func (tree *Tree) rotateLeft(node *Node) {
+func (tree *Tree) rotateLeft(node *node) {
 	right := node.right
 	tree.replaceNode(node, right)
 	node.right = right.left
@@ -245,7 +245,7 @@ func (tree *Tree) rotateLeft(node *Node) {
 	node.parent = right
 }
 
-func (tree *Tree) rotateRight(node *Node) {
+func (tree *Tree) rotateRight(node *node) {
 	left := node.left
 	tree.replaceNode(node, left)
 	node.left = left.right
@@ -256,7 +256,7 @@ func (tree *Tree) rotateRight(node *Node) {
 	node.parent = left
 }
 
-func (tree *Tree) replaceNode(old *Node, new *Node) {
+func (tree *Tree) replaceNode(old *node, new *node) {
 	if old.parent == nil {
 		tree.root = new
 	} else {
@@ -271,34 +271,34 @@ func (tree *Tree) replaceNode(old *Node, new *Node) {
 	}
 }
 
-func (tree *Tree) insertCase1(node *Node) {
+func (tree *Tree) insertCase1(node *node) {
 	if node.parent == nil {
-		node.color = BLACK
+		node.color = black
 	} else {
 		tree.insertCase2(node)
 	}
 }
 
-func (tree *Tree) insertCase2(node *Node) {
-	if color(node.parent) == BLACK {
+func (tree *Tree) insertCase2(node *node) {
+	if nodeColor(node.parent) == black {
 		return
 	}
 	tree.insertCase3(node)
 }
 
-func (tree *Tree) insertCase3(node *Node) {
+func (tree *Tree) insertCase3(node *node) {
 	uncle := node.uncle()
-	if color(uncle) == RED {
-		node.parent.color = BLACK
-		uncle.color = BLACK
-		node.grandparent().color = RED
+	if nodeColor(uncle) == red {
+		node.parent.color = black
+		uncle.color = black
+		node.grandparent().color = red
 		tree.insertCase1(node.grandparent())
 	} else {
 		tree.insertCase4(node)
 	}
 }
 
-func (tree *Tree) insertCase4(node *Node) {
+func (tree *Tree) insertCase4(node *node) {
 	grandparent := node.grandparent()
 	if node == node.parent.right && node.parent == grandparent.left {
 		tree.rotateLeft(node.parent)
@@ -310,10 +310,10 @@ func (tree *Tree) insertCase4(node *Node) {
 	tree.insertCase5(node)
 }
 
-func (tree *Tree) insertCase5(node *Node) {
-	node.parent.color = BLACK
+func (tree *Tree) insertCase5(node *node) {
+	node.parent.color = black
 	grandparent := node.grandparent()
-	grandparent.color = RED
+	grandparent.color = red
 	if node == node.parent.left && node.parent == grandparent.left {
 		tree.rotateRight(grandparent)
 	} else if node == node.parent.right && node.parent == grandparent.right {
@@ -321,7 +321,7 @@ func (tree *Tree) insertCase5(node *Node) {
 	}
 }
 
-func (node *Node) maximumNode() *Node {
+func (node *node) maximumNode() *node {
 	if node == nil {
 		return nil
 	}
@@ -331,7 +331,7 @@ func (node *Node) maximumNode() *Node {
 	return node
 }
 
-func (tree *Tree) deleteCase1(node *Node) {
+func (tree *Tree) deleteCase1(node *node) {
 	if node.parent == nil {
 		return
 	} else {
@@ -339,11 +339,11 @@ func (tree *Tree) deleteCase1(node *Node) {
 	}
 }
 
-func (tree *Tree) deleteCase2(node *Node) {
+func (tree *Tree) deleteCase2(node *node) {
 	sibling := node.sibling()
-	if color(sibling) == RED {
-		node.parent.color = RED
-		sibling.color = BLACK
+	if nodeColor(sibling) == red {
+		node.parent.color = red
+		sibling.color = black
 		if node == node.parent.left {
 			tree.rotateLeft(node.parent)
 		} else {
@@ -353,68 +353,68 @@ func (tree *Tree) deleteCase2(node *Node) {
 	tree.deleteCase3(node)
 }
 
-func (tree *Tree) deleteCase3(node *Node) {
+func (tree *Tree) deleteCase3(node *node) {
 	sibling := node.sibling()
-	if color(node.parent) == BLACK &&
-		color(sibling) == BLACK &&
-		color(sibling.left) == BLACK &&
-		color(sibling.right) == BLACK {
-		sibling.color = RED
+	if nodeColor(node.parent) == black &&
+		nodeColor(sibling) == black &&
+		nodeColor(sibling.left) == black &&
+		nodeColor(sibling.right) == black {
+		sibling.color = red
 		tree.deleteCase1(node.parent)
 	} else {
 		tree.deleteCase4(node)
 	}
 }
 
-func (tree *Tree) deleteCase4(node *Node) {
+func (tree *Tree) deleteCase4(node *node) {
 	sibling := node.sibling()
-	if color(node.parent) == RED &&
-		color(sibling) == BLACK &&
-		color(sibling.left) == BLACK &&
-		color(sibling.right) == BLACK {
-		sibling.color = RED
-		node.parent.color = BLACK
+	if nodeColor(node.parent) == red &&
+		nodeColor(sibling) == black &&
+		nodeColor(sibling.left) == black &&
+		nodeColor(sibling.right) == black {
+		sibling.color = red
+		node.parent.color = black
 	} else {
 		tree.deleteCase5(node)
 	}
 }
 
-func (tree *Tree) deleteCase5(node *Node) {
+func (tree *Tree) deleteCase5(node *node) {
 	sibling := node.sibling()
 	if node == node.parent.left &&
-		color(sibling) == BLACK &&
-		color(sibling.left) == RED &&
-		color(sibling.right) == BLACK {
-		sibling.color = RED
-		sibling.left.color = BLACK
+		nodeColor(sibling) == black &&
+		nodeColor(sibling.left) == red &&
+		nodeColor(sibling.right) == black {
+		sibling.color = red
+		sibling.left.color = black
 		tree.rotateRight(sibling)
 	} else if node == node.parent.right &&
-		color(sibling) == BLACK &&
-		color(sibling.right) == RED &&
-		color(sibling.left) == BLACK {
-		sibling.color = RED
-		sibling.right.color = BLACK
+		nodeColor(sibling) == black &&
+		nodeColor(sibling.right) == red &&
+		nodeColor(sibling.left) == black {
+		sibling.color = red
+		sibling.right.color = black
 		tree.rotateLeft(sibling)
 	}
 	tree.deleteCase6(node)
 }
 
-func (tree *Tree) deleteCase6(node *Node) {
+func (tree *Tree) deleteCase6(node *node) {
 	sibling := node.sibling()
-	sibling.color = color(node.parent)
-	node.parent.color = BLACK
-	if node == node.parent.left && color(sibling.right) == RED {
-		sibling.right.color = BLACK
+	sibling.color = nodeColor(node.parent)
+	node.parent.color = black
+	if node == node.parent.left && nodeColor(sibling.right) == red {
+		sibling.right.color = black
 		tree.rotateLeft(node.parent)
-	} else if color(sibling.left) == RED {
-		sibling.left.color = BLACK
+	} else if nodeColor(sibling.left) == red {
+		sibling.left.color = black
 		tree.rotateRight(node.parent)
 	}
 }
 
-func color(node *Node) Color {
+func nodeColor(node *node) color {
 	if node == nil {
-		return BLACK
+		return black
 	}
 	return node.color
 }
