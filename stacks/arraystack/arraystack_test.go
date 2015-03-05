@@ -16,13 +16,13 @@ License along with this library. See the file LICENSE included
 with this distribution for more information.
 */
 
-package linkedliststack
+package arraystack
 
 import (
 	"testing"
 )
 
-func TestLinkedListStack(t *testing.T) {
+func TestArrayStack(t *testing.T) {
 
 	stack := New()
 
@@ -71,8 +71,8 @@ func TestLinkedListStack(t *testing.T) {
 
 }
 
-func BenchmarkLinkedListStack(b *testing.B) {
-	// Faster in comparison to the ArrayStack
+func BenchmarkArrayStack(b *testing.B) {
+	// Slow in comparison to the LinkedListStack
 	// BenchmarkArrayStack         50  31760994 ns/op  8540863 B/op  2010 allocs/op
 	// BenchmarkLinkedListStack  5000    390812 ns/op    40016 B/op  2001 allocs/op
 	for i := 0; i < b.N; i++ {
@@ -84,4 +84,5 @@ func BenchmarkLinkedListStack(b *testing.B) {
 			stack.Pop()
 		}
 	}
+
 }

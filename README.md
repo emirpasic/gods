@@ -4,4 +4,6 @@
 
 Go Data Structures
 
+## Testing and Benchmarking
 
+`go test -v -bench . -benchmem  -benchtime 1s ./...`
