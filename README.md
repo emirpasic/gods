@@ -24,17 +24,28 @@ Collections and data structures found in other languages: Java Collections, C++ 
 
 ## Goals
 
-- **Fast algorithms**: 
+**Fast algorithms**: 
+
   - Based on decades of knowledge and experiences of other libraries mentioned below.
-- **Memory efficient algorithms**: 
+
+**Memory efficient algorithms**: 
+  
   - Avoiding to keep consume memory by using optimal algorithms and data structures for the given set of problems.
-- **Easy to use library**: 
+
+**Easy to use library**: 
+  
   - Well-structued library with minimalistic set of atomic operations from which more complex operations can be crafted.
-- **Stable library**: 
+
+**Stable library**: 
+  
   - Only additions are permitted keeping the library backward compatible.
-- **Solid documentation and examples**: 
+
+**Solid documentation and examples**: 
+  
   - TODO
-- **Production ready**: 
+
+**Production ready**: 
+
   - TODO 
 
 There is often a tug of war between speed and memory when crafting algorithms. We choose to optimize for speed in most cases within reasonable limits on memory consumption.
