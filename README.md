@@ -459,4 +459,4 @@ For direct contributions, branch of from master and do _pull request_.
 
 Copyright (c) Emir Pasic , All rights reserved.
 
-GNU Lesser General Public License Version 3, see [LICENSE](https://github.com/emirpasic/gods/blob/master/LICENSE) for more details.
+This library is distributed under the BSD-style license found in the [LICENSE](https://github.com/emirpasic/gods/blob/master/LICENSE) file.
