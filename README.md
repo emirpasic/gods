@@ -6,17 +6,19 @@ Implementation of various data structures in Go.
 
 ## Data Structures
 
-- [Sets](#Sets)
-  - [HashSet](#HashSet)
-  - [TreeSet](#TreeSet)
-- [Stacks](#Stacks)
-  - [LinkedListStack](#LinkedListStack)
-  - [ArrayStack](#ArrayStack)
-- [Maps](#Maps)
-  - [HashMap](#HashMap)
-  - [TreeMap](#TreeMap)
-- [Trees](#Trees)
-  - [RedBlackTree](#RedBlackTree)
+- [Sets](#sets)
+  - [HashSet](#hashset)
+  - [TreeSet](#treeset)
+- [Stacks](#stacks)
+  - [LinkedListStack](#linkedliststack)
+  - [ArrayStack](#arraystack)
+- [Maps](#maps)
+  - [HashMap](#hashmap)
+  - [TreeMap](#treemap)
+- [Trees](#trees)
+  - [RedBlackTree](#redblacktree)
+- [Functions](#functions)
+  - [Comparator](#comparator)
   
 
 ###Sets 
@@ -297,6 +299,111 @@ func main() {
 }
 
 ```
+
+### Functions
+
+Various helper functions used throughout the library.
+
+#### Comparator
+
+Some data structures (e.g. TreeMap, TreeSet) require a comparator function to sort their contained elements. This comparator is necessary during the initalization.
+
+Comparator is defined as:
+
+
+```go
+Return values:
+
+  -1, if a < b
+   0, if a == b
+   1, if a > b
+     
+Comparator signature:
+
+  type Comparator func(a, b interface{}) int
+```
+
+Two common comparators are included in the library:
+
+#####IntComparator
+```go
+func IntComparator(a, b interface{}) int {
+	aInt := a.(int)
+	bInt := b.(int)
+	switch {
+	case aInt > bInt:
+		return 1
+	case aInt < bInt:
+		return -1
+	default:
+		return 0
+	}
+}
+```
+
+#####StringComparator
+```go
+func StringComparator(a, b interface{}) int {
+	s1 := a.(string)
+	s2 := b.(string)
+	min := len(s2)
+	if len(s1) < len(s2) {
+		min = len(s1)
+	}
+	diff := 0
+	for i := 0; i < min && diff == 0; i++ {
+		diff = int(s1[i]) - int(s2[i])
+	}
+	if diff == 0 {
+		diff = len(s1) - len(s2)
+	}
+	return diff
+}
+```
+
+#####CustomComparator
+```go
+package main
+
+import (
+	"fmt"
+	"github.com/emirpasic/gods/sets/treeset"
+)
+
+type User struct {
+	id   int
+	name string
+}
+
+// Comparator function (sort by IDs)
+func byID(a, b interface{}) int {
+
+	// Type assertion, program will panic if this is not respected
+	c1 := a.(User)
+	c2 := b.(User)
+
+	switch {
+	case c1.id > c2.id:
+		return 1
+	case c1.id < c2.id:
+		return -1
+	default:
+		return 0
+	}
+}
+
+func main() {
+	set := treeset.NewWith(byID) 
+
+	set.Add(User{2, "Second"})
+	set.Add(User{3, "Third"})
+	set.Add(User{1, "First"})
+	set.Add(User{4, "Fourth"})
+	
+	fmt.Println(set) // {1 First}, {2 Second}, {3 Third}, {4 Fourth}
+}
+```
+
 
 ## Motivations
 
