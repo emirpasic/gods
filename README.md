@@ -357,7 +357,13 @@ func StringComparator(a, b interface{}) int {
 	if diff == 0 {
 		diff = len(s1) - len(s2)
 	}
-	return diff
+	if diff < 0 {
+		return -1
+	}
+	if diff > 0 {
+		return 1
+	}
+	return 0
 }
 ```
 

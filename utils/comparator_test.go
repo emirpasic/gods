@@ -37,6 +37,7 @@ func TestStringComparator(t *testing.T) {
 		{"", "", 0},
 		{"a", "", 1},
 		{"", "a", -1},
+		{"", "aaaaaaa", -1},
 	}
 
 	for _, test := range tests {
