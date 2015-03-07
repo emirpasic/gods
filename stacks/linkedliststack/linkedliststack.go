@@ -100,11 +100,10 @@ func (stack *Stack) Clear() {
 
 // Returns all elements in the stack (LIFO order).
 func (stack *Stack) Values() []interface{} {
-	size := stack.list.Size()
-	elements := make([]interface{}, size, size)
+	elements := make([]interface{}, stack.size, stack.size)
 	element := stack.top
 	for index := 0; element != nil; index++ {
-		elements[index] = element
+		elements[index] = element.value
 		element = element.next
 	}
 

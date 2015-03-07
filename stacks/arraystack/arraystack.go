@@ -58,7 +58,9 @@ func (stack *Stack) Push(value interface{}) {
 // Pops (removes) top element on stack and returns it, or nil if stack is empty.
 // Second return parameter is true, unless the stack was empty and there was nothing to pop.
 func (stack *Stack) Pop() (value interface{}, ok bool) {
-	return stack.list.Get(stack.list.Size() - 1)
+	value, ok = stack.list.Get(stack.list.Size() - 1)
+	stack.list.Remove(stack.list.Size() - 1)
+	return
 }
 
 // Returns top element on the stack without removing it, or nil if stack is empty.
@@ -79,15 +81,15 @@ func (stack *Stack) Size() int {
 
 // Removes all elements from the stack.
 func (stack *Stack) Clear() {
-	return stack.list.Clear()
+	stack.list.Clear()
 }
 
 // Returns all elements in the stack (LIFO order).
 func (stack *Stack) Values() []interface{} {
 	size := stack.list.Size()
 	elements := make([]interface{}, size, size)
-	for i := size - 1; i >= 0; i-- { // in reverse
-		elements[i] = stack.list.Get(i)
+	for i := 1; i <= size; i++ {
+		elements[size-i], _ = stack.list.Get(i - 1) // in reverse (LIFO)
 	}
 	return elements
 }
@@ -95,7 +97,7 @@ func (stack *Stack) Values() []interface{} {
 func (stack *Stack) String() string {
 	str := "ArrayStack\n"
 	values := []string{}
-	for _, value := range stack.elements {
+	for _, value := range stack.list.Values() {
 		values = append(values, fmt.Sprintf("%v", value))
 	}
 	str += strings.Join(values, ", ")
