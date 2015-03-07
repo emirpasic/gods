@@ -6,41 +6,59 @@ Implementation of various data structures in Go.
 
 ## Data Structures
 
-- [Sets](#sets)
-  - [HashSet](#hashset)
-  - [TreeSet](#treeset)
-- [Lists](#lists)
-  - [ArrayList](#arraylist)
-- [Stacks](#stacks)
-  - [LinkedListStack](#linkedliststack)
-  - [ArrayStack](#arraystack)
-- [Maps](#maps)
-  - [HashMap](#hashmap)
-  - [TreeMap](#treemap)
-- [Trees](#trees)
-  - [RedBlackTree](#redblacktree)
+- [Containers](#containers)
+  - [Sets](#sets)
+    - [HashSet](#hashset)
+    - [TreeSet](#treeset)
+  - [Lists](#lists)
+    - [ArrayList](#arraylist)
+  - [Stacks](#stacks)
+    - [LinkedListStack](#linkedliststack)
+    - [ArrayStack](#arraystack)
+  - [Maps](#maps)
+    - [HashMap](#hashmap)
+    - [TreeMap](#treemap)
+  - [Trees](#trees)
+    - [RedBlackTree](#redblacktree)
 - [Functions](#functions)
-  - [Comparator](#comparator)
+    - [Comparator](#comparator)
   
 
-###Sets 
+###Containers
+
+All data structures implement the continer interface with the following methods:
+
+```go
+type Interface interface {
+	Empty() bool
+	Size() int
+	Clear()
+	Values() []interface{}
+}
+
+```
+
+####Sets 
 
 A set is a data structure that can store elements and no repeated values. It is a computer implementation of the mathematical concept of a finite set. Unlike most other collection types, rather than retrieving a specific element from a set, one typically tests an element for membership in a set. This structed is often used to ensure that no duplicates are present in a collection.
 
 All sets implement the set interface with the following methods:
 
 ```go
-	Add(items ...interface{})
-	Remove(items ...interface{})
-	Contains(items ...interface{}) bool
-	Empty() bool
-	Size() int
-	Clear()
-	Values() []interface{}
+type Interface interface {
+    Add(elements ...interface{})
+	Remove(elements ...interface{})
+	Contains(elements ...interface{}) bool
 
+	containers.Interface
+	// Empty() bool
+	// Size() int
+	// Clear()
+	// Values() []interface{}
+}
 ```
 
-####HashSet
+#####HashSet
 
 This structure implements the Set interface and is backed by a hash table (actually a Go's map). It makes no guarantees as to the iteration order of the set, since Go randomizes this iteration order on maps.
 
@@ -69,7 +87,7 @@ func main() {
 	
 ```
 
-####TreeSet
+#####TreeSet
 
 This structure implements the Set interface and is backed by a red-black tree to keep the elements sorted with respect to the comparator.
 
@@ -97,24 +115,28 @@ func main() {
 
 ```
 
-###Lists
+####Lists
 
 A list is a data structure that can store elements and may have repeated values. There is no ordering in a list. The user can access and remove an element by the index position.
 
 All lists implement the list interface with the following methods:
 
 ```go
-	Get(index int) (interface{}, bool)
+type Interface interface {
+    Get(index int) (interface{}, bool)
 	Remove(index int)
 	Add(elements ...interface{})
 	Contains(elements ...interface{}) bool
-	Empty() bool
-	Size() int
-	Clear()
-	Values() []interface{}
+
+	containers.Interface
+	// Empty() bool
+	// Size() int
+	// Clear()
+	// Values() []interface{}
+}
 ```
 
-####ArrayList
+#####ArrayList
 
 This structure implements the List interface and is backed by a dynamic array that grows and shrinks implicitly (by 50% when capacity is reached).
 
@@ -140,22 +162,27 @@ Direct access method _Get(index)_ is guaranteed a constant time performance. Rem
 }
 ```
 
-###Stacks
+####Stacks
 
 The stack interface represents a last-in-first-out (LIFO) collection of objects. The usual push and pop operations are provided, as well as a method to peek at the top item on the stack, a method to check whether the stack is empty and the size (number of elements).
 
 All stacks implement the stack interface with the following methods:
 ```go
+type Interface interface {
 	Push(value interface{})
 	Pop() (value interface{}, ok bool)
 	Peek() (value interface{}, ok bool)
-	Empty() bool
-	Size() int
-	Clear()
-	Values() []interface{}
+
+	containers.Interface
+	// Empty() bool
+	// Size() int
+	// Clear()
+	// Values() []interface{}
+}
+
 ```
 
-####LinkedListStack
+#####LinkedListStack
 
 This stack structure is based on a linked list, i.e. each previous element has a point to the next. 
 
@@ -183,7 +210,7 @@ func main() {
 
 ```
 
-####ArrayStack
+#####ArrayStack
 
 This stack structure is back by ArrayList.
 
@@ -212,23 +239,27 @@ func main() {
 
 ```
 
-###Maps
+####Maps
 
 Structure that maps keys to values. A map cannot contain duplicate keys and each key can map to at most one value.
 
 All maps implement the map interface with the following methods:
 ```go
-	Put(key interface{}, value interface{})
+type Interface interface {
+    Put(key interface{}, value interface{})
 	Get(key interface{}) (value interface{}, found bool)
 	Remove(key interface{})
-	Empty() bool
-	Size() int
-	Clear()
 	Keys() []interface{}
-	Values() []interface{}
+
+	containers.Interface
+	// Empty() bool
+	// Size() int
+	// Clear()
+	// Values() []interface{}
+}
 ```
 
-####HashMap
+#####HashMap
 
 Map structure based on hash tables, more exactly, Go's map. Keys are unordered. 
 
@@ -256,7 +287,7 @@ func main() {
 
 ```
 
-####TreeMap
+#####TreeMap
 
 Map structure based on our red-black tree implementation. Keys are ordered with respect to the passed comparator. 
 
@@ -287,11 +318,22 @@ func main() {
 
 ```
 
-###Trees
+####Trees
 
 A tree is a widely used data data structure that simulates a hierarchical tree structure, with a root value and subtrees of children, represented as a set of linked nodes; thus no cyclic links.
+
+All trees implement the tree interface with the following methods:
+```go
+type Interface interface {
+	containers.Interface
+	// Empty() bool
+	// Size() int
+	// Clear()
+	// Values() []interface{}
+}
+```
  
-####RedBlackTree
+#####RedBlackTree
 
 A red–black tree is a binary search tree with an extra bit of data per node, its color, which can be either red or black. The extra bit of storage ensures an approximately balanced tree by constraining how nodes are colored from any path from the root to the leaf. Thus, it is a data structure which is a type of self-balancing binary search tree.[Wikipedia](http://en.wikipedia.org/wiki/Red%E2%80%93black_tree)
 
