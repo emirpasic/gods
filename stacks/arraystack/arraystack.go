@@ -24,7 +24,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Implementation of stack using a slice.
+// Implementation of stack backed by ArrayList.
 // Structure is not thread safe.
 // References: http://en.wikipedia.org/wiki/Stack_%28abstract_data_type%29
 
@@ -32,6 +32,7 @@ package arraystack
 
 import (
 	"fmt"
+	"github.com/emirpasic/gods/lists/arraylist"
 	"github.com/emirpasic/gods/stacks"
 	"strings"
 )
@@ -41,64 +42,54 @@ func assertInterfaceImplementation() {
 }
 
 type Stack struct {
-	elements []interface{}
-	top      int
+	list *arraylist.List
 }
 
 // Instantiates a new empty stack
 func New() *Stack {
-	return &Stack{top: -1}
+	return &Stack{list: arraylist.New()}
 }
 
 // Pushes a value onto the top of the stack
 func (stack *Stack) Push(value interface{}) {
-	// Increase when capacity is reached by a factor of 1.5 and add one so it grows when size is zero
-	if stack.top+1 >= cap(stack.elements) {
-		currentSize := len(stack.elements)
-		sizeIncrease := int(1.5*float32(currentSize) + 1.0)
-		newSize := currentSize + sizeIncrease
-		newItems := make([]interface{}, newSize, newSize)
-		copy(newItems, stack.elements)
-		stack.elements = newItems
-	}
-	stack.top += 1
-	stack.elements[stack.top] = value
+	stack.list.Add(value)
 }
 
 // Pops (removes) top element on stack and returns it, or nil if stack is empty.
 // Second return parameter is true, unless the stack was empty and there was nothing to pop.
 func (stack *Stack) Pop() (value interface{}, ok bool) {
-	if stack.top >= 0 {
-		value, ok = stack.elements[stack.top], true
-		stack.top -= 1
-		return
-	}
-	return nil, false
+	return stack.list.Get(stack.list.Size() - 1)
 }
 
 // Returns top element on the stack without removing it, or nil if stack is empty.
 // Second return parameter is true, unless the stack was empty and there was nothing to peek.
 func (stack *Stack) Peek() (value interface{}, ok bool) {
-	if stack.top >= 0 {
-		return stack.elements[stack.top], true
-	}
-	return nil, false
+	return stack.list.Get(stack.list.Size() - 1)
 }
 
 // Returns true if stack does not contain any elements.
 func (stack *Stack) Empty() bool {
-	return stack.Size() == 0
+	return stack.list.Empty()
 }
 
 // Returns number of elements within the stack.
 func (stack *Stack) Size() int {
-	return stack.top + 1
+	return stack.list.Size()
 }
 
 // Removes all elements from the stack.
 func (stack *Stack) Clear() {
-	stack.top = -1
-	stack.elements = []interface{}{}
+	return stack.list.Clear()
+}
+
+// Returns all elements in the stack (LIFO order).
+func (stack *Stack) Values() []interface{} {
+	size := stack.list.Size()
+	elements := make([]interface{}, size, size)
+	for i := size - 1; i >= 0; i-- { // in reverse
+		elements[i] = stack.list.Get(i)
+	}
+	return elements
 }
 
 func (stack *Stack) String() string {

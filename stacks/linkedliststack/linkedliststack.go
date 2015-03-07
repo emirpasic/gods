@@ -98,6 +98,19 @@ func (stack *Stack) Clear() {
 	stack.size = 0
 }
 
+// Returns all elements in the stack (LIFO order).
+func (stack *Stack) Values() []interface{} {
+	size := stack.list.Size()
+	elements := make([]interface{}, size, size)
+	element := stack.top
+	for index := 0; element != nil; index++ {
+		elements[index] = element
+		element = element.next
+	}
+
+	return elements
+}
+
 func (stack *Stack) String() string {
 	str := "LinkedListStack\n"
 	element := stack.top

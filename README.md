@@ -152,6 +152,7 @@ All stacks implement the stack interface with the following methods:
 	Empty() bool
 	Size() int
 	Clear()
+	Values() []interface{}
 ```
 
 ####LinkedListStack
@@ -169,6 +170,7 @@ func main() {
 	stack := lls.New()  // empty
 	stack.Push(1)       // 1
 	stack.Push(2)       // 1, 2
+	stack.Values()      // 2, 1 (LIFO order)
 	_, _ = stack.Peek() // 2,true
 	_, _ = stack.Pop()  // 2, true
 	_, _ = stack.Pop()  // 1, true
@@ -183,7 +185,7 @@ func main() {
 
 ####ArrayStack
 
-This stack structure is based on a array.
+This stack structure is back by ArrayList.
 
 All operations are guaranted constant time performance.
 
@@ -196,6 +198,7 @@ func main() {
 	stack := arraystack.New() // empty
 	stack.Push(1)             // 1
 	stack.Push(2)             // 1, 2
+	stack.Values()            // 2, 1 (LIFO order)
 	_, _ = stack.Peek()       // 2,true
 	_, _ = stack.Pop()        // 2, true
 	_, _ = stack.Pop()        // 1, true

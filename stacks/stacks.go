@@ -33,4 +33,5 @@ type Interface interface {
 	Empty() bool
 	Size() int
 	Clear()
+	Values() []interface{}
 }

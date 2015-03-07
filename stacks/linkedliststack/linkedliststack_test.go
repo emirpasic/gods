@@ -27,6 +27,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package linkedliststack
 
 import (
+	"github.com/emirpasic/gods/utils"
 	"testing"
 )
 
@@ -42,6 +43,10 @@ func TestLinkedListStack(t *testing.T) {
 	stack.Push(1)
 	stack.Push(2)
 	stack.Push(3)
+
+	if actualValue := stack.Values(); !utils.IdenticalSlices(actualValue, []interface{}{3, 2, 1}) {
+		t.Errorf("Got %v expected %v", actualValue, []interface{}{3, 2, 1})
+	}
 
 	if actualValue := stack.Empty(); actualValue != false {
 		t.Errorf("Got %v expected %v", actualValue, false)
@@ -75,6 +80,10 @@ func TestLinkedListStack(t *testing.T) {
 
 	if actualValue := stack.Empty(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+
+	if actualValue := stack.Values(); !utils.IdenticalSlices(actualValue, []interface{}{}) {
+		t.Errorf("Got %v expected %v", actualValue, []interface{}{})
 	}
 
 }
