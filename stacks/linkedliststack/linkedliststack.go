@@ -112,15 +112,10 @@ func (stack *Stack) Values() []interface{} {
 
 func (stack *Stack) String() string {
 	str := "LinkedListStack\n"
-	element := stack.top
-	elementsValues := []string{}
-	for element != nil {
-		elementsValues = append(elementsValues, fmt.Sprintf("%v", element.value))
-		element = element.next
+	values := []string{}
+	for _, value := range stack.Values() {
+		values = append(values, fmt.Sprintf("%v", value))
 	}
-	for i, j := 0, len(elementsValues)-1; i < j; i, j = i+1, j-1 {
-		elementsValues[i], elementsValues[j] = elementsValues[j], elementsValues[i]
-	}
-	str += strings.Join(elementsValues, ", ")
+	str += strings.Join(values, ", ")
 	return str
 }
