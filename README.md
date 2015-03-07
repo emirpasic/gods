@@ -549,4 +549,4 @@ For direct contributions, branch of from master and do _pull request_.
 
 This library is distributed under the BSD-style license found in the [LICENSE](https://github.com/emirpasic/gods/blob/master/LICENSE) file.
 
-TimSort copied from (psilva261/timsort)[https://github.com/psilva261/timsort] with [LICENSE](https://github.com/emirpasic/gods/blob/master/utils/timsort/LICENSE) file.
+TimSort copied from [https://github.com/psilva261/timsort](https://github.com/psilva261/timsort) with MIT [LICENSE](https://github.com/emirpasic/gods/blob/master/utils/timsort/LICENSE) file.
