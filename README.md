@@ -26,7 +26,7 @@ Implementation of various data structures in Go.
 
 ###Containers
 
-All data structures implement the continer interface with the following methods:
+All data structures implement the container interface with the following methods:
 
 ```go
 type Interface interface {
@@ -548,3 +548,5 @@ For direct contributions, branch of from master and do _pull request_.
 ## License
 
 This library is distributed under the BSD-style license found in the [LICENSE](https://github.com/emirpasic/gods/blob/master/LICENSE) file.
+
+TimSort copied from (psilva261/timsort)[https://github.com/psilva261/timsort] with [LICENSE](https://github.com/emirpasic/gods/blob/master/utils/timsort/LICENSE) file.
