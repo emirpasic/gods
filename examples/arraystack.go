@@ -28,7 +28,7 @@ package examples
 
 import "github.com/emirpasic/gods/stacks/arraystack"
 
-func arraystackExample() {
+func ArrayStackExample() {
 	stack := arraystack.New() // empty
 	stack.Push(1)             // 1
 	stack.Push(2)             // 1, 2

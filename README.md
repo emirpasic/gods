@@ -9,6 +9,8 @@ Implementation of various data structures in Go.
 - [Sets](#sets)
   - [HashSet](#hashset)
   - [TreeSet](#treeset)
+- [Lists](#lists)
+  - [ArrayList](#arraylist)
 - [Stacks](#stacks)
   - [LinkedListStack](#linkedliststack)
   - [ArrayStack](#arraystack)
@@ -93,6 +95,41 @@ func main() {
 	set.Size()                            // 0
 }
 
+```
+
+###Lists
+
+####ArrayList
+
+```go
+package main
+
+import "github.com/emirpasic/gods/lists/arraylist"
+
+func main() {
+	list := arraylist.New()
+
+	list.Add("a")      // ["a"]
+	list.Add("b", "c") // ["a","b","c"]
+
+	_, _ = list.Get(0)   // "a",true
+	_, _ = list.Get(100) // nil,false
+
+	_ = list.Contains("a", "b", "c")      //true
+	_ = list.Contains("a", "b", "c", "d") //false
+
+	list.Remove(2) // ["a","b"]
+	list.Remove(1) // ["a"]
+	list.Remove(0) // []
+	list.Remove(0) // [] (ignored)
+
+	_ = list.Empty() // true
+	_ = list.Size()  // 0
+
+	list.Add("a") // ["a"]
+	list.Clear()  // []
+
+}
 ```
 
 ###Stacks
@@ -456,7 +493,5 @@ Biggest contribution towards this library is to use it and give us feedback for 
 For direct contributions, branch of from master and do _pull request_.
 
 ## License
-
-Copyright (c) Emir Pasic , All rights reserved.
 
 This library is distributed under the BSD-style license found in the [LICENSE](https://github.com/emirpasic/gods/blob/master/LICENSE) file.

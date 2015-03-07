@@ -84,3 +84,15 @@ func TestTreeSet(t *testing.T) {
 	}
 
 }
+
+func BenchmarkTreeSet(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		set := NewWithIntComparator()
+		for n := 0; n < 1000; n++ {
+			set.Add(i)
+		}
+		for n := 0; n < 1000; n++ {
+			set.Remove(n)
+		}
+	}
+}

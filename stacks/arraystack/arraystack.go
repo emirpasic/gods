@@ -41,8 +41,8 @@ func assertInterfaceImplementation() {
 }
 
 type Stack struct {
-	items []interface{}
-	top   int
+	elements []interface{}
+	top      int
 }
 
 // Instantiates a new empty stack
@@ -53,24 +53,23 @@ func New() *Stack {
 // Pushes a value onto the top of the stack
 func (stack *Stack) Push(value interface{}) {
 	// Increase when capacity is reached by a factor of 1.5 and add one so it grows when size is zero
-	if stack.top+1 >= cap(stack.items) {
-		currentSize := len(stack.items)
+	if stack.top+1 >= cap(stack.elements) {
+		currentSize := len(stack.elements)
 		sizeIncrease := int(1.5*float32(currentSize) + 1.0)
 		newSize := currentSize + sizeIncrease
 		newItems := make([]interface{}, newSize, newSize)
-		copy(newItems, stack.items)
-		stack.items = newItems
+		copy(newItems, stack.elements)
+		stack.elements = newItems
 	}
 	stack.top += 1
-	stack.items[stack.top] = value
+	stack.elements[stack.top] = value
 }
 
 // Pops (removes) top element on stack and returns it, or nil if stack is empty.
 // Second return parameter is true, unless the stack was empty and there was nothing to pop.
 func (stack *Stack) Pop() (value interface{}, ok bool) {
 	if stack.top >= 0 {
-		value, ok = stack.items[stack.top], true
-		// TODO shrink slice at some point
+		value, ok = stack.elements[stack.top], true
 		stack.top -= 1
 		return
 	}
@@ -81,7 +80,7 @@ func (stack *Stack) Pop() (value interface{}, ok bool) {
 // Second return parameter is true, unless the stack was empty and there was nothing to peek.
 func (stack *Stack) Peek() (value interface{}, ok bool) {
 	if stack.top >= 0 {
-		return stack.items[stack.top], true
+		return stack.elements[stack.top], true
 	}
 	return nil, false
 }
@@ -99,13 +98,13 @@ func (stack *Stack) Size() int {
 // Removes all elements from the stack.
 func (stack *Stack) Clear() {
 	stack.top = -1
-	stack.items = []interface{}{}
+	stack.elements = []interface{}{}
 }
 
 func (stack *Stack) String() string {
 	str := "ArrayStack\n"
 	values := []string{}
-	for _, value := range stack.items {
+	for _, value := range stack.elements {
 		values = append(values, fmt.Sprintf("%v", value))
 	}
 	str += strings.Join(values, ", ")

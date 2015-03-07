@@ -31,7 +31,7 @@ import (
 	rbt "github.com/emirpasic/gods/trees/redblacktree"
 )
 
-func redblacktreeExample() {
+func RedBlacTtreeExample() {
 	tree := rbt.NewWithIntComparator() // empty(keys are of type int)
 
 	tree.Put(1, "x") // 1->x

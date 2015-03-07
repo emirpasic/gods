@@ -28,7 +28,7 @@ package examples
 
 import lls "github.com/emirpasic/gods/stacks/linkedliststack"
 
-func linkedliststackExample() {
+func LinkedListStackExample() {
 	stack := lls.New()  // empty
 	stack.Push(1)       // 1
 	stack.Push(2)       // 1, 2

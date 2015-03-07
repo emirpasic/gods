@@ -159,3 +159,15 @@ func TestRedBlackTree(t *testing.T) {
 	}
 
 }
+
+func BenchmarkRedBlackTree(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		tree := NewWithIntComparator()
+		for n := 0; n < 1000; n++ {
+			tree.Put(n, n)
+		}
+		for n := 0; n < 1000; n++ {
+			tree.Remove(n)
+		}
+	}
+}

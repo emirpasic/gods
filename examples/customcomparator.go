@@ -53,7 +53,7 @@ func byID(a, b interface{}) int {
 	}
 }
 
-func exampleCustomComparator() {
+func CustomComparatorExample() {
 	set := treeset.NewWith(byID)
 
 	set.Add(User{2, "Second"})

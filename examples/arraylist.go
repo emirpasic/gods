@@ -26,19 +26,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package examples
 
-import "github.com/emirpasic/gods/maps/treemap"
+import "github.com/emirpasic/gods/lists/arraylist"
 
-func TreeMapExample() {
-	m := treemap.NewWithIntComparator() // empty (keys are of type int)
-	m.Put(1, "x")                       // 1->x
-	m.Put(2, "b")                       // 1->x, 2->b (in order)
-	m.Put(1, "a")                       // 1->a, 2->b (in order)
-	_, _ = m.Get(2)                     // b, true
-	_, _ = m.Get(3)                     // nil, false
-	_ = m.Values()                      // []interface {}{"a", "b"} (in order)
-	_ = m.Keys()                        // []interface {}{1, 2} (in order)
-	m.Remove(1)                         // 2->b
-	m.Clear()                           // empty
-	m.Empty()                           // true
-	m.Size()                            // 0
+func ArrayListExample() {
+	list := arraylist.New()
+	list.Add("a")                         // ["a"]
+	list.Add("b", "c")                    // ["a","b","c"]
+	_, _ = list.Get(0)                    // "a",true
+	_, _ = list.Get(100)                  // nil,false
+	_ = list.Contains("a", "b", "c")      // true
+	_ = list.Contains("a", "b", "c", "d") // false
+	list.Remove(2)                        // ["a","b"]
+	list.Remove(1)                        // ["a"]
+	list.Remove(0)                        // []
+	list.Remove(0)                        // [] (ignored)
+	_ = list.Empty()                      // true
+	_ = list.Size()                       // 0
+	list.Add("a")                         // ["a"]
+	list.Clear()                          // []
 }

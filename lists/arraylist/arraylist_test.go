@@ -24,69 +24,93 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package arraystack
+package arraylist
 
 import (
 	"testing"
 )
 
-func TestArrayStack(t *testing.T) {
+func TestArrayList(t *testing.T) {
 
-	stack := New()
+	list := New()
 
-	if actualValue := stack.Empty(); actualValue != true {
+	list.Add("a", "b", "c", "d", "e", "f", "g")
+	list.Clear()
+
+	if actualValue := list.Empty(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
 
-	// insertions
-	stack.Push(1)
-	stack.Push(2)
-	stack.Push(3)
+	if actualValue := list.Size(); actualValue != 0 {
+		t.Errorf("Got %v expected %v", actualValue, 0)
+	}
 
-	if actualValue := stack.Empty(); actualValue != false {
+	list.Add("a")
+	list.Add("b", "c")
+
+	if actualValue := list.Empty(); actualValue != false {
 		t.Errorf("Got %v expected %v", actualValue, false)
 	}
 
-	if actualValue := stack.Size(); actualValue != 3 {
+	if actualValue := list.Size(); actualValue != 3 {
 		t.Errorf("Got %v expected %v", actualValue, 3)
 	}
 
-	if actualValue, ok := stack.Peek(); actualValue != 3 || !ok {
-		t.Errorf("Got %v expected %v", actualValue, 3)
+	if actualValue, ok := list.Get(2); actualValue != "c" || !ok {
+		t.Errorf("Got %v expected %v", actualValue, "c")
 	}
 
-	stack.Pop()
+	list.Remove(2)
 
-	if actualValue, ok := stack.Peek(); actualValue != 2 || !ok {
-		t.Errorf("Got %v expected %v", actualValue, 2)
-	}
-
-	if actualValue, ok := stack.Pop(); actualValue != 2 || !ok {
-		t.Errorf("Got %v expected %v", actualValue, 2)
-	}
-
-	if actualValue, ok := stack.Pop(); actualValue != 1 || !ok {
-		t.Errorf("Got %v expected %v", actualValue, 1)
-	}
-
-	if actualValue, ok := stack.Pop(); actualValue != nil || ok {
+	if actualValue, ok := list.Get(2); actualValue != nil || ok {
 		t.Errorf("Got %v expected %v", actualValue, nil)
 	}
 
-	if actualValue := stack.Empty(); actualValue != true {
+	list.Remove(1)
+	list.Remove(0)
+
+	if actualValue := list.Empty(); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+
+	if actualValue := list.Size(); actualValue != 0 {
+		t.Errorf("Got %v expected %v", actualValue, 0)
+	}
+
+	list.Add("a", "b", "c")
+
+	if actualValue := list.Contains("a", "b", "c"); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+
+	if actualValue := list.Contains("a", "b", "c", "d"); actualValue != false {
+		t.Errorf("Got %v expected %v", actualValue, false)
+	}
+
+	list.Clear()
+
+	if actualValue := list.Contains("a"); actualValue != false {
+		t.Errorf("Got %v expected %v", actualValue, false)
+	}
+
+	if actualValue, ok := list.Get(0); actualValue != nil || ok {
+		t.Errorf("Got %v expected %v", actualValue, false)
+	}
+
+	if actualValue := list.Empty(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
 
 }
 
-func BenchmarkArrayStack(b *testing.B) {
+func BenchmarkArrayList(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		stack := New()
+		list := New()
 		for n := 0; n < 1000; n++ {
-			stack.Push(i)
+			list.Add(i)
 		}
-		for !stack.Empty() {
-			stack.Pop()
+		for !list.Empty() {
+			list.Remove(0)
 		}
 	}
 

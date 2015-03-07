@@ -177,3 +177,15 @@ func sameElements(a []interface{}, b []interface{}) bool {
 	}
 	return true
 }
+
+func BenchmarkHashMap(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		m := New()
+		for n := 0; n < 1000; n++ {
+			m.Put(n, n)
+		}
+		for n := 0; n < 1000; n++ {
+			m.Remove(n)
+		}
+	}
+}

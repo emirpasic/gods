@@ -89,3 +89,15 @@ func TestHashSet(t *testing.T) {
 	}
 
 }
+
+func BenchmarkHashSet(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		set := New()
+		for n := 0; n < 1000; n++ {
+			set.Add(i)
+		}
+		for n := 0; n < 1000; n++ {
+			set.Remove(n)
+		}
+	}
+}

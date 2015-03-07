@@ -16,11 +16,12 @@ License along with this library. See the file LICENSE included
 with this distribution for more information.
 */
 
-package sets
+package lists
 
 type Interface interface {
+	Get(index int) (interface{}, bool)
+	Remove(index int)
 	Add(elements ...interface{})
-	Remove(elements ...interface{})
 	Contains(elements ...interface{}) bool
 	Empty() bool
 	Size() int

@@ -65,7 +65,7 @@ func (set *Set) Remove(items ...interface{}) {
 	}
 }
 
-// Check wether items (one or more) are present in the set.
+// Check if items (one or more) are present in the set.
 // All items have to be present in the set for the method to return true.
 // Returns true if no arguments are passed at all, i.e. set is always superset of empty set.
 func (set *Set) Contains(items ...interface{}) bool {

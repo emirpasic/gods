@@ -28,7 +28,7 @@ package examples
 
 import "github.com/emirpasic/gods/sets/treeset"
 
-func treesetExample() {
+func TreeSetExample() {
 	set := treeset.NewWithIntComparator() // empty
 	set.Add(1)                            // 1
 	set.Add(2, 2, 3, 4, 5)                // 1, 2, 3, 4, 5 (in order, duplicates ignored)
