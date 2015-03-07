@@ -18,13 +18,17 @@ with this distribution for more information.
 
 package lists
 
+import "github.com/emirpasic/gods/containers"
+
 type Interface interface {
 	Get(index int) (interface{}, bool)
 	Remove(index int)
 	Add(elements ...interface{})
 	Contains(elements ...interface{}) bool
-	Empty() bool
-	Size() int
-	Clear()
-	Values() []interface{}
+
+	containers.Interface
+	// Empty() bool
+	// Size() int
+	// Clear()
+	// Values() []interface{}
 }

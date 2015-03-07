@@ -26,12 +26,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package stacks
 
+import "github.com/emirpasic/gods/containers"
+
 type Interface interface {
 	Push(value interface{})
 	Pop() (value interface{}, ok bool)
 	Peek() (value interface{}, ok bool)
-	Empty() bool
-	Size() int
-	Clear()
-	Values() []interface{}
+
+	containers.Interface
+	// Empty() bool
+	// Size() int
+	// Clear()
+	// Values() []interface{}
 }

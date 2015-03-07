@@ -24,19 +24,13 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package maps
+// All data structures must implement the container structure
 
-import "github.com/emirpasic/gods/containers"
+package containers
 
 type Interface interface {
-	Put(key interface{}, value interface{})
-	Get(key interface{}) (value interface{}, found bool)
-	Remove(key interface{})
-	Keys() []interface{}
-
-	containers.Interface
-	// Empty() bool
-	// Size() int
-	// Clear()
-	// Values() []interface{}
+	Empty() bool
+	Size() int
+	Clear()
+	Values() []interface{}
 }

@@ -34,8 +34,13 @@ package redblacktree
 import (
 	"fmt"
 	"github.com/emirpasic/gods/stacks/linkedliststack"
+	"github.com/emirpasic/gods/trees"
 	"github.com/emirpasic/gods/utils"
 )
+
+func assertInterfaceImplementation() {
+	var _ trees.Interface = (*Tree)(nil)
+}
 
 type color bool
 
