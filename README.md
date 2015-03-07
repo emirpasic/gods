@@ -99,36 +99,44 @@ func main() {
 
 ###Lists
 
-####ArrayList
+A list is a data structure that can store elements and may have repeated values. There is no ordering in a list. The user can access and remove an element by the index position.
+
+All lists implement the list interface with the following methods:
 
 ```go
-package main
+	Get(index int) (interface{}, bool)
+	Remove(index int)
+	Add(elements ...interface{})
+	Contains(elements ...interface{}) bool
+	Empty() bool
+	Size() int
+	Clear()
+	Values() []interface{}
+```
 
-import "github.com/emirpasic/gods/lists/arraylist"
+####ArrayList
 
-func main() {
+This structure implements the List interface and is backed by a dynamic array that grows and shrinks implicitly (by 50% when capacity is reached).
+
+Direct access method _Get(index)_ is guaranteed a constant time performance. Remove is of linear time performance. Checking with _Contains()_ is of quadratic complexity.
+
+
+```go
 	list := arraylist.New()
-
-	list.Add("a")      // ["a"]
-	list.Add("b", "c") // ["a","b","c"]
-
-	_, _ = list.Get(0)   // "a",true
-	_, _ = list.Get(100) // nil,false
-
-	_ = list.Contains("a", "b", "c")      //true
-	_ = list.Contains("a", "b", "c", "d") //false
-
-	list.Remove(2) // ["a","b"]
-	list.Remove(1) // ["a"]
-	list.Remove(0) // []
-	list.Remove(0) // [] (ignored)
-
-	_ = list.Empty() // true
-	_ = list.Size()  // 0
-
-	list.Add("a") // ["a"]
-	list.Clear()  // []
-
+	list.Add("a")                         // ["a"]
+	list.Add("b", "c")                    // ["a","b","c"]
+	_, _ = list.Get(0)                    // "a",true
+	_, _ = list.Get(100)                  // nil,false
+	_ = list.Contains("a", "b", "c")      // true
+	_ = list.Contains("a", "b", "c", "d") // false
+	list.Remove(2)                        // ["a","b"]
+	list.Remove(1)                        // ["a"]
+	list.Remove(0)                        // []
+	list.Remove(0)                        // [] (ignored)
+	_ = list.Empty()                      // true
+	_ = list.Size()                       // 0
+	list.Add("a")                         // ["a"]
+	list.Clear()                          // []
 }
 ```
 
