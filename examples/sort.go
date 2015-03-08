@@ -26,26 +26,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package examples
 
-import (
-	"github.com/emirpasic/gods/lists/arraylist"
-	"github.com/emirpasic/gods/utils"
-)
+import "github.com/emirpasic/gods/utils"
 
-func ArrayListExample() {
-	list := arraylist.New()
-	list.Add("a")                         // ["a"]
-	list.Add("c", "b")                    // ["a","c","b"]
-	list.Sort(utils.StringComparator)     // ["a","b","c"]
-	_, _ = list.Get(0)                    // "a",true
-	_, _ = list.Get(100)                  // nil,false
-	_ = list.Contains("a", "b", "c")      // true
-	_ = list.Contains("a", "b", "c", "d") // false
-	list.Remove(2)                        // ["a","b"]
-	list.Remove(1)                        // ["a"]
-	list.Remove(0)                        // []
-	list.Remove(0)                        // [] (ignored)
-	_ = list.Empty()                      // true
-	_ = list.Size()                       // 0
-	list.Add("a")                         // ["a"]
-	list.Clear()                          // []
+func SortExample() {
+	strings := []interface{}{}                  // []
+	strings = append(strings, "d")              // ["d"]
+	strings = append(strings, "a")              // ["d","a"]
+	strings = append(strings, "b")              // ["d","a",b"
+	strings = append(strings, "c")              // ["d","a",b","c"]
+	utils.Sort(strings, utils.StringComparator) // ["a","b","c","d"]
 }

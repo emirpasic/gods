@@ -529,9 +529,7 @@ Internally they use the _utils.Sort()_ method:
 ```go
 package main
 
-import (
-	"github.com/emirpasic/gods/utils"
-)
+import "github.com/emirpasic/gods/utils"
 
 func main() {
 	strings := []interface{}{}                  // []
