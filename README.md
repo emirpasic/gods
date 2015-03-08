@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/emirpasic/gods.svg)](https://travis-ci.org/emirpasic/gods) 
+[![Build Status](https://travis-ci.org/emirpasic/gods.svg)](https://travis-ci.org/emirpasic/gods) [![GoDoc](https://godoc.org/github.com/emirpasic/gods?status.svg)](https://godoc.org/github.com/emirpasic/gods)
 
 # GoDS (Go Data Structures)
 
@@ -42,7 +42,7 @@ type Interface interface {
 Container specific operations:
 
 ```go
-// Returns sorted container's elements using with respect to the passed comparator. 
+// Returns sorted container's elements with respect to the passed comparator. 
 // Does not effect the ordering of elements within the container.
 // Uses timsort.
 func GetSortedValues(container Interface, comparator utils.Comparator) []interface{} {
