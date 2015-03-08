@@ -22,6 +22,7 @@ Implementation of various data structures in Go.
     - [RedBlackTree](#redblacktree)
 - [Functions](#functions)
     - [Comparator](#comparator)
+    - [Sort](#sort)
   
 
 ###Containers
@@ -36,6 +37,15 @@ type Interface interface {
 	Values() []interface{}
 }
 
+```
+
+Container specific operations:
+
+```go
+// Returns sorted container's elements using with respect to the passed comparator. 
+// Does not effect the ordering of elements within the container.
+// Uses timsort.
+func GetSortedValues(container Interface, comparator utils.Comparator) []interface{} {
 ```
 
 ####Sets 
@@ -127,6 +137,7 @@ type Interface interface {
 	Remove(index int)
 	Add(elements ...interface{})
 	Contains(elements ...interface{}) bool
+	Sort(comparator utils.Comparator)
 
 	containers.Interface
 	// Empty() bool
@@ -144,9 +155,18 @@ Direct access method _Get(index)_ is guaranteed a constant time performance. Rem
 
 
 ```go
+package main
+
+import (
+	"github.com/emirpasic/gods/lists/arraylist"
+    "github.com/emirpasic/gods/utils"
+)
+
+func main() {
 	list := arraylist.New()
 	list.Add("a")                         // ["a"]
-	list.Add("b", "c")                    // ["a","b","c"]
+	list.Add("c", "b")                    // ["a","c","b"]
+    list.Sort(utils.StringComparator)     // ["a","b","c"]
 	_, _ = list.Get(0)                    // "a",true
 	_, _ = list.Get(100)                  // nil,false
 	_ = list.Contains("a", "b", "c")      // true
@@ -500,6 +520,29 @@ func main() {
 }
 ```
 
+#### Sort
+
+Sort uses timsort for best performance on real-world data. Lists have an in-place _Sort()_ method. All containers can return their sorted elements via _GetSortedValues()_ call.
+
+Internally they use the _utils.Sort()_ method:
+
+```go
+package main
+
+import (
+	"github.com/emirpasic/gods/utils"
+)
+
+func main() {
+	strings := []interface{}{}                  // []
+	strings = append(strings, "d")              // ["d"]
+	strings = append(strings, "a")              // ["d","a"]
+	strings = append(strings, "b")              // ["d","a",b"
+	strings = append(strings, "c")              // ["d","a",b","c"]
+	utils.Sort(strings, utils.StringComparator) // ["a","b","c","d"]
+}
+
+```
 
 ## Motivations
 
@@ -509,7 +552,7 @@ Collections and data structures found in other languages: Java Collections, C++ 
 
 **Fast algorithms**: 
 
-  - Based on decades of knowledge and experiences of other libraries mentioned below.
+  - Based on decades of knowledge and experiences of other libraries mentioned above.
 
 **Memory efficient algorithms**: 
   

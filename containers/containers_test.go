@@ -24,14 +24,54 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Util methods for sorting a slice of values with respect to the comparator
+// All data structures must implement the container structure
 
-package utils
+package containers
 
-import "github.com/emirpasic/gods/utils/timsort"
+import (
+	"github.com/emirpasic/gods/utils"
+	"testing"
+)
 
-// Sorts values (in-place) using timsort
-func Sort(values []interface{}, comparator Comparator) {
-	less := func(a, b interface{}) bool { return comparator(a, b) < 0 }
-	timsort.Sort(values, less)
+// For testing purposes
+type Container struct {
+	values []interface{}
+}
+
+func (container Container) Empty() bool {
+	return len(container.values) == 0
+}
+
+func (container Container) Size() int {
+	return len(container.values)
+}
+
+func (container Container) Clear() {
+	container.values = []interface{}{}
+}
+
+func (container Container) Values() []interface{} {
+	return container.values
+}
+
+func TestGetSortedValuesInts(t *testing.T) {
+	container := Container{}
+	container.values = []interface{}{5, 1, 3, 2, 4}
+	values := GetSortedValues(container, utils.IntComparator)
+	for i := 1; i < container.Size(); i++ {
+		if values[i-1].(int) > values[i].(int) {
+			t.Errorf("Not sorted!")
+		}
+	}
+}
+
+func TestGetSortedValuesStrings(t *testing.T) {
+	container := Container{}
+	container.values = []interface{}{"g", "a", "d", "e", "f", "c", "b"}
+	values := GetSortedValues(container, utils.StringComparator)
+	for i := 1; i < container.Size(); i++ {
+		if values[i-1].(string) > values[i].(string) {
+			t.Errorf("Not sorted!")
+		}
+	}
 }

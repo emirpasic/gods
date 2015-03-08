@@ -33,6 +33,7 @@ package arraylist
 import (
 	"fmt"
 	"github.com/emirpasic/gods/lists"
+	"github.com/emirpasic/gods/utils"
 	"strings"
 )
 
@@ -133,19 +134,23 @@ func (list *List) Clear() {
 	list.elements = []interface{}{}
 }
 
+// Sorts values (in-place) using timsort.
+func (list *List) Sort(comparator utils.Comparator) {
+	if len(list.elements) < 2 {
+		return
+	}
+	utils.Sort(list.elements[:list.size], comparator)
+}
+
 func (list *List) String() string {
 	str := "ArrayList\n"
 	values := []string{}
-	for _, value := range list.elements {
+	for _, value := range list.elements[:list.size] {
 		values = append(values, fmt.Sprintf("%v", value))
 	}
 	str += strings.Join(values, ", ")
 	return str
 }
-
-/*************
- * Internals *
- *************/
 
 // Check that the index is withing bounds of the list
 func (list *List) withinRange(index int) bool {

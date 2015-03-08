@@ -27,6 +27,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package arraylist
 
 import (
+	"github.com/emirpasic/gods/utils"
 	"testing"
 )
 
@@ -34,7 +35,19 @@ func TestArrayList(t *testing.T) {
 
 	list := New()
 
-	list.Add("a", "b", "c", "d", "e", "f", "g")
+	list.Sort(utils.StringComparator)
+
+	list.Add("e", "f", "g", "a", "b", "c", "d")
+
+	list.Sort(utils.StringComparator)
+	for i := 1; i < list.Size(); i++ {
+		a, _ := list.Get(i - 1)
+		b, _ := list.Get(i)
+		if a.(string) > b.(string) {
+			t.Errorf("Not sorted! %s > %s", a, b)
+		}
+	}
+
 	list.Clear()
 
 	if actualValue := list.Empty(); actualValue != true {
