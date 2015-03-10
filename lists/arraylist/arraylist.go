@@ -47,8 +47,8 @@ type List struct {
 }
 
 const (
-	GROWTH_FACTOR = float32(1.5) // growth by 50%
-	SHRINK_FACTOR = float32(0.5) // shrink when size is 50% of capacity (0 means never shrink)
+	GROWTH_FACTOR = float32(2.0)  // growth by 100%
+	SHRINK_FACTOR = float32(0.25) // shrink when size is 25% of capacity (0 means never shrink)
 )
 
 // Instantiates a new empty list
@@ -165,7 +165,7 @@ func (list *List) resize(cap int) {
 
 // Expand the array if necessary, i.e. capacity will be reached if we add n elements
 func (list *List) growBy(n int) {
-	// Grow when capacity is reached by a factor of 1.5 and add number of elements
+	// When capacity is reached, grow by a factor of GROWTH_FACTOR and add number of elements
 	currentCapacity := cap(list.elements)
 	if list.size+n >= currentCapacity {
 		newCapacity := int(GROWTH_FACTOR * float32(currentCapacity+n))

@@ -151,7 +151,7 @@ type Interface interface {
 
 #####ArrayList
 
-This structure implements the List interface and is backed by a dynamic array that grows and shrinks implicitly (by 50% when capacity is reached).
+This structure implements the List interface and is backed by a dynamic array that grows and shrinks implicitly (by 100% when capacity is reached).
 
 Direct access method _Get(index)_ is guaranteed a constant time performance. Remove is of linear time performance. Checking with _Contains()_ is of quadratic complexity.
 
