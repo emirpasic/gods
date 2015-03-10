@@ -24,7 +24,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Implementation of stack using linked list.
+// Implementation of stack backed by our singly linked list.
 // Used by red-black tree during in-order traversal.
 // Structure is not thread safe.
 // References: http://en.wikipedia.org/wiki/Stack_%28abstract_data_type%29
@@ -33,6 +33,7 @@ package linkedliststack
 
 import (
 	"fmt"
+	"github.com/emirpasic/gods/lists/singlylinkedlist"
 	"github.com/emirpasic/gods/stacks"
 	"strings"
 )
@@ -42,78 +43,57 @@ func assertInterfaceImplementation() {
 }
 
 type Stack struct {
-	top  *element
-	size int
-}
-
-type element struct {
-	value interface{}
-	next  *element
+	list *singlylinkedlist.List
 }
 
 // Instantiates a new empty stack
 func New() *Stack {
-	return &Stack{}
+	return &Stack{list: &singlylinkedlist.List{}}
 }
 
 // Pushes a value onto the top of the stack
 func (stack *Stack) Push(value interface{}) {
-	stack.top = &element{value, stack.top}
-	stack.size += 1
+	stack.list.Prepend(value)
 }
 
 // Pops (removes) top element on stack and returns it, or nil if stack is empty.
 // Second return parameter is true, unless the stack was empty and there was nothing to pop.
 func (stack *Stack) Pop() (value interface{}, ok bool) {
-	if stack.size > 0 {
-		value, stack.top = stack.top.value, stack.top.next
-		stack.size -= 1
-		return value, true
-	}
-	return nil, false
+	value, ok = stack.list.Get(0)
+	stack.list.Remove(0)
+	return
 }
 
 // Returns top element on the stack without removing it, or nil if stack is empty.
 // Second return parameter is true, unless the stack was empty and there was nothing to peek.
 func (stack *Stack) Peek() (value interface{}, ok bool) {
-	if stack.size > 0 {
-		return stack.top.value, true
-	}
-	return nil, false
+	return stack.list.Get(0)
 }
 
 // Returns true if stack does not contain any elements.
 func (stack *Stack) Empty() bool {
-	return stack.size == 0
+	return stack.list.Empty()
 }
 
 // Returns number of elements within the stack.
 func (stack *Stack) Size() int {
-	return stack.size
+	return stack.list.Size()
 }
 
 // Removes all elements from the stack.
 func (stack *Stack) Clear() {
-	stack.top = nil
-	stack.size = 0
+	stack.list.Clear()
 }
 
 // Returns all elements in the stack (LIFO order).
 func (stack *Stack) Values() []interface{} {
-	elements := make([]interface{}, stack.size, stack.size)
-	element := stack.top
-	for index := 0; element != nil; index++ {
-		elements[index] = element.value
-		element = element.next
-	}
-
-	return elements
+	return stack.list.Values()
 }
 
 func (stack *Stack) String() string {
 	str := "LinkedListStack\n"
 	values := []string{}
-	for _, value := range stack.Values() {
+	for _, value := range stack.list.Values() {
 		values = append(values, fmt.Sprintf("%v", value))
 	}
 	str += strings.Join(values, ", ")

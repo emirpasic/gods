@@ -283,7 +283,7 @@ type Interface interface {
 
 This stack structure is based on a linked list, i.e. each previous element has a point to the next. 
 
-All operations are guaranted constant time performance.
+All operations are guaranted constant time performance, except _Values()_, which is as always of linear time performance.
 
 ```go
 package main
