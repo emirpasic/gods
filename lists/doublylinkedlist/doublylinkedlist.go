@@ -124,6 +124,11 @@ func (list *List) Remove(index int) {
 		return
 	}
 
+	if list.size == 1 {
+		list.Clear()
+		return
+	}
+
 	var element *element
 	// determine traversal direction, last to first or first to last
 	if list.size-index < index {
