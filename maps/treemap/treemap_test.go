@@ -130,12 +130,12 @@ func TestTreeMap(t *testing.T) {
 	m.Remove(2)
 
 	// Test Keys()
-	if actualValue, expactedValue := fmt.Sprintf("", m.Keys()...), ""; actualValue != expactedValue {
+	if actualValue, expactedValue := fmt.Sprintf("%s", m.Keys()), "[]"; actualValue != expactedValue {
 		t.Errorf("Got %v expected %v", actualValue, expactedValue)
 	}
 
 	// test Values()
-	if actualValue, expactedValue := fmt.Sprintf("", m.Values()...), ""; actualValue != expactedValue {
+	if actualValue, expactedValue := fmt.Sprintf("%s", m.Values()), "[]"; actualValue != expactedValue {
 		t.Errorf("Got %v expected %v", actualValue, expactedValue)
 	}
 

@@ -130,12 +130,12 @@ func TestRedBlackTree(t *testing.T) {
 	tree.Remove(2)
 
 	// Test Keys()
-	if actualValue, expactedValue := fmt.Sprintf("", tree.Keys()...), ""; actualValue != expactedValue {
+	if actualValue, expactedValue := fmt.Sprintf("%s", tree.Keys()), "[]"; actualValue != expactedValue {
 		t.Errorf("Got %v expected %v", actualValue, expactedValue)
 	}
 
 	// test Values()
-	if actualValue, expactedValue := fmt.Sprintf("", tree.Values()...), ""; actualValue != expactedValue {
+	if actualValue, expactedValue := fmt.Sprintf("%s", tree.Values()), "[]"; actualValue != expactedValue {
 		t.Errorf("Got %v expected %v", actualValue, expactedValue)
 	}
 
