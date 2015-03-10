@@ -26,9 +26,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // Implementation of doubly linked list.
 // Structure is not thread safe.
-// References: http://en.wikipedia.org/wiki/Doubly_linked_list
+// References: http://en.wikipedia.org/wiki/Linked_list#Singly_linked_list
 
-package doublylinkedlist
+package singlylinkedlist
 
 import (
 	"fmt"
@@ -49,7 +49,6 @@ type List struct {
 
 type element struct {
 	value interface{}
-	prev  *element
 	next  *element
 }
 
@@ -61,7 +60,7 @@ func New() *List {
 // Appends a value (one or more) at the end of the list (same as Append())
 func (list *List) Add(values ...interface{}) {
 	for _, value := range values {
-		newElement := &element{value: value, prev: list.last}
+		newElement := &element{value: value}
 		if list.size == 0 {
 			list.first = newElement
 			list.last = newElement
@@ -83,12 +82,9 @@ func (list *List) Prepend(values ...interface{}) {
 	// in reverse to keep passed order i.e. ["c","d"] -> Prepend(["a","b"]) -> ["a","b","c",d"]
 	for v := len(values) - 1; v >= 0; v-- {
 		newElement := &element{value: values[v], next: list.first}
+		list.first = newElement
 		if list.size == 0 {
-			list.first = newElement
 			list.last = newElement
-		} else {
-			list.first.prev = newElement
-			list.first = newElement
 		}
 		list.size++
 	}
@@ -102,19 +98,11 @@ func (list *List) Get(index int) (interface{}, bool) {
 		return nil, false
 	}
 
-	// determine traveral direction, last to first or first to last
-	if list.size-index < index {
-		element := list.last
-		for e := list.size - 1; e != index; e, element = e-1, element.prev {
-		}
-		return element.value, true
-	} else {
-		element := list.first
-		for e := 0; e != index; e, element = e+1, element.next {
-		}
-		return element.value, true
+	element := list.first
+	for e := 0; e != index; e, element = e+1, element.next {
 	}
 
+	return element.value, true
 }
 
 // Removes one or more elements from the list with the supplied indices.
@@ -129,29 +117,20 @@ func (list *List) Remove(index int) {
 		return
 	}
 
-	var element *element
-	// determine traversal direction, last to first or first to last
-	if list.size-index < index {
-		element = list.last
-		for e := list.size - 1; e != index; e, element = e-1, element.prev {
-		}
-	} else {
-		element = list.first
-		for e := 0; e != index; e, element = e+1, element.next {
-		}
+	var beforeElement *element
+	element := list.first
+	for e := 0; e != index; e, element = e+1, element.next {
+		beforeElement = element
 	}
 
 	if element == list.first {
 		list.first = element.next
 	}
 	if element == list.last {
-		list.last = element.prev
+		list.last = beforeElement
 	}
-	if element.prev != nil {
-		element.prev.next = element.next
-	}
-	if element.next != nil {
-		element.next.prev = element.prev
+	if beforeElement != nil {
+		beforeElement.next = element.next
 	}
 
 	element = nil
@@ -229,7 +208,7 @@ func (list *List) Sort(comparator utils.Comparator) {
 }
 
 func (list *List) String() string {
-	str := "DoublyLinkedList\n"
+	str := "SinglyLinkedList\n"
 	values := []string{}
 	for element := list.first; element != nil; element = element.next {
 		values = append(values, fmt.Sprintf("%v", element.value))

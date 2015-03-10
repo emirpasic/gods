@@ -12,6 +12,7 @@ Implementation of various data structures in Go.
     - [TreeSet](#treeset)
   - [Lists](#lists)
     - [ArrayList](#arraylist)
+    - [SinglyLinkedList](#singlylinkedlist)
     - [DoublyLinkedList](#doublylinkedlist)
   - [Stacks](#stacks)
     - [LinkedListStack](#linkedliststack)
@@ -181,6 +182,43 @@ func main() {
 	list.Add("a")                         // ["a"]
 	list.Clear()                          // []
 }
+```
+
+#####SinglyLinkedList
+
+This structure implements the _List_ interface and is a linked data structure where each element points to the next in the list.
+
+Direct access method _Get(index)_ and _Remove()_ are of linear performance. _Append_ and _Prepend_ are of constant time performance. Checking with _Contains()_ is of quadratic complexity.
+
+```go
+package main
+
+import (
+	sll "github.com/emirpasic/gods/lists/singlylinkedlist"
+	"github.com/emirpasic/gods/utils"
+)
+
+func main() {
+	list := sll.New()
+	list.Add("a")                         // ["a"]
+	list.Append("b")                      // ["a","b"] (same as Add())
+	list.Prepend("c")                     // ["c","a","b"]
+	list.Sort(utils.StringComparator)     // ["a","b","c"]
+	_, _ = list.Get(0)                    // "a",true
+	_, _ = list.Get(100)                  // nil,false
+	_ = list.Contains("a", "b", "c")      // true
+	_ = list.Contains("a", "b", "c", "d") // false
+	list.Remove(2)                        // ["a","b"]
+	list.Remove(1)                        // ["a"]
+	list.Remove(0)                        // []
+	list.Remove(0)                        // [] (ignored)
+	_ = list.Empty()                      // true
+	_ = list.Size()                       // 0
+	list.Add("a")                         // ["a"]
+	list.Clear()                          // []
+}
+
+
 ```
 
 #####DoublyLinkedList
