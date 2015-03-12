@@ -168,13 +168,14 @@ func main() {
 	list := arraylist.New()
 	list.Add("a")                         // ["a"]
 	list.Add("c", "b")                    // ["a","c","b"]
-    list.Sort(utils.StringComparator)     // ["a","b","c"]
+	list.Sort(utils.StringComparator)     // ["a","b","c"]
 	_, _ = list.Get(0)                    // "a",true
 	_, _ = list.Get(100)                  // nil,false
 	_ = list.Contains("a", "b", "c")      // true
 	_ = list.Contains("a", "b", "c", "d") // false
-	list.Remove(2)                        // ["a","b"]
-	list.Remove(1)                        // ["a"]
+	list.Swap(0, 1)                       // ["b","a",c"]
+	list.Remove(2)                        // ["b","a"]
+	list.Remove(1)                        // ["b"]
 	list.Remove(0)                        // []
 	list.Remove(0)                        // [] (ignored)
 	_ = list.Empty()                      // true
