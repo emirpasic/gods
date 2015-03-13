@@ -22,6 +22,7 @@ Implementation of various data structures in Go.
     - [TreeMap](#treemap)
   - [Trees](#trees)
     - [RedBlackTree](#redblacktree)
+    - [BinaryHeap](#binaryheap)
 - [Functions](#functions)
     - [Comparator](#comparator)
     - [Sort](#sort)
@@ -486,6 +487,57 @@ func main() {
 	tree.Size()  // 0
 }
 
+```
+
+#####BinaryHeap
+
+A binary heap is a heap data structure created using a binary tree. It can be seen as a binary tree with two additional constraints:
+
+- Shape property:
+
+  A binary heap is a complete binary tree; that is, all levels of the tree, except possibly the last one (deepest) are fully filled, and, if the last level of the tree is not complete, the nodes of that level are filled from left to right.
+- Heap property:
+
+  All nodes are either greater than or equal to or less than or equal to each of its children, according to a comparison predicate defined for the heap. <small>[Wiki](http://en.wikipedia.org/wiki/Binary_heap)</small>
+
+  
+
+```go
+package main
+
+import (
+	"github.com/emirpasic/gods/trees/binaryheap"
+	"github.com/emirpasic/gods/utils"
+)
+
+func main() {
+
+	// Min-heap
+	heap := binaryheap.NewWithIntComparator() // empty (min-heap)
+	heap.Push(2)                              // 2
+	heap.Push(3)                              // 2, 3
+	heap.Push(1)                              // 1, 3, 2
+	heap.Values()                             // 1, 3, 2
+	_, _ = heap.Peek()                        // 1,true
+	_, _ = heap.Pop()                         // 1, true
+	_, _ = heap.Pop()                         // 2, true
+	_, _ = heap.Pop()                         // 3, true
+	_, _ = heap.Pop()                         // nil, false (nothing to pop)
+	heap.Push(1)                              // 1
+	heap.Clear()                              // empty
+	heap.Empty()                              // true
+	heap.Size()                               // 0
+
+	// Max-heap
+	inverseIntComparator := func(a, b interface{}) int {
+		return -utils.IntComparator(a, b)
+	}
+	heap = binaryheap.NewWith(inverseIntComparator) // empty (min-heap)
+	heap.Push(2)                                    // 2
+	heap.Push(3)                                    // 3, 2
+	heap.Push(1)                                    // 3, 2, 1
+	heap.Values()                                   // 3, 2, 1
+}
 ```
 
 ### Functions
