@@ -141,6 +141,7 @@ type Interface interface {
 	Add(elements ...interface{})
 	Contains(elements ...interface{}) bool
 	Sort(comparator utils.Comparator)
+    Swap(index1, index2 int)
 
 	containers.Interface
 	// Empty() bool
@@ -201,17 +202,17 @@ import (
 )
 
 func main() {
-	list := sll.New()
+	list := arraylist.New()
 	list.Add("a")                         // ["a"]
-	list.Append("b")                      // ["a","b"] (same as Add())
-	list.Prepend("c")                     // ["c","a","b"]
+	list.Add("c", "b")                    // ["a","c","b"]
 	list.Sort(utils.StringComparator)     // ["a","b","c"]
 	_, _ = list.Get(0)                    // "a",true
 	_, _ = list.Get(100)                  // nil,false
 	_ = list.Contains("a", "b", "c")      // true
 	_ = list.Contains("a", "b", "c", "d") // false
-	list.Remove(2)                        // ["a","b"]
-	list.Remove(1)                        // ["a"]
+	list.Swap(0, 1)                       // ["b","a",c"]
+	list.Remove(2)                        // ["b","a"]
+	list.Remove(1)                        // ["b"]
 	list.Remove(0)                        // []
 	list.Remove(0)                        // [] (ignored)
 	_ = list.Empty()                      // true
@@ -238,17 +239,17 @@ import (
 )
 
 func main() {
-	list := dll.New()
+	list := arraylist.New()
 	list.Add("a")                         // ["a"]
-	list.Append("b")                      // ["a","b"] (same as Add())
-	list.Prepend("c")                     // ["c","a","b"]
+	list.Add("c", "b")                    // ["a","c","b"]
 	list.Sort(utils.StringComparator)     // ["a","b","c"]
 	_, _ = list.Get(0)                    // "a",true
 	_, _ = list.Get(100)                  // nil,false
 	_ = list.Contains("a", "b", "c")      // true
 	_ = list.Contains("a", "b", "c", "d") // false
-	list.Remove(2)                        // ["a","b"]
-	list.Remove(1)                        // ["a"]
+	list.Swap(0, 1)                       // ["b","a",c"]
+	list.Remove(2)                        // ["b","a"]
+	list.Remove(1)                        // ["b"]
 	list.Remove(0)                        // []
 	list.Remove(0)                        // [] (ignored)
 	_ = list.Empty()                      // true
@@ -434,11 +435,11 @@ type Interface interface {
  
 #####RedBlackTree
 
-A red–black tree is a binary search tree with an extra bit of data per node, its color, which can be either red or black. The extra bit of storage ensures an approximately balanced tree by constraining how nodes are colored from any path from the root to the leaf. Thus, it is a data structure which is a type of self-balancing binary search tree.[Wikipedia](http://en.wikipedia.org/wiki/Red%E2%80%93black_tree)
+A red–black tree is a binary search tree with an extra bit of data per node, its color, which can be either red or black. The extra bit of storage ensures an approximately balanced tree by constraining how nodes are colored from any path from the root to the leaf. Thus, it is a data structure which is a type of self-balancing binary search tree.
 
-The balancing of the tree is not perfect but it is good enough to allow it to guarantee searching in O(log n) time, where n is the total number of elements in the tree. The insertion and deletion operations, along with the tree rearrangement and recoloring, are also performed in O(log n) time.[Wikipedia](http://en.wikipedia.org/wiki/Red%E2%80%93black_tree)
+The balancing of the tree is not perfect but it is good enough to allow it to guarantee searching in O(log n) time, where n is the total number of elements in the tree. The insertion and deletion operations, along with the tree rearrangement and recoloring, are also performed in O(log n) time.<small>[Wikipedia](http://en.wikipedia.org/wiki/Red%E2%80%93black_tree)</small>
 
-[![Build Status](http://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Red-black_tree_example.svg/500px-Red-black_tree_example.svg.png)](http://en.wikipedia.org/wiki/Red%E2%80%93black_tree)
+<center><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Red-black_tree_example.svg/500px-Red-black_tree_example.svg.png" width="400px" height="200px" /></center>
 
 ```go
 package main
@@ -498,9 +499,9 @@ A binary heap is a heap data structure created using a binary tree. It can be se
   A binary heap is a complete binary tree; that is, all levels of the tree, except possibly the last one (deepest) are fully filled, and, if the last level of the tree is not complete, the nodes of that level are filled from left to right.
 - Heap property:
 
-  All nodes are either greater than or equal to or less than or equal to each of its children, according to a comparison predicate defined for the heap. <small>[Wiki](http://en.wikipedia.org/wiki/Binary_heap)</small>
+  All nodes are either greater than or equal to or less than or equal to each of its children, according to a comparison predicate defined for the heap. <small>[Wikipedia](http://en.wikipedia.org/wiki/Binary_heap)</small>
 
-  
+<center><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Max-Heap.svg/501px-Max-Heap.svg.png" width="300px" height="200px" /></center>
 
 ```go
 package main
