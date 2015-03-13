@@ -37,16 +37,7 @@ func TestSinglyLinkedList(t *testing.T) {
 
 	list.Sort(utils.StringComparator)
 
-	list.Add("g", "a")
-	list.Append("b", "c", "d")
-	list.Prepend("e", "f")
-
-	shouldBe := []interface{}{"e", "f", "g", "a", "b", "c", "d"}
-	for i, _ := range shouldBe {
-		if value, ok := list.Get(i); value != shouldBe[i] || !ok {
-			t.Errorf("List not populated in correct order. Expected: %v Got: %v", shouldBe, list.Values())
-		}
-	}
+	list.Add("e", "f", "g", "a", "b", "c", "d")
 
 	list.Sort(utils.StringComparator)
 	for i := 1; i < list.Size(); i++ {
@@ -82,6 +73,14 @@ func TestSinglyLinkedList(t *testing.T) {
 		t.Errorf("Got %v expected %v", actualValue, "c")
 	}
 
+	list.Swap(0, 2)
+	list.Swap(0, 2)
+	list.Swap(0, 1)
+
+	if actualValue, ok := list.Get(0); actualValue != "b" || !ok {
+		t.Errorf("Got %v expected %v", actualValue, "c")
+	}
+
 	list.Remove(2)
 
 	if actualValue, ok := list.Get(2); actualValue != nil || ok {
@@ -101,9 +100,9 @@ func TestSinglyLinkedList(t *testing.T) {
 
 	list.Add("a", "b", "c")
 
-	//if actualValue := list.Contains("a", "b", "c"); actualValue != true {
-	//	t.Errorf("Got %v expected %v", actualValue, true)
-	//}
+	if actualValue := list.Contains("a", "b", "c"); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
 
 	if actualValue := list.Contains("a", "b", "c", "d"); actualValue != false {
 		t.Errorf("Got %v expected %v", actualValue, false)
@@ -111,9 +110,9 @@ func TestSinglyLinkedList(t *testing.T) {
 
 	list.Clear()
 
-	//if actualValue := list.Contains("a"); actualValue != false {
-	//	t.Errorf("Got %v expected %v", actualValue, false)
-	//}
+	if actualValue := list.Contains("a"); actualValue != false {
+		t.Errorf("Got %v expected %v", actualValue, false)
+	}
 
 	if actualValue, ok := list.Get(0); actualValue != nil || ok {
 		t.Errorf("Got %v expected %v", actualValue, false)

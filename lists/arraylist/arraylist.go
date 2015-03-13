@@ -142,7 +142,7 @@ func (list *List) Sort(comparator utils.Comparator) {
 	utils.Sort(list.elements[:list.size], comparator)
 }
 
-// Swaps two elements with the given indices.
+// Swaps values of two elements at the given indices.
 func (list *List) Swap(i, j int) {
 	if list.withinRange(i) && list.withinRange(j) {
 		list.elements[i], list.elements[j] = list.elements[j], list.elements[i]

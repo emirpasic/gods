@@ -228,6 +228,22 @@ func (list *List) Sort(comparator utils.Comparator) {
 
 }
 
+// Swaps values of two elements at the given indices.
+func (list *List) Swap(i, j int) {
+	if list.withinRange(i) && list.withinRange(j) && i != j {
+		var element1, element2 *element
+		for e, currentElement := 0, list.first; element1 == nil || element2 == nil; e, currentElement = e+1, currentElement.next {
+			switch e {
+			case i:
+				element1 = currentElement
+			case j:
+				element2 = currentElement
+			}
+		}
+		element1.value, element2.value = element2.value, element1.value
+	}
+}
+
 func (list *List) String() string {
 	str := "DoublyLinkedList\n"
 	values := []string{}

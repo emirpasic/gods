@@ -29,6 +29,7 @@ type Interface interface {
 	Add(elements ...interface{})
 	Contains(elements ...interface{}) bool
 	Sort(comparator utils.Comparator)
+	Swap(index1, index2 int)
 
 	containers.Interface
 	// Empty() bool
