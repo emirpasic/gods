@@ -78,7 +78,6 @@ func TestArrayList(t *testing.T) {
 	if actualValue, ok := list.Get(0); actualValue != "b" || !ok {
 		t.Errorf("Got %v expected %v", actualValue, "c")
 	}
-	
 
 	list.Remove(2)
 
