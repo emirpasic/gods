@@ -202,7 +202,7 @@ import (
 )
 
 func main() {
-	list := arraylist.New()
+	list := sll.New()
 	list.Add("a")                         // ["a"]
 	list.Add("c", "b")                    // ["a","c","b"]
 	list.Sort(utils.StringComparator)     // ["a","b","c"]
@@ -239,7 +239,7 @@ import (
 )
 
 func main() {
-	list := arraylist.New()
+	list := dll.New()
 	list.Add("a")                         // ["a"]
 	list.Add("c", "b")                    // ["a","c","b"]
 	list.Sort(utils.StringComparator)     // ["a","b","c"]
