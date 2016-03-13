@@ -204,6 +204,60 @@ func (node *node) String() string {
 	return fmt.Sprintf("%v", node.key)
 }
 
+func (tree *Tree) getMinFromNode(node *node) (foundNode *node, found bool) {
+	if node.left == nil {
+		return node, true
+	} else {
+		return tree.getMinFromNode(node.left)
+	}
+}
+
+func (tree *Tree) GetMin() (value interface{}, found bool) {
+	n, f := tree.getMinFromNode(tree.root)
+	if n != nil {
+		return n.value, f
+	} else {
+		return nil, false
+	}
+}
+
+func (tree *Tree) getMaxFromNode(node *node) (foundNode *node, found bool) {
+	if node.right == nil {
+		return node, true
+	} else {
+		return tree.getMaxFromNode(node.right)
+	}
+}
+
+func (tree *Tree) GetMax() (value interface{}, found bool) {
+	n, f := tree.getMaxFromNode(tree.root)
+	if n != nil {
+		return n.value, f
+	} else {
+		return nil, false
+	}
+}
+
+func (tree *Tree) RemoveMin() (value interface{}, deleted bool) {
+	node, found := tree.getMinFromNode(tree.root)
+	if found == true {
+		tree.Remove(node.key)
+		return node.value, found
+	} else {
+		return nil, false
+	}
+}
+
+func (tree *Tree) RemoveMax() (value interface{}, deleted bool) {
+	node, found := tree.getMaxFromNode(tree.root)
+	if found == true {
+		tree.Remove(node.key)
+		return node.value, found
+	} else {
+		return nil, false
+	}
+}
+
 // Returns all nodes in order
 func (tree *Tree) inOrder() []*node {
 	nodes := make([]*node, tree.size)

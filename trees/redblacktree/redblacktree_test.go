@@ -80,12 +80,30 @@ func TestRedBlackTree(t *testing.T) {
 		}
 	}
 
+	//getMin, getMax
+	minValue, minFound := tree.GetMin()
+	maxValue, maxFound := tree.GetMax()
+
+	if minValue != "a" || minFound != true {
+		t.Errorf("Not found expected Min value")
+	}
+
+	if maxValue != "g" || maxFound != true {
+		t.Errorf("Not found expected Max value")
+	}
+
 	// removals
 	tree.Remove(5)
 	tree.Remove(6)
 	tree.Remove(7)
 	tree.Remove(8)
 	tree.Remove(5)
+
+	//re-get max after removal
+	maxValue, maxFound = tree.GetMax()
+	if maxValue != "d" || maxFound != true {
+		t.Errorf("Not found expected Max value after Removal")
+	}
 
 	// Test Keys()
 	if actualValue, expactedValue := fmt.Sprintf("%d%d%d%d", tree.Keys()...), "1234"; actualValue != expactedValue {
@@ -99,14 +117,18 @@ func TestRedBlackTree(t *testing.T) {
 
 	// Test Size()
 	if actualValue := tree.Size(); actualValue != 4 {
-		t.Errorf("Got %v expected %v", actualValue, 7)
+		t.Errorf("Got %v expected %v", actualValue, 4)
 	}
 
+	//RemoveMin, RemoveMax
+	tree.RemoveMin()
+	tree.RemoveMax()
+
 	tests2 := [][]interface{}{
-		{1, "a", true},
+		{1, nil, false},
 		{2, "b", true},
 		{3, "c", true},
-		{4, "d", true},
+		{4, nil, false},
 		{5, nil, false},
 		{6, nil, false},
 		{7, nil, false},
