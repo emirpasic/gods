@@ -116,7 +116,7 @@ func (tree *Tree) Put(key interface{}, value interface{}) {
 }
 
 // Searches the node in the tree by key and returns its value or nil if key is not found in tree.
-// return parameter is true if key was found, otherwise false.
+// Second return parameter is true if key was found, otherwise false.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (tree *Tree) Get(key interface{}) (value interface{}, found bool) {
 	node := tree.lookup(key)
