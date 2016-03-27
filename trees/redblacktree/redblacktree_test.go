@@ -203,8 +203,8 @@ func TestFloor(t *testing.T) {
 	tree.Put(6, "f")
 	tree.Put(7, "g")
 
-	//ceiling map
-	ceilingMap := [][]interface{}{
+	//floor map
+	floorMap := [][]interface{}{
 		{0, nil, false},
 		{1, 1, true},
 		{2, 2, true},
@@ -215,7 +215,7 @@ func TestFloor(t *testing.T) {
 		{7, 7, true},
 		{8, 7, true},
 	}
-	for _, test := range ceilingMap {
+	for _, test := range floorMap {
 		actualKey, _, actualFound := tree.Floor(test[0])
 		if actualKey != test[1] || actualFound != test[2] {
 			t.Errorf("Got (%v, %v) expected (%v, %v)",
