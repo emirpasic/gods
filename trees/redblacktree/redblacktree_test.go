@@ -160,6 +160,70 @@ func TestRedBlackTree(t *testing.T) {
 
 }
 
+func TestCeiling(t *testing.T) {
+
+	tree := NewWithIntComparator()
+
+	//key-value to insert
+	tree.Put(1, "a")
+	tree.Put(2, "b")
+	tree.Put(4, "d")
+	tree.Put(6, "f")
+	tree.Put(7, "g")
+
+	//ceiling map
+	ceilingMap := [][]interface{}{
+		{0, 1, true},
+		{1, 1, true},
+		{2, 2, true},
+		{3, 4, true},
+		{4, 4, true},
+		{5, 6, true},
+		{6, 6, true},
+		{7, 7, true},
+		{8, nil, false},
+	}
+	for _, test := range ceilingMap {
+		actualKey, _, actualFound := tree.Ceiling(test[0])
+		if actualKey != test[1] || actualFound != test[2] {
+			t.Errorf("Got (%v, %v) expected (%v, %v)",
+				actualKey, actualFound, test[1], test[2])
+		}
+	}
+}
+
+func TestFloor(t *testing.T) {
+
+	tree := NewWithIntComparator()
+
+	//key-value to insert
+	tree.Put(1, "a")
+	tree.Put(2, "b")
+	tree.Put(4, "d")
+	tree.Put(6, "f")
+	tree.Put(7, "g")
+
+	//ceiling map
+	ceilingMap := [][]interface{}{
+		{0, nil, false},
+		{1, 1, true},
+		{2, 2, true},
+		{3, 2, true},
+		{4, 4, true},
+		{5, 4, true},
+		{6, 6, true},
+		{7, 7, true},
+		{8, 7, true},
+	}
+	for _, test := range ceilingMap {
+		actualKey, _, actualFound := tree.Floor(test[0])
+		if actualKey != test[1] || actualFound != test[2] {
+			t.Errorf("Got (%v, %v) expected (%v, %v)",
+				actualKey, actualFound, test[1], test[2])
+		}
+	}
+}
+
 func BenchmarkRedBlackTree(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		tree := NewWithIntComparator()
