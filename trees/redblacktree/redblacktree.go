@@ -192,6 +192,11 @@ func (tree *Tree) Clear() {
 	tree.size = 0
 }
 
+// Return comparator of the tree
+func (tree *Tree) Comparator() utils.Comparator {
+	return tree.comparator
+}
+
 func (tree *Tree) String() string {
 	str := "RedBlackTree\n"
 	if !tree.Empty() {
