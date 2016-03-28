@@ -103,14 +103,15 @@ func print(tree *RedBlackTreeExtended) {
 	fmt.Println(tree)
 }
 
-// Find ceiling node of the input key, return its key and value or nil if no ceiling is found.
-// Third return parameter is true if ceiling was found, otherwise false.
+// Find ceiling node of the input key, return the ceiling node or nil if no ceiling is found.
+// Second return parameter is true if ceiling was found, otherwise false.
+//
 // Ceiling node is defined as the smallest node that is larger than or equal to the given node.
 // A ceiling node may not be found, either because the tree is empty, or because
 // all nodes in the tree is smaller than the given node.
+//
 // Key should adhere to the comparator's type assertion, otherwise method panics.
-func (tree *RedBlackTreeExtended) Ceiling(key interface{}) (ceilingKey interface{}, value interface{}, found bool) {
-	var ceiling *rbt.Node
+func (tree *RedBlackTreeExtended) Ceiling(key interface{}) (ceiling *rbt.Node, found bool) {
 	found = false
 	comparator := tree.Comparator()
 
@@ -119,7 +120,7 @@ func (tree *RedBlackTreeExtended) Ceiling(key interface{}) (ceilingKey interface
 		compare := comparator(key, node.Key)
 		switch {
 		case compare == 0:
-			return node.Key, node.Value, true
+			return node, true
 		case compare < 0:
 			ceiling, found = node, true
 			node = node.Left
@@ -128,19 +129,20 @@ func (tree *RedBlackTreeExtended) Ceiling(key interface{}) (ceilingKey interface
 		}
 	}
 	if found {
-		return ceiling.Key, ceiling.Value, true
+		return ceiling, true
 	}
-	return nil, nil, false
+	return nil, false
 }
 
-// Find floor node of the input key, return its key and value or nil if no ceiling is found.
-// Third return parameter is true if floor was found, otherwise false.
+// Find floor node of the input key, return the floor node or nil if no ceiling is found.
+// Second return parameter is true if floor was found, otherwise false.
+//
 // Floor node is defined as the largest node that is smaller than or equal to the given node.
 // A floor node may not be found, either because the tree is empty, or because
 // all nodes in the tree is larger than the given node.
+//
 // Key should adhere to the comparator's type assertion, otherwise method panics.
-func (tree *RedBlackTreeExtended) Floor(key interface{}) (floorKey interface{}, value interface{}, found bool) {
-	var floor *rbt.Node
+func (tree *RedBlackTreeExtended) Floor(key interface{}) (floor *rbt.Node, found bool) {
 	found = false
 	comparator := tree.Comparator()
 
@@ -149,7 +151,7 @@ func (tree *RedBlackTreeExtended) Floor(key interface{}) (floorKey interface{}, 
 		compare := comparator(key, node.Key)
 		switch {
 		case compare == 0:
-			return node.Key, node.Value, true
+			return node, true
 		case compare < 0:
 			node = node.Left
 		case compare > 0:
@@ -158,9 +160,9 @@ func (tree *RedBlackTreeExtended) Floor(key interface{}) (floorKey interface{}, 
 		}
 	}
 	if found {
-		return floor.Key, floor.Value, true
+		return floor, true
 	}
-	return nil, nil, false
+	return nil, false
 }
 
 func RedBlackTreeExtendedExample() {
@@ -216,8 +218,8 @@ func RedBlackTreeExtendedExample() {
 		{8, nil, 7},
 	}
 	for _, tt := range testValues {
-		actualCeiling, _, _ := tree.Ceiling(tt[0])
-		actualFloor, _, _ := tree.Floor(tt[0])
-		fmt.Printf("test key %d, expected (%d, %d), actual (%d, %d)\n", tt[0], tt[1], tt[2], actualCeiling, actualFloor)
+		actualCeiling, _ := tree.Ceiling(tt[0])
+		actualFloor, _ := tree.Floor(tt[0])
+		fmt.Printf("test key %d, expected (%d, %d), actual (%d, %d)\n", tt[0], tt[1], tt[2], actualCeiling.Key, actualFloor.Key)
 	}
 }
