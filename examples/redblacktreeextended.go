@@ -103,68 +103,6 @@ func print(tree *RedBlackTreeExtended) {
 	fmt.Println(tree)
 }
 
-// Find ceiling node of the input key, return the ceiling node or nil if no ceiling is found.
-// Second return parameter is true if ceiling was found, otherwise false.
-//
-// Ceiling node is defined as the smallest node that is larger than or equal to the given node.
-// A ceiling node may not be found, either because the tree is empty, or because
-// all nodes in the tree is smaller than the given node.
-//
-// Key should adhere to the comparator's type assertion, otherwise method panics.
-func (tree *RedBlackTreeExtended) Ceiling(key interface{}) (ceiling *rbt.Node, found bool) {
-	found = false
-	comparator := tree.Comparator()
-
-	node := tree.Root
-	for node != nil {
-		compare := comparator(key, node.Key)
-		switch {
-		case compare == 0:
-			return node, true
-		case compare < 0:
-			ceiling, found = node, true
-			node = node.Left
-		case compare > 0:
-			node = node.Right
-		}
-	}
-	if found {
-		return ceiling, true
-	}
-	return nil, false
-}
-
-// Find floor node of the input key, return the floor node or nil if no ceiling is found.
-// Second return parameter is true if floor was found, otherwise false.
-//
-// Floor node is defined as the largest node that is smaller than or equal to the given node.
-// A floor node may not be found, either because the tree is empty, or because
-// all nodes in the tree is larger than the given node.
-//
-// Key should adhere to the comparator's type assertion, otherwise method panics.
-func (tree *RedBlackTreeExtended) Floor(key interface{}) (floor *rbt.Node, found bool) {
-	found = false
-	comparator := tree.Comparator()
-
-	node := tree.Root
-	for node != nil {
-		compare := comparator(key, node.Key)
-		switch {
-		case compare == 0:
-			return node, true
-		case compare < 0:
-			node = node.Left
-		case compare > 0:
-			floor, found = node, true
-			node = node.Right
-		}
-	}
-	if found {
-		return floor, true
-	}
-	return nil, false
-}
-
 func RedBlackTreeExtendedExample() {
 	tree := RedBlackTreeExtended{rbt.NewWithIntComparator()}
 
@@ -194,32 +132,4 @@ func RedBlackTreeExtendedExample() {
 	// Value for min key: c
 	// RedBlackTree
 	// └── 3
-
-	/*
-	 * Ceiling and Floor functions
-	 */
-	tree = RedBlackTreeExtended{rbt.NewWithIntComparator()}
-	tree.Put(1, "a")
-	tree.Put(2, "b")
-	tree.Put(4, "d")
-	tree.Put(6, "f")
-	tree.Put(7, "g")
-
-	//index, ceiling, floor
-	testValues := [][]interface{}{
-		{0, 1, nil},
-		{1, 1, 1},
-		{2, 2, 2},
-		{3, 4, 2},
-		{4, 4, 4},
-		{5, 6, 4},
-		{6, 6, 6},
-		{7, 7, 7},
-		{8, nil, 7},
-	}
-	for _, tt := range testValues {
-		actualCeiling, _ := tree.Ceiling(tt[0])
-		actualFloor, _ := tree.Floor(tt[0])
-		fmt.Printf("test key %d, expected (%d, %d), actual (%d, %d)\n", tt[0], tt[1], tt[2], actualCeiling.Key, actualFloor.Key)
-	}
 }
