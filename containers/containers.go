@@ -37,7 +37,7 @@ type Interface interface {
 	Values() []interface{}
 }
 
-// Returns sorted container's elements using with respect to the passed comparator.
+// Returns sorted container's elements with respect to the passed comparator.
 // Does not effect the ordering of elements within the container.
 // Uses timsort.
 func GetSortedValues(container Interface, comparator utils.Comparator) []interface{} {

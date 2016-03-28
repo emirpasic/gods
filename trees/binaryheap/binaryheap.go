@@ -45,22 +45,22 @@ func assertInterfaceImplementation() {
 
 type Heap struct {
 	list       *arraylist.List
-	comparator utils.Comparator
+	Comparator utils.Comparator
 }
 
 // Instantiates a new empty heap tree with the custom comparator.
 func NewWith(comparator utils.Comparator) *Heap {
-	return &Heap{list: arraylist.New(), comparator: comparator}
+	return &Heap{list: arraylist.New(), Comparator: comparator}
 }
 
 // Instantiates a new empty heap with the IntComparator, i.e. elements are of type int.
 func NewWithIntComparator() *Heap {
-	return &Heap{list: arraylist.New(), comparator: utils.IntComparator}
+	return &Heap{list: arraylist.New(), Comparator: utils.IntComparator}
 }
 
 // Instantiates a new empty heap with the StringComparator, i.e. elements are of type string.
 func NewWithStringComparator() *Heap {
-	return &Heap{list: arraylist.New(), comparator: utils.StringComparator}
+	return &Heap{list: arraylist.New(), Comparator: utils.StringComparator}
 }
 
 // Pushes a value onto the heap and bubbles it up accordingly.
@@ -129,12 +129,12 @@ func (heap *Heap) bubbleDown() {
 		smallerIndex := leftIndex
 		leftValue, _ := heap.list.Get(leftIndex)
 		rightValue, _ := heap.list.Get(rightIndex)
-		if rightIndex < size && heap.comparator(leftValue, rightValue) > 0 {
+		if rightIndex < size && heap.Comparator(leftValue, rightValue) > 0 {
 			smallerIndex = rightIndex
 		}
 		indexValue, _ := heap.list.Get(index)
 		smallerValue, _ := heap.list.Get(smallerIndex)
-		if heap.comparator(indexValue, smallerValue) > 0 {
+		if heap.Comparator(indexValue, smallerValue) > 0 {
 			heap.list.Swap(index, smallerIndex)
 		} else {
 			break
@@ -151,7 +151,7 @@ func (heap *Heap) bubbleUp() {
 	for parentIndex := (index - 1) >> 1; index > 0; parentIndex = (index - 1) >> 1 {
 		indexValue, _ := heap.list.Get(index)
 		parentValue, _ := heap.list.Get(parentIndex)
-		if heap.comparator(parentValue, indexValue) <= 0 {
+		if heap.Comparator(parentValue, indexValue) <= 0 {
 			break
 		}
 		heap.list.Swap(index, parentIndex)
