@@ -126,64 +126,6 @@ func (tree *Tree) Get(key interface{}) (value interface{}, found bool) {
 	return nil, false
 }
 
-// Find ceiling node of the input key, return its key and value or nil if no ceiling is found.
-// Third return parameter is true if ceiling was found, otherwise false.
-// Ceiling node is defined as the smallest node that is larger than or equal to the given node.
-// A ceiling node may not be found, either because the tree is empty, or because
-// all nodes in the tree is smaller than the given node.
-// Key should adhere to the comparator's type assertion, otherwise method panics.
-func (tree *Tree) Ceiling(key interface{}) (ceilingKey interface{}, value interface{}, found bool) {
-	ceiling := &Node{}
-	found = false
-
-	node := tree.Root
-	for node != nil {
-		compare := tree.comparator(key, node.Key)
-		switch {
-		case compare == 0:
-			return node.Key, node.Value, true
-		case compare < 0:
-			ceiling, found = node, true
-			node = node.Left
-		case compare > 0:
-			node = node.Right
-		}
-	}
-	if found {
-		return ceiling.Key, ceiling.Value, true
-	}
-	return nil, nil, false
-}
-
-// Find floor node of the input key, return its key and value or nil if no ceiling is found.
-// Third return parameter is true if floor was found, otherwise false.
-// Floor node is defined as the largest node that is smaller than or equal to the given node.
-// A floor node may not be found, either because the tree is empty, or because
-// all nodes in the tree is larger than the given node.
-// Key should adhere to the comparator's type assertion, otherwise method panics.
-func (tree *Tree) Floor(key interface{}) (floorKey interface{}, value interface{}, found bool) {
-	floor := &Node{}
-	found = false
-
-	node := tree.Root
-	for node != nil {
-		compare := tree.comparator(key, node.Key)
-		switch {
-		case compare == 0:
-			return node.Key, node.Value, true
-		case compare < 0:
-			node = node.Left
-		case compare > 0:
-			floor, found = node, true
-			node = node.Right
-		}
-	}
-	if found {
-		return floor.Key, floor.Value, true
-	}
-	return nil, nil, false
-}
-
 // Remove the node from the tree by key.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (tree *Tree) Remove(key interface{}) {
@@ -248,6 +190,11 @@ func (tree *Tree) Values() []interface{} {
 func (tree *Tree) Clear() {
 	tree.Root = nil
 	tree.size = 0
+}
+
+// Return comparator of the tree
+func (tree *Tree) Comparator() utils.Comparator {
+	return tree.comparator
 }
 
 func (tree *Tree) String() string {
