@@ -51,7 +51,7 @@ const (
 type Tree struct {
 	Root       *Node
 	size       int
-	comparator utils.Comparator
+	Comparator utils.Comparator
 }
 
 type Node struct {
@@ -65,17 +65,17 @@ type Node struct {
 
 // Instantiates a red-black tree with the custom comparator.
 func NewWith(comparator utils.Comparator) *Tree {
-	return &Tree{comparator: comparator}
+	return &Tree{Comparator: comparator}
 }
 
 // Instantiates a red-black tree with the IntComparator, i.e. keys are of type int.
 func NewWithIntComparator() *Tree {
-	return &Tree{comparator: utils.IntComparator}
+	return &Tree{Comparator: utils.IntComparator}
 }
 
 // Instantiates a red-black tree with the StringComparator, i.e. keys are of type string.
 func NewWithStringComparator() *Tree {
-	return &Tree{comparator: utils.StringComparator}
+	return &Tree{Comparator: utils.StringComparator}
 }
 
 // Inserts node into the tree.
@@ -88,7 +88,7 @@ func (tree *Tree) Put(key interface{}, value interface{}) {
 		node := tree.Root
 		loop := true
 		for loop {
-			compare := tree.comparator(key, node.Key)
+			compare := tree.Comparator(key, node.Key)
 			switch {
 			case compare == 0:
 				node.Value = value
@@ -263,7 +263,7 @@ func output(node *Node, prefix string, isTail bool, str *string) {
 func (tree *Tree) lookup(key interface{}) *Node {
 	node := tree.Root
 	for node != nil {
-		compare := tree.comparator(key, node.Key)
+		compare := tree.Comparator(key, node.Key)
 		switch {
 		case compare == 0:
 			return node
