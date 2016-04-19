@@ -51,13 +51,23 @@ func TestTreeMap(t *testing.T) {
 	}
 
 	// test Keys()
-	if actualValue, expactedValue := fmt.Sprintf("%d%d%d%d%d%d%d", m.Keys()...), "1234567"; actualValue != expactedValue {
-		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	if actualValue, expectedValue := fmt.Sprintf("%d%d%d%d%d%d%d", m.Keys()...), "1234567"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
 	// test Values()
-	if actualValue, expactedValue := fmt.Sprintf("%s%s%s%s%s%s%s", m.Values()...), "abcdefg"; actualValue != expactedValue {
-		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	if actualValue, expectedValue := fmt.Sprintf("%s%s%s%s%s%s%s", m.Values()...), "abcdefg"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+
+	// test Left()
+	if actualValue, expectedValue := fmt.Sprintf("%d", m.Left()), "1"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+
+	// test Right()
+	if actualValue, expectedValue := fmt.Sprintf("%d", m.Right()), "7"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
 	// key,expectedValue,expectedFound
@@ -88,13 +98,13 @@ func TestTreeMap(t *testing.T) {
 	m.Remove(5)
 
 	// Test Keys()
-	if actualValue, expactedValue := fmt.Sprintf("%d%d%d%d", m.Keys()...), "1234"; actualValue != expactedValue {
-		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	if actualValue, expectedValue := fmt.Sprintf("%d%d%d%d", m.Keys()...), "1234"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
 	// test Values()
-	if actualValue, expactedValue := fmt.Sprintf("%s%s%s%s", m.Values()...), "abcd"; actualValue != expactedValue {
-		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	if actualValue, expectedValue := fmt.Sprintf("%s%s%s%s", m.Values()...), "abcd"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
 	// Test Size()
@@ -130,13 +140,13 @@ func TestTreeMap(t *testing.T) {
 	m.Remove(2)
 
 	// Test Keys()
-	if actualValue, expactedValue := fmt.Sprintf("%s", m.Keys()), "[]"; actualValue != expactedValue {
-		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	if actualValue, expectedValue := fmt.Sprintf("%s", m.Keys()), "[]"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
 	// test Values()
-	if actualValue, expactedValue := fmt.Sprintf("%s", m.Values()), "[]"; actualValue != expactedValue {
-		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	if actualValue, expectedValue := fmt.Sprintf("%s", m.Values()), "[]"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
 	// Test Size()

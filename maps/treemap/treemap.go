@@ -73,6 +73,16 @@ func (m *Map) Get(key interface{}) (value interface{}, found bool) {
 	return m.tree.Get(key)
 }
 
+// Returns the left-most element in the tree map (minimum).
+func (m *Map) Left() (key interface{}) {
+	return m.tree.Left()
+}
+
+// Returns the right-most element in the tree map (maximum).
+func (m *Map) Right() (key interface{}) {
+	return m.tree.Right()
+}
+
 // Remove the element from the map by key.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (m *Map) Remove(key interface{}) {
