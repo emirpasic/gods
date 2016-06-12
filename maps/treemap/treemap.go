@@ -104,6 +104,24 @@ func (m *Map) Clear() {
 	m.tree.Clear()
 }
 
+// Returns the minimum key and its value from the tree map.
+// Returns nil, nil if map is empty.
+func (m *Map) Min() (key interface{}, value interface{}) {
+	if node := m.tree.Left(); node != nil {
+		return node.Key, node.Value
+	}
+	return nil, nil
+}
+
+// Returns the maximum key and its value from the tree map.
+// Returns nil, nil if map is empty.
+func (m *Map) Max() (key interface{}, value interface{}) {
+	if node := m.tree.Right(); node != nil {
+		return node.Key, node.Value
+	}
+	return nil, nil
+}
+
 func (m *Map) String() string {
 	str := "TreeMap\n"
 	str += m.tree.String()

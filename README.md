@@ -400,6 +400,10 @@ func main() {
 	m.Clear()                           // empty
 	m.Empty()                           // true
 	m.Size()                            // 0
+
+    // Other:
+    m.Min() // Returns the minimum key and its value from map.
+    m.Max() // Returns the maximum key and its value from map.
 }
 ```
 
@@ -471,6 +475,12 @@ func main() {
 	tree.Clear() // empty
 	tree.Empty() // true
 	tree.Size()  // 0
+
+    // Other:
+    tree.Left() // gets the left-most (min) node
+    tree.Right() // get the right-most (max) node
+    tree.Floor(1) // get the floor node
+    tree.Ceiling(1) // get the ceiling node
 }
 ```
 
