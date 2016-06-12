@@ -471,6 +471,12 @@ func main() {
 	tree.Clear() // empty
 	tree.Empty() // true
 	tree.Size()  // 0
+
+    // Other:
+    tree.Left() // gets the left-most (min) node
+    tree.Right() // get the right-most (max) node
+    tree.Floor(1) // get the floor node
+    tree.Ceiling(1) // get the ceiling node
 }
 ```
 
