@@ -73,16 +73,6 @@ func (m *Map) Get(key interface{}) (value interface{}, found bool) {
 	return m.tree.Get(key)
 }
 
-// Returns the left-most element in the tree map (minimum).
-func (m *Map) Left() (key interface{}) {
-	return m.tree.Left()
-}
-
-// Returns the right-most element in the tree map (maximum).
-func (m *Map) Right() (key interface{}) {
-	return m.tree.Right()
-}
-
 // Remove the element from the map by key.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (m *Map) Remove(key interface{}) {
@@ -112,6 +102,24 @@ func (m *Map) Values() []interface{} {
 // Removes all elements from the map.
 func (m *Map) Clear() {
 	m.tree.Clear()
+}
+
+// Returns the minimum key and its value from the tree map.
+// Returns nil, nil if map is empty.
+func (m *Map) Min() (key interface{}, value interface{}) {
+	if node := m.tree.Left(); node != nil {
+		return node.Key, node.Value
+	}
+	return nil, nil
+}
+
+// Returns the maximum key and its value from the tree map.
+// Returns nil, nil if map is empty.
+func (m *Map) Max() (key interface{}, value interface{}) {
+	if node := m.tree.Right(); node != nil {
+		return node.Key, node.Value
+	}
+	return nil, nil
 }
 
 func (m *Map) String() string {

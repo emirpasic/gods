@@ -400,6 +400,10 @@ func main() {
 	m.Clear()                           // empty
 	m.Empty()                           // true
 	m.Size()                            // 0
+
+    // Other:
+    m.Min() // Returns the minimum key and its value from map.
+    m.Max() // Returns the maximum key and its value from map.
 }
 ```
 

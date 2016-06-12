@@ -60,14 +60,14 @@ func TestTreeMap(t *testing.T) {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
-	// test Left()
-	if actualValue, expectedValue := fmt.Sprintf("%d", m.Left()), "1"; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	// test Min()
+	if key, value := m.Min(); key != 1 || value != "a" {
+		t.Errorf("Got %v expected %v", key, 1)
 	}
 
-	// test Right()
-	if actualValue, expectedValue := fmt.Sprintf("%d", m.Right()), "7"; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	// test Max()
+	if key, value := m.Max(); key != 7 || value != "g" {
+		t.Errorf("Got %v expected %v", key, 7)
 	}
 
 	// key,expectedValue,expectedFound
@@ -168,6 +168,15 @@ func TestTreeMap(t *testing.T) {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
 
+	// test Min()
+	if key, value := m.Min(); key != nil || value != nil {
+		t.Errorf("Got %v expected %v", key, nil)
+	}
+
+	// test Max()
+	if key, value := m.Max(); key != nil || value != nil {
+		t.Errorf("Got %v expected %v", key, nil)
+	}
 }
 
 func BenchmarkTreeMap(b *testing.B) {
