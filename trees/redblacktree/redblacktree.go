@@ -186,6 +186,24 @@ func (tree *Tree) Values() []interface{} {
 	return values
 }
 
+// Returns the left-most key.
+func (tree *Tree) Left() interface{} {
+	left := tree.leftNode()
+	if left == nil {
+		return nil
+	}
+	return left.Key
+}
+
+// Returns the right-most key.
+func (tree *Tree) Right() interface{} {
+	right := tree.rightNode()
+	if right == nil {
+		return nil
+	}
+	return right.Key
+}
+
 // Removes all nodes from the tree.
 func (tree *Tree) Clear() {
 	tree.Root = nil
@@ -230,6 +248,26 @@ func (tree *Tree) inOrder() []*Node {
 		}
 	}
 	return nodes
+}
+
+func (tree *Tree) leftNode() *Node {
+	var parent *Node
+	current := tree.Root
+	for current != nil {
+		parent = current
+		current = current.Left
+	}
+	return parent
+}
+
+func (tree *Tree) rightNode() *Node {
+	var parent *Node
+	current := tree.Root
+	for current != nil {
+		parent = current
+		current = current.Right
+	}
+	return parent
 }
 
 func output(node *Node, prefix string, isTail bool, str *string) {
