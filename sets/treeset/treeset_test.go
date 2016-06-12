@@ -61,8 +61,8 @@ func TestTreeSet(t *testing.T) {
 
 	// repeat 10 time since map in golang has a random iteration order each time and we want to make sure that the set is ordered
 	for i := 1; i <= 10; i++ {
-		if actualValue, expactedValue := fmt.Sprintf("%d%d%d", set.Values()...), "123"; actualValue != expactedValue {
-			t.Errorf("Got %v expected %v", actualValue, expactedValue)
+		if actualValue, expectedValue := fmt.Sprintf("%d%d%d", set.Values()...), "123"; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
 		}
 	}
 

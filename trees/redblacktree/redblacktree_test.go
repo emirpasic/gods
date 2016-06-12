@@ -51,13 +51,13 @@ func TestRedBlackTree(t *testing.T) {
 	}
 
 	// test Keys()
-	if actualValue, expactedValue := fmt.Sprintf("%d%d%d%d%d%d%d", tree.Keys()...), "1234567"; actualValue != expactedValue {
-		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	if actualValue, expectedValue := fmt.Sprintf("%d%d%d%d%d%d%d", tree.Keys()...), "1234567"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
 	// test Values()
-	if actualValue, expactedValue := fmt.Sprintf("%s%s%s%s%s%s%s", tree.Values()...), "abcdefg"; actualValue != expactedValue {
-		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	if actualValue, expectedValue := fmt.Sprintf("%s%s%s%s%s%s%s", tree.Values()...), "abcdefg"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
 	// key,expectedValue,expectedFound
@@ -88,13 +88,13 @@ func TestRedBlackTree(t *testing.T) {
 	tree.Remove(5)
 
 	// Test Keys()
-	if actualValue, expactedValue := fmt.Sprintf("%d%d%d%d", tree.Keys()...), "1234"; actualValue != expactedValue {
-		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	if actualValue, expectedValue := fmt.Sprintf("%d%d%d%d", tree.Keys()...), "1234"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
 	// test Values()
-	if actualValue, expactedValue := fmt.Sprintf("%s%s%s%s", tree.Values()...), "abcd"; actualValue != expactedValue {
-		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	if actualValue, expectedValue := fmt.Sprintf("%s%s%s%s", tree.Values()...), "abcd"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
 	// Test Size()
@@ -130,13 +130,13 @@ func TestRedBlackTree(t *testing.T) {
 	tree.Remove(2)
 
 	// Test Keys()
-	if actualValue, expactedValue := fmt.Sprintf("%s", tree.Keys()), "[]"; actualValue != expactedValue {
-		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	if actualValue, expectedValue := fmt.Sprintf("%s", tree.Keys()), "[]"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
 	// test Values()
-	if actualValue, expactedValue := fmt.Sprintf("%s", tree.Values()), "[]"; actualValue != expactedValue {
-		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	if actualValue, expectedValue := fmt.Sprintf("%s", tree.Values()), "[]"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
 	// Test Size()

@@ -51,13 +51,13 @@ func TestHashMap(t *testing.T) {
 	}
 
 	// test Keys()
-	if actualValue, expactedValue := m.Keys(), []interface{}{1, 2, 3, 4, 5, 6, 7}; !sameElements(actualValue, expactedValue) {
-		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	if actualValue, expectedValue := m.Keys(), []interface{}{1, 2, 3, 4, 5, 6, 7}; !sameElements(actualValue, expectedValue) {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
 	// test Values()
-	if actualValue, expactedValue := m.Values(), []interface{}{"a", "b", "c", "d", "e", "f", "g"}; !sameElements(actualValue, expactedValue) {
-		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	if actualValue, expectedValue := m.Values(), []interface{}{"a", "b", "c", "d", "e", "f", "g"}; !sameElements(actualValue, expectedValue) {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
 	// key,expectedValue,expectedFound
@@ -88,13 +88,13 @@ func TestHashMap(t *testing.T) {
 	m.Remove(5)
 
 	// test Keys()
-	if actualValue, expactedValue := m.Keys(), []interface{}{1, 2, 3, 4}; !sameElements(actualValue, expactedValue) {
-		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	if actualValue, expectedValue := m.Keys(), []interface{}{1, 2, 3, 4}; !sameElements(actualValue, expectedValue) {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
 	// test Values()
-	if actualValue, expactedValue := m.Values(), []interface{}{"a", "b", "c", "d"}; !sameElements(actualValue, expactedValue) {
-		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	if actualValue, expectedValue := m.Values(), []interface{}{"a", "b", "c", "d"}; !sameElements(actualValue, expectedValue) {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 	// Test Size()
 	if actualValue := m.Size(); actualValue != 4 {
@@ -129,13 +129,13 @@ func TestHashMap(t *testing.T) {
 	m.Remove(2)
 
 	// Test Keys()
-	if actualValue, expactedValue := fmt.Sprintf("%s", m.Keys()), "[]"; actualValue != expactedValue {
-		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	if actualValue, expectedValue := fmt.Sprintf("%s", m.Keys()), "[]"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
 	// test Values()
-	if actualValue, expactedValue := fmt.Sprintf("%s", m.Values()), "[]"; actualValue != expactedValue {
-		t.Errorf("Got %v expected %v", actualValue, expactedValue)
+	if actualValue, expectedValue := fmt.Sprintf("%s", m.Values()), "[]"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
 	// Test Size()

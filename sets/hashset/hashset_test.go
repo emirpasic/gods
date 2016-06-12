@@ -70,8 +70,8 @@ func TestHashSet(t *testing.T) {
 	set.Remove()
 	set.Remove(1)
 
-	if actualValue, expactedValues := fmt.Sprintf("%d%d", set.Values()...), [2]string{"23", "32"}; actualValue != expactedValues[0] && actualValue != expactedValues[1] {
-		t.Errorf("Got %v expected %v", actualValue, expactedValues)
+	if actualValue, expectedValues := fmt.Sprintf("%d%d", set.Values()...), [2]string{"23", "32"}; actualValue != expectedValues[0] && actualValue != expectedValues[1] {
+		t.Errorf("Got %v expected %v", actualValue, expectedValues)
 	}
 
 	if actualValue := set.Contains(1); actualValue != false {
