@@ -26,10 +26,11 @@ import (
 type Interface interface {
 	Get(index int) (interface{}, bool)
 	Remove(index int)
-	Add(elements ...interface{})
-	Contains(elements ...interface{}) bool
+	Add(values ...interface{})
+	Contains(values ...interface{}) bool
 	Sort(comparator utils.Comparator)
 	Swap(index1, index2 int)
+	Insert(index int, values ...interface{})
 
 	containers.Interface
 	// Empty() bool

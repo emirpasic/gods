@@ -57,10 +57,10 @@ func New() *List {
 }
 
 // Appends a value at the end of the list
-func (list *List) Add(elements ...interface{}) {
-	list.growBy(len(elements))
-	for _, element := range elements {
-		list.elements[list.size] = element
+func (list *List) Add(values ...interface{}) {
+	list.growBy(len(values))
+	for _, value := range values {
+		list.elements[list.size] = value
 		list.size += 1
 	}
 }
@@ -94,12 +94,12 @@ func (list *List) Remove(index int) {
 // All elements have to be present in the set for the method to return true.
 // Performance time complexity of n^2.
 // Returns true if no arguments are passed at all, i.e. set is always super-set of empty set.
-func (list *List) Contains(elements ...interface{}) bool {
+func (list *List) Contains(values ...interface{}) bool {
 
-	for _, searchElement := range elements {
+	for _, searchValue := range values {
 		found := false
 		for _, element := range list.elements {
-			if element == searchElement {
+			if element == searchValue {
 				found = true
 				break
 			}
@@ -142,10 +142,36 @@ func (list *List) Sort(comparator utils.Comparator) {
 	utils.Sort(list.elements[:list.size], comparator)
 }
 
-// Swaps values of two elements at the given indices.
+// Swaps the two values at the specified positions.
 func (list *List) Swap(i, j int) {
 	if list.withinRange(i) && list.withinRange(j) {
 		list.elements[i], list.elements[j] = list.elements[j], list.elements[i]
+	}
+}
+
+// Inserts values at specified index position shifting the value at that position (if any) and any subsequent elements to the right.
+// Does not do anything if position is negative or bigger than list's size
+// Note: position equal to list's size is valid, i.e. append.
+func (list *List) Insert(index int, values ...interface{}) {
+
+	if !list.withinRange(index) {
+		// Append
+		if index == list.size {
+			list.Add(values...)
+		}
+		return
+	}
+
+	l := len(values)
+	list.growBy(l)
+	list.size += l
+	// Shift old to right
+	for i := list.size - 1; i >= index+l; i-- {
+		list.elements[i] = list.elements[i-l]
+	}
+	// Insert new
+	for i, value := range values {
+		list.elements[index+i] = value
 	}
 }
 
@@ -161,7 +187,7 @@ func (list *List) String() string {
 
 // Check that the index is withing bounds of the list
 func (list *List) withinRange(index int) bool {
-	return index >= 0 && index < list.size && list.size != 0
+	return index >= 0 && index < list.size
 }
 
 func (list *List) resize(cap int) {

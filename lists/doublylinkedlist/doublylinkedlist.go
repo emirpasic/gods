@@ -244,6 +244,60 @@ func (list *List) Swap(i, j int) {
 	}
 }
 
+// Inserts values at specified index position shifting the value at that position (if any) and any subsequent elements to the right.
+// Does not do anything if position is negative or bigger than list's size
+// Note: position equal to list's size is valid, i.e. append.
+func (list *List) Insert(index int, values ...interface{}) {
+
+	if !list.withinRange(index) {
+		// Append
+		if index == list.size {
+			list.Add(values...)
+		}
+		fmt.Println(list.Values())
+		return
+	}
+
+	list.size += len(values)
+
+	var beforeElement *element
+	var foundElement *element
+	// determine traversal direction, last to first or first to last
+	if list.size-index < index {
+		foundElement = list.last
+		for e := list.size - 1; e != index; e, foundElement = e-1, foundElement.prev {
+			beforeElement = foundElement.prev
+		}
+	} else {
+		foundElement = list.first
+		for e := 0; e != index; e, foundElement = e+1, foundElement.next {
+			beforeElement = foundElement
+		}
+	}
+
+	if foundElement == list.first {
+		oldNextElement := list.first
+		for i, value := range values {
+			newElement := &element{value: value}
+			if i == 0 {
+				list.first = newElement
+			} else {
+				beforeElement.next = newElement
+			}
+			beforeElement = newElement
+		}
+		beforeElement.next = oldNextElement
+	} else {
+		oldNextElement := beforeElement.next
+		for _, value := range values {
+			newElement := &element{value: value}
+			beforeElement.next = newElement
+			beforeElement = newElement
+		}
+		beforeElement.next = oldNextElement
+	}
+}
+
 func (list *List) String() string {
 	str := "DoublyLinkedList\n"
 	values := []string{}
@@ -256,5 +310,5 @@ func (list *List) String() string {
 
 // Check that the index is withing bounds of the list
 func (list *List) withinRange(index int) bool {
-	return index >= 0 && index < list.size && list.size != 0
+	return index >= 0 && index < list.size
 }

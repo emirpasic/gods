@@ -126,7 +126,7 @@ func main() {
 
 ####Lists
 
-A list is a data structure that can store elements and may have repeated values. There is no ordering in a list. The user can access and remove an element by the index position.
+A list is a data structure that can store values and may have repeated values. There is no ordering in a list. The user can access and remove a value by the index position.
 
 All lists implement the list interface with the following methods:
 
@@ -134,10 +134,11 @@ All lists implement the list interface with the following methods:
 type Interface interface {
     Get(index int) (interface{}, bool)
 	Remove(index int)
-	Add(elements ...interface{})
-	Contains(elements ...interface{}) bool
+	Add(values ...interface{})
+	Contains(values ...interface{}) bool
 	Sort(comparator utils.Comparator)
     Swap(index1, index2 int)
+   	Insert(index int, values ...interface{})
 
 	containers.Interface
 	// Empty() bool
@@ -180,12 +181,14 @@ func main() {
 	_ = list.Size()                       // 0
 	list.Add("a")                         // ["a"]
 	list.Clear()                          // []
+    list.Insert(0, "b")                   // ["b"]
+    list.Insert(0, "a")                   // ["a","b"]
 }
 ```
 
 #####SinglyLinkedList
 
-This structure implements the _List_ interface and is a linked data structure where each element points to the next in the list.
+This structure implements the _List_ interface and is a linked data structure where each value points to the next in the list.
 
 Direct access method _Get(index)_ and _Remove()_ are of linear performance. _Append_ and _Prepend_ are of constant time performance. Checking with _Contains()_ is of quadratic complexity.
 
@@ -215,12 +218,14 @@ func main() {
 	_ = list.Size()                       // 0
 	list.Add("a")                         // ["a"]
 	list.Clear()                          // []
+    list.Insert(0, "b")                   // ["b"]
+    list.Insert(0, "a")                   // ["a","b"]
 }
 ```
 
 #####DoublyLinkedList
 
-This structure implements the _List_ interface and is a linked data structure where each element points to the next and previous element in the list.
+This structure implements the _List_ interface and is a linked data structure where each value points to the next and previous element in the list.
 
 Direct access method _Get(index)_ and _Remove()_ are of linear performance. _Append_ and _Prepend_ are of constant time performance. Checking with _Contains()_ is of quadratic complexity.
 
@@ -250,6 +255,8 @@ func main() {
 	_ = list.Size()                       // 0
 	list.Add("a")                         // ["a"]
 	list.Clear()                          // []
+    list.Insert(0, "b")                   // ["b"]
+    list.Insert(0, "a")                   // ["a","b"]
 }
 ```
 

@@ -27,6 +27,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package arraylist
 
 import (
+	"fmt"
 	"github.com/emirpasic/gods/utils"
 	"testing"
 )
@@ -118,6 +119,19 @@ func TestArrayList(t *testing.T) {
 
 	if actualValue := list.Empty(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+
+	list.Insert(0, "h")
+	list.Insert(0, "e")
+	list.Insert(1, "f")
+	list.Insert(2, "g")
+	list.Insert(4, "i")
+	list.Insert(0, "a", "b")
+	list.Insert(list.Size(), "j", "k")
+	list.Insert(2, "c", "d")
+
+	if actualValue, expectedValue := fmt.Sprintf("%s%s%s%s%s%s%s%s%s%s%s", list.Values()...), "abcdefghijk"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
 }
