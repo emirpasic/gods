@@ -32,6 +32,8 @@ package arraylist
 
 import (
 	"fmt"
+	"github.com/emirpasic/gods/containers"
+	"github.com/emirpasic/gods/enumerable"
 	"github.com/emirpasic/gods/lists"
 	"github.com/emirpasic/gods/utils"
 	"strings"
@@ -39,6 +41,7 @@ import (
 
 func assertInterfaceImplementation() {
 	var _ lists.Interface = (*List)(nil)
+	var _ enumerable.Interface = (*List)(nil)
 }
 
 type List struct {
@@ -173,6 +176,57 @@ func (list *List) Insert(index int, values ...interface{}) {
 	for i, value := range values {
 		list.elements[index+i] = value
 	}
+}
+
+func (list *List) Each(f func(index interface{}, value interface{})) {
+	for i := 0; i < list.size; i++ {
+		f(i, list.elements[i])
+	}
+}
+
+func (list *List) Map(f func(index interface{}, value interface{}) interface{}) containers.Interface {
+	newList := &List{}
+	for i := 0; i < list.size; i++ {
+		newList.Add(f(i, list.elements[i]))
+	}
+	return newList
+}
+
+func (list *List) Select(f func(index interface{}, value interface{}) bool) containers.Interface {
+	newList := &List{}
+	for i := 0; i < list.size; i++ {
+		if f(i, list.elements[i]) {
+			newList.Add(list.elements[i])
+		}
+	}
+	return newList
+}
+
+func (list *List) Any(f func(index interface{}, value interface{}) bool) bool {
+	for i := 0; i < list.size; i++ {
+		if f(i, list.elements[i]) {
+			return true
+		}
+	}
+	return false
+}
+
+func (list *List) All(f func(index interface{}, value interface{}) bool) bool {
+	for i := 0; i < list.size; i++ {
+		if !f(i, list.elements[i]) {
+			return false
+		}
+	}
+	return true
+}
+
+func (list *List) Find(f func(index interface{}, value interface{}) bool) (index interface{}, value interface{}) {
+	for i := 0; i < list.size; i++ {
+		if f(i, list.elements[i]) {
+			return i, list.elements[i]
+		}
+	}
+	return nil, nil
 }
 
 func (list *List) String() string {
