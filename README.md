@@ -138,6 +138,7 @@ type Interface interface {
 	Contains(elements ...interface{}) bool
 	Sort(comparator utils.Comparator)
     Swap(index1, index2 int)
+   	Insert(index int, elements ...interface{})
 
 	containers.Interface
 	// Empty() bool
@@ -180,6 +181,8 @@ func main() {
 	_ = list.Size()                       // 0
 	list.Add("a")                         // ["a"]
 	list.Clear()                          // []
+    list.Insert(0, "b")                   // ["b"]
+    list.Insert(0, "a")                   // ["a","b"]
 }
 ```
 

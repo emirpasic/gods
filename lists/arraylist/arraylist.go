@@ -149,6 +149,32 @@ func (list *List) Swap(i, j int) {
 	}
 }
 
+// Inserts values at specified index position shifting the value at that position (if any) and any subsequent elements to the right.
+// Does not do anything if position is negative or bigger than list's size
+// Note: position equal to list's size is valid, i.e. append.
+func (list *List) Insert(index int, elements ...interface{}) {
+
+	if !list.withinRange(index) {
+		// Append
+		if index == list.size {
+			list.Add(elements...)
+		}
+		return
+	}
+
+	l := len(elements)
+	list.growBy(l)
+	list.size += l
+	// Shift old to right
+	for i := list.size - 1; i >= index+l; i-- {
+		list.elements[i] = list.elements[i-l]
+	}
+	// Insert new
+	for i, element := range elements {
+		list.elements[index+i] = element
+	}
+}
+
 func (list *List) String() string {
 	str := "ArrayList\n"
 	values := []string{}
@@ -161,7 +187,7 @@ func (list *List) String() string {
 
 // Check that the index is withing bounds of the list
 func (list *List) withinRange(index int) bool {
-	return index >= 0 && index < list.size && list.size != 0
+	return index >= 0 && index < list.size
 }
 
 func (list *List) resize(cap int) {
