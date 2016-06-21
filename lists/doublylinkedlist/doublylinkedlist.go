@@ -310,5 +310,5 @@ func (list *List) String() string {
 
 // Check that the index is withing bounds of the list
 func (list *List) withinRange(index int) bool {
-	return index >= 0 && index < list.size && list.size != 0
+	return index >= 0 && index < list.size
 }
