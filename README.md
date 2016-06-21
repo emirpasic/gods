@@ -255,6 +255,8 @@ func main() {
 	_ = list.Size()                       // 0
 	list.Add("a")                         // ["a"]
 	list.Clear()                          // []
+    list.Insert(0, "b")                   // ["b"]
+    list.Insert(0, "a")                   // ["a","b"]
 }
 ```
 
