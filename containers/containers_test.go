@@ -34,28 +34,28 @@ import (
 )
 
 // For testing purposes
-type Container struct {
+type ContainerTest struct {
 	values []interface{}
 }
 
-func (container Container) Empty() bool {
+func (container ContainerTest) Empty() bool {
 	return len(container.values) == 0
 }
 
-func (container Container) Size() int {
+func (container ContainerTest) Size() int {
 	return len(container.values)
 }
 
-func (container Container) Clear() {
+func (container ContainerTest) Clear() {
 	container.values = []interface{}{}
 }
 
-func (container Container) Values() []interface{} {
+func (container ContainerTest) Values() []interface{} {
 	return container.values
 }
 
 func TestGetSortedValuesInts(t *testing.T) {
-	container := Container{}
+	container := ContainerTest{}
 	container.values = []interface{}{5, 1, 3, 2, 4}
 	values := GetSortedValues(container, utils.IntComparator)
 	for i := 1; i < container.Size(); i++ {
@@ -66,7 +66,7 @@ func TestGetSortedValuesInts(t *testing.T) {
 }
 
 func TestGetSortedValuesStrings(t *testing.T) {
-	container := Container{}
+	container := ContainerTest{}
 	container.values = []interface{}{"g", "a", "d", "e", "f", "c", "b"}
 	values := GetSortedValues(container, utils.StringComparator)
 	for i := 1; i < container.Size(); i++ {

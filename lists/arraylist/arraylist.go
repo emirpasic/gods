@@ -55,19 +55,20 @@ type Iterator struct {
 }
 
 func (list *List) Iterator() Iterator {
-	return Iterator{list: list, current: 0}
+	return Iterator{list: list, current: -1}
 }
 
 func (iterator *Iterator) Next() bool {
-	return false
+	iterator.current += 1
+	return iterator.list.withinRange(iterator.current)
 }
 
 func (iterator *Iterator) Value() interface{} {
-	return nil
+	return iterator.list.elements[iterator.current]
 }
 
 func (iterator *Iterator) Index() interface{} {
-	return nil
+	return iterator.list.elements[iterator.current]
 }
 
 const (
@@ -108,7 +109,7 @@ func (list *List) Remove(index int) {
 	}
 
 	list.elements[index] = nil                                    // cleanup reference
-	copy(list.elements[index:], list.elements[index+1:list.size]) // shift to the left by one (slow operation, need ways to optimize this)
+	copy(list.elements[index:], list.elements[index + 1:list.size]) // shift to the left by one (slow operation, need ways to optimize this)
 	list.size -= 1
 
 	list.shrink()
@@ -190,12 +191,12 @@ func (list *List) Insert(index int, values ...interface{}) {
 	list.growBy(l)
 	list.size += l
 	// Shift old to right
-	for i := list.size - 1; i >= index+l; i-- {
-		list.elements[i] = list.elements[i-l]
+	for i := list.size - 1; i >= index + l; i-- {
+		list.elements[i] = list.elements[i - l]
 	}
 	// Insert new
 	for i, value := range values {
-		list.elements[index+i] = value
+		list.elements[index + i] = value
 	}
 }
 
@@ -275,8 +276,8 @@ func (list *List) resize(cap int) {
 func (list *List) growBy(n int) {
 	// When capacity is reached, grow by a factor of GROWTH_FACTOR and add number of elements
 	currentCapacity := cap(list.elements)
-	if list.size+n >= currentCapacity {
-		newCapacity := int(GROWTH_FACTOR * float32(currentCapacity+n))
+	if list.size + n >= currentCapacity {
+		newCapacity := int(GROWTH_FACTOR * float32(currentCapacity + n))
 		list.resize(newCapacity)
 	}
 }
@@ -288,7 +289,7 @@ func (list *List) shrink() {
 	}
 	// Shrink when size is at SHRINK_FACTOR * capacity
 	currentCapacity := cap(list.elements)
-	if list.size <= int(float32(currentCapacity)*SHRINK_FACTOR) {
+	if list.size <= int(float32(currentCapacity) * SHRINK_FACTOR) {
 		list.resize(list.size)
 	}
 }
