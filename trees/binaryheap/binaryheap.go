@@ -33,6 +33,7 @@ package binaryheap
 
 import (
 	"fmt"
+	"github.com/emirpasic/gods/containers"
 	"github.com/emirpasic/gods/lists/arraylist"
 	"github.com/emirpasic/gods/trees"
 	"github.com/emirpasic/gods/utils"
@@ -41,6 +42,7 @@ import (
 
 func assertInterfaceImplementation() {
 	var _ trees.Tree = (*Heap)(nil)
+	var _ containers.Iterator = (*Iterator)(nil)
 }
 
 type Heap struct {
@@ -109,6 +111,29 @@ func (heap *Heap) Values() []interface{} {
 	return heap.list.Values()
 }
 
+type Iterator struct {
+	heap  *Heap
+	index int
+}
+
+func (heap *Heap) Iterator() Iterator {
+	return Iterator{heap: heap, index: -1}
+}
+
+func (iterator *Iterator) Next() bool {
+	iterator.index += 1
+	return iterator.heap.withinRange(iterator.index)
+}
+
+func (iterator *Iterator) Value() interface{} {
+	value, _ := iterator.heap.list.Get(iterator.index)
+	return value
+}
+
+func (iterator *Iterator) Index() interface{} {
+	return iterator.index
+}
+
 func (heap *Heap) String() string {
 	str := "BinaryHeap\n"
 	values := []string{}
@@ -157,4 +182,9 @@ func (heap *Heap) bubbleUp() {
 		heap.list.Swap(index, parentIndex)
 		index = parentIndex
 	}
+}
+
+// Check that the index is withing bounds of the list
+func (heap *Heap) withinRange(index int) bool {
+	return index >= 0 && index < heap.list.Size()
 }

@@ -103,7 +103,50 @@ func TestBinaryHeap(t *testing.T) {
 		}
 		prev = curr
 	}
+}
 
+func TestBinaryHeapIterator(t *testing.T) {
+	heap := NewWithIntComparator()
+
+	if actualValue := heap.Empty(); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+
+	// insertions
+	heap.Push(3)
+	// [3]
+	heap.Push(2)
+	// [2,3]
+	heap.Push(1)
+	// [1,3,2](2 swapped with 1, hence last)
+
+	// Iterator
+	it := heap.Iterator()
+	for it.Next() {
+		index := it.Index()
+		value := it.Value()
+		switch index {
+		case 0:
+			if actualValue, expectedValue := value, 1; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case 1:
+			if actualValue, expectedValue := value, 3; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case 2:
+			if actualValue, expectedValue := value, 2; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		default:
+			t.Errorf("Too many")
+		}
+	}
+	heap.Clear()
+	it = heap.Iterator()
+	for it.Next() {
+		t.Errorf("Shouldn't iterate on empty stack")
+	}
 }
 
 func BenchmarkBinaryHeap(b *testing.B) {
