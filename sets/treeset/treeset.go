@@ -33,6 +33,7 @@ import (
 
 func assertInterfaceImplementation() {
 	var _ sets.Set = (*Set)(nil)
+	var _ containers.Enumerable = (*Set)(nil)
 	var _ containers.IteratorWithIndex = (*Iterator)(nil)
 }
 
@@ -71,7 +72,7 @@ func (set *Set) Remove(items ...interface{}) {
 	}
 }
 
-// Check wether items (one or more) are present in the set.
+// Check weather items (one or more) are present in the set.
 // All items have to be present in the set for the method to return true.
 // Returns true if no arguments are passed at all, i.e. set is always superset of empty set.
 func (set *Set) Contains(items ...interface{}) bool {
@@ -123,6 +124,63 @@ func (iterator *Iterator) Value() interface{} {
 
 func (iterator *Iterator) Index() int {
 	return iterator.index
+}
+
+func (set *Set) Each(f func(index interface{}, value interface{})) {
+	iterator := set.Iterator()
+	for iterator.Next() {
+		f(iterator.Index(), iterator.Value())
+	}
+}
+
+func (set *Set) Map(f func(index interface{}, value interface{}) interface{}) containers.Container {
+	newSet := &Set{tree: rbt.NewWith(set.tree.Comparator)}
+	iterator := set.Iterator()
+	for iterator.Next() {
+		newSet.Add(f(iterator.Index(), iterator.Value()))
+	}
+	return newSet
+}
+
+func (set *Set) Select(f func(index interface{}, value interface{}) bool) containers.Container {
+	newSet := &Set{tree: rbt.NewWith(set.tree.Comparator)}
+	iterator := set.Iterator()
+	for iterator.Next() {
+		if f(iterator.Index(), iterator.Value()) {
+			newSet.Add(iterator.Value())
+		}
+	}
+	return newSet
+}
+
+func (set *Set) Any(f func(index interface{}, value interface{}) bool) bool {
+	iterator := set.Iterator()
+	for iterator.Next() {
+		if f(iterator.Index(), iterator.Value()) {
+			return true
+		}
+	}
+	return false
+}
+
+func (set *Set) All(f func(index interface{}, value interface{}) bool) bool {
+	iterator := set.Iterator()
+	for iterator.Next() {
+		if !f(iterator.Index(), iterator.Value()) {
+			return false
+		}
+	}
+	return true
+}
+
+func (set *Set) Find(f func(index interface{}, value interface{}) bool) (index interface{}, value interface{}) {
+	iterator := set.Iterator()
+	for iterator.Next() {
+		if f(iterator.Index(), iterator.Value()) {
+			return iterator.Index(), iterator.Value()
+		}
+	}
+	return nil, nil
 }
 
 func (set *Set) String() string {
