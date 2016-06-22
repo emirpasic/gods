@@ -254,7 +254,6 @@ func (list *List) Insert(index int, values ...interface{}) {
 		if index == list.size {
 			list.Add(values...)
 		}
-		fmt.Println(list.Values())
 		return
 	}
 
