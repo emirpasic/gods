@@ -33,6 +33,7 @@ package redblacktree
 
 import (
 	"fmt"
+	"github.com/emirpasic/gods/containers"
 	"github.com/emirpasic/gods/stacks/linkedliststack"
 	"github.com/emirpasic/gods/trees"
 	"github.com/emirpasic/gods/utils"
@@ -40,6 +41,7 @@ import (
 
 func assertInterfaceImplementation() {
 	var _ trees.Tree = (*Tree)(nil)
+	var _ containers.Iterator = (*Iterator)(nil)
 }
 
 type color bool
@@ -270,6 +272,47 @@ func (tree *Tree) Ceiling(key interface{}) (ceiling *Node, found bool) {
 func (tree *Tree) Clear() {
 	tree.Root = nil
 	tree.size = 0
+}
+
+type Iterator struct {
+	tree *Tree
+	left *Node
+}
+
+func (tree *Tree) Iterator() Iterator {
+	return Iterator{tree: tree, left: nil}
+}
+
+func (iterator *Iterator) Next() bool {
+	if iterator.left == nil {
+		iterator.left = iterator.tree.Left()
+		return iterator.left != nil
+	}
+	if iterator.left.Right != nil {
+		iterator.left = iterator.left.Right
+		for iterator.left.Left != nil {
+			iterator.left = iterator.left.Left
+		}
+		return true
+	}
+	if iterator.left.Parent != nil {
+		key := iterator.left.Key
+		for iterator.left.Parent != nil {
+			iterator.left = iterator.left.Parent
+			if iterator.tree.Comparator(key, iterator.left.Key) <= 0 {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func (iterator *Iterator) Value() interface{} {
+	return iterator.left.Value
+}
+
+func (iterator *Iterator) Index() interface{} {
+	return iterator.left.Key
 }
 
 func (tree *Tree) String() string {
