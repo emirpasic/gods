@@ -33,7 +33,7 @@ Implementation of various data structures in Go.
 All data structures implement the container interface with the following methods:
 
 ```go
-type Interface interface {
+type Container interface {
 	Empty() bool
 	Size() int
 	Clear()
@@ -47,7 +47,7 @@ Container specific operations:
 // Returns sorted container's elements with respect to the passed comparator.
 // Does not effect the ordering of elements within the container.
 // Uses timsort.
-func GetSortedValues(container Interface, comparator utils.Comparator) []interface{} {
+func GetSortedValues(container Container, comparator utils.Comparator) []interface{} {
 ```
 
 ####Sets
@@ -57,12 +57,12 @@ A set is a data structure that can store elements and no repeated values. It is 
 All sets implement the set interface with the following methods:
 
 ```go
-type Interface interface {
+type Set interface {
     Add(elements ...interface{})
 	Remove(elements ...interface{})
 	Contains(elements ...interface{}) bool
 
-	containers.Interface
+	containers.Container
 	// Empty() bool
 	// Size() int
 	// Clear()
@@ -131,7 +131,7 @@ A list is a data structure that can store values and may have repeated values. T
 All lists implement the list interface with the following methods:
 
 ```go
-type Interface interface {
+type List interface {
     Get(index int) (interface{}, bool)
 	Remove(index int)
 	Add(values ...interface{})
@@ -140,7 +140,7 @@ type Interface interface {
     Swap(index1, index2 int)
    	Insert(index int, values ...interface{})
 
-	containers.Interface
+	containers.Container
 	// Empty() bool
 	// Size() int
 	// Clear()
@@ -267,12 +267,12 @@ The stack interface represents a last-in-first-out (LIFO) collection of objects.
 
 All stacks implement the stack interface with the following methods:
 ```go
-type Interface interface {
+type Stack interface {
 	Push(value interface{})
 	Pop() (value interface{}, ok bool)
 	Peek() (value interface{}, ok bool)
 
-	containers.Interface
+	containers.Container
 	// Empty() bool
 	// Size() int
 	// Clear()
@@ -340,13 +340,13 @@ Structure that maps keys to values. A map cannot contain duplicate keys and each
 
 All maps implement the map interface with the following methods:
 ```go
-type Interface interface {
+type Map interface {
     Put(key interface{}, value interface{})
 	Get(key interface{}) (value interface{}, found bool)
 	Remove(key interface{})
 	Keys() []interface{}
 
-	containers.Interface
+	containers.Container
 	// Empty() bool
 	// Size() int
 	// Clear()
@@ -420,8 +420,8 @@ A tree is a widely used data data structure that simulates a hierarchical tree s
 
 All trees implement the tree interface with the following methods:
 ```go
-type Interface interface {
-	containers.Interface
+type Tree interface {
+	containers.Container
 	// Empty() bool
 	// Size() int
 	// Clear()
