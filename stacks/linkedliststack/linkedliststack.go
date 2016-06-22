@@ -41,7 +41,7 @@ import (
 
 func assertInterfaceImplementation() {
 	var _ stacks.Stack = (*Stack)(nil)
-	var _ containers.Iterator = (*Iterator)(nil)
+	var _ containers.IteratorWithIndex = (*Iterator)(nil)
 }
 
 type Stack struct {
@@ -111,7 +111,7 @@ func (iterator *Iterator) Value() interface{} {
 	return value
 }
 
-func (iterator *Iterator) Index() interface{} {
+func (iterator *Iterator) Index() int {
 	return iterator.index
 }
 

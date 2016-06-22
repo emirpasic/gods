@@ -41,7 +41,7 @@ import (
 func assertInterfaceImplementation() {
 	var _ lists.List = (*List)(nil)
 	var _ containers.Enumerable = (*List)(nil)
-	var _ containers.Iterator = (*Iterator)(nil)
+	var _ containers.IteratorWithIndex = (*Iterator)(nil)
 }
 
 type List struct {
@@ -196,7 +196,7 @@ func (iterator *Iterator) Value() interface{} {
 	return iterator.list.elements[iterator.index]
 }
 
-func (iterator *Iterator) Index() interface{} {
+func (iterator *Iterator) Index() int {
 	return iterator.index
 }
 

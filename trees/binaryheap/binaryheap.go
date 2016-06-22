@@ -42,7 +42,7 @@ import (
 
 func assertInterfaceImplementation() {
 	var _ trees.Tree = (*Heap)(nil)
-	var _ containers.Iterator = (*Iterator)(nil)
+	var _ containers.IteratorWithIndex = (*Iterator)(nil)
 }
 
 type Heap struct {
@@ -130,7 +130,7 @@ func (iterator *Iterator) Value() interface{} {
 	return value
 }
 
-func (iterator *Iterator) Index() interface{} {
+func (iterator *Iterator) Index() int {
 	return iterator.index
 }
 

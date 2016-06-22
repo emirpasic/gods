@@ -234,7 +234,7 @@ func TestRedBlackTreeIterator(t *testing.T) {
 	count := 0
 	for it.Next() {
 		count += 1
-		index := it.Index()
+		index := it.Key()
 		switch index {
 		case count:
 			if actualValue, expectedValue := index, count; actualValue != expectedValue {
@@ -259,7 +259,7 @@ func TestRedBlackTreeIterator(t *testing.T) {
 	count = 0
 	for it.Next() {
 		count += 1
-		index := it.Index()
+		index := it.Key()
 		switch index {
 		case count:
 			if actualValue, expectedValue := index, count; actualValue != expectedValue {
@@ -282,7 +282,7 @@ func TestRedBlackTreeIterator(t *testing.T) {
 	count = 0
 	for it.Next() {
 		count += 1
-		index := it.Index()
+		index := it.Key()
 		switch index {
 		case count:
 			if actualValue, expectedValue := index, count; actualValue != expectedValue {

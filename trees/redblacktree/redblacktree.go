@@ -41,7 +41,7 @@ import (
 
 func assertInterfaceImplementation() {
 	var _ trees.Tree = (*Tree)(nil)
-	var _ containers.Iterator = (*Iterator)(nil)
+	var _ containers.IteratorWithKey = (*Iterator)(nil)
 }
 
 type color bool
@@ -311,7 +311,7 @@ func (iterator *Iterator) Value() interface{} {
 	return iterator.left.Value
 }
 
-func (iterator *Iterator) Index() interface{} {
+func (iterator *Iterator) Key() interface{} {
 	return iterator.left.Key
 }
 
