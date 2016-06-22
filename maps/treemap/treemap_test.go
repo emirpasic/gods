@@ -179,6 +179,34 @@ func TestTreeMap(t *testing.T) {
 	}
 }
 
+func TestTreeMapIterator(t *testing.T) {
+	m := NewWithStringComparator()
+	m.Put("c", 3)
+	m.Put("a", 1)
+	m.Put("b", 2)
+
+	// Iterator
+	it := m.Iterator()
+	count := 0
+	for it.Next() {
+		count += 1
+		value := it.Value()
+		switch value {
+		case count:
+			if actualValue, expectedValue := value, count; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		default:
+			t.Errorf("Too many")
+		}
+	}
+	m.Clear()
+	it = m.Iterator()
+	for it.Next() {
+		t.Errorf("Shouldn't iterate on empty map")
+	}
+}
+
 func BenchmarkTreeMap(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		m := NewWithIntComparator()

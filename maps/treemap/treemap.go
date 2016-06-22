@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package treemap
 
 import (
+	"github.com/emirpasic/gods/containers"
 	"github.com/emirpasic/gods/maps"
 	rbt "github.com/emirpasic/gods/trees/redblacktree"
 	"github.com/emirpasic/gods/utils"
@@ -39,6 +40,7 @@ import (
 
 func assertInterfaceImplementation() {
 	var _ maps.Map = (*Map)(nil)
+	var _ containers.IteratorWithKey = (*Iterator)(nil)
 }
 
 type Map struct {
@@ -120,6 +122,26 @@ func (m *Map) Max() (key interface{}, value interface{}) {
 		return node.Key, node.Value
 	}
 	return nil, nil
+}
+
+type Iterator struct {
+	iterator rbt.Iterator
+}
+
+func (m *Map) Iterator() Iterator {
+	return Iterator{iterator: m.tree.Iterator()}
+}
+
+func (iterator *Iterator) Next() bool {
+	return iterator.iterator.Next()
+}
+
+func (iterator *Iterator) Value() interface{} {
+	return iterator.iterator.Value()
+}
+
+func (iterator *Iterator) Key() interface{} {
+	return iterator.iterator.Key()
 }
 
 func (m *Map) String() string {
