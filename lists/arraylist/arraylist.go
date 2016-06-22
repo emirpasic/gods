@@ -40,7 +40,7 @@ import (
 
 func assertInterfaceImplementation() {
 	var _ lists.List = (*List)(nil)
-	var _ containers.Enumerable = (*List)(nil)
+	var _ containers.EnumerableWithIndex = (*List)(nil)
 	var _ containers.IteratorWithIndex = (*Iterator)(nil)
 }
 
@@ -200,14 +200,14 @@ func (iterator *Iterator) Index() int {
 	return iterator.index
 }
 
-func (list *List) Each(f func(index interface{}, value interface{})) {
+func (list *List) Each(f func(index int, value interface{})) {
 	iterator := list.Iterator()
 	for iterator.Next() {
 		f(iterator.Index(), iterator.Value())
 	}
 }
 
-func (list *List) Map(f func(index interface{}, value interface{}) interface{}) containers.Container {
+func (list *List) Map(f func(index int, value interface{}) interface{}) containers.Container {
 	newList := &List{}
 	iterator := list.Iterator()
 	for iterator.Next() {
@@ -216,7 +216,7 @@ func (list *List) Map(f func(index interface{}, value interface{}) interface{}) 
 	return newList
 }
 
-func (list *List) Select(f func(index interface{}, value interface{}) bool) containers.Container {
+func (list *List) Select(f func(index int, value interface{}) bool) containers.Container {
 	newList := &List{}
 	iterator := list.Iterator()
 	for iterator.Next() {
@@ -227,7 +227,7 @@ func (list *List) Select(f func(index interface{}, value interface{}) bool) cont
 	return newList
 }
 
-func (list *List) Any(f func(index interface{}, value interface{}) bool) bool {
+func (list *List) Any(f func(index int, value interface{}) bool) bool {
 	iterator := list.Iterator()
 	for iterator.Next() {
 		if f(iterator.Index(), iterator.Value()) {
@@ -237,7 +237,7 @@ func (list *List) Any(f func(index interface{}, value interface{}) bool) bool {
 	return false
 }
 
-func (list *List) All(f func(index interface{}, value interface{}) bool) bool {
+func (list *List) All(f func(index int, value interface{}) bool) bool {
 	iterator := list.Iterator()
 	for iterator.Next() {
 		if !f(iterator.Index(), iterator.Value()) {
@@ -247,14 +247,14 @@ func (list *List) All(f func(index interface{}, value interface{}) bool) bool {
 	return true
 }
 
-func (list *List) Find(f func(index interface{}, value interface{}) bool) (index interface{}, value interface{}) {
+func (list *List) Find(f func(index int, value interface{}) bool) (index int, value interface{}) {
 	iterator := list.Iterator()
 	for iterator.Next() {
 		if f(iterator.Index(), iterator.Value()) {
 			return iterator.Index(), iterator.Value()
 		}
 	}
-	return nil, nil
+	return -1, nil
 }
 
 func (list *List) String() string {

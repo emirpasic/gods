@@ -140,7 +140,7 @@ func TestArrayListEnumerableAndIterator(t *testing.T) {
 	list.Add("a", "b", "c")
 
 	// Each
-	list.Each(func(index interface{}, value interface{}) {
+	list.Each(func(index int, value interface{}) {
 		switch index {
 		case 0:
 			if actualValue, expectedValue := value, "a"; actualValue != expectedValue {
@@ -160,7 +160,7 @@ func TestArrayListEnumerableAndIterator(t *testing.T) {
 	})
 
 	// Map
-	mappedList := list.Map(func(index interface{}, value interface{}) interface{} {
+	mappedList := list.Map(func(index int, value interface{}) interface{} {
 		return "mapped: " + value.(string)
 	}).(*List)
 	if actualValue, _ := mappedList.Get(0); actualValue != "mapped: a" {
@@ -177,7 +177,7 @@ func TestArrayListEnumerableAndIterator(t *testing.T) {
 	}
 
 	// Select
-	selectedList := list.Select(func(index interface{}, value interface{}) bool {
+	selectedList := list.Select(func(index int, value interface{}) bool {
 		return value.(string) >= "a" && value.(string) <= "b"
 	}).(*List)
 	if actualValue, _ := selectedList.Get(0); actualValue != "a" {
@@ -191,13 +191,13 @@ func TestArrayListEnumerableAndIterator(t *testing.T) {
 	}
 
 	// Any
-	any := list.Any(func(index interface{}, value interface{}) bool {
+	any := list.Any(func(index int, value interface{}) bool {
 		return value.(string) == "c"
 	})
 	if any != true {
 		t.Errorf("Got %v expected %v", any, true)
 	}
-	any = list.Any(func(index interface{}, value interface{}) bool {
+	any = list.Any(func(index int, value interface{}) bool {
 		return value.(string) == "x"
 	})
 	if any != false {
@@ -205,13 +205,13 @@ func TestArrayListEnumerableAndIterator(t *testing.T) {
 	}
 
 	// All
-	all := list.All(func(index interface{}, value interface{}) bool {
+	all := list.All(func(index int, value interface{}) bool {
 		return value.(string) >= "a" && value.(string) <= "c"
 	})
 	if all != true {
 		t.Errorf("Got %v expected %v", all, true)
 	}
-	all = list.All(func(index interface{}, value interface{}) bool {
+	all = list.All(func(index int, value interface{}) bool {
 		return value.(string) >= "a" && value.(string) <= "b"
 	})
 	if all != false {
@@ -219,16 +219,16 @@ func TestArrayListEnumerableAndIterator(t *testing.T) {
 	}
 
 	// Find
-	foundIndex, foundValue := list.Find(func(index interface{}, value interface{}) bool {
+	foundIndex, foundValue := list.Find(func(index int, value interface{}) bool {
 		return value.(string) == "c"
 	})
 	if foundValue != "c" || foundIndex != 2 {
 		t.Errorf("Got %v at %v expected %v at %v", foundValue, foundIndex, "c", 2)
 	}
-	foundIndex, foundValue = list.Find(func(index interface{}, value interface{}) bool {
+	foundIndex, foundValue = list.Find(func(index int, value interface{}) bool {
 		return value.(string) == "x"
 	})
-	if foundValue != nil || foundIndex != nil {
+	if foundValue != nil || foundIndex != -1 {
 		t.Errorf("Got %v at %v expected %v at %v", foundValue, foundIndex, nil, nil)
 	}
 

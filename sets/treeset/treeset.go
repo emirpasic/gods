@@ -33,7 +33,7 @@ import (
 
 func assertInterfaceImplementation() {
 	var _ sets.Set = (*Set)(nil)
-	var _ containers.Enumerable = (*Set)(nil)
+	var _ containers.EnumerableWithIndex = (*Set)(nil)
 	var _ containers.IteratorWithIndex = (*Iterator)(nil)
 }
 
@@ -126,14 +126,14 @@ func (iterator *Iterator) Index() int {
 	return iterator.index
 }
 
-func (set *Set) Each(f func(index interface{}, value interface{})) {
+func (set *Set) Each(f func(index int, value interface{})) {
 	iterator := set.Iterator()
 	for iterator.Next() {
 		f(iterator.Index(), iterator.Value())
 	}
 }
 
-func (set *Set) Map(f func(index interface{}, value interface{}) interface{}) containers.Container {
+func (set *Set) Map(f func(index int, value interface{}) interface{}) containers.Container {
 	newSet := &Set{tree: rbt.NewWith(set.tree.Comparator)}
 	iterator := set.Iterator()
 	for iterator.Next() {
@@ -142,7 +142,7 @@ func (set *Set) Map(f func(index interface{}, value interface{}) interface{}) co
 	return newSet
 }
 
-func (set *Set) Select(f func(index interface{}, value interface{}) bool) containers.Container {
+func (set *Set) Select(f func(index int, value interface{}) bool) containers.Container {
 	newSet := &Set{tree: rbt.NewWith(set.tree.Comparator)}
 	iterator := set.Iterator()
 	for iterator.Next() {
@@ -153,7 +153,7 @@ func (set *Set) Select(f func(index interface{}, value interface{}) bool) contai
 	return newSet
 }
 
-func (set *Set) Any(f func(index interface{}, value interface{}) bool) bool {
+func (set *Set) Any(f func(index int, value interface{}) bool) bool {
 	iterator := set.Iterator()
 	for iterator.Next() {
 		if f(iterator.Index(), iterator.Value()) {
@@ -163,7 +163,7 @@ func (set *Set) Any(f func(index interface{}, value interface{}) bool) bool {
 	return false
 }
 
-func (set *Set) All(f func(index interface{}, value interface{}) bool) bool {
+func (set *Set) All(f func(index int, value interface{}) bool) bool {
 	iterator := set.Iterator()
 	for iterator.Next() {
 		if !f(iterator.Index(), iterator.Value()) {
@@ -173,14 +173,14 @@ func (set *Set) All(f func(index interface{}, value interface{}) bool) bool {
 	return true
 }
 
-func (set *Set) Find(f func(index interface{}, value interface{}) bool) (index interface{}, value interface{}) {
+func (set *Set) Find(f func(index int, value interface{}) bool) (index int, value interface{}) {
 	iterator := set.Iterator()
 	for iterator.Next() {
 		if f(iterator.Index(), iterator.Value()) {
 			return iterator.Index(), iterator.Value()
 		}
 	}
-	return nil, nil
+	return -1, nil
 }
 
 func (set *Set) String() string {

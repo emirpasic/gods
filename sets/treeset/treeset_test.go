@@ -89,7 +89,7 @@ func TestTreeSetEnumerableAndIterator(t *testing.T) {
 	set.Add("c", "a", "b")
 
 	// Each
-	set.Each(func(index interface{}, value interface{}) {
+	set.Each(func(index int, value interface{}) {
 		switch index {
 		case 0:
 			if actualValue, expectedValue := value, "a"; actualValue != expectedValue {
@@ -109,7 +109,7 @@ func TestTreeSetEnumerableAndIterator(t *testing.T) {
 	})
 
 	// Map
-	mappedSet := set.Map(func(index interface{}, value interface{}) interface{} {
+	mappedSet := set.Map(func(index int, value interface{}) interface{} {
 		return "mapped: " + value.(string)
 	}).(*Set)
 	if actualValue, expectedValue := mappedSet.Contains("mapped: a", "mapped: b", "mapped: c"), true; actualValue != expectedValue {
@@ -123,7 +123,7 @@ func TestTreeSetEnumerableAndIterator(t *testing.T) {
 	}
 
 	// Select
-	selectedSet := set.Select(func(index interface{}, value interface{}) bool {
+	selectedSet := set.Select(func(index int, value interface{}) bool {
 		return value.(string) >= "a" && value.(string) <= "b"
 	}).(*Set)
 	if actualValue, expectedValue := selectedSet.Contains("a", "b"), true; actualValue != expectedValue {
@@ -138,13 +138,13 @@ func TestTreeSetEnumerableAndIterator(t *testing.T) {
 	}
 
 	// Any
-	any := set.Any(func(index interface{}, value interface{}) bool {
+	any := set.Any(func(index int, value interface{}) bool {
 		return value.(string) == "c"
 	})
 	if any != true {
 		t.Errorf("Got %v expected %v", any, true)
 	}
-	any = set.Any(func(index interface{}, value interface{}) bool {
+	any = set.Any(func(index int, value interface{}) bool {
 		return value.(string) == "x"
 	})
 	if any != false {
@@ -152,13 +152,13 @@ func TestTreeSetEnumerableAndIterator(t *testing.T) {
 	}
 
 	// All
-	all := set.All(func(index interface{}, value interface{}) bool {
+	all := set.All(func(index int, value interface{}) bool {
 		return value.(string) >= "a" && value.(string) <= "c"
 	})
 	if all != true {
 		t.Errorf("Got %v expected %v", all, true)
 	}
-	all = set.All(func(index interface{}, value interface{}) bool {
+	all = set.All(func(index int, value interface{}) bool {
 		return value.(string) >= "a" && value.(string) <= "b"
 	})
 	if all != false {
@@ -166,16 +166,16 @@ func TestTreeSetEnumerableAndIterator(t *testing.T) {
 	}
 
 	// Find
-	foundIndex, foundValue := set.Find(func(index interface{}, value interface{}) bool {
+	foundIndex, foundValue := set.Find(func(index int, value interface{}) bool {
 		return value.(string) == "c"
 	})
 	if foundValue != "c" || foundIndex != 2 {
 		t.Errorf("Got %v at %v expected %v at %v", foundValue, foundIndex, "c", 2)
 	}
-	foundIndex, foundValue = set.Find(func(index interface{}, value interface{}) bool {
+	foundIndex, foundValue = set.Find(func(index int, value interface{}) bool {
 		return value.(string) == "x"
 	})
-	if foundValue != nil || foundIndex != nil {
+	if foundValue != nil || foundIndex != -1 {
 		t.Errorf("Got %v at %v expected %v at %v", foundValue, foundIndex, nil, nil)
 	}
 

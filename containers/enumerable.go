@@ -29,7 +29,34 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package containers
 
-type Enumerable interface {
+// Enumerable function for ordered containers whose values can be fetched by an index.
+type EnumerableWithIndex interface {
+	// Calls the given function once for each element, passing that element's index(key) and value.
+	Each(func(index int, value interface{}))
+
+	// Invokes the given function once for each element and returns a
+	// container containing the values returned by the given function.
+	Map(func(index int, value interface{}) interface{}) Container
+
+	// Returns a new container containing all elements for which the given function returns a true value.
+	Select(func(index int, value interface{}) bool) Container
+
+	// Passes each element of the collection to the given function and
+	// returns true if the function ever returns true for any element.
+	Any(func(index int, value interface{}) bool) bool
+
+	// Passes each element of the collection to the given function and
+	// returns true if the function returns true for all elements.
+	All(func(index int, value interface{}) bool) bool
+
+	// Passes each element of the collection to the given function and returns
+	// the first for which the function is true or nil,nil otherwise if no element
+	// matches the criteria.
+	Find(func(index int, value interface{}) bool) (index int, value interface{})
+}
+
+// Enumerable function for ordered containers whose values whose elements are key value pairs.
+type EnumerableWithKey interface {
 	// Calls the given function once for each element, passing that element's index(key) and value.
 	Each(func(index interface{}, value interface{}))
 
