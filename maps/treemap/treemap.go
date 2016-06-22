@@ -40,6 +40,7 @@ import (
 
 func assertInterfaceImplementation() {
 	var _ maps.Map = (*Map)(nil)
+	var _ containers.EnumerableWithKey = (*Map)(nil)
 	var _ containers.IteratorWithKey = (*Iterator)(nil)
 }
 
@@ -142,6 +143,64 @@ func (iterator *Iterator) Value() interface{} {
 
 func (iterator *Iterator) Key() interface{} {
 	return iterator.iterator.Key()
+}
+
+func (m *Map) Each(f func(key interface{}, value interface{})) {
+	iterator := m.Iterator()
+	for iterator.Next() {
+		f(iterator.Key(), iterator.Value())
+	}
+}
+
+func (m *Map) Map(f func(key1 interface{}, value1 interface{}) (key2 interface{}, value2 interface{})) containers.Container {
+	newMap := &Map{tree: rbt.NewWith(m.tree.Comparator)}
+	iterator := m.Iterator()
+	for iterator.Next() {
+		key2, value2 := f(iterator.Key(), iterator.Value())
+		newMap.Put(key2, value2)
+	}
+	return newMap
+}
+
+func (m *Map) Select(f func(key interface{}, value interface{}) bool) containers.Container {
+	newMap := &Map{tree: rbt.NewWith(m.tree.Comparator)}
+	iterator := m.Iterator()
+	for iterator.Next() {
+		if f(iterator.Key(), iterator.Value()) {
+			newMap.Put(iterator.Key(), iterator.Value())
+		}
+	}
+	return newMap
+}
+
+func (m *Map) Any(f func(key interface{}, value interface{}) bool) bool {
+	iterator := m.Iterator()
+	for iterator.Next() {
+		if f(iterator.Key(), iterator.Value()) {
+			return true
+		}
+	}
+	return false
+}
+
+func (m *Map) All(f func(key interface{}, value interface{}) bool) bool {
+	iterator := m.Iterator()
+	for iterator.Next() {
+		if !f(iterator.Key(), iterator.Value()) {
+			return false
+		}
+	}
+	return true
+}
+
+func (m *Map) Find(f func(key interface{}, value interface{}) bool) (key interface{}, value interface{}) {
+	iterator := m.Iterator()
+	for iterator.Next() {
+		if f(iterator.Key(), iterator.Value()) {
+			return iterator.Key(), iterator.Value()
+		}
+	}
+	return nil, nil
 }
 
 func (m *Map) String() string {

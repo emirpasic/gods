@@ -31,7 +31,7 @@ package containers
 
 // Enumerable function for ordered containers whose values can be fetched by an index.
 type EnumerableWithIndex interface {
-	// Calls the given function once for each element, passing that element's index(key) and value.
+	// Calls the given function once for each element, passing that element's index and value.
 	Each(func(index int, value interface{}))
 
 	// Invokes the given function once for each element and returns a
@@ -50,33 +50,33 @@ type EnumerableWithIndex interface {
 	All(func(index int, value interface{}) bool) bool
 
 	// Passes each element of the collection to the given function and returns
-	// the first for which the function is true or nil,nil otherwise if no element
+	// the first for which the function is true or -1,nil otherwise if no element
 	// matches the criteria.
 	Find(func(index int, value interface{}) bool) (index int, value interface{})
 }
 
 // Enumerable function for ordered containers whose values whose elements are key value pairs.
 type EnumerableWithKey interface {
-	// Calls the given function once for each element, passing that element's index(key) and value.
-	Each(func(index interface{}, value interface{}))
+	// Calls the given function once for each element, passing that element's key and value.
+	Each(func(key interface{}, value interface{}))
 
 	// Invokes the given function once for each element and returns a
 	// container containing the values returned by the given function.
-	Map(func(index interface{}, value interface{}) interface{}) Container
+	Map(func(key1 interface{}, value1 interface{}) (key2 interface{}, value2 interface{})) Container
 
 	// Returns a new container containing all elements for which the given function returns a true value.
-	Select(func(index interface{}, value interface{}) bool) Container
+	Select(func(key interface{}, value interface{}) bool) Container
 
 	// Passes each element of the collection to the given function and
 	// returns true if the function ever returns true for any element.
-	Any(func(index interface{}, value interface{}) bool) bool
+	Any(func(key interface{}, value interface{}) bool) bool
 
 	// Passes each element of the collection to the given function and
 	// returns true if the function returns true for all elements.
-	All(func(index interface{}, value interface{}) bool) bool
+	All(func(key interface{}, value interface{}) bool) bool
 
 	// Passes each element of the collection to the given function and returns
 	// the first for which the function is true or nil,nil otherwise if no element
 	// matches the criteria.
-	Find(func(index interface{}, value interface{}) bool) (index interface{}, value interface{})
+	Find(func(key interface{}, value interface{}) bool) (key interface{}, value interface{})
 }

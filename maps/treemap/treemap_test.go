@@ -179,21 +179,126 @@ func TestTreeMap(t *testing.T) {
 	}
 }
 
-func TestTreeMapIterator(t *testing.T) {
+func TestTreeMapEnumerableAndIterator(t *testing.T) {
 	m := NewWithStringComparator()
 	m.Put("c", 3)
 	m.Put("a", 1)
 	m.Put("b", 2)
 
+	// Each
+	count := 0
+	m.Each(func(key interface{}, value interface{}) {
+		count += 1
+		if actualValue, expectedValue := count, value; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+		switch value {
+		case 1:
+			if actualValue, expectedValue := key, "a"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case 2:
+			if actualValue, expectedValue := key, "b"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case 3:
+			if actualValue, expectedValue := key, "c"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		default:
+			t.Errorf("Too many")
+		}
+	})
+
+	// Map
+	mappedMap := m.Map(func(key1 interface{}, value1 interface{}) (key2 interface{}, value2 interface{}) {
+		return key1, "mapped: " + key1.(string)
+	}).(*Map)
+	if actualValue, _ := mappedMap.Get("a"); actualValue != "mapped: a" {
+		t.Errorf("Got %v expected %v", actualValue, "mapped: a")
+	}
+	if actualValue, _ := mappedMap.Get("b"); actualValue != "mapped: b" {
+		t.Errorf("Got %v expected %v", actualValue, "mapped: b")
+	}
+	if actualValue, _ := mappedMap.Get("c"); actualValue != "mapped: c" {
+		t.Errorf("Got %v expected %v", actualValue, "mapped: c")
+	}
+	if mappedMap.Size() != 3 {
+		t.Errorf("Got %v expected %v", mappedMap.Size(), 3)
+	}
+
+	// Select
+	selectedMap := m.Select(func(key interface{}, value interface{}) bool {
+		return key.(string) >= "a" && key.(string) <= "b"
+	}).(*Map)
+	if actualValue, _ := selectedMap.Get("a"); actualValue != 1 {
+		t.Errorf("Got %v expected %v", actualValue, "value: a")
+	}
+	if actualValue, _ := selectedMap.Get("b"); actualValue != 2 {
+		t.Errorf("Got %v expected %v", actualValue, "value: b")
+	}
+	if selectedMap.Size() != 2 {
+		t.Errorf("Got %v expected %v", selectedMap.Size(), 3)
+	}
+
+	// Any
+	any := m.Any(func(key interface{}, value interface{}) bool {
+		return value.(int) == 3
+	})
+	if any != true {
+		t.Errorf("Got %v expected %v", any, true)
+	}
+	any = m.Any(func(key interface{}, value interface{}) bool {
+		return value.(int) == 4
+	})
+	if any != false {
+		t.Errorf("Got %v expected %v", any, false)
+	}
+
+	// All
+	all := m.All(func(key interface{}, value interface{}) bool {
+		return key.(string) >= "a" && key.(string) <= "c"
+	})
+	if all != true {
+		t.Errorf("Got %v expected %v", all, true)
+	}
+	all = m.All(func(key interface{}, value interface{}) bool {
+		return key.(string) >= "a" && key.(string) <= "b"
+	})
+	if all != false {
+		t.Errorf("Got %v expected %v", all, false)
+	}
+
+	// Find
+	foundKey, foundValue := m.Find(func(key interface{}, value interface{}) bool {
+		return key.(string) == "c"
+	})
+	if foundKey != "c" || foundValue != 3 {
+		t.Errorf("Got %v -> %v expected %v -> %v", foundKey, foundValue, "c", 3)
+	}
+	foundKey, foundValue = m.Find(func(key interface{}, value interface{}) bool {
+		return key.(string) == "x"
+	})
+	if foundKey != nil || foundValue != nil {
+		t.Errorf("Got %v at %v expected %v at %v", foundValue, foundKey, nil, nil)
+	}
+
 	// Iterator
 	it := m.Iterator()
-	count := 0
 	for it.Next() {
-		count += 1
+		key := it.Key()
 		value := it.Value()
-		switch value {
-		case count:
-			if actualValue, expectedValue := value, count; actualValue != expectedValue {
+		switch key {
+		case "a":
+			if actualValue, expectedValue := value, 1; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case "b":
+			if actualValue, expectedValue := value, 2; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case "c":
+			if actualValue, expectedValue := value, 3; actualValue != expectedValue {
 				t.Errorf("Got %v expected %v", actualValue, expectedValue)
 			}
 		default:
