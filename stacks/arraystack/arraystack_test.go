@@ -84,7 +84,41 @@ func TestArrayStack(t *testing.T) {
 	if actualValue := stack.Values(); len(actualValue) != 0 {
 		t.Errorf("Got %v expected %v", actualValue, "[]")
 	}
+}
 
+func TestArrayStackIterator(t *testing.T) {
+	stack := New()
+	stack.Push("a")
+	stack.Push("b")
+	stack.Push("c")
+
+	// Iterator
+	it := stack.Iterator()
+	for it.Next() {
+		index := it.Index()
+		value := it.Value()
+		switch index {
+		case 0:
+			if actualValue, expectedValue := value, "c"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case 1:
+			if actualValue, expectedValue := value, "b"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case 2:
+			if actualValue, expectedValue := value, "a"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		default:
+			t.Errorf("Too many")
+		}
+	}
+	stack.Clear()
+	it = stack.Iterator()
+	for it.Next() {
+		t.Errorf("Shouldn't iterate on empty stack")
+	}
 }
 
 func BenchmarkArrayStack(b *testing.B) {
