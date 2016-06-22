@@ -24,14 +24,12 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package trees
+// Stateful iterator pattern for ordered containers.
 
-import "github.com/emirpasic/gods/containers"
+package containers
 
-type Tree interface {
-	containers.Container
-	// Empty() bool
-	// Size() int
-	// Clear()
-	// Values() []interface{}
+type Iterator interface {
+	Next() bool
+	Value() interface{}
+	Index() interface{}
 }

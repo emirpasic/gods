@@ -30,7 +30,7 @@ package containers
 
 import "github.com/emirpasic/gods/utils"
 
-type Interface interface {
+type Container interface {
 	Empty() bool
 	Size() int
 	Clear()
@@ -40,7 +40,7 @@ type Interface interface {
 // Returns sorted container's elements with respect to the passed comparator.
 // Does not effect the ordering of elements within the container.
 // Uses timsort.
-func GetSortedValues(container Interface, comparator utils.Comparator) []interface{} {
+func GetSortedValues(container Container, comparator utils.Comparator) []interface{} {
 	values := container.Values()
 	if len(values) < 2 {
 		return values

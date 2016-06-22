@@ -38,7 +38,7 @@ import (
 )
 
 func assertInterfaceImplementation() {
-	var _ lists.Interface = (*List)(nil)
+	var _ lists.List = (*List)(nil)
 }
 
 type List struct {

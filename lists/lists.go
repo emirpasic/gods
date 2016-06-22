@@ -23,7 +23,7 @@ import (
 	"github.com/emirpasic/gods/utils"
 )
 
-type Interface interface {
+type List interface {
 	Get(index int) (interface{}, bool)
 	Remove(index int)
 	Add(values ...interface{})
@@ -32,7 +32,7 @@ type Interface interface {
 	Swap(index1, index2 int)
 	Insert(index int, values ...interface{})
 
-	containers.Interface
+	containers.Container
 	// Empty() bool
 	// Size() int
 	// Clear()

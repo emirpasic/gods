@@ -40,7 +40,7 @@ import (
 )
 
 func assertInterfaceImplementation() {
-	var _ trees.Interface = (*Heap)(nil)
+	var _ trees.Tree = (*Heap)(nil)
 }
 
 type Heap struct {

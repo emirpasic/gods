@@ -27,20 +27,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // Enumerable functions for ordered containers.
 // Ruby's enumerable inspired package.
 
-package enumerable
+package containers
 
-import "github.com/emirpasic/gods/containers"
-
-type Interface interface {
+type Enumerable interface {
 	// Calls the given function once for each element, passing that element's index(key) and value.
 	Each(func(index interface{}, value interface{}))
 
 	// Invokes the given function once for each element and returns a
 	// container containing the values returned by the given function.
-	Map(func(index interface{}, value interface{}) interface{}) containers.Interface
+	Map(func(index interface{}, value interface{}) interface{}) Container
 
 	// Returns a new container containing all elements for which the given function returns a true value.
-	Select(func(index interface{}, value interface{}) bool) containers.Interface
+	Select(func(index interface{}, value interface{}) bool) Container
 
 	// Passes each element of the collection to the given function and
 	// returns true if the function ever returns true for any element.

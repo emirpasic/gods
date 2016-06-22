@@ -33,20 +33,41 @@ package arraylist
 import (
 	"fmt"
 	"github.com/emirpasic/gods/containers"
-	"github.com/emirpasic/gods/enumerable"
 	"github.com/emirpasic/gods/lists"
 	"github.com/emirpasic/gods/utils"
 	"strings"
 )
 
 func assertInterfaceImplementation() {
-	var _ lists.Interface = (*List)(nil)
-	var _ enumerable.Interface = (*List)(nil)
+	var _ lists.List = (*List)(nil)
+	var _ containers.Enumerable = (*List)(nil)
+	var _ containers.Iterator = (*Iterator)(nil)
 }
 
 type List struct {
 	elements []interface{}
 	size     int
+}
+
+type Iterator struct {
+	list    *List
+	current int
+}
+
+func (list *List) Iterator() Iterator {
+	return Iterator{list: list, current: 0}
+}
+
+func (iterator *Iterator) Next() bool {
+	return false
+}
+
+func (iterator *Iterator) Value() interface{} {
+	return nil
+}
+
+func (iterator *Iterator) Index() interface{} {
+	return nil
 }
 
 const (
@@ -184,7 +205,7 @@ func (list *List) Each(f func(index interface{}, value interface{})) {
 	}
 }
 
-func (list *List) Map(f func(index interface{}, value interface{}) interface{}) containers.Interface {
+func (list *List) Map(f func(index interface{}, value interface{}) interface{}) containers.Container {
 	newList := &List{}
 	for i := 0; i < list.size; i++ {
 		newList.Add(f(i, list.elements[i]))
@@ -192,7 +213,7 @@ func (list *List) Map(f func(index interface{}, value interface{}) interface{}) 
 	return newList
 }
 
-func (list *List) Select(f func(index interface{}, value interface{}) bool) containers.Interface {
+func (list *List) Select(f func(index interface{}, value interface{}) bool) containers.Container {
 	newList := &List{}
 	for i := 0; i < list.size; i++ {
 		if f(i, list.elements[i]) {
@@ -270,5 +291,4 @@ func (list *List) shrink() {
 	if list.size <= int(float32(currentCapacity)*SHRINK_FACTOR) {
 		list.resize(list.size)
 	}
-
 }

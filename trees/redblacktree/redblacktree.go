@@ -39,7 +39,7 @@ import (
 )
 
 func assertInterfaceImplementation() {
-	var _ trees.Interface = (*Tree)(nil)
+	var _ trees.Tree = (*Tree)(nil)
 }
 
 type color bool

@@ -39,7 +39,7 @@ import (
 )
 
 func assertInterfaceImplementation() {
-	var _ stacks.Interface = (*Stack)(nil)
+	var _ stacks.Stack = (*Stack)(nil)
 }
 
 type Stack struct {

@@ -38,7 +38,7 @@ import (
 )
 
 func assertInterfaceImplementation() {
-	var _ maps.Interface = (*Map)(nil)
+	var _ maps.Map = (*Map)(nil)
 }
 
 type Map struct {
