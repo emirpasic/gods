@@ -33,6 +33,7 @@ package linkedliststack
 
 import (
 	"fmt"
+	"github.com/emirpasic/gods/containers"
 	"github.com/emirpasic/gods/lists/singlylinkedlist"
 	"github.com/emirpasic/gods/stacks"
 	"strings"
@@ -40,6 +41,7 @@ import (
 
 func assertInterfaceImplementation() {
 	var _ stacks.Stack = (*Stack)(nil)
+	var _ containers.Iterator = (*Iterator)(nil)
 }
 
 type Stack struct {
@@ -90,6 +92,29 @@ func (stack *Stack) Values() []interface{} {
 	return stack.list.Values()
 }
 
+type Iterator struct {
+	stack *Stack
+	index int
+}
+
+func (stack *Stack) Iterator() Iterator {
+	return Iterator{stack: stack, index: -1}
+}
+
+func (iterator *Iterator) Next() bool {
+	iterator.index += 1
+	return iterator.stack.withinRange(iterator.index)
+}
+
+func (iterator *Iterator) Value() interface{} {
+	value, _ := iterator.stack.list.Get(iterator.index) // in reverse (LIFO)
+	return value
+}
+
+func (iterator *Iterator) Index() interface{} {
+	return iterator.index
+}
+
 func (stack *Stack) String() string {
 	str := "LinkedListStack\n"
 	values := []string{}
@@ -98,4 +123,9 @@ func (stack *Stack) String() string {
 	}
 	str += strings.Join(values, ", ")
 	return str
+}
+
+// Check that the index is withing bounds of the list
+func (stack *Stack) withinRange(index int) bool {
+	return index >= 0 && index < stack.list.Size()
 }
