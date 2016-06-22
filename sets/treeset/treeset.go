@@ -24,6 +24,7 @@ package treeset
 
 import (
 	"fmt"
+	"github.com/emirpasic/gods/containers"
 	"github.com/emirpasic/gods/sets"
 	rbt "github.com/emirpasic/gods/trees/redblacktree"
 	"github.com/emirpasic/gods/utils"
@@ -32,6 +33,7 @@ import (
 
 func assertInterfaceImplementation() {
 	var _ sets.Set = (*Set)(nil)
+	var _ containers.IteratorWithIndex = (*Iterator)(nil)
 }
 
 type Set struct {
@@ -99,6 +101,28 @@ func (set *Set) Clear() {
 // Returns all items in the set.
 func (set *Set) Values() []interface{} {
 	return set.tree.Keys()
+}
+
+type Iterator struct {
+	index    int
+	iterator rbt.Iterator
+}
+
+func (set *Set) Iterator() Iterator {
+	return Iterator{index: -1, iterator: set.tree.Iterator()}
+}
+
+func (iterator *Iterator) Next() bool {
+	iterator.index += 1
+	return iterator.iterator.Next()
+}
+
+func (iterator *Iterator) Value() interface{} {
+	return iterator.iterator.Key()
+}
+
+func (iterator *Iterator) Index() int {
+	return iterator.index
 }
 
 func (set *Set) String() string {

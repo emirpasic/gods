@@ -82,7 +82,41 @@ func TestTreeSet(t *testing.T) {
 	if actualValue := set.Empty(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
+}
 
+func TestTreeSetIterator(t *testing.T) {
+	set := NewWithStringComparator()
+	set.Add("c")
+	set.Add("a")
+	set.Add("b")
+
+	// Iterator
+	it := set.Iterator()
+	for it.Next() {
+		index := it.Index()
+		value := it.Value()
+		switch index {
+		case 0:
+			if actualValue, expectedValue := value, "a"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case 1:
+			if actualValue, expectedValue := value, "b"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case 2:
+			if actualValue, expectedValue := value, "c"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		default:
+			t.Errorf("Too many")
+		}
+	}
+	set.Clear()
+	it = set.Iterator()
+	for it.Next() {
+		t.Errorf("Shouldn't iterate on empty set")
+	}
 }
 
 func BenchmarkTreeSet(b *testing.B) {
