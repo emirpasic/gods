@@ -32,6 +32,7 @@ package doublylinkedlist
 
 import (
 	"fmt"
+	"github.com/emirpasic/gods/containers"
 	"github.com/emirpasic/gods/lists"
 	"github.com/emirpasic/gods/utils"
 	"strings"
@@ -39,6 +40,8 @@ import (
 
 func assertInterfaceImplementation() {
 	var _ lists.List = (*List)(nil)
+	var _ containers.Enumerable = (*List)(nil)
+	var _ containers.Iterator = (*Iterator)(nil)
 }
 
 type List struct {
@@ -295,6 +298,95 @@ func (list *List) Insert(index int, values ...interface{}) {
 		}
 		beforeElement.next = oldNextElement
 	}
+}
+
+type Iterator struct {
+	list    *List
+	index   int
+	element *element
+}
+
+func (list *List) Iterator() Iterator {
+	return Iterator{list: list, index: -1, element: nil}
+}
+
+func (iterator *Iterator) Next() bool {
+	iterator.index += 1
+	if !iterator.list.withinRange(iterator.index) {
+		iterator.element = nil
+		return false
+	}
+	if iterator.element == nil {
+		iterator.element = iterator.list.first
+	} else {
+		iterator.element = iterator.element.next
+	}
+	return true
+}
+
+func (iterator *Iterator) Value() interface{} {
+	return iterator.element.value
+}
+
+func (iterator *Iterator) Index() interface{} {
+	return iterator.index
+}
+
+func (list *List) Each(f func(index interface{}, value interface{})) {
+	iterator := list.Iterator()
+	for iterator.Next() {
+		f(iterator.Index(), iterator.Value())
+	}
+}
+
+func (list *List) Map(f func(index interface{}, value interface{}) interface{}) containers.Container {
+	newList := &List{}
+	iterator := list.Iterator()
+	for iterator.Next() {
+		newList.Add(f(iterator.Index(), iterator.Value()))
+	}
+	return newList
+}
+
+func (list *List) Select(f func(index interface{}, value interface{}) bool) containers.Container {
+	newList := &List{}
+	iterator := list.Iterator()
+	for iterator.Next() {
+		if f(iterator.Index(), iterator.Value()) {
+			newList.Add(iterator.Value())
+		}
+	}
+	return newList
+}
+
+func (list *List) Any(f func(index interface{}, value interface{}) bool) bool {
+	iterator := list.Iterator()
+	for iterator.Next() {
+		if f(iterator.Index(), iterator.Value()) {
+			return true
+		}
+	}
+	return false
+}
+
+func (list *List) All(f func(index interface{}, value interface{}) bool) bool {
+	iterator := list.Iterator()
+	for iterator.Next() {
+		if !f(iterator.Index(), iterator.Value()) {
+			return false
+		}
+	}
+	return true
+}
+
+func (list *List) Find(f func(index interface{}, value interface{}) bool) (index interface{}, value interface{}) {
+	iterator := list.Iterator()
+	for iterator.Next() {
+		if f(iterator.Index(), iterator.Value()) {
+			return iterator.Index(), iterator.Value()
+		}
+	}
+	return nil, nil
 }
 
 func (list *List) String() string {

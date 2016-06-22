@@ -178,21 +178,26 @@ func (list *List) Insert(index int, values ...interface{}) {
 	}
 }
 
+type Iterator struct {
+	list  *List
+	index int
+}
+
 func (list *List) Iterator() Iterator {
-	return Iterator{list: list, current: -1}
+	return Iterator{list: list, index: -1}
 }
 
 func (iterator *Iterator) Next() bool {
-	iterator.current += 1
-	return iterator.list.withinRange(iterator.current)
+	iterator.index += 1
+	return iterator.list.withinRange(iterator.index)
 }
 
 func (iterator *Iterator) Value() interface{} {
-	return iterator.list.elements[iterator.current]
+	return iterator.list.elements[iterator.index]
 }
 
 func (iterator *Iterator) Index() interface{} {
-	return iterator.current
+	return iterator.index
 }
 
 func (list *List) Each(f func(index interface{}, value interface{})) {
@@ -250,11 +255,6 @@ func (list *List) Find(f func(index interface{}, value interface{}) bool) (index
 		}
 	}
 	return nil, nil
-}
-
-type Iterator struct {
-	list    *List
-	current int
 }
 
 func (list *List) String() string {

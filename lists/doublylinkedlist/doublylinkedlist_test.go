@@ -135,7 +135,132 @@ func TestDoublyLinkedList(t *testing.T) {
 	if actualValue, expectedValue := fmt.Sprintf("%s%s%s%s%s%s%s%s%s%s%s", list.Values()...), "abcdefghijk"; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
+}
 
+func TestDoublyLinkedListEnumerableAndIterator(t *testing.T) {
+	list := New()
+	list.Add("a", "b", "c")
+
+	// Each
+	list.Each(func(index interface{}, value interface{}) {
+		switch index {
+		case 0:
+			if actualValue, expectedValue := value, "a"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case 1:
+			if actualValue, expectedValue := value, "b"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case 2:
+			if actualValue, expectedValue := value, "c"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		default:
+			t.Errorf("Too many")
+		}
+	})
+
+	// Map
+	mappedList := list.Map(func(index interface{}, value interface{}) interface{} {
+		return "mapped: " + value.(string)
+	}).(*List)
+	if actualValue, _ := mappedList.Get(0); actualValue != "mapped: a" {
+		t.Errorf("Got %v expected %v", actualValue, "mapped: a")
+	}
+	if actualValue, _ := mappedList.Get(1); actualValue != "mapped: b" {
+		t.Errorf("Got %v expected %v", actualValue, "mapped: b")
+	}
+	if actualValue, _ := mappedList.Get(2); actualValue != "mapped: c" {
+		t.Errorf("Got %v expected %v", actualValue, "mapped: c")
+	}
+	if mappedList.Size() != 3 {
+		t.Errorf("Got %v expected %v", mappedList.Size(), 3)
+	}
+
+	// Select
+	selectedList := list.Select(func(index interface{}, value interface{}) bool {
+		return value.(string) >= "a" && value.(string) <= "b"
+	}).(*List)
+	if actualValue, _ := selectedList.Get(0); actualValue != "a" {
+		t.Errorf("Got %v expected %v", actualValue, "value: a")
+	}
+	if actualValue, _ := selectedList.Get(1); actualValue != "b" {
+		t.Errorf("Got %v expected %v", actualValue, "value: b")
+	}
+	if selectedList.Size() != 2 {
+		t.Errorf("Got %v expected %v", selectedList.Size(), 3)
+	}
+
+	// Any
+	any := list.Any(func(index interface{}, value interface{}) bool {
+		return value.(string) == "c"
+	})
+	if any != true {
+		t.Errorf("Got %v expected %v", any, true)
+	}
+	any = list.Any(func(index interface{}, value interface{}) bool {
+		return value.(string) == "x"
+	})
+	if any != false {
+		t.Errorf("Got %v expected %v", any, false)
+	}
+
+	// All
+	all := list.All(func(index interface{}, value interface{}) bool {
+		return value.(string) >= "a" && value.(string) <= "c"
+	})
+	if all != true {
+		t.Errorf("Got %v expected %v", all, true)
+	}
+	all = list.All(func(index interface{}, value interface{}) bool {
+		return value.(string) >= "a" && value.(string) <= "b"
+	})
+	if all != false {
+		t.Errorf("Got %v expected %v", all, false)
+	}
+
+	// Find
+	foundIndex, foundValue := list.Find(func(index interface{}, value interface{}) bool {
+		return value.(string) == "c"
+	})
+	if foundValue != "c" || foundIndex != 2 {
+		t.Errorf("Got %v at %v expected %v at %v", foundValue, foundIndex, "c", 2)
+	}
+	foundIndex, foundValue = list.Find(func(index interface{}, value interface{}) bool {
+		return value.(string) == "x"
+	})
+	if foundValue != nil || foundIndex != nil {
+		t.Errorf("Got %v at %v expected %v at %v", foundValue, foundIndex, nil, nil)
+	}
+
+	// Iterator
+	it := list.Iterator()
+	for it.Next() {
+		index := it.Index()
+		value := it.Value()
+		switch index {
+		case 0:
+			if actualValue, expectedValue := value, "a"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case 1:
+			if actualValue, expectedValue := value, "b"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case 2:
+			if actualValue, expectedValue := value, "c"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		default:
+			t.Errorf("Too many")
+		}
+	}
+	list.Clear()
+	it = list.Iterator()
+	for it.Next() {
+		t.Errorf("Shouldn't iterate on empty list")
+	}
 }
 
 func BenchmarkDoublyLinkedList(b *testing.B) {

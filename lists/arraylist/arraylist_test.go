@@ -133,7 +133,6 @@ func TestArrayList(t *testing.T) {
 	if actualValue, expectedValue := fmt.Sprintf("%s%s%s%s%s%s%s%s%s%s%s", list.Values()...), "abcdefghijk"; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
-
 }
 
 func TestArrayListEnumerableAndIterator(t *testing.T) {
