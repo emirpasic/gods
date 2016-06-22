@@ -178,62 +178,6 @@ func (list *List) Insert(index int, values ...interface{}) {
 	}
 }
 
-func (list *List) Each(f func(index interface{}, value interface{})) {
-	for i := 0; i < list.size; i++ {
-		f(i, list.elements[i])
-	}
-}
-
-func (list *List) Map(f func(index interface{}, value interface{}) interface{}) containers.Container {
-	newList := &List{}
-	for i := 0; i < list.size; i++ {
-		newList.Add(f(i, list.elements[i]))
-	}
-	return newList
-}
-
-func (list *List) Select(f func(index interface{}, value interface{}) bool) containers.Container {
-	newList := &List{}
-	for i := 0; i < list.size; i++ {
-		if f(i, list.elements[i]) {
-			newList.Add(list.elements[i])
-		}
-	}
-	return newList
-}
-
-func (list *List) Any(f func(index interface{}, value interface{}) bool) bool {
-	for i := 0; i < list.size; i++ {
-		if f(i, list.elements[i]) {
-			return true
-		}
-	}
-	return false
-}
-
-func (list *List) All(f func(index interface{}, value interface{}) bool) bool {
-	for i := 0; i < list.size; i++ {
-		if !f(i, list.elements[i]) {
-			return false
-		}
-	}
-	return true
-}
-
-func (list *List) Find(f func(index interface{}, value interface{}) bool) (index interface{}, value interface{}) {
-	for i := 0; i < list.size; i++ {
-		if f(i, list.elements[i]) {
-			return i, list.elements[i]
-		}
-	}
-	return nil, nil
-}
-
-type Iterator struct {
-	list    *List
-	current int
-}
-
 func (list *List) Iterator() Iterator {
 	return Iterator{list: list, current: -1}
 }
@@ -249,6 +193,68 @@ func (iterator *Iterator) Value() interface{} {
 
 func (iterator *Iterator) Index() interface{} {
 	return iterator.current
+}
+
+func (list *List) Each(f func(index interface{}, value interface{})) {
+	iterator := list.Iterator()
+	for iterator.Next() {
+		f(iterator.Index(), iterator.Value())
+	}
+}
+
+func (list *List) Map(f func(index interface{}, value interface{}) interface{}) containers.Container {
+	newList := &List{}
+	iterator := list.Iterator()
+	for iterator.Next() {
+		newList.Add(f(iterator.Index(), iterator.Value()))
+	}
+	return newList
+}
+
+func (list *List) Select(f func(index interface{}, value interface{}) bool) containers.Container {
+	newList := &List{}
+	iterator := list.Iterator()
+	for iterator.Next() {
+		if f(iterator.Index(), iterator.Value()) {
+			newList.Add(iterator.Value())
+		}
+	}
+	return newList
+}
+
+func (list *List) Any(f func(index interface{}, value interface{}) bool) bool {
+	iterator := list.Iterator()
+	for iterator.Next() {
+		if f(iterator.Index(), iterator.Value()) {
+			return true
+		}
+	}
+	return false
+}
+
+func (list *List) All(f func(index interface{}, value interface{}) bool) bool {
+	iterator := list.Iterator()
+	for iterator.Next() {
+		if !f(iterator.Index(), iterator.Value()) {
+			return false
+		}
+	}
+	return true
+}
+
+func (list *List) Find(f func(index interface{}, value interface{}) bool) (index interface{}, value interface{}) {
+	iterator := list.Iterator()
+	for iterator.Next() {
+		if f(iterator.Index(), iterator.Value()) {
+			return iterator.Index(), iterator.Value()
+		}
+	}
+	return nil, nil
+}
+
+type Iterator struct {
+	list    *List
+	current int
 }
 
 func (list *List) String() string {
