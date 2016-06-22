@@ -29,7 +29,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package containers
 
 type Iterator interface {
+	// Moves the iterator to the next element and returns true if there was a next element in the container.
 	Next() bool
+	// Returns the current element's value.
 	Value() interface{}
+	// Returns the current element's index(key).
 	Index() interface{}
 }
