@@ -109,23 +109,32 @@ type Iterator struct {
 	iterator rbt.Iterator
 }
 
+// Returns a stateful iterator whose values can be fetched by an index.
 func (set *Set) Iterator() Iterator {
 	return Iterator{index: -1, iterator: set.tree.Iterator()}
 }
 
+// Moves the iterator to the next element and returns true if there was a next element in the container.
+// If Next() returns true, then next element's index and value can be retrieved by Index() and Value().
+// Modifies the state of the iterator.
 func (iterator *Iterator) Next() bool {
 	iterator.index += 1
 	return iterator.iterator.Next()
 }
 
+// Returns the current element's value.
+// Does not modify the state of the iterator.
 func (iterator *Iterator) Value() interface{} {
 	return iterator.iterator.Key()
 }
 
+// Returns the current element's index.
+// Does not modify the state of the iterator.
 func (iterator *Iterator) Index() int {
 	return iterator.index
 }
 
+// Calls the given function once for each element, passing that element's index and value.
 func (set *Set) Each(f func(index int, value interface{})) {
 	iterator := set.Iterator()
 	for iterator.Next() {
@@ -133,6 +142,8 @@ func (set *Set) Each(f func(index int, value interface{})) {
 	}
 }
 
+// Invokes the given function once for each element and returns a
+// container containing the values returned by the given function.
 func (set *Set) Map(f func(index int, value interface{}) interface{}) containers.Container {
 	newSet := &Set{tree: rbt.NewWith(set.tree.Comparator)}
 	iterator := set.Iterator()
@@ -142,6 +153,7 @@ func (set *Set) Map(f func(index int, value interface{}) interface{}) containers
 	return newSet
 }
 
+// Returns a new container containing all elements for which the given function returns a true value.
 func (set *Set) Select(f func(index int, value interface{}) bool) containers.Container {
 	newSet := &Set{tree: rbt.NewWith(set.tree.Comparator)}
 	iterator := set.Iterator()
@@ -153,6 +165,8 @@ func (set *Set) Select(f func(index int, value interface{}) bool) containers.Con
 	return newSet
 }
 
+// Passes each element of the container to the given function and
+// returns true if the function ever returns true for any element.
 func (set *Set) Any(f func(index int, value interface{}) bool) bool {
 	iterator := set.Iterator()
 	for iterator.Next() {
@@ -163,6 +177,8 @@ func (set *Set) Any(f func(index int, value interface{}) bool) bool {
 	return false
 }
 
+// Passes each element of the container to the given function and
+// returns true if the function returns true for all elements.
 func (set *Set) All(f func(index int, value interface{}) bool) bool {
 	iterator := set.Iterator()
 	for iterator.Next() {
@@ -173,7 +189,10 @@ func (set *Set) All(f func(index int, value interface{}) bool) bool {
 	return true
 }
 
-func (set *Set) Find(f func(index int, value interface{}) bool) (index int, value interface{}) {
+// Passes each element of the container to the given function and returns
+// the first (index,value) for which the function is true or -1,nil otherwise
+// if no element matches the criteria.
+func (set *Set) Find(f func(index int, value interface{}) bool) (int, interface{}) {
 	iterator := set.Iterator()
 	for iterator.Next() {
 		if f(iterator.Index(), iterator.Value()) {

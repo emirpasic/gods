@@ -129,22 +129,31 @@ type Iterator struct {
 	iterator rbt.Iterator
 }
 
+// Returns a stateful iterator whose elements are key/value pairs.
 func (m *Map) Iterator() Iterator {
 	return Iterator{iterator: m.tree.Iterator()}
 }
 
+// Moves the iterator to the next element and returns true if there was a next element in the container.
+// If Next() returns true, then next element's key and value can be retrieved by Key() and Value().
+// Modifies the state of the iterator.
 func (iterator *Iterator) Next() bool {
 	return iterator.iterator.Next()
 }
 
+// Returns the current element's value.
+// Does not modify the state of the iterator.
 func (iterator *Iterator) Value() interface{} {
 	return iterator.iterator.Value()
 }
 
+// Returns the current element's key.
+// Does not modify the state of the iterator.
 func (iterator *Iterator) Key() interface{} {
 	return iterator.iterator.Key()
 }
 
+// Calls the given function once for each element, passing that element's key and value.
 func (m *Map) Each(f func(key interface{}, value interface{})) {
 	iterator := m.Iterator()
 	for iterator.Next() {
@@ -152,7 +161,9 @@ func (m *Map) Each(f func(key interface{}, value interface{})) {
 	}
 }
 
-func (m *Map) Map(f func(key1 interface{}, value1 interface{}) (key2 interface{}, value2 interface{})) containers.Container {
+// Invokes the given function once for each element and returns a container
+// containing the values returned by the given function as key/value pairs.
+func (m *Map) Map(f func(key1 interface{}, value1 interface{}) (interface{}, interface{})) containers.Container {
 	newMap := &Map{tree: rbt.NewWith(m.tree.Comparator)}
 	iterator := m.Iterator()
 	for iterator.Next() {
@@ -162,6 +173,7 @@ func (m *Map) Map(f func(key1 interface{}, value1 interface{}) (key2 interface{}
 	return newMap
 }
 
+// Returns a new container containing all elements for which the given function returns a true value.
 func (m *Map) Select(f func(key interface{}, value interface{}) bool) containers.Container {
 	newMap := &Map{tree: rbt.NewWith(m.tree.Comparator)}
 	iterator := m.Iterator()
@@ -173,6 +185,8 @@ func (m *Map) Select(f func(key interface{}, value interface{}) bool) containers
 	return newMap
 }
 
+// Passes each element of the container to the given function and
+// returns true if the function ever returns true for any element.
 func (m *Map) Any(f func(key interface{}, value interface{}) bool) bool {
 	iterator := m.Iterator()
 	for iterator.Next() {
@@ -183,6 +197,8 @@ func (m *Map) Any(f func(key interface{}, value interface{}) bool) bool {
 	return false
 }
 
+// Passes each element of the container to the given function and
+// returns true if the function returns true for all elements.
 func (m *Map) All(f func(key interface{}, value interface{}) bool) bool {
 	iterator := m.Iterator()
 	for iterator.Next() {
@@ -193,7 +209,10 @@ func (m *Map) All(f func(key interface{}, value interface{}) bool) bool {
 	return true
 }
 
-func (m *Map) Find(f func(key interface{}, value interface{}) bool) (key interface{}, value interface{}) {
+// Passes each element of the container to the given function and returns
+// the first (key,value) for which the function is true or nil,nil otherwise if no element
+// matches the criteria.
+func (m *Map) Find(f func(key interface{}, value interface{}) bool) (interface{}, interface{}) {
 	iterator := m.Iterator()
 	for iterator.Next() {
 		if f(iterator.Key(), iterator.Value()) {

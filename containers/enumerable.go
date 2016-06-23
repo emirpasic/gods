@@ -41,18 +41,18 @@ type EnumerableWithIndex interface {
 	// Returns a new container containing all elements for which the given function returns a true value.
 	Select(func(index int, value interface{}) bool) Container
 
-	// Passes each element of the collection to the given function and
+	// Passes each element of the container to the given function and
 	// returns true if the function ever returns true for any element.
 	Any(func(index int, value interface{}) bool) bool
 
-	// Passes each element of the collection to the given function and
+	// Passes each element of the container to the given function and
 	// returns true if the function returns true for all elements.
 	All(func(index int, value interface{}) bool) bool
 
-	// Passes each element of the collection to the given function and returns
-	// the first for which the function is true or -1,nil otherwise if no element
-	// matches the criteria.
-	Find(func(index int, value interface{}) bool) (index int, value interface{})
+	// Passes each element of the container to the given function and returns
+	// the first (index,value) for which the function is true or -1,nil otherwise
+	// if no element matches the criteria.
+	Find(func(index int, value interface{}) bool) (int, interface{})
 }
 
 // Enumerable function for ordered containers whose values whose elements are key value pairs.
@@ -60,23 +60,23 @@ type EnumerableWithKey interface {
 	// Calls the given function once for each element, passing that element's key and value.
 	Each(func(key interface{}, value interface{}))
 
-	// Invokes the given function once for each element and returns a
-	// container containing the values returned by the given function.
-	Map(func(key1 interface{}, value1 interface{}) (key2 interface{}, value2 interface{})) Container
+	// Invokes the given function once for each element and returns a container
+	// containing the values returned by the given function as key/value pairs.
+	Map(func(key interface{}, value interface{}) (interface{}, interface{})) Container
 
 	// Returns a new container containing all elements for which the given function returns a true value.
 	Select(func(key interface{}, value interface{}) bool) Container
 
-	// Passes each element of the collection to the given function and
+	// Passes each element of the container to the given function and
 	// returns true if the function ever returns true for any element.
 	Any(func(key interface{}, value interface{}) bool) bool
 
-	// Passes each element of the collection to the given function and
+	// Passes each element of the container to the given function and
 	// returns true if the function returns true for all elements.
 	All(func(key interface{}, value interface{}) bool) bool
 
-	// Passes each element of the collection to the given function and returns
-	// the first for which the function is true or nil,nil otherwise if no element
+	// Passes each element of the container to the given function and returns
+	// the first (key,value) for which the function is true or nil,nil otherwise if no element
 	// matches the criteria.
-	Find(func(key interface{}, value interface{}) bool) (key interface{}, value interface{})
+	Find(func(key interface{}, value interface{}) bool) (interface{}, interface{})
 }

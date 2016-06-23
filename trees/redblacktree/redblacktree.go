@@ -279,10 +279,14 @@ type Iterator struct {
 	left *Node
 }
 
+// Returns a stateful iterator whose elements are key/value pairs.
 func (tree *Tree) Iterator() Iterator {
 	return Iterator{tree: tree, left: nil}
 }
 
+// Moves the iterator to the next element and returns true if there was a next element in the container.
+// If Next() returns true, then next element's key and value can be retrieved by Key() and Value().
+// Modifies the state of the iterator.
 func (iterator *Iterator) Next() bool {
 	if iterator.left == nil {
 		iterator.left = iterator.tree.Left()
@@ -307,10 +311,14 @@ func (iterator *Iterator) Next() bool {
 	return false
 }
 
+// Returns the current element's value.
+// Does not modify the state of the iterator.
 func (iterator *Iterator) Value() interface{} {
 	return iterator.left.Value
 }
 
+// Returns the current element's key.
+// Does not modify the state of the iterator.
 func (iterator *Iterator) Key() interface{} {
 	return iterator.left.Key
 }
