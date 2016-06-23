@@ -7,13 +7,13 @@ Implementation of various data structures in Go.
 ## Data Structures
 
 - [Containers](#containers)
-  - [Sets](#sets)
-    - [HashSet](#hashset)
-    - [TreeSet](#treeset)
   - [Lists](#lists)
     - [ArrayList](#arraylist)
     - [SinglyLinkedList](#singlylinkedlist)
     - [DoublyLinkedList](#doublylinkedlist)
+  - [Sets](#sets)
+    - [HashSet](#hashset)
+    - [TreeSet](#treeset)
   - [Stacks](#stacks)
     - [LinkedListStack](#linkedliststack)
     - [ArrayStack](#arraystack)
@@ -28,7 +28,7 @@ Implementation of various data structures in Go.
     - [Sort](#sort)
   
 
-###Containers
+## Containers
 
 All data structures implement the container interface with the following methods:
 
@@ -41,90 +41,28 @@ type Container interface {
 }
 ```
 
-Container specific operations:
+Containers are either ordered or unordered:
 
-```go
-// Returns sorted container's elements with respect to the passed comparator.
-// Does not effect the ordering of elements within the container.
-// Uses timsort.
-func GetSortedValues(container Container, comparator utils.Comparator) []interface{} {
-```
+- Ordered containers: 
+  - ArrayList
+  - SinglyLinkedList
+  - DoublyLinkedList
+  - TreeSet
+  - LinkedListStack
+  - ArrayStack
+  - TreeMap
+  - RedBlackTree
+  - BinaryHeap
+- Unordered containers: 
+  - HashSet
+  - HashMap
 
-####Sets
+All ordered containers have stateful iterators:
 
-A set is a data structure that can store elements and no repeated values. It is a computer implementation of the mathematical concept of a finite set. Unlike most other collection types, rather than retrieving a specific element from a set, one typically tests an element for membership in a set. This structed is often used to ensure that no duplicates are present in a collection.
+- IteratorWithIndex (iterates over containers whose elements are referenced by an index)
+- IteratorWithKey (iterates over containers whose elements are referenced by a key)
 
-All sets implement the set interface with the following methods:
-
-```go
-type Set interface {
-    Add(elements ...interface{})
-	Remove(elements ...interface{})
-	Contains(elements ...interface{}) bool
-
-	containers.Container
-	// Empty() bool
-	// Size() int
-	// Clear()
-	// Values() []interface{}
-}
-```
-
-#####HashSet
-
-This structure implements the Set interface and is backed by a hash table (actually a Go's map). It makes no guarantees as to the iteration order of the set, since Go randomizes this iteration order on maps.
-
-This structure offers constant time performance for the basic operations (add, remove, contains and size).
-
-```go
-package main
-
-import "github.com/emirpasic/gods/sets/hashset"
-
-func main() {
-	set := hashset.New()   // empty
-	set.Add(1)             // 1
-	set.Add(2, 2, 3, 4, 5) // 3, 1, 2, 4, 5 (random order, duplicates ignored)
-	set.Remove(4)          // 5, 3, 2, 1 (random order)
-	set.Remove(2, 3)       // 1, 5 (random order)
-	set.Contains(1)        // true
-	set.Contains(1, 5)     // true
-	set.Contains(1, 6)     // false
-	_ = set.Values()       // []int{5,1} (random order)
-	set.Clear()            // empty
-	set.Empty()            // true
-	set.Size()             // 0
-}
-```
-
-#####TreeSet
-
-This structure implements the Set interface and is backed by a red-black tree to keep the elements sorted with respect to the comparator.
-
-This implementation provides guaranteed log(n) time cost for the basic operations (add, remove and contains).
-
-```go
-package main
-
-import "github.com/emirpasic/gods/sets/treeset"
-
-func main() {
-	set := treeset.NewWithIntComparator() // empty (keys are of type int)
-	set.Add(1)                            // 1
-	set.Add(2, 2, 3, 4, 5)                // 1, 2, 3, 4, 5 (in order, duplicates ignored)
-	set.Remove(4)                         // 1, 2, 3, 5 (in order)
-	set.Remove(2, 3)                      // 1, 5 (in order)
-	set.Contains(1)                       // true
-	set.Contains(1, 5)                    // true
-	set.Contains(1, 6)                    // false
-	_ = set.Values()                      // []int{1,5} (in order)
-	set.Clear()                           // empty
-	set.Empty()                           // true
-	set.Size()                            // 0
-}
-```
-
-####Lists
+### Lists
 
 A list is a data structure that can store values and may have repeated values. There is no ordering in a list. The user can access and remove a value by the index position.
 
@@ -148,7 +86,7 @@ type List interface {
 }
 ```
 
-#####ArrayList
+#### ArrayList
 
 This structure implements the List interface and is backed by a dynamic array that grows and shrinks implicitly (by 100% when capacity is reached).
 
@@ -186,7 +124,7 @@ func main() {
 }
 ```
 
-#####SinglyLinkedList
+#### SinglyLinkedList
 
 This structure implements the _List_ interface and is a linked data structure where each value points to the next in the list.
 
@@ -223,7 +161,7 @@ func main() {
 }
 ```
 
-#####DoublyLinkedList
+#### DoublyLinkedList
 
 This structure implements the _List_ interface and is a linked data structure where each value points to the next and previous element in the list.
 
@@ -260,8 +198,81 @@ func main() {
 }
 ```
 
+### Sets
 
-####Stacks
+A set is a data structure that can store elements and no repeated values. It is a computer implementation of the mathematical concept of a finite set. Unlike most other collection types, rather than retrieving a specific element from a set, one typically tests an element for membership in a set. This structed is often used to ensure that no duplicates are present in a collection.
+
+All sets implement the set interface with the following methods:
+
+```go
+type Set interface {
+    Add(elements ...interface{})
+	Remove(elements ...interface{})
+	Contains(elements ...interface{}) bool
+
+	containers.Container
+	// Empty() bool
+	// Size() int
+	// Clear()
+	// Values() []interface{}
+}
+```
+
+#### HashSet
+
+This structure implements the Set interface and is backed by a hash table (actually a Go's map). It makes no guarantees as to the iteration order of the set, since Go randomizes this iteration order on maps.
+
+This structure offers constant time performance for the basic operations (add, remove, contains and size).
+
+```go
+package main
+
+import "github.com/emirpasic/gods/sets/hashset"
+
+func main() {
+	set := hashset.New()   // empty
+	set.Add(1)             // 1
+	set.Add(2, 2, 3, 4, 5) // 3, 1, 2, 4, 5 (random order, duplicates ignored)
+	set.Remove(4)          // 5, 3, 2, 1 (random order)
+	set.Remove(2, 3)       // 1, 5 (random order)
+	set.Contains(1)        // true
+	set.Contains(1, 5)     // true
+	set.Contains(1, 6)     // false
+	_ = set.Values()       // []int{5,1} (random order)
+	set.Clear()            // empty
+	set.Empty()            // true
+	set.Size()             // 0
+}
+```
+
+#### TreeSet
+
+This structure implements the Set interface and is backed by a red-black tree to keep the elements sorted with respect to the comparator.
+
+This implementation provides guaranteed log(n) time cost for the basic operations (add, remove and contains).
+
+```go
+package main
+
+import "github.com/emirpasic/gods/sets/treeset"
+
+func main() {
+	set := treeset.NewWithIntComparator() // empty (keys are of type int)
+	set.Add(1)                            // 1
+	set.Add(2, 2, 3, 4, 5)                // 1, 2, 3, 4, 5 (in order, duplicates ignored)
+	set.Remove(4)                         // 1, 2, 3, 5 (in order)
+	set.Remove(2, 3)                      // 1, 5 (in order)
+	set.Contains(1)                       // true
+	set.Contains(1, 5)                    // true
+	set.Contains(1, 6)                    // false
+	_ = set.Values()                      // []int{1,5} (in order)
+	set.Clear()                           // empty
+	set.Empty()                           // true
+	set.Size()                            // 0
+}
+```
+
+### Stacks
 
 The stack interface represents a last-in-first-out (LIFO) collection of objects. The usual push and pop operations are provided, as well as a method to peek at the top item on the stack, a method to check whether the stack is empty and the size (number of elements).
 
@@ -307,7 +318,7 @@ func main() {
 }
 ```
 
-#####ArrayStack
+#### ArrayStack
 
 This stack structure is back by ArrayList.
 
@@ -334,7 +345,7 @@ func main() {
 }
 ```
 
-####Maps
+### Maps
 
 Structure that maps keys to values. A map cannot contain duplicate keys and each key can map to at most one value.
 
@@ -354,7 +365,7 @@ type Map interface {
 }
 ```
 
-#####HashMap
+#### HashMap
 
 Map structure based on hash tables, more exactly, Go's map. Keys are unordered.
 
@@ -381,7 +392,7 @@ func main() {
 }
 ```
 
-#####TreeMap
+#### TreeMap
 
 Map structure based on our red-black tree implementation. Keys are ordered with respect to the passed comparator.
 
@@ -414,7 +425,7 @@ func main() {
 }
 ```
 
-####Trees
+### Trees
 
 A tree is a widely used data data structure that simulates a hierarchical tree structure, with a root value and subtrees of children, represented as a set of linked nodes; thus no cyclic links.
 
@@ -429,7 +440,7 @@ type Tree interface {
 }
 ```
 
-#####RedBlackTree
+#### RedBlackTree
 
 A red–black tree is a binary search tree with an extra bit of data per node, its color, which can be either red or black. The extra bit of storage ensures an approximately balanced tree by constraining how nodes are colored from any path from the root to the leaf. Thus, it is a data structure which is a type of self-balancing binary search tree.
 
@@ -493,7 +504,7 @@ func main() {
 
 Extending the red-black tree's functionality  has been demonstrated in the following [example](https://github.com/emirpasic/gods/blob/master/examples/redblacktreeextended.go).
 
-#####BinaryHeap
+#### BinaryHeap
 
 A binary heap is a heap data structure created using a binary tree. It can be seen as a binary tree with two additional constraints:
 
@@ -544,11 +555,11 @@ func main() {
 }
 ```
 
-### Functions
+## Functions
 
 Various helper functions used throughout the library.
 
-#### Comparator
+### Comparator
 
 Some data structures (e.g. TreeMap, TreeSet) require a comparator function to sort their contained elements. This comparator is necessary during the initalization.
 
@@ -569,7 +580,8 @@ Comparator signature:
 
 Two common comparators are included in the library:
 
-#####IntComparator
+#### IntComparator
+
 ```go
 func IntComparator(a, b interface{}) int {
 	aInt := a.(int)
@@ -585,7 +597,8 @@ func IntComparator(a, b interface{}) int {
 }
 ```
 
-#####StringComparator
+#### StringComparator
+
 ```go
 func StringComparator(a, b interface{}) int {
 	s1 := a.(string)
@@ -611,7 +624,7 @@ func StringComparator(a, b interface{}) int {
 }
 ```
 
-#####CustomComparator
+#### CustomComparator
 ```go
 package main
 
@@ -654,7 +667,7 @@ func main() {
 }
 ```
 
-#### Sort
+### Sort
 
 Sort uses timsort for best performance on real-world data. Lists have an in-place _Sort()_ method. All containers can return their sorted elements via _GetSortedValues()_ call.
 
@@ -675,11 +688,11 @@ func main() {
 }
 ```
 
-## Motivations
+# Motivations
 
 Collections and data structures found in other languages: Java Collections, C++ Standard Template Library (STL) containers, Qt Containers, etc.
 
-## Goals
+# Goals
 
 **Fast algorithms**:
 
@@ -709,7 +722,7 @@ There is often a tug of war between speed and memory when crafting algorithms. W
 
 Thread safety is not a concern of this project, this should be handled at a higher level.
 
-## Testing and Benchmarking
+# Testing and Benchmarking
 
 `go test -v -bench . -benchmem  -benchtime 1s ./...`
 
@@ -719,7 +732,7 @@ Biggest contribution towards this library is to use it and give us feedback for 
 
 For direct contributions, branch of from master and do _pull request_.
 
-## License
+# License
 
 This library is distributed under the BSD-style license found in the [LICENSE](https://github.com/emirpasic/gods/blob/master/LICENSE) file.
 
