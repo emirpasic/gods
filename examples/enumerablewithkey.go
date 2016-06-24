@@ -29,18 +29,17 @@ package examples
 import (
 	"fmt"
 	"github.com/emirpasic/gods/maps/treemap"
-	"strconv"
 )
 
-func prettyPrint(m *treemap.Map) {
-	fmt.Print("{ ")
+func printMap(txt string, m *treemap.Map) {
+	fmt.Print(txt, " { ")
 	m.Each(func(key interface{}, value interface{}) {
-		fmt.Print(key.(string) + ": " + strconv.Itoa(value.(int)) + " ")
+		fmt.Print(key, ":", value, " ")
 	})
 	fmt.Println("}")
 }
 
-func EnumerableWithKeyExample() {
+func EunumerableWithKey() {
 	m := treemap.NewWithStringComparator()
 	m.Put("g", 7)
 	m.Put("f", 6)
@@ -49,43 +48,39 @@ func EnumerableWithKeyExample() {
 	m.Put("c", 3)
 	m.Put("b", 2)
 	m.Put("a", 1)
-	prettyPrint(m) // { a: 1 b: 2 c: 3 d: 4 e: 5 f: 6 g: 7 }
+	printMap("Initial", m) // { a:1 b:2 c:3 d:4 e:5 f:6 g:7 }
 
-	// Selects all elements with even values into a new map.
 	even := m.Select(func(key interface{}, value interface{}) bool {
 		return value.(int)%2 == 0
 	})
-	prettyPrint(even) // { b: 2 d: 4 f: 6 }
+	printMap("Elements with even values", even) // { b:2 d:4 f:6 }
 
-	// Finds first element whose value is divisible by 2 and 3
 	foundKey, foundValue := m.Find(func(key interface{}, value interface{}) bool {
 		return value.(int)%2 == 0 && value.(int)%3 == 0
 	})
-	fmt.Println(foundKey, foundValue) // key: f, value: 6
+	if foundKey != nil {
+		fmt.Println("Element with value divisible by 2 and 3 found is", foundValue, "with key", foundKey) // value: 6, index: 4
+	}
 
-	// Creates a new map containing same elements with their values squared and letters duplicated.
 	square := m.Map(func(key interface{}, value interface{}) (interface{}, interface{}) {
 		return key.(string) + key.(string), value.(int) * value.(int)
 	})
-	prettyPrint(square) // { aa: 1 bb: 4 cc: 9 dd: 16 ee: 25 ff: 36 gg: 49 }
+	printMap("Elements' values squared and letters duplicated", square) // { aa:1 bb:4 cc:9 dd:16 ee:25 ff:36 gg:49 }
 
-	// Tests if any element contains value that is bigger than 5
 	bigger := m.Any(func(key interface{}, value interface{}) bool {
 		return value.(int) > 5
 	})
-	fmt.Println(bigger) // true
+	fmt.Println("Map contains element whose value is bigger than 5 is", bigger) // true
 
-	// Tests if all elements' values are positive
 	positive := m.All(func(key interface{}, value interface{}) bool {
 		return value.(int) > 0
 	})
-	fmt.Println(positive) // true
+	fmt.Println("All map's elements have positive values is", positive) // true
 
-	// Chaining
 	evenNumbersSquared := m.Select(func(key interface{}, value interface{}) bool {
 		return value.(int)%2 == 0
 	}).Map(func(key interface{}, value interface{}) (interface{}, interface{}) {
 		return key, value.(int) * value.(int)
 	})
-	prettyPrint(evenNumbersSquared) // { b: 4 d: 16 f: 36 }
+	printMap("Chaining", evenNumbersSquared) // { b:4 d:16 f:36 }
 }

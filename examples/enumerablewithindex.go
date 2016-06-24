@@ -31,53 +31,50 @@ import (
 	"github.com/emirpasic/gods/sets/treeset"
 )
 
-func EnumerableWithIndexExample() {
+func printSet(txt string, set *treeset.Set) {
+	fmt.Print(txt, "[ ")
+	set.Each(func(index int, value interface{}) {
+		fmt.Print(value, " ")
+	})
+	fmt.Println("]")
+}
+
+func EnumerableWithIndexTest() {
 	set := treeset.NewWithIntComparator()
 	set.Add(2, 3, 4, 2, 5, 6, 7, 8)
-	fmt.Println(set) // TreeSet [2, 3, 4, 5, 6, 7, 8]
+	printSet("Initial", set) // [ 2 3 4 5 6 7 8 ]
 
-	// Calculates sum.
-	sum := 0
-	set.Each(func(index int, value interface{}) {
-		sum += value.(int)
-	})
-	fmt.Println(sum) // 35
-
-	// Selects all even numbers into a new set.
 	even := set.Select(func(index int, value interface{}) bool {
 		return value.(int)%2 == 0
 	})
-	fmt.Println(even) // TreeSet [2, 4, 6, 8]
+	printSet("Even numbers", even) // [ 2 4 6 8 ]
 
-	// Finds first number divisible by 2 and 3
 	foundIndex, foundValue := set.Find(func(index int, value interface{}) bool {
 		return value.(int)%2 == 0 && value.(int)%3 == 0
 	})
-	fmt.Println(foundIndex, foundValue) // index: 4, value: 6
+	if foundIndex != -1 {
+		fmt.Println("Number divisible by 2 and 3 found is", foundValue, "at index", foundIndex) // value: 6, index: 4
+	}
 
-	// Squares each number in a new set.
 	square := set.Map(func(index int, value interface{}) interface{} {
 		return value.(int) * value.(int)
 	})
-	fmt.Println(square) // TreeSet [4, 9, 16, 25, 36, 49, 64]
+	printSet("Numbers squared", square) // [ 4 9 16 25 36 49 64 ]
 
-	// Tests if any number is bigger than 5
 	bigger := set.Any(func(index int, value interface{}) bool {
 		return value.(int) > 5
 	})
-	fmt.Println(bigger) // true
+	fmt.Println("Set contains a number bigger than 5 is ", bigger) // true
 
-	// Tests if all numbers are positive
 	positive := set.All(func(index int, value interface{}) bool {
 		return value.(int) > 0
 	})
-	fmt.Println(positive) // true
+	fmt.Println("All numbers are positive is", positive) // true
 
-	// Chaining
 	evenNumbersSquared := set.Select(func(index int, value interface{}) bool {
 		return value.(int)%2 == 0
 	}).Map(func(index int, value interface{}) interface{} {
 		return value.(int) * value.(int)
 	})
-	fmt.Println(evenNumbersSquared) // TreeSet [4, 16, 36, 64]
+	printSet("Chaining", evenNumbersSquared) // [ 4 16 36 64 ]
 }

@@ -62,8 +62,8 @@ Containers are either ordered or unordered. All ordered containers provide [stat
 | [ArrayStack](#arraystack) | yes | yes | no | index |
 | [HashMap](#hashmap) | no | no | no | key |
 | [TreeMap](#treemap) | yes | yes | yes | key |
-| [RedBlackTree](#redblacktree) | yes | yes | yes | key |
-| [BinaryHeap](#binaryheap) | yes | yes | yes | index |
+| [RedBlackTree](#redblacktree) | yes | yes | no | key |
+| [BinaryHeap](#binaryheap) | yes | yes | no | index |
 
 ### Lists
 
@@ -724,7 +724,7 @@ Passes each element of the container to the given function and returns the first
 Find(func(index int, value interface{}) bool) (int, interface{})}
 ```
 
-**Example: **
+**Example:**
 
 ```go
 package main
@@ -734,55 +734,52 @@ import (
 	"github.com/emirpasic/gods/sets/treeset"
 )
 
+func printSet(txt string, set *treeset.Set) {
+	fmt.Print(txt, "[ ")
+	set.Each(func(index int, value interface{}) {
+		fmt.Print(value, " ")
+	})
+	fmt.Println("]")
+}
+
 func main() {
 	set := treeset.NewWithIntComparator()
 	set.Add(2, 3, 4, 2, 5, 6, 7, 8)
-	fmt.Println(set) // TreeSet [2, 3, 4, 5, 6, 7, 8]
+	printSet("Initial", set) // [ 2 3 4 5 6 7 8 ]
 
-	// Calculates sum.
-	sum := 0
-	set.Each(func(index int, value interface{}) {
-		sum += value.(int)
-	})
-	fmt.Println(sum) // 35
-
-	// Selects all even numbers into a new set.
 	even := set.Select(func(index int, value interface{}) bool {
 		return value.(int)%2 == 0
 	})
-	fmt.Println(even) // TreeSet [2, 4, 6, 8]
+	printSet("Even numbers", even) // [ 2 4 6 8 ]
 
-	// Finds first number divisible by 2 and 3
 	foundIndex, foundValue := set.Find(func(index int, value interface{}) bool {
 		return value.(int)%2 == 0 && value.(int)%3 == 0
 	})
-	fmt.Println(foundIndex, foundValue) // index: 4, value: 6
+	if foundIndex != -1 {
+		fmt.Println("Number divisible by 2 and 3 found is", foundValue, "at index", foundIndex) // value: 6, index: 4
+	}
 
-	// Squares each number in a new set.
 	square := set.Map(func(index int, value interface{}) interface{} {
 		return value.(int) * value.(int)
 	})
-	fmt.Println(square) // TreeSet [4, 9, 16, 25, 36, 49, 64]
+	printSet("Numbers squared", square) // [ 4 9 16 25 36 49 64 ]
 
-	// Tests if any number is bigger than 5
 	bigger := set.Any(func(index int, value interface{}) bool {
 		return value.(int) > 5
 	})
-	fmt.Println(bigger) // true
+	fmt.Println("Set contains a number bigger than 5 is ", bigger) // true
 
-	// Tests if all numbers are positive
 	positive := set.All(func(index int, value interface{}) bool {
 		return value.(int) > 0
 	})
-	fmt.Println(positive) // true
+	fmt.Println("All numbers are positive is", positive) // true
 
-	// Chaining
 	evenNumbersSquared := set.Select(func(index int, value interface{}) bool {
 		return value.(int)%2 == 0
 	}).Map(func(index int, value interface{}) interface{} {
 		return value.(int) * value.(int)
 	})
-	fmt.Println(evenNumbersSquared) // TreeSet [4, 16, 36, 64]
+	printSet("Chaining", evenNumbersSquared) // [ 4 16 36 64 ]
 }
 ```
 
@@ -838,20 +835,20 @@ Passes each element of the container to the given function and returns the first
 Find(func(key interface{}, value interface{}) bool) (interface{}, interface{})
 ```
 
-Typical usage:
+**Example:**
+
 ```go
 package main
 
 import (
 	"fmt"
 	"github.com/emirpasic/gods/maps/treemap"
-	"strconv"
 )
 
-func prettyPrint(m *treemap.Map) {
-	fmt.Print("{ ")
+func printMap(txt string, m *treemap.Map) {
+	fmt.Print(txt, " { ")
 	m.Each(func(key interface{}, value interface{}) {
-		fmt.Print(key.(string) + ": " + strconv.Itoa(value.(int)) + " ")
+		fmt.Print(key, ":", value, " ")
 	})
 	fmt.Println("}")
 }
@@ -865,45 +862,41 @@ func main() {
 	m.Put("c", 3)
 	m.Put("b", 2)
 	m.Put("a", 1)
-	prettyPrint(m) // { a: 1 b: 2 c: 3 d: 4 e: 5 f: 6 g: 7 }
+	printMap("Initial", m) // { a:1 b:2 c:3 d:4 e:5 f:6 g:7 }
 
-	// Selects all elements with even values into a new map.
 	even := m.Select(func(key interface{}, value interface{}) bool {
-		return value.(int)%2 == 0
+		return value.(int) % 2 == 0
 	})
-	prettyPrint(even) // { b: 2 d: 4 f: 6 }
+	printMap("Elements with even values", even) // { b:2 d:4 f:6 }
 
-	// Finds first element whose value is divisible by 2 and 3
 	foundKey, foundValue := m.Find(func(key interface{}, value interface{}) bool {
-		return value.(int)%2 == 0 && value.(int)%3 == 0
+		return value.(int) % 2 == 0 && value.(int) % 3 == 0
 	})
-	fmt.Println(foundKey, foundValue) // key: f, value: 6
+	if foundKey != nil {
+		fmt.Println("Element with value divisible by 2 and 3 found is", foundValue, "with key", foundKey) // value: 6, index: 4
+	}
 
-	// Creates a new map containing same elements with their values squared and letters duplicated.
 	square := m.Map(func(key interface{}, value interface{}) (interface{}, interface{}) {
 		return key.(string) + key.(string), value.(int) * value.(int)
 	})
-	prettyPrint(square) // { aa: 1 bb: 4 cc: 9 dd: 16 ee: 25 ff: 36 gg: 49 }
+	printMap("Elements' values squared and letters duplicated", square) // { aa:1 bb:4 cc:9 dd:16 ee:25 ff:36 gg:49 }
 
-	// Tests if any element contains value that is bigger than 5
 	bigger := m.Any(func(key interface{}, value interface{}) bool {
 		return value.(int) > 5
 	})
-	fmt.Println(bigger) // true
+	fmt.Println("Map contains element whose value is bigger than 5 is", bigger) // true
 
-	// Tests if all elements' values are positive
 	positive := m.All(func(key interface{}, value interface{}) bool {
 		return value.(int) > 0
 	})
-	fmt.Println(positive) // true
+	fmt.Println("All map's elements have positive values is", positive) // true
 
-	// Chaining
 	evenNumbersSquared := m.Select(func(key interface{}, value interface{}) bool {
-		return value.(int)%2 == 0
+		return value.(int) % 2 == 0
 	}).Map(func(key interface{}, value interface{}) (interface{}, interface{}) {
 		return key, value.(int) * value.(int)
 	})
-	prettyPrint(evenNumbersSquared) // { b: 4 d: 16 f: 36 }
+	printMap("Chaining", evenNumbersSquared) // { b:4 d:16 f:36 }
 }
 ```
 
