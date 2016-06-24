@@ -50,12 +50,14 @@ const (
 	black, red color = true, false
 )
 
+// Tree holds elements of the red-black tree
 type Tree struct {
 	Root       *Node
 	size       int
 	Comparator utils.Comparator
 }
 
+// Node is a single element within the tree
 type Node struct {
 	Key    interface{}
 	Value  interface{}
@@ -65,22 +67,22 @@ type Node struct {
 	Parent *Node
 }
 
-// Instantiates a red-black tree with the custom comparator.
+// NewWith instantiates a red-black tree with the custom comparator.
 func NewWith(comparator utils.Comparator) *Tree {
 	return &Tree{Comparator: comparator}
 }
 
-// Instantiates a red-black tree with the IntComparator, i.e. keys are of type int.
+// NewWithIntComparator instantiates a red-black tree with the IntComparator, i.e. keys are of type int.
 func NewWithIntComparator() *Tree {
 	return &Tree{Comparator: utils.IntComparator}
 }
 
-// Instantiates a red-black tree with the StringComparator, i.e. keys are of type string.
+// NewWithStringComparator instantiates a red-black tree with the StringComparator, i.e. keys are of type string.
 func NewWithStringComparator() *Tree {
 	return &Tree{Comparator: utils.StringComparator}
 }
 
-// Inserts node into the tree.
+// Put inserts node into the tree.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (tree *Tree) Put(key interface{}, value interface{}) {
 	insertedNode := &Node{Key: key, Value: value, color: red}
@@ -114,10 +116,10 @@ func (tree *Tree) Put(key interface{}, value interface{}) {
 		insertedNode.Parent = node
 	}
 	tree.insertCase1(insertedNode)
-	tree.size += 1
+	tree.size++
 }
 
-// Searches the node in the tree by key and returns its value or nil if key is not found in tree.
+// Get searches the node in the tree by key and returns its value or nil if key is not found in tree.
 // Second return parameter is true if key was found, otherwise false.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (tree *Tree) Get(key interface{}) (value interface{}, found bool) {
@@ -128,7 +130,7 @@ func (tree *Tree) Get(key interface{}) (value interface{}, found bool) {
 	return nil, false
 }
 
-// Remove the node from the tree by key.
+// Remove remove the node from the tree by key.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (tree *Tree) Remove(key interface{}) {
 	var child *Node
@@ -157,20 +159,20 @@ func (tree *Tree) Remove(key interface{}) {
 			child.color = black
 		}
 	}
-	tree.size -= 1
+	tree.size--
 }
 
-// Returns true if tree does not contain any nodes
+// Empty returns true if tree does not contain any nodes
 func (tree *Tree) Empty() bool {
 	return tree.size == 0
 }
 
-// Returns number of nodes in the tree.
+// Size returns number of nodes in the tree.
 func (tree *Tree) Size() int {
 	return tree.size
 }
 
-// Returns all keys in-order
+// Keys returns all keys in-order
 func (tree *Tree) Keys() []interface{} {
 	keys := make([]interface{}, tree.size)
 	for i, node := range tree.inOrder() {
@@ -179,7 +181,7 @@ func (tree *Tree) Keys() []interface{} {
 	return keys
 }
 
-// Returns all values in-order based on the key.
+// Values returns all values in-order based on the key.
 func (tree *Tree) Values() []interface{} {
 	values := make([]interface{}, tree.size)
 	for i, node := range tree.inOrder() {
@@ -188,7 +190,7 @@ func (tree *Tree) Values() []interface{} {
 	return values
 }
 
-// Returns the left-most (min) node or nil if tree is empty.
+// Left returns the left-most (min) node or nil if tree is empty.
 func (tree *Tree) Left() *Node {
 	var parent *Node
 	current := tree.Root
@@ -199,7 +201,7 @@ func (tree *Tree) Left() *Node {
 	return parent
 }
 
-// Returns the right-most (max) node or nil if tree is empty.
+// Right returns the right-most (max) node or nil if tree is empty.
 func (tree *Tree) Right() *Node {
 	var parent *Node
 	current := tree.Root
@@ -210,7 +212,7 @@ func (tree *Tree) Right() *Node {
 	return parent
 }
 
-// Find floor node of the input key, return the floor node or nil if no ceiling is found.
+// Floor Finds floor node of the input key, return the floor node or nil if no ceiling is found.
 // Second return parameter is true if floor was found, otherwise false.
 //
 // Floor node is defined as the largest node that is smaller than or equal to the given node.
@@ -239,7 +241,7 @@ func (tree *Tree) Floor(key interface{}) (floor *Node, found bool) {
 	return nil, false
 }
 
-// Find ceiling node of the input key, return the ceiling node or nil if no ceiling is found.
+// Ceiling finds ceiling node of the input key, return the ceiling node or nil if no ceiling is found.
 // Second return parameter is true if ceiling was found, otherwise false.
 //
 // Ceiling node is defined as the smallest node that is larger than or equal to the given node.
@@ -268,23 +270,24 @@ func (tree *Tree) Ceiling(key interface{}) (ceiling *Node, found bool) {
 	return nil, false
 }
 
-// Removes all nodes from the tree.
+// Clear removes all nodes from the tree.
 func (tree *Tree) Clear() {
 	tree.Root = nil
 	tree.size = 0
 }
 
+// Iterator holding the iterator's state
 type Iterator struct {
 	tree *Tree
 	left *Node
 }
 
-// Returns a stateful iterator whose elements are key/value pairs.
+// Iterator returns a stateful iterator whose elements are key/value pairs.
 func (tree *Tree) Iterator() Iterator {
 	return Iterator{tree: tree, left: nil}
 }
 
-// Moves the iterator to the next element and returns true if there was a next element in the container.
+// Next moves the iterator to the next element and returns true if there was a next element in the container.
 // If Next() returns true, then next element's key and value can be retrieved by Key() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator) Next() bool {
@@ -311,18 +314,19 @@ func (iterator *Iterator) Next() bool {
 	return false
 }
 
-// Returns the current element's value.
+// Value returns the current element's value.
 // Does not modify the state of the iterator.
 func (iterator *Iterator) Value() interface{} {
 	return iterator.left.Value
 }
 
-// Returns the current element's key.
+// Key returns the current element's key.
 // Does not modify the state of the iterator.
 func (iterator *Iterator) Key() interface{} {
 	return iterator.left.Key
 }
 
+// String returns a string representation of container
 func (tree *Tree) String() string {
 	str := "RedBlackTree\n"
 	if !tree.Empty() {
@@ -352,7 +356,7 @@ func (tree *Tree) inOrder() []*Node {
 					currentPop, _ := stack.Pop()
 					current = currentPop.(*Node)
 					nodes[count] = current
-					count += 1
+					count++
 					current = current.Right
 				} else {
 					done = true
@@ -363,6 +367,7 @@ func (tree *Tree) inOrder() []*Node {
 	return nodes
 }
 
+// String returns a string representation of container
 func output(node *Node, prefix string, isTail bool, str *string) {
 	if node.Right != nil {
 		newPrefix := prefix
@@ -427,9 +432,8 @@ func (node *Node) sibling() *Node {
 	}
 	if node == node.Parent.Left {
 		return node.Parent.Right
-	} else {
-		return node.Parent.Left
 	}
+	return node.Parent.Left
 }
 
 func (tree *Tree) rotateLeft(node *Node) {
@@ -532,9 +536,8 @@ func (node *Node) maximumNode() *Node {
 func (tree *Tree) deleteCase1(node *Node) {
 	if node.Parent == nil {
 		return
-	} else {
-		tree.deleteCase2(node)
 	}
+	tree.deleteCase2(node)
 }
 
 func (tree *Tree) deleteCase2(node *Node) {

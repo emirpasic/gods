@@ -31,6 +31,7 @@ import (
 	"github.com/emirpasic/gods/utils"
 )
 
+// BinaryHeapExample to demonstrate basic usage of BinaryHeap
 func BinaryHeapExample() {
 
 	// Min-heap

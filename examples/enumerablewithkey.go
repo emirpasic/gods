@@ -39,7 +39,8 @@ func printMap(txt string, m *treemap.Map) {
 	fmt.Println("}")
 }
 
-func EunumerableWithKey() {
+// EunumerableWithKeyExample to demonstrate basic usage of EunumerableWithKey
+func EunumerableWithKeyExample() {
 	m := treemap.NewWithStringComparator()
 	m.Put("g", 7)
 	m.Put("f", 6)

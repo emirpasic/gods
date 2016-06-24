@@ -40,32 +40,33 @@ func assertInterfaceImplementation() {
 	var _ sets.Set = (*Set)(nil)
 }
 
+// Set holds elements in go's native map
 type Set struct {
 	items map[interface{}]struct{}
 }
 
 var itemExists = struct{}{}
 
-// Instantiates a new empty set
+// New instantiates a new empty set
 func New() *Set {
 	return &Set{items: make(map[interface{}]struct{})}
 }
 
-// Adds the items (one or more) to the set.
+// Add adds the items (one or more) to the set.
 func (set *Set) Add(items ...interface{}) {
 	for _, item := range items {
 		set.items[item] = itemExists
 	}
 }
 
-// Removes the items (one or more) from the set.
+// Remove removes the items (one or more) from the set.
 func (set *Set) Remove(items ...interface{}) {
 	for _, item := range items {
 		delete(set.items, item)
 	}
 }
 
-// Check if items (one or more) are present in the set.
+// Contains check if items (one or more) are present in the set.
 // All items have to be present in the set for the method to return true.
 // Returns true if no arguments are passed at all, i.e. set is always superset of empty set.
 func (set *Set) Contains(items ...interface{}) bool {
@@ -77,32 +78,33 @@ func (set *Set) Contains(items ...interface{}) bool {
 	return true
 }
 
-// Returns true if set does not contain any elements.
+// Empty returns true if set does not contain any elements.
 func (set *Set) Empty() bool {
 	return set.Size() == 0
 }
 
-// Returns number of elements within the set.
+// Size returns number of elements within the set.
 func (set *Set) Size() int {
 	return len(set.items)
 }
 
-// Clears all values in the set.
+// Clear clears all values in the set.
 func (set *Set) Clear() {
 	set.items = make(map[interface{}]struct{})
 }
 
-// Returns all items in the set.
+// Values returns all items in the set.
 func (set *Set) Values() []interface{} {
 	values := make([]interface{}, set.Size())
 	count := 0
 	for item := range set.items {
 		values[count] = item
-		count += 1
+		count++
 	}
 	return values
 }
 
+// String returns a string representation of container
 func (set *Set) String() string {
 	str := "HashSet\n"
 	items := []string{}

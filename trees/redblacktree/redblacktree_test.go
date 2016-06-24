@@ -220,7 +220,7 @@ func TestRedBlackTreeIterator1(t *testing.T) {
 	it := tree.Iterator()
 	count := 0
 	for it.Next() {
-		count += 1
+		count++
 		index := it.Key()
 		switch index {
 		case count:
@@ -246,7 +246,7 @@ func TestRedBlackTreeIterator2(t *testing.T) {
 	it := tree.Iterator()
 	count := 0
 	for it.Next() {
-		count += 1
+		count++
 		index := it.Key()
 		switch index {
 		case count:
@@ -277,7 +277,7 @@ func TestRedBlackTreeIterator3(t *testing.T) {
 	it = tree.Iterator()
 	count := 0
 	for it.Next() {
-		count += 1
+		count++
 		index := it.Key()
 		switch index {
 		case count:
@@ -311,7 +311,7 @@ func TestRedBlackTreeIterator4(t *testing.T) {
 	it := tree.Iterator()
 	count := 0
 	for it.Next() {
-		count += 1
+		count++
 		value := it.Value()
 		switch value {
 		case count:

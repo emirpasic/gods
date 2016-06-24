@@ -28,6 +28,7 @@ package examples
 
 import "github.com/emirpasic/gods/stacks/arraystack"
 
+// ArrayStackExample to demonstrate basic usage of ArrayStack
 func ArrayStackExample() {
 	stack := arraystack.New() // empty
 	stack.Push(1)             // 1

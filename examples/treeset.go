@@ -28,6 +28,7 @@ package examples
 
 import "github.com/emirpasic/gods/sets/treeset"
 
+// TreeSetExample to demonstrate basic usage of TreeSet
 func TreeSetExample() {
 	set := treeset.NewWithIntComparator() // empty
 	set.Add(1)                            // 1

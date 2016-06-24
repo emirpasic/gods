@@ -166,7 +166,7 @@ func TestMapEach(t *testing.T) {
 	m.Put("b", 2)
 	count := 0
 	m.Each(func(key interface{}, value interface{}) {
-		count += 1
+		count++
 		if actualValue, expectedValue := count, value; actualValue != expectedValue {
 			t.Errorf("Got %v expected %v", actualValue, expectedValue)
 		}

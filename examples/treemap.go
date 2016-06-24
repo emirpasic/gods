@@ -28,6 +28,7 @@ package examples
 
 import "github.com/emirpasic/gods/maps/treemap"
 
+// TreeMapExample to demonstrate basic usage of TreeMap
 func TreeMapExample() {
 	m := treemap.NewWithIntComparator() // empty (keys are of type int)
 	m.Put(1, "x")                       // 1->x

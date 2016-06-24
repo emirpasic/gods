@@ -28,6 +28,7 @@ package maps
 
 import "github.com/emirpasic/gods/containers"
 
+// Map interface that all maps implement
 type Map interface {
 	Put(key interface{}, value interface{})
 	Get(key interface{}) (value interface{}, found bool)

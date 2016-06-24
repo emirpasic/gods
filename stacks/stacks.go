@@ -28,6 +28,7 @@ package stacks
 
 import "github.com/emirpasic/gods/containers"
 
+// Stack interface that all stacks implement
 type Stack interface {
 	Push(value interface{})
 	Pop() (value interface{}, ok bool)

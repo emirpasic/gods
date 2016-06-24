@@ -31,6 +31,7 @@ import (
 	rbt "github.com/emirpasic/gods/trees/redblacktree"
 )
 
+// RedBlackTreeExample to demonstrate basic usage of RedBlackTree
 func RedBlackTreeExample() {
 	tree := rbt.NewWithIntComparator() // empty(keys are of type int)
 

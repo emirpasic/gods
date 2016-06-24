@@ -28,6 +28,7 @@ package examples
 
 import "github.com/emirpasic/gods/utils"
 
+// SortExample to demonstrate basic usage of basic sort (timsort)
 func SortExample() {
 	strings := []interface{}{}                  // []
 	strings = append(strings, "d")              // ["d"]

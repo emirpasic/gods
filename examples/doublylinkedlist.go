@@ -31,6 +31,7 @@ import (
 	"github.com/emirpasic/gods/utils"
 )
 
+// DoublyLinkedListExample to demonstrate basic usage of DoublyLinkedList
 func DoublyLinkedListExample() {
 	list := dll.New()
 	list.Add("a")                         // ["a"]

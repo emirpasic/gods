@@ -28,6 +28,7 @@ package trees
 
 import "github.com/emirpasic/gods/containers"
 
+// Tree interface that all trees implement
 type Tree interface {
 	containers.Container
 	// Empty() bool

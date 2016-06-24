@@ -28,6 +28,7 @@ package examples
 
 import "github.com/emirpasic/gods/maps/hashmap"
 
+// HashMapExample to demonstrate basic usage of HashMap
 func HashMapExample() {
 	m := hashmap.New() // empty
 	m.Put(1, "x")      // 1->x

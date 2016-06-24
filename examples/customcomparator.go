@@ -31,6 +31,7 @@ import (
 	"github.com/emirpasic/gods/sets/treeset"
 )
 
+// User model (id and name)
 type User struct {
 	id   int
 	name string
@@ -53,6 +54,7 @@ func byID(a, b interface{}) int {
 	}
 }
 
+// CustomComparatorExample to demonstrate basic usage of CustomComparator
 func CustomComparatorExample() {
 	set := treeset.NewWith(byID)
 
