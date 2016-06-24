@@ -31,6 +31,7 @@ import (
 	"github.com/emirpasic/gods/utils"
 )
 
+// SinglyLinkedListExample to demonstrate basic usage of SinglyLinkedList
 func SinglyLinkedListExample() {
 	list := sll.New()
 	list.Add("a")                         // ["a"]

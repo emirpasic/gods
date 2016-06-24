@@ -31,11 +31,8 @@ import (
 	"testing"
 )
 
-func TestHashMap(t *testing.T) {
-
+func TestMapPut(t *testing.T) {
 	m := New()
-
-	// insertions
 	m.Put(5, "e")
 	m.Put(6, "f")
 	m.Put(7, "g")
@@ -45,17 +42,12 @@ func TestHashMap(t *testing.T) {
 	m.Put(2, "b")
 	m.Put(1, "a") //overwrite
 
-	// Test Size()
 	if actualValue := m.Size(); actualValue != 7 {
 		t.Errorf("Got %v expected %v", actualValue, 7)
 	}
-
-	// test Keys()
 	if actualValue, expectedValue := m.Keys(), []interface{}{1, 2, 3, 4, 5, 6, 7}; !sameElements(actualValue, expectedValue) {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
-
-	// test Values()
 	if actualValue, expectedValue := m.Values(), []interface{}{"a", "b", "c", "d", "e", "f", "g"}; !sameElements(actualValue, expectedValue) {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
@@ -79,26 +71,34 @@ func TestHashMap(t *testing.T) {
 			t.Errorf("Got %v expected %v", actualValue, test[1])
 		}
 	}
+}
 
-	// removals
+func TestMapRemove(t *testing.T) {
+	m := New()
+	m.Put(5, "e")
+	m.Put(6, "f")
+	m.Put(7, "g")
+	m.Put(3, "c")
+	m.Put(4, "d")
+	m.Put(1, "x")
+	m.Put(2, "b")
+	m.Put(1, "a") //overwrite
+
 	m.Remove(5)
 	m.Remove(6)
 	m.Remove(7)
 	m.Remove(8)
 	m.Remove(5)
 
-	// test Keys()
 	if actualValue, expectedValue := m.Keys(), []interface{}{1, 2, 3, 4}; !sameElements(actualValue, expectedValue) {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
-	// test Values()
 	if actualValue, expectedValue := m.Values(), []interface{}{"a", "b", "c", "d"}; !sameElements(actualValue, expectedValue) {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
-	// Test Size()
 	if actualValue := m.Size(); actualValue != 4 {
-		t.Errorf("Got %v expected %v", actualValue, 7)
+		t.Errorf("Got %v expected %v", actualValue, 4)
 	}
 
 	tests2 := [][]interface{}{
@@ -113,14 +113,12 @@ func TestHashMap(t *testing.T) {
 	}
 
 	for _, test := range tests2 {
-		// retrievals
 		actualValue, actualFound := m.Get(test[0])
 		if actualValue != test[1] || actualFound != test[2] {
 			t.Errorf("Got %v expected %v", actualValue, test[1])
 		}
 	}
 
-	// removals
 	m.Remove(1)
 	m.Remove(4)
 	m.Remove(2)
@@ -128,35 +126,18 @@ func TestHashMap(t *testing.T) {
 	m.Remove(2)
 	m.Remove(2)
 
-	// Test Keys()
 	if actualValue, expectedValue := fmt.Sprintf("%s", m.Keys()), "[]"; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
-
-	// test Values()
 	if actualValue, expectedValue := fmt.Sprintf("%s", m.Values()), "[]"; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
-
-	// Test Size()
 	if actualValue := m.Size(); actualValue != 0 {
 		t.Errorf("Got %v expected %v", actualValue, 0)
 	}
-
-	// Test Empty()
 	if actualValue := m.Empty(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
-
-	m.Put(1, "a")
-	m.Put(2, "b")
-	m.Clear()
-
-	// Test Empty()
-	if actualValue := m.Empty(); actualValue != true {
-		t.Errorf("Got %v expected %v", actualValue, true)
-	}
-
 }
 
 func sameElements(a []interface{}, b []interface{}) bool {
@@ -178,7 +159,7 @@ func sameElements(a []interface{}, b []interface{}) bool {
 	return true
 }
 
-func BenchmarkHashMap(b *testing.B) {
+func BenchmarkMap(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		m := New()
 		for n := 0; n < 1000; n++ {

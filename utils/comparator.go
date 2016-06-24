@@ -35,6 +35,7 @@ package utils
 //    1, if a > b
 type Comparator func(a, b interface{}) int
 
+// IntComparator provides a basic comparison on ints
 func IntComparator(a, b interface{}) int {
 	aInt := a.(int)
 	bInt := b.(int)
@@ -48,6 +49,7 @@ func IntComparator(a, b interface{}) int {
 	}
 }
 
+// StringComparator provides a fast comparison on strings
 func StringComparator(a, b interface{}) int {
 	s1 := a.(string)
 	s2 := b.(string)

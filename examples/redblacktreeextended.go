@@ -31,46 +31,47 @@ import (
 	rbt "github.com/emirpasic/gods/trees/redblacktree"
 )
 
+// RedBlackTreeExtended to demonstrate how to extend a RedBlackTree to include new functions
 type RedBlackTreeExtended struct {
 	*rbt.Tree
 }
 
+// GetMin gets the min value and flag if found
 func (tree *RedBlackTreeExtended) GetMin() (value interface{}, found bool) {
 	node, found := tree.getMinFromNode(tree.Root)
 	if node != nil {
 		return node.Value, found
-	} else {
-		return nil, false
 	}
+	return nil, false
 }
 
+// GetMax gets the max value and flag if found
 func (tree *RedBlackTreeExtended) GetMax() (value interface{}, found bool) {
 	node, found := tree.getMaxFromNode(tree.Root)
 	if node != nil {
 		return node.Value, found
-	} else {
-		return nil, false
 	}
+	return nil, false
 }
 
+// RemoveMin removes the min value and flag if found
 func (tree *RedBlackTreeExtended) RemoveMin() (value interface{}, deleted bool) {
 	node, found := tree.getMinFromNode(tree.Root)
 	if found {
 		tree.Remove(node.Key)
 		return node.Value, found
-	} else {
-		return nil, false
 	}
+	return nil, false
 }
 
+// RemoveMax removes the max value and flag if found
 func (tree *RedBlackTreeExtended) RemoveMax() (value interface{}, deleted bool) {
 	node, found := tree.getMaxFromNode(tree.Root)
 	if found {
 		tree.Remove(node.Key)
 		return node.Value, found
-	} else {
-		return nil, false
 	}
+	return nil, false
 }
 
 func (tree *RedBlackTreeExtended) getMinFromNode(node *rbt.Node) (foundNode *rbt.Node, found bool) {
@@ -79,9 +80,8 @@ func (tree *RedBlackTreeExtended) getMinFromNode(node *rbt.Node) (foundNode *rbt
 	}
 	if node.Left == nil {
 		return node, true
-	} else {
-		return tree.getMinFromNode(node.Left)
 	}
+	return tree.getMinFromNode(node.Left)
 }
 
 func (tree *RedBlackTreeExtended) getMaxFromNode(node *rbt.Node) (foundNode *rbt.Node, found bool) {
@@ -90,9 +90,8 @@ func (tree *RedBlackTreeExtended) getMaxFromNode(node *rbt.Node) (foundNode *rbt
 	}
 	if node.Right == nil {
 		return node, true
-	} else {
-		return tree.getMaxFromNode(node.Right)
 	}
+	return tree.getMaxFromNode(node.Right)
 }
 
 func print(tree *RedBlackTreeExtended) {
@@ -103,6 +102,7 @@ func print(tree *RedBlackTreeExtended) {
 	fmt.Println(tree)
 }
 
+// RedBlackTreeExtendedExample main method on how to use the custom red-black tree above
 func RedBlackTreeExtendedExample() {
 	tree := RedBlackTreeExtended{rbt.NewWithIntComparator()}
 

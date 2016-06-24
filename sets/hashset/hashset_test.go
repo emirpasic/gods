@@ -27,70 +27,64 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package hashset
 
 import (
-	"fmt"
 	"testing"
 )
 
-func TestHashSet(t *testing.T) {
-
+func TestSetAdd(t *testing.T) {
 	set := New()
-
-	// insertions
 	set.Add()
 	set.Add(1)
 	set.Add(2)
 	set.Add(2, 3)
 	set.Add()
-
 	if actualValue := set.Empty(); actualValue != false {
 		t.Errorf("Got %v expected %v", actualValue, false)
 	}
-
 	if actualValue := set.Size(); actualValue != 3 {
 		t.Errorf("Got %v expected %v", actualValue, 3)
 	}
+}
 
-	// Asking if a set is superset of nothing, thus it's true
+func TestSetContains(t *testing.T) {
+	set := New()
+	set.Add(3, 1, 2)
+	set.Add(2, 3)
+	set.Add()
 	if actualValue := set.Contains(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
-
 	if actualValue := set.Contains(1); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
-
 	if actualValue := set.Contains(1, 2, 3); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
-
 	if actualValue := set.Contains(1, 2, 3, 4); actualValue != false {
 		t.Errorf("Got %v expected %v", actualValue, false)
 	}
-
-	set.Remove()
-	set.Remove(1)
-
-	if actualValue, expectedValues := fmt.Sprintf("%d%d", set.Values()...), [2]string{"23", "32"}; actualValue != expectedValues[0] && actualValue != expectedValues[1] {
-		t.Errorf("Got %v expected %v", actualValue, expectedValues)
-	}
-
-	if actualValue := set.Contains(1); actualValue != false {
-		t.Errorf("Got %v expected %v", actualValue, false)
-	}
-
-	set.Remove(1, 2, 3)
-
-	if actualValue := set.Contains(3); actualValue != false {
-		t.Errorf("Got %v expected %v", actualValue, false)
-	}
-
-	if actualValue := set.Empty(); actualValue != true {
-		t.Errorf("Got %v expected %v", actualValue, true)
-	}
-
 }
 
-func BenchmarkHashSet(b *testing.B) {
+func TestSetRemove(t *testing.T) {
+	set := New()
+	set.Add(3, 1, 2)
+	set.Remove()
+	if actualValue := set.Size(); actualValue != 3 {
+		t.Errorf("Got %v expected %v", actualValue, 3)
+	}
+	set.Remove(1)
+	if actualValue := set.Size(); actualValue != 2 {
+		t.Errorf("Got %v expected %v", actualValue, 2)
+	}
+	set.Remove(3)
+	set.Remove(3)
+	set.Remove()
+	set.Remove(2)
+	if actualValue := set.Size(); actualValue != 0 {
+		t.Errorf("Got %v expected %v", actualValue, 0)
+	}
+}
+
+func BenchmarkSet(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		set := New()
 		for n := 0; n < 1000; n++ {

@@ -30,7 +30,7 @@ package utils
 
 import "github.com/emirpasic/gods/utils/timsort"
 
-// Sorts values (in-place) using timsort
+// Sort sorts values (in-place) using timsort
 func Sort(values []interface{}, comparator Comparator) {
 	less := func(a, b interface{}) bool { return comparator(a, b) < 0 }
 	timsort.Sort(values, less)

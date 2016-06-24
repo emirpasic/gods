@@ -28,6 +28,7 @@ package examples
 
 import "github.com/emirpasic/gods/sets/hashset"
 
+// HashSetExample to demonstrate basic usage of HashSet
 func HashSetExample() {
 	set := hashset.New()   // empty (keys are of type int)
 	set.Add(1)             // 1

@@ -23,72 +23,64 @@ import (
 	"testing"
 )
 
-func TestTreeSet(t *testing.T) {
-
+func TestSetAdd(t *testing.T) {
 	set := NewWithIntComparator()
-
-	// insertions
 	set.Add()
 	set.Add(1)
 	set.Add(2)
 	set.Add(2, 3)
 	set.Add()
-
 	if actualValue := set.Empty(); actualValue != false {
 		t.Errorf("Got %v expected %v", actualValue, false)
 	}
-
 	if actualValue := set.Size(); actualValue != 3 {
 		t.Errorf("Got %v expected %v", actualValue, 3)
 	}
-
-	// Asking if a set is superset of nothing, thus it's true
-	if actualValue := set.Contains(); actualValue != true {
-		t.Errorf("Got %v expected %v", actualValue, true)
-	}
-
-	if actualValue := set.Contains(1); actualValue != true {
-		t.Errorf("Got %v expected %v", actualValue, true)
-	}
-
-	if actualValue := set.Contains(1, 2, 3); actualValue != true {
-		t.Errorf("Got %v expected %v", actualValue, true)
-	}
-
-	if actualValue := set.Contains(1, 2, 3, 4); actualValue != false {
-		t.Errorf("Got %v expected %v", actualValue, false)
-	}
-
-	// repeat 10 time since map in golang has a random iteration order each time and we want to make sure that the set is ordered
-	for i := 1; i <= 10; i++ {
-		if actualValue, expectedValue := fmt.Sprintf("%d%d%d", set.Values()...), "123"; actualValue != expectedValue {
-			t.Errorf("Got %v expected %v", actualValue, expectedValue)
-		}
-	}
-
-	set.Remove()
-	set.Remove(1)
-
-	if actualValue := set.Contains(1); actualValue != false {
-		t.Errorf("Got %v expected %v", actualValue, false)
-	}
-
-	set.Remove(1, 2, 3)
-
-	if actualValue := set.Contains(3); actualValue != false {
-		t.Errorf("Got %v expected %v", actualValue, false)
-	}
-
-	if actualValue := set.Empty(); actualValue != true {
-		t.Errorf("Got %v expected %v", actualValue, true)
+	if actualValue, expectedValue := fmt.Sprintf("%d%d%d", set.Values()...), "123"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 }
 
-func TestTreeSetEnumerableAndIterator(t *testing.T) {
+func TestSetContains(t *testing.T) {
+	set := NewWithIntComparator()
+	set.Add(3, 1, 2)
+	if actualValue := set.Contains(); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+	if actualValue := set.Contains(1); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+	if actualValue := set.Contains(1, 2, 3); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+	if actualValue := set.Contains(1, 2, 3, 4); actualValue != false {
+		t.Errorf("Got %v expected %v", actualValue, false)
+	}
+}
+
+func TestSetRemove(t *testing.T) {
+	set := NewWithIntComparator()
+	set.Add(3, 1, 2)
+	set.Remove()
+	if actualValue := set.Size(); actualValue != 3 {
+		t.Errorf("Got %v expected %v", actualValue, 3)
+	}
+	set.Remove(1)
+	if actualValue := set.Size(); actualValue != 2 {
+		t.Errorf("Got %v expected %v", actualValue, 2)
+	}
+	set.Remove(3)
+	set.Remove(3)
+	set.Remove()
+	set.Remove(2)
+	if actualValue := set.Size(); actualValue != 0 {
+		t.Errorf("Got %v expected %v", actualValue, 0)
+	}
+}
+
+func TestSetEach(t *testing.T) {
 	set := NewWithStringComparator()
 	set.Add("c", "a", "b")
-
-	// Each
 	set.Each(func(index int, value interface{}) {
 		switch index {
 		case 0:
@@ -107,8 +99,11 @@ func TestTreeSetEnumerableAndIterator(t *testing.T) {
 			t.Errorf("Too many")
 		}
 	})
+}
 
-	// Map
+func TestSetMap(t *testing.T) {
+	set := NewWithStringComparator()
+	set.Add("c", "a", "b")
 	mappedSet := set.Map(func(index int, value interface{}) interface{} {
 		return "mapped: " + value.(string)
 	})
@@ -121,13 +116,16 @@ func TestTreeSetEnumerableAndIterator(t *testing.T) {
 	if mappedSet.Size() != 3 {
 		t.Errorf("Got %v expected %v", mappedSet.Size(), 3)
 	}
+}
 
-	// Select
+func TestSetSelect(t *testing.T) {
+	set := NewWithStringComparator()
+	set.Add("c", "a", "b")
 	selectedSet := set.Select(func(index int, value interface{}) bool {
 		return value.(string) >= "a" && value.(string) <= "b"
 	})
 	if actualValue, expectedValue := selectedSet.Contains("a", "b"), true; actualValue != expectedValue {
-		fmt.Println("A: ", mappedSet.Contains("b"))
+		fmt.Println("A: ", selectedSet.Contains("b"))
 		t.Errorf("Got %v (%v) expected %v (%v)", actualValue, selectedSet.Values(), expectedValue, "[a b]")
 	}
 	if actualValue, expectedValue := selectedSet.Contains("a", "b", "c"), false; actualValue != expectedValue {
@@ -136,8 +134,11 @@ func TestTreeSetEnumerableAndIterator(t *testing.T) {
 	if selectedSet.Size() != 2 {
 		t.Errorf("Got %v expected %v", selectedSet.Size(), 3)
 	}
+}
 
-	// Any
+func TestSetAny(t *testing.T) {
+	set := NewWithStringComparator()
+	set.Add("c", "a", "b")
 	any := set.Any(func(index int, value interface{}) bool {
 		return value.(string) == "c"
 	})
@@ -150,8 +151,11 @@ func TestTreeSetEnumerableAndIterator(t *testing.T) {
 	if any != false {
 		t.Errorf("Got %v expected %v", any, false)
 	}
+}
 
-	// All
+func TestSetAll(t *testing.T) {
+	set := NewWithStringComparator()
+	set.Add("c", "a", "b")
 	all := set.All(func(index int, value interface{}) bool {
 		return value.(string) >= "a" && value.(string) <= "c"
 	})
@@ -164,8 +168,11 @@ func TestTreeSetEnumerableAndIterator(t *testing.T) {
 	if all != false {
 		t.Errorf("Got %v expected %v", all, false)
 	}
+}
 
-	// Find
+func TestSetFind(t *testing.T) {
+	set := NewWithStringComparator()
+	set.Add("c", "a", "b")
 	foundIndex, foundValue := set.Find(func(index int, value interface{}) bool {
 		return value.(string) == "c"
 	})
@@ -178,8 +185,17 @@ func TestTreeSetEnumerableAndIterator(t *testing.T) {
 	if foundValue != nil || foundIndex != -1 {
 		t.Errorf("Got %v at %v expected %v at %v", foundValue, foundIndex, nil, nil)
 	}
+}
 
-	// Iterator
+func TestSetChaining(t *testing.T) {
+	set := NewWithStringComparator()
+	set.Add("c", "a", "b")
+}
+
+func TestSetIterator(t *testing.T) {
+	set := NewWithStringComparator()
+	set.Add("c", "a", "b")
+
 	it := set.Iterator()
 	for it.Next() {
 		index := it.Index()
@@ -201,6 +217,7 @@ func TestTreeSetEnumerableAndIterator(t *testing.T) {
 			t.Errorf("Too many")
 		}
 	}
+
 	set.Clear()
 	it = set.Iterator()
 	for it.Next() {
@@ -208,7 +225,7 @@ func TestTreeSetEnumerableAndIterator(t *testing.T) {
 	}
 }
 
-func BenchmarkTreeSet(b *testing.B) {
+func BenchmarkSet(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		set := NewWithIntComparator()
 		for n := 0; n < 1000; n++ {

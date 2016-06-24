@@ -31,6 +31,7 @@ import (
 	"github.com/emirpasic/gods/utils"
 )
 
+// ArrayListExample to demonstrate basic usage of ArrayList
 func ArrayListExample() {
 	list := arraylist.New()
 	list.Add("a")                         // ["a"]

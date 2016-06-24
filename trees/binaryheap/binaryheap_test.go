@@ -31,63 +31,65 @@ import (
 	"testing"
 )
 
-func TestBinaryHeap(t *testing.T) {
-
+func TestBinaryHeapPush(t *testing.T) {
 	heap := NewWithIntComparator()
 
 	if actualValue := heap.Empty(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
 
-	// insertions
-	heap.Push(3)
-	// [3]
-	heap.Push(2)
-	// [2,3]
-	heap.Push(1)
-	// [1,3,2](2 swapped with 1, hence last)
+	heap.Push(3) // [3]
+	heap.Push(2) // [2,3]
+	heap.Push(1) // [1,3,2](2 swapped with 1, hence last)
 
 	if actualValue := heap.Values(); actualValue[0].(int) != 1 || actualValue[1].(int) != 3 || actualValue[2].(int) != 2 {
 		t.Errorf("Got %v expected %v", actualValue, "[1,2,3]")
 	}
-
 	if actualValue := heap.Empty(); actualValue != false {
 		t.Errorf("Got %v expected %v", actualValue, false)
 	}
-
 	if actualValue := heap.Size(); actualValue != 3 {
 		t.Errorf("Got %v expected %v", actualValue, 3)
 	}
-
 	if actualValue, ok := heap.Peek(); actualValue != 1 || !ok {
 		t.Errorf("Got %v expected %v", actualValue, 1)
 	}
+}
 
-	heap.Pop()
-
-	if actualValue, ok := heap.Peek(); actualValue != 2 || !ok {
-		t.Errorf("Got %v expected %v", actualValue, 2)
-	}
-
-	if actualValue, ok := heap.Pop(); actualValue != 2 || !ok {
-		t.Errorf("Got %v expected %v", actualValue, 2)
-	}
-
-	if actualValue, ok := heap.Pop(); actualValue != 3 || !ok {
-		t.Errorf("Got %v expected %v", actualValue, 3)
-	}
-
-	if actualValue, ok := heap.Pop(); actualValue != nil || ok {
-		t.Errorf("Got %v expected %v", actualValue, nil)
-	}
+func TestBinaryHeapPop(t *testing.T) {
+	heap := NewWithIntComparator()
 
 	if actualValue := heap.Empty(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
 
+	heap.Push(3) // [3]
+	heap.Push(2) // [2,3]
+	heap.Push(1) // [1,3,2](2 swapped with 1, hence last)
+	heap.Pop()   // [3,2]
+
+	if actualValue, ok := heap.Peek(); actualValue != 2 || !ok {
+		t.Errorf("Got %v expected %v", actualValue, 2)
+	}
+	if actualValue, ok := heap.Pop(); actualValue != 2 || !ok {
+		t.Errorf("Got %v expected %v", actualValue, 2)
+	}
+	if actualValue, ok := heap.Pop(); actualValue != 3 || !ok {
+		t.Errorf("Got %v expected %v", actualValue, 3)
+	}
+	if actualValue, ok := heap.Pop(); actualValue != nil || ok {
+		t.Errorf("Got %v expected %v", actualValue, nil)
+	}
+	if actualValue := heap.Empty(); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
 	if actualValue := heap.Values(); len(actualValue) != 0 {
 		t.Errorf("Got %v expected %v", actualValue, "[]")
 	}
+}
+
+func TestBinaryHeapRandom(t *testing.T) {
+	heap := NewWithIntComparator()
 
 	rand.Seed(3)
 	for i := 0; i < 10000; i++ {
@@ -112,15 +114,10 @@ func TestBinaryHeapIterator(t *testing.T) {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
 
-	// insertions
-	heap.Push(3)
-	// [3]
-	heap.Push(2)
-	// [2,3]
-	heap.Push(1)
-	// [1,3,2](2 swapped with 1, hence last)
+	heap.Push(3) // [3]
+	heap.Push(2) // [2,3]
+	heap.Push(1) // [1,3,2](2 swapped with 1, hence last)
 
-	// Iterator
 	it := heap.Iterator()
 	for it.Next() {
 		index := it.Index()
@@ -142,6 +139,7 @@ func TestBinaryHeapIterator(t *testing.T) {
 			t.Errorf("Too many")
 		}
 	}
+
 	heap.Clear()
 	it = heap.Iterator()
 	for it.Next() {

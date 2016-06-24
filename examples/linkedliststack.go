@@ -28,6 +28,7 @@ package examples
 
 import lls "github.com/emirpasic/gods/stacks/linkedliststack"
 
+// LinkedListStackExample to demonstrate basic usage of LinkedListStack
 func LinkedListStackExample() {
 	stack := lls.New()  // empty
 	stack.Push(1)       // 1

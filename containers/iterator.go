@@ -28,30 +28,30 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package containers
 
-// Stateful iterator for ordered containers whose values can be fetched by an index.
+// IteratorWithIndex is stateful iterator for ordered containers whose values can be fetched by an index.
 type IteratorWithIndex interface {
-	// Moves the iterator to the next element and returns true if there was a next element in the container.
+	// Next moves the iterator to the next element and returns true if there was a next element in the container.
 	// If Next() returns true, then next element's index and value can be retrieved by Index() and Value().
 	// Modifies the state of the iterator.
 	Next() bool
-	// Returns the current element's value.
+	// Value returns the current element's value.
 	// Does not modify the state of the iterator.
 	Value() interface{}
-	// Returns the current element's index.
+	// Index returns the current element's index.
 	// Does not modify the state of the iterator.
 	Index() int
 }
 
-// Stateful iterator for ordered containers whose elements are key value pairs.
+// IteratorWithKey is a stateful iterator for ordered containers whose elements are key value pairs.
 type IteratorWithKey interface {
-	// Moves the iterator to the next element and returns true if there was a next element in the container.
+	// Next moves the iterator to the next element and returns true if there was a next element in the container.
 	// If Next() returns true, then next element's key and value can be retrieved by Key() and Value().
 	// Modifies the state of the iterator.
 	Next() bool
-	// Returns the current element's value.
+	// Value returns the current element's value.
 	// Does not modify the state of the iterator.
 	Value() interface{}
-	// Returns the current element's key.
+	// Key returns the current element's key.
 	// Does not modify the state of the iterator.
 	Key() interface{}
 }
