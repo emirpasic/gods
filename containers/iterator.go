@@ -24,14 +24,34 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package trees
+// Stateful iterator pattern for ordered containers.
 
-import "github.com/emirpasic/gods/containers"
+package containers
 
-type Tree interface {
-	containers.Container
-	// Empty() bool
-	// Size() int
-	// Clear()
-	// Values() []interface{}
+// Stateful iterator for ordered containers whose values can be fetched by an index.
+type IteratorWithIndex interface {
+	// Moves the iterator to the next element and returns true if there was a next element in the container.
+	// If Next() returns true, then next element's index and value can be retrieved by Index() and Value().
+	// Modifies the state of the iterator.
+	Next() bool
+	// Returns the current element's value.
+	// Does not modify the state of the iterator.
+	Value() interface{}
+	// Returns the current element's index.
+	// Does not modify the state of the iterator.
+	Index() int
+}
+
+// Stateful iterator for ordered containers whose elements are key value pairs.
+type IteratorWithKey interface {
+	// Moves the iterator to the next element and returns true if there was a next element in the container.
+	// If Next() returns true, then next element's key and value can be retrieved by Key() and Value().
+	// Modifies the state of the iterator.
+	Next() bool
+	// Returns the current element's value.
+	// Does not modify the state of the iterator.
+	Value() interface{}
+	// Returns the current element's key.
+	// Does not modify the state of the iterator.
+	Key() interface{}
 }

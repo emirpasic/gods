@@ -33,13 +33,15 @@ package redblacktree
 
 import (
 	"fmt"
+	"github.com/emirpasic/gods/containers"
 	"github.com/emirpasic/gods/stacks/linkedliststack"
 	"github.com/emirpasic/gods/trees"
 	"github.com/emirpasic/gods/utils"
 )
 
 func assertInterfaceImplementation() {
-	var _ trees.Interface = (*Tree)(nil)
+	var _ trees.Tree = (*Tree)(nil)
+	var _ containers.IteratorWithKey = (*Iterator)(nil)
 }
 
 type color bool
@@ -270,6 +272,55 @@ func (tree *Tree) Ceiling(key interface{}) (ceiling *Node, found bool) {
 func (tree *Tree) Clear() {
 	tree.Root = nil
 	tree.size = 0
+}
+
+type Iterator struct {
+	tree *Tree
+	left *Node
+}
+
+// Returns a stateful iterator whose elements are key/value pairs.
+func (tree *Tree) Iterator() Iterator {
+	return Iterator{tree: tree, left: nil}
+}
+
+// Moves the iterator to the next element and returns true if there was a next element in the container.
+// If Next() returns true, then next element's key and value can be retrieved by Key() and Value().
+// Modifies the state of the iterator.
+func (iterator *Iterator) Next() bool {
+	if iterator.left == nil {
+		iterator.left = iterator.tree.Left()
+		return iterator.left != nil
+	}
+	if iterator.left.Right != nil {
+		iterator.left = iterator.left.Right
+		for iterator.left.Left != nil {
+			iterator.left = iterator.left.Left
+		}
+		return true
+	}
+	if iterator.left.Parent != nil {
+		key := iterator.left.Key
+		for iterator.left.Parent != nil {
+			iterator.left = iterator.left.Parent
+			if iterator.tree.Comparator(key, iterator.left.Key) <= 0 {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// Returns the current element's value.
+// Does not modify the state of the iterator.
+func (iterator *Iterator) Value() interface{} {
+	return iterator.left.Value
+}
+
+// Returns the current element's key.
+// Does not modify the state of the iterator.
+func (iterator *Iterator) Key() interface{} {
+	return iterator.left.Key
 }
 
 func (tree *Tree) String() string {

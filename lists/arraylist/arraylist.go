@@ -32,13 +32,16 @@ package arraylist
 
 import (
 	"fmt"
+	"github.com/emirpasic/gods/containers"
 	"github.com/emirpasic/gods/lists"
 	"github.com/emirpasic/gods/utils"
 	"strings"
 )
 
 func assertInterfaceImplementation() {
-	var _ lists.Interface = (*List)(nil)
+	var _ lists.List = (*List)(nil)
+	var _ containers.EnumerableWithIndex = (*List)(nil)
+	var _ containers.IteratorWithIndex = (*Iterator)(nil)
 }
 
 type List struct {
@@ -175,6 +178,104 @@ func (list *List) Insert(index int, values ...interface{}) {
 	}
 }
 
+type Iterator struct {
+	list  *List
+	index int
+}
+
+// Returns a stateful iterator whose values can be fetched by an index.
+func (list *List) Iterator() Iterator {
+	return Iterator{list: list, index: -1}
+}
+
+// Moves the iterator to the next element and returns true if there was a next element in the container.
+// If Next() returns true, then next element's index and value can be retrieved by Index() and Value().
+// Modifies the state of the iterator.
+func (iterator *Iterator) Next() bool {
+	iterator.index += 1
+	return iterator.list.withinRange(iterator.index)
+}
+
+// Returns the current element's value.
+// Does not modify the state of the iterator.
+func (iterator *Iterator) Value() interface{} {
+	return iterator.list.elements[iterator.index]
+}
+
+// Returns the current element's index.
+// Does not modify the state of the iterator.
+func (iterator *Iterator) Index() int {
+	return iterator.index
+}
+
+// Calls the given function once for each element, passing that element's index and value.
+func (list *List) Each(f func(index int, value interface{})) {
+	iterator := list.Iterator()
+	for iterator.Next() {
+		f(iterator.Index(), iterator.Value())
+	}
+}
+
+// Invokes the given function once for each element and returns a
+// container containing the values returned by the given function.
+func (list *List) Map(f func(index int, value interface{}) interface{}) *List {
+	newList := &List{}
+	iterator := list.Iterator()
+	for iterator.Next() {
+		newList.Add(f(iterator.Index(), iterator.Value()))
+	}
+	return newList
+}
+
+// Returns a new container containing all elements for which the given function returns a true value.
+func (list *List) Select(f func(index int, value interface{}) bool) *List {
+	newList := &List{}
+	iterator := list.Iterator()
+	for iterator.Next() {
+		if f(iterator.Index(), iterator.Value()) {
+			newList.Add(iterator.Value())
+		}
+	}
+	return newList
+}
+
+// Passes each element of the collection to the given function and
+// returns true if the function ever returns true for any element.
+func (list *List) Any(f func(index int, value interface{}) bool) bool {
+	iterator := list.Iterator()
+	for iterator.Next() {
+		if f(iterator.Index(), iterator.Value()) {
+			return true
+		}
+	}
+	return false
+}
+
+// Passes each element of the collection to the given function and
+// returns true if the function returns true for all elements.
+func (list *List) All(f func(index int, value interface{}) bool) bool {
+	iterator := list.Iterator()
+	for iterator.Next() {
+		if !f(iterator.Index(), iterator.Value()) {
+			return false
+		}
+	}
+	return true
+}
+
+// Passes each element of the container to the given function and returns
+// the first (index,value) for which the function is true or -1,nil otherwise
+// if no element matches the criteria.
+func (list *List) Find(f func(index int, value interface{}) bool) (int, interface{}) {
+	iterator := list.Iterator()
+	for iterator.Next() {
+		if f(iterator.Index(), iterator.Value()) {
+			return iterator.Index(), iterator.Value()
+		}
+	}
+	return -1, nil
+}
+
 func (list *List) String() string {
 	str := "ArrayList\n"
 	values := []string{}
@@ -216,5 +317,4 @@ func (list *List) shrink() {
 	if list.size <= int(float32(currentCapacity)*SHRINK_FACTOR) {
 		list.resize(list.size)
 	}
-
 }

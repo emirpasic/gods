@@ -33,6 +33,7 @@ package binaryheap
 
 import (
 	"fmt"
+	"github.com/emirpasic/gods/containers"
 	"github.com/emirpasic/gods/lists/arraylist"
 	"github.com/emirpasic/gods/trees"
 	"github.com/emirpasic/gods/utils"
@@ -40,7 +41,8 @@ import (
 )
 
 func assertInterfaceImplementation() {
-	var _ trees.Interface = (*Heap)(nil)
+	var _ trees.Tree = (*Heap)(nil)
+	var _ containers.IteratorWithIndex = (*Iterator)(nil)
 }
 
 type Heap struct {
@@ -109,6 +111,37 @@ func (heap *Heap) Values() []interface{} {
 	return heap.list.Values()
 }
 
+type Iterator struct {
+	heap  *Heap
+	index int
+}
+
+// Returns a stateful iterator whose values can be fetched by an index.
+func (heap *Heap) Iterator() Iterator {
+	return Iterator{heap: heap, index: -1}
+}
+
+// Moves the iterator to the next element and returns true if there was a next element in the container.
+// If Next() returns true, then next element's index and value can be retrieved by Index() and Value().
+// Modifies the state of the iterator.
+func (iterator *Iterator) Next() bool {
+	iterator.index += 1
+	return iterator.heap.withinRange(iterator.index)
+}
+
+// Returns the current element's value.
+// Does not modify the state of the iterator.
+func (iterator *Iterator) Value() interface{} {
+	value, _ := iterator.heap.list.Get(iterator.index)
+	return value
+}
+
+// Returns the current element's index.
+// Does not modify the state of the iterator.
+func (iterator *Iterator) Index() int {
+	return iterator.index
+}
+
 func (heap *Heap) String() string {
 	str := "BinaryHeap\n"
 	values := []string{}
@@ -157,4 +190,9 @@ func (heap *Heap) bubbleUp() {
 		heap.list.Swap(index, parentIndex)
 		index = parentIndex
 	}
+}
+
+// Check that the index is withing bounds of the list
+func (heap *Heap) withinRange(index int) bool {
+	return index >= 0 && index < heap.list.Size()
 }

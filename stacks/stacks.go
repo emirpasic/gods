@@ -28,12 +28,12 @@ package stacks
 
 import "github.com/emirpasic/gods/containers"
 
-type Interface interface {
+type Stack interface {
 	Push(value interface{})
 	Pop() (value interface{}, ok bool)
 	Peek() (value interface{}, ok bool)
 
-	containers.Interface
+	containers.Container
 	// Empty() bool
 	// Size() int
 	// Clear()

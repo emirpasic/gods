@@ -37,7 +37,7 @@ import (
 )
 
 func assertInterfaceImplementation() {
-	var _ sets.Interface = (*Set)(nil)
+	var _ sets.Set = (*Set)(nil)
 }
 
 type Set struct {

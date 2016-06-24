@@ -32,13 +32,15 @@ package arraystack
 
 import (
 	"fmt"
+	"github.com/emirpasic/gods/containers"
 	"github.com/emirpasic/gods/lists/arraylist"
 	"github.com/emirpasic/gods/stacks"
 	"strings"
 )
 
 func assertInterfaceImplementation() {
-	var _ stacks.Interface = (*Stack)(nil)
+	var _ stacks.Stack = (*Stack)(nil)
+	var _ containers.IteratorWithIndex = (*Iterator)(nil)
 }
 
 type Stack struct {
@@ -94,6 +96,37 @@ func (stack *Stack) Values() []interface{} {
 	return elements
 }
 
+type Iterator struct {
+	stack *Stack
+	index int
+}
+
+// Returns a stateful iterator whose values can be fetched by an index.
+func (stack *Stack) Iterator() Iterator {
+	return Iterator{stack: stack, index: -1}
+}
+
+// Moves the iterator to the next element and returns true if there was a next element in the container.
+// If Next() returns true, then next element's index and value can be retrieved by Index() and Value().
+// Modifies the state of the iterator.
+func (iterator *Iterator) Next() bool {
+	iterator.index += 1
+	return iterator.stack.withinRange(iterator.index)
+}
+
+// Returns the current element's value.
+// Does not modify the state of the iterator.
+func (iterator *Iterator) Value() interface{} {
+	value, _ := iterator.stack.list.Get(iterator.stack.list.Size() - iterator.index - 1) // in reverse (LIFO)
+	return value
+}
+
+// Returns the current element's index.
+// Does not modify the state of the iterator.
+func (iterator *Iterator) Index() int {
+	return iterator.index
+}
+
 func (stack *Stack) String() string {
 	str := "ArrayStack\n"
 	values := []string{}
@@ -102,4 +135,9 @@ func (stack *Stack) String() string {
 	}
 	str += strings.Join(values, ", ")
 	return str
+}
+
+// Check that the index is withing bounds of the list
+func (stack *Stack) withinRange(index int) bool {
+	return index >= 0 && index < stack.list.Size()
 }
