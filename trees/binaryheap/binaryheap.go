@@ -192,7 +192,7 @@ func (heap *Heap) bubbleUp() {
 	}
 }
 
-// Check that the index is withing bounds of the list
+// Check that the index is within bounds of the list
 func (heap *Heap) withinRange(index int) bool {
 	return index >= 0 && index < heap.list.Size()
 }
