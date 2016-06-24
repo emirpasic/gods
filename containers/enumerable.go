@@ -29,7 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package containers
 
-// Enumerable function for ordered containers whose values can be fetched by an index.
+// Enumerable functions for ordered containers whose values can be fetched by an index.
 type EnumerableWithIndex interface {
 	// Calls the given function once for each element, passing that element's index and value.
 	Each(func(index int, value interface{}))
@@ -55,7 +55,7 @@ type EnumerableWithIndex interface {
 	Find(func(index int, value interface{}) bool) (int, interface{})
 }
 
-// Enumerable function for ordered containers whose values whose elements are key value pairs.
+// Enumerable functions for ordered containers whose values whose elements are key/value pairs.
 type EnumerableWithKey interface {
 	// Calls the given function once for each element, passing that element's key and value.
 	Each(func(key interface{}, value interface{}))

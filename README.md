@@ -33,7 +33,8 @@ Implementation of various data structures and algorithms in Go.
       - [EnumerableWithKey](#enumerablewithkey)
     - [Sort](#sort)
     - [Container](#container)
-  
+- [Appendix](#appendix)
+
 
 ## Containers
 
@@ -48,9 +49,9 @@ type Container interface {
 }
 ```
 
-Containers are either ordered or unordered. All ordered containers provide [stateful iterators](iterator) and some of them allow [enumerable functions](#enumerable).
+Containers are either ordered or unordered. All ordered containers provide [stateful iterators](#iterator) and some of them allow [enumerable functions](#enumerable).
 
-| Container | Ordered | [Iterator](iterator) | [Enumerable](#enumerable) | Ordered by |
+| Container | Ordered | [Iterator](#iterator) | [Enumerable](#enumerable) | Ordered by |
 | :--- | :---: | :---: | :---: | :---: |
 | [ArrayList](#arraylist) | yes | yes | yes | index |
 | [SinglyLinkedList](#singlylinkedlist) | yes | yes | yes | index |
@@ -518,7 +519,7 @@ A binary heap is a [tree](#trees) created using a binary tree. It can be seen as
 - Heap property:
 
   All nodes are either greater than or equal to or less than or equal to each of its children, according to a comparison predicate defined for the heap. <small>[Wikipedia](http://en.wikipedia.org/wiki/Binary_heap)</small>
-  
+
 Implements [Tree](#trees) and [IteratorWithIndex](#iteratorwithindex) interfaces.
 
 <center><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Max-Heap.svg/501px-Max-Heap.svg.png" width="300px" height="200px" /></center>
@@ -641,7 +642,7 @@ func main() {
 
 ### Iterator
 
-All ordered containers have stateful iterators. Typically an iterator is obtained by _Iterator()_ function of an ordered container. Once obtained, iterator's _Next()_ function moves the iterator to the next element and returns true if there was a next element. If there was an element, then element's can be obtained by iterator's _Value()_ function. Depending on the ordering type, it's position can be obtained by iterator's _Index()_ or _Key()_ functions. '
+All ordered containers have stateful iterators. Typically an iterator is obtained by _Iterator()_ function of an ordered container. Once obtained, iterator's _Next()_ function moves the iterator to the next element and returns true if there was a next element. If there was an element, then element's can be obtained by iterator's _Value()_ function. Depending on the ordering type, it's position can be obtained by iterator's _Index()_ or _Key()_ functions.
 
 #### IteratorWithIndex
 
@@ -673,68 +674,92 @@ Enumerable functions for ordered containers that implement [EnumerableWithIndex]
 
 #### EnumerableWithIndex
 
-Enumerable function for ordered containers whose values can be fetched by an index.
+[Enumerable](#enumerable) functions for ordered containers whose values can be fetched by an index.
 
-Definition:
+**Each**: Calls the given function once for each element, passing that element's index and value.
 
 ```go
-type EnumerableWithIndex interface {
-	// Calls the given function once for each element, passing that element's index and value.
-	Each(func(index int, value interface{}))
+Each(func(index int, value interface{}))
+```
 
-	// Invokes the given function once for each element and returns a
-	// container containing the values returned by the given function.
-	Map(func(index int, value interface{}) interface{}) Container
+**Map**: Invokes the given function once for each element and returns a container containing the values returned by the given function.
 
-	// Returns a new container containing all elements for which the given function returns a true value.
-	Select(func(index int, value interface{}) bool) Container
+```go
+Map(func(index int, value interface{}) interface{}) Container
+```
 
-	// Passes each element of the container to the given function and
-	// returns true if the function ever returns true for any element.
-	Any(func(index int, value interface{}) bool) bool
+**Select**: Returns a new container containing all elements for which the given function returns a true value.
 
-	// Passes each element of the container to the given function and
-	// returns true if the function returns true for all elements.
-	All(func(index int, value interface{}) bool) bool
+```go
+Select(func(index int, value interface{}) bool) Container
+```
 
-	// Passes each element of the container to the given function and returns
-	// the first (index,value) for which the function is true or -1,nil otherwise
-	// if no element matches the criteria.
-	Find(func(index int, value interface{}) bool) (int, interface{})
-}
+**Any**: Passes each element of the container to the given function and returns true if the function ever returns true for any element.
+
+```go
+Any(func(index int, value interface{}) bool) bool
+```
+
+**All**: Passes each element of the container to the given function and returns true if the function returns true for all elements.
+
+```go
+All(func(index int, value interface{}) bool) bool
+```
+
+**Find**: Passes each element of the container to the given function and returns the first (index,value) for which the function is true or -1,nil otherwise if no element matches the criteria.
+
+```go
+Find(func(index int, value interface{}) bool) (int, interface{})}
+```
+
+Typical usage:
+```go
+TODO
 ```
 
 #### EnumerableWithKey
 
 Enumerable functions for ordered containers whose values whose elements are key/value pairs.
 
-Definition: 
+**Each**: Calls the given function once for each element, passing that element's key and value.
 
 ```go
-type EnumerableWithKey interface {
-	// Calls the given function once for each element, passing that element's key and value.
-	Each(func(key interface{}, value interface{}))
+Each(func(key interface{}, value interface{}))
+```
 
-	// Invokes the given function once for each element and returns a container
-	// containing the values returned by the given function as key/value pairs.
-	Map(func(key interface{}, value interface{}) (interface{}, interface{})) Container
+**Map**: Invokes the given function once for each element and returns a container containing the values returned by the given function as key/value pairs.
 
-	// Returns a new container containing all elements for which the given function returns a true value.
-	Select(func(key interface{}, value interface{}) bool) Container
+```go
+Map(func(key interface{}, value interface{}) (interface{}, interface{})) Container
+```
 
-	// Passes each element of the container to the given function and
-	// returns true if the function ever returns true for any element.
-	Any(func(key interface{}, value interface{}) bool) bool
+**Select**: Returns a new container containing all elements for which the given function returns a true value.
 
-	// Passes each element of the container to the given function and
-	// returns true if the function returns true for all elements.
-	All(func(key interface{}, value interface{}) bool) bool
+```go
+Select(func(key interface{}, value interface{}) bool) Container
+```
 
-	// Passes each element of the container to the given function and returns
-	// the first (key,value) for which the function is true or nil,nil otherwise if no element
-	// matches the criteria.
-	Find(func(key interface{}, value interface{}) bool) (interface{}, interface{})
-}
+**Any**: Passes each element of the container to the given function and returns true if the function ever returns true for any element.
+
+```go
+Any(func(key interface{}, value interface{}) bool) bool
+```
+
+**All**: Passes each element of the container to the given function and returns true if the function returns true for all elements.
+
+```go
+All(func(key interface{}, value interface{}) bool) bool
+```
+
+**Find**: Passes each element of the container to the given function and returns the first (key,value) for which the function is true or nil,nil otherwise if no element matches the criteria.
+
+```go
+Find(func(key interface{}, value interface{}) bool) (interface{}, interface{})
+```
+
+Typical usage:
+```go
+TODO
 ```
 
 ### Sort
@@ -763,8 +788,8 @@ func main() {
 Container specific operations:
 
 ```go
-// Returns sorted container''s elements with respect to the passed comparator. 
-// Does not effect the ordering of elements within the container. 
+// Returns sorted container''s elements with respect to the passed comparator.
+// Does not effect the ordering of elements within the container.
 // Uses timsort.
 func GetSortedValues(container Container, comparator utils.Comparator) []interface{}
 ```
@@ -772,8 +797,18 @@ func GetSortedValues(container Container, comparator utils.Comparator) []interfa
 Usage:
 
 ```go
+package main
+
+import (
+	"github.com/emirpasic/gods/lists/arraylist"
+    "github.com/emirpasic/gods/utils"
+)
+
+func main() {
+	list := arraylist.New()
     list.Add(2, 1, 3)
     values := GetSortedValues(container, utils.StringComparator) // [1, 2, 3]
+}
 ```
 
 ## Appendix
