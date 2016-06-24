@@ -676,82 +676,163 @@ Enumerable functions for ordered containers that implement [EnumerableWithIndex]
 
 [Enumerable](#enumerable) functions for ordered containers whose values can be fetched by an index.
 
-**Each**: Calls the given function once for each element, passing that element's index and value.
+**Each**
+
+Calls the given function once for each element, passing that element's index and value.
 
 ```go
 Each(func(index int, value interface{}))
 ```
 
-**Map**: Invokes the given function once for each element and returns a container containing the values returned by the given function.
+**Map**
+
+Invokes the given function once for each element and returns a container containing the values returned by the given function.
 
 ```go
 Map(func(index int, value interface{}) interface{}) Container
 ```
 
-**Select**: Returns a new container containing all elements for which the given function returns a true value.
+**Select**
+
+Returns a new container containing all elements for which the given function returns a true value.
 
 ```go
 Select(func(index int, value interface{}) bool) Container
 ```
 
-**Any**: Passes each element of the container to the given function and returns true if the function ever returns true for any element.
+**Any**
+
+Passes each element of the container to the given function and returns true if the function ever returns true for any element.
 
 ```go
 Any(func(index int, value interface{}) bool) bool
 ```
 
-**All**: Passes each element of the container to the given function and returns true if the function returns true for all elements.
+**All**
+
+Passes each element of the container to the given function and returns true if the function returns true for all elements.
 
 ```go
 All(func(index int, value interface{}) bool) bool
 ```
 
-**Find**: Passes each element of the container to the given function and returns the first (index,value) for which the function is true or -1,nil otherwise if no element matches the criteria.
+**Find**
+
+Passes each element of the container to the given function and returns the first (index,value) for which the function is true or -1,nil otherwise if no element matches the criteria.
 
 ```go
 Find(func(index int, value interface{}) bool) (int, interface{})}
 ```
 
-Typical usage:
+**Example: **
+
 ```go
-TODO
+package main
+
+import (
+	"fmt"
+	"github.com/emirpasic/gods/sets/treeset"
+)
+
+func main() {
+	set := treeset.NewWithIntComparator()
+	set.Add(2, 3, 4, 2, 5, 6, 7, 8)
+	fmt.Println(set) // TreeSet [2, 3, 4, 5, 6, 7, 8]
+
+	// Calculates sum.
+	sum := 0
+	set.Each(func(index int, value interface{}) {
+		sum += value.(int)
+	})
+	fmt.Println(sum) // 35
+
+	// Selects all even numbers into a new set.
+	even := set.Select(func(index int, value interface{}) bool {
+		return value.(int)%2 == 0
+	})
+	fmt.Println(even) // TreeSet [2, 4, 6, 8]
+
+	// Finds first number divisible by 2 and 3
+	foundIndex, foundValue := set.Find(func(index int, value interface{}) bool {
+		return value.(int)%2 == 0 && value.(int)%3 == 0
+	})
+	fmt.Println(foundIndex, foundValue) // index: 4, value: 6
+
+	// Squares each number in a new set.
+	square := set.Map(func(index int, value interface{}) interface{} {
+		return value.(int) * value.(int)
+	})
+	fmt.Println(square) // TreeSet [4, 9, 16, 25, 36, 49, 64]
+
+	// Tests if any number is bigger than 5
+	bigger := set.Any(func(index int, value interface{}) bool {
+		return value.(int) > 5
+	})
+	fmt.Println(bigger) // true
+
+	// Tests if all numbers are positive
+	positive := set.All(func(index int, value interface{}) bool {
+		return value.(int) > 0
+	})
+	fmt.Println(positive) // true
+
+	// Chaining
+	evenNumbersSquared := set.Select(func(index int, value interface{}) bool {
+		return value.(int)%2 == 0
+	}).Map(func(index int, value interface{}) interface{} {
+		return value.(int) * value.(int)
+	})
+	fmt.Println(evenNumbersSquared) // TreeSet [4, 16, 36, 64]
+}
 ```
 
 #### EnumerableWithKey
 
 Enumerable functions for ordered containers whose values whose elements are key/value pairs.
 
-**Each**: Calls the given function once for each element, passing that element's key and value.
+**Each**
+
+Calls the given function once for each element, passing that element's key and value.
 
 ```go
 Each(func(key interface{}, value interface{}))
 ```
 
-**Map**: Invokes the given function once for each element and returns a container containing the values returned by the given function as key/value pairs.
+**Map**
+
+Invokes the given function once for each element and returns a container containing the values returned by the given function as key/value pairs.
 
 ```go
 Map(func(key interface{}, value interface{}) (interface{}, interface{})) Container
 ```
 
-**Select**: Returns a new container containing all elements for which the given function returns a true value.
+**Select**
+
+Returns a new container containing all elements for which the given function returns a true value.
 
 ```go
 Select(func(key interface{}, value interface{}) bool) Container
 ```
 
-**Any**: Passes each element of the container to the given function and returns true if the function ever returns true for any element.
+**Any**
+
+Passes each element of the container to the given function and returns true if the function ever returns true for any element.
 
 ```go
 Any(func(key interface{}, value interface{}) bool) bool
 ```
 
-**All**: Passes each element of the container to the given function and returns true if the function returns true for all elements.
+**All**
+
+Passes each element of the container to the given function and returns true if the function returns true for all elements.
 
 ```go
 All(func(key interface{}, value interface{}) bool) bool
 ```
 
-**Find**: Passes each element of the container to the given function and returns the first (key,value) for which the function is true or nil,nil otherwise if no element matches the criteria.
+**Find**
+
+Passes each element of the container to the given function and returns the first (key,value) for which the function is true or nil,nil otherwise if no element matches the criteria.
 
 ```go
 Find(func(key interface{}, value interface{}) bool) (interface{}, interface{})
@@ -759,7 +840,71 @@ Find(func(key interface{}, value interface{}) bool) (interface{}, interface{})
 
 Typical usage:
 ```go
-TODO
+package main
+
+import (
+	"fmt"
+	"github.com/emirpasic/gods/maps/treemap"
+	"strconv"
+)
+
+func prettyPrint(m *treemap.Map) {
+	fmt.Print("{ ")
+	m.Each(func(key interface{}, value interface{}) {
+		fmt.Print(key.(string) + ": " + strconv.Itoa(value.(int)) + " ")
+	})
+	fmt.Println("}")
+}
+
+func main() {
+	m := treemap.NewWithStringComparator()
+	m.Put("g", 7)
+	m.Put("f", 6)
+	m.Put("e", 5)
+	m.Put("d", 4)
+	m.Put("c", 3)
+	m.Put("b", 2)
+	m.Put("a", 1)
+	prettyPrint(m) // { a: 1 b: 2 c: 3 d: 4 e: 5 f: 6 g: 7 }
+
+	// Selects all elements with even values into a new map.
+	even := m.Select(func(key interface{}, value interface{}) bool {
+		return value.(int)%2 == 0
+	})
+	prettyPrint(even) // { b: 2 d: 4 f: 6 }
+
+	// Finds first element whose value is divisible by 2 and 3
+	foundKey, foundValue := m.Find(func(key interface{}, value interface{}) bool {
+		return value.(int)%2 == 0 && value.(int)%3 == 0
+	})
+	fmt.Println(foundKey, foundValue) // key: f, value: 6
+
+	// Creates a new map containing same elements with their values squared and letters duplicated.
+	square := m.Map(func(key interface{}, value interface{}) (interface{}, interface{}) {
+		return key.(string) + key.(string), value.(int) * value.(int)
+	})
+	prettyPrint(square) // { aa: 1 bb: 4 cc: 9 dd: 16 ee: 25 ff: 36 gg: 49 }
+
+	// Tests if any element contains value that is bigger than 5
+	bigger := m.Any(func(key interface{}, value interface{}) bool {
+		return value.(int) > 5
+	})
+	fmt.Println(bigger) // true
+
+	// Tests if all elements' values are positive
+	positive := m.All(func(key interface{}, value interface{}) bool {
+		return value.(int) > 0
+	})
+	fmt.Println(positive) // true
+
+	// Chaining
+	evenNumbersSquared := m.Select(func(key interface{}, value interface{}) bool {
+		return value.(int)%2 == 0
+	}).Map(func(key interface{}, value interface{}) (interface{}, interface{}) {
+		return key, value.(int) * value.(int)
+	})
+	prettyPrint(evenNumbersSquared) // { b: 4 d: 16 f: 36 }
+}
 ```
 
 ### Sort
