@@ -80,7 +80,7 @@ func (m *Map) Size() int {
 func (m *Map) Keys() []interface{} {
 	keys := make([]interface{}, m.Size())
 	count := 0
-	for key, _ := range m.m {
+	for key := range m.m {
 		keys[count] = key
 		count += 1
 	}

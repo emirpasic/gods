@@ -96,7 +96,7 @@ func (set *Set) Clear() {
 func (set *Set) Values() []interface{} {
 	values := make([]interface{}, set.Size())
 	count := 0
-	for item, _ := range set.items {
+	for item := range set.items {
 		values[count] = item
 		count += 1
 	}
@@ -106,7 +106,7 @@ func (set *Set) Values() []interface{} {
 func (set *Set) String() string {
 	str := "HashSet\n"
 	items := []string{}
-	for k, _ := range set.items {
+	for k := range set.items {
 		items = append(items, fmt.Sprintf("%v", k))
 	}
 	str += strings.Join(items, ", ")
