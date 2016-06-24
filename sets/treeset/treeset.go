@@ -144,7 +144,7 @@ func (set *Set) Each(f func(index int, value interface{})) {
 
 // Invokes the given function once for each element and returns a
 // container containing the values returned by the given function.
-func (set *Set) Map(f func(index int, value interface{}) interface{}) containers.Container {
+func (set *Set) Map(f func(index int, value interface{}) interface{}) *Set {
 	newSet := &Set{tree: rbt.NewWith(set.tree.Comparator)}
 	iterator := set.Iterator()
 	for iterator.Next() {
@@ -154,7 +154,7 @@ func (set *Set) Map(f func(index int, value interface{}) interface{}) containers
 }
 
 // Returns a new container containing all elements for which the given function returns a true value.
-func (set *Set) Select(f func(index int, value interface{}) bool) containers.Container {
+func (set *Set) Select(f func(index int, value interface{}) bool) *Set {
 	newSet := &Set{tree: rbt.NewWith(set.tree.Comparator)}
 	iterator := set.Iterator()
 	for iterator.Next() {

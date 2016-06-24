@@ -213,7 +213,7 @@ func TestTreeMapEnumerableAndIterator(t *testing.T) {
 	// Map
 	mappedMap := m.Map(func(key1 interface{}, value1 interface{}) (key2 interface{}, value2 interface{}) {
 		return key1, "mapped: " + key1.(string)
-	}).(*Map)
+	})
 	if actualValue, _ := mappedMap.Get("a"); actualValue != "mapped: a" {
 		t.Errorf("Got %v expected %v", actualValue, "mapped: a")
 	}
@@ -230,7 +230,7 @@ func TestTreeMapEnumerableAndIterator(t *testing.T) {
 	// Select
 	selectedMap := m.Select(func(key interface{}, value interface{}) bool {
 		return key.(string) >= "a" && key.(string) <= "b"
-	}).(*Map)
+	})
 	if actualValue, _ := selectedMap.Get("a"); actualValue != 1 {
 		t.Errorf("Got %v expected %v", actualValue, "value: a")
 	}

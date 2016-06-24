@@ -36,10 +36,12 @@ type EnumerableWithIndex interface {
 
 	// Invokes the given function once for each element and returns a
 	// container containing the values returned by the given function.
-	Map(func(index int, value interface{}) interface{}) Container
+	// TODO need help on how to enforce this in containers (don't want to type assert when chaining)
+	// Map(func(index int, value interface{}) interface{}) Container
 
 	// Returns a new container containing all elements for which the given function returns a true value.
-	Select(func(index int, value interface{}) bool) Container
+	// TODO need help on how to enforce this in containers (don't want to type assert when chaining)
+	// Select(func(index int, value interface{}) bool) Container
 
 	// Passes each element of the container to the given function and
 	// returns true if the function ever returns true for any element.
@@ -62,10 +64,12 @@ type EnumerableWithKey interface {
 
 	// Invokes the given function once for each element and returns a container
 	// containing the values returned by the given function as key/value pairs.
-	Map(func(key interface{}, value interface{}) (interface{}, interface{})) Container
+	// TODO need help on how to enforce this in containers (don't want to type assert when chaining)
+	// Map(func(key interface{}, value interface{}) (interface{}, interface{})) Container
 
 	// Returns a new container containing all elements for which the given function returns a true value.
-	Select(func(key interface{}, value interface{}) bool) Container
+	// TODO need help on how to enforce this in containers (don't want to type assert when chaining)
+	// Select(func(key interface{}, value interface{}) bool) Container
 
 	// Passes each element of the container to the given function and
 	// returns true if the function ever returns true for any element.

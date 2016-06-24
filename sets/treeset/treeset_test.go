@@ -111,7 +111,7 @@ func TestTreeSetEnumerableAndIterator(t *testing.T) {
 	// Map
 	mappedSet := set.Map(func(index int, value interface{}) interface{} {
 		return "mapped: " + value.(string)
-	}).(*Set)
+	})
 	if actualValue, expectedValue := mappedSet.Contains("mapped: a", "mapped: b", "mapped: c"), true; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
@@ -125,7 +125,7 @@ func TestTreeSetEnumerableAndIterator(t *testing.T) {
 	// Select
 	selectedSet := set.Select(func(index int, value interface{}) bool {
 		return value.(string) >= "a" && value.(string) <= "b"
-	}).(*Set)
+	})
 	if actualValue, expectedValue := selectedSet.Contains("a", "b"), true; actualValue != expectedValue {
 		fmt.Println("A: ", mappedSet.Contains("b"))
 		t.Errorf("Got %v (%v) expected %v (%v)", actualValue, selectedSet.Values(), expectedValue, "[a b]")

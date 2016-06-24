@@ -218,7 +218,7 @@ func (list *List) Each(f func(index int, value interface{})) {
 
 // Invokes the given function once for each element and returns a
 // container containing the values returned by the given function.
-func (list *List) Map(f func(index int, value interface{}) interface{}) containers.Container {
+func (list *List) Map(f func(index int, value interface{}) interface{}) *List {
 	newList := &List{}
 	iterator := list.Iterator()
 	for iterator.Next() {
@@ -228,7 +228,7 @@ func (list *List) Map(f func(index int, value interface{}) interface{}) containe
 }
 
 // Returns a new container containing all elements for which the given function returns a true value.
-func (list *List) Select(f func(index int, value interface{}) bool) containers.Container {
+func (list *List) Select(f func(index int, value interface{}) bool) *List {
 	newList := &List{}
 	iterator := list.Iterator()
 	for iterator.Next() {

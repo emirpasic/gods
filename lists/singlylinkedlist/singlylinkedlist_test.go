@@ -164,7 +164,7 @@ func TestSinglyLinkedListEnumerableAndIterator(t *testing.T) {
 	// Map
 	mappedList := list.Map(func(index int, value interface{}) interface{} {
 		return "mapped: " + value.(string)
-	}).(*List)
+	})
 	if actualValue, _ := mappedList.Get(0); actualValue != "mapped: a" {
 		t.Errorf("Got %v expected %v", actualValue, "mapped: a")
 	}
@@ -181,7 +181,7 @@ func TestSinglyLinkedListEnumerableAndIterator(t *testing.T) {
 	// Select
 	selectedList := list.Select(func(index int, value interface{}) bool {
 		return value.(string) >= "a" && value.(string) <= "b"
-	}).(*List)
+	})
 	if actualValue, _ := selectedList.Get(0); actualValue != "a" {
 		t.Errorf("Got %v expected %v", actualValue, "value: a")
 	}
