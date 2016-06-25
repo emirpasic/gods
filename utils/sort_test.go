@@ -27,6 +27,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package utils
 
 import (
+	"math/rand"
 	"testing"
 )
 
@@ -98,5 +99,28 @@ func TestSortStructs(t *testing.T) {
 			t.Errorf("Not sorted!")
 		}
 	}
+}
 
+func TestSortRandom(t *testing.T) {
+	ints := []interface{}{}
+	for i := 0; i < 10000; i++ {
+		ints = append(ints, rand.Int())
+	}
+	Sort(ints, IntComparator)
+	for i := 1; i < len(ints); i++ {
+		if ints[i-1].(int) > ints[i].(int) {
+			t.Errorf("Not sorted!")
+		}
+	}
+}
+
+func BenchmarkGoSortRandom(b *testing.B) {
+	b.StopTimer()
+	ints := []interface{}{}
+	for i := 0; i < 100000; i++ {
+		ints = append(ints, rand.Int())
+	}
+	b.StartTimer()
+	Sort(ints, IntComparator)
+	b.StopTimer()
 }
