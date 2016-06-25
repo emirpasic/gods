@@ -16,7 +16,7 @@ License along with this library. See the file LICENSE included
 with this distribution for more information.
 */
 
-// Package sets provides abstract Set interface for that all concrete sets should implement.
+// Package sets provides an abstract Set interface.
 //
 // In computer science, a set is an abstract data type that can store certain values and no repeated values. It is a computer implementation of the mathematical concept of a finite set. Unlike most other collection types, rather than retrieving a specific element from a set, one typically tests a value for membership in a set.
 //

@@ -28,6 +28,8 @@ Implementation of various data structures and algorithms in Go.
     - [Iterator](#iterator)
       - [IteratorWithIndex](#iteratorwithindex)
       - [IteratorWithKey](#iteratorwithkey)
+      - [ReverseIteratorWithIndex](#reverseiteratorwithindex)
+      - [ReverseIteratorWithKey](#reverseiteratorwithkey)
     - [Enumerable](#enumerable)
       - [EnumerableWithIndex](#enumerablewithindex)
       - [EnumerableWithKey](#enumerablewithkey)
@@ -53,9 +55,9 @@ Containers are either ordered or unordered. All ordered containers provide [stat
 
 | Container | Ordered | [Iterator](#iterator) | [Enumerable](#enumerable) | Ordered by |
 | :--- | :---: | :---: | :---: | :---: |
-| [ArrayList](#arraylist) | yes | yes | yes | index |
-| [SinglyLinkedList](#singlylinkedlist) | yes | yes | yes | index |
-| [DoublyLinkedList](#doublylinkedlist) | yes | yes | yes | index |
+| [ArrayList](#arraylist) | yes | yes* | yes | index |
+| [SinglyLinkedList](#singlylinkedlist) | yes | yes* | yes | index |
+| [DoublyLinkedList](#doublylinkedlist) | yes | yes* | yes | index |
 | [HashSet](#hashset) | no | no | no | index |
 | [TreeSet](#treeset) | yes | yes | yes | index |
 | [LinkedListStack](#linkedliststack) | yes | yes | no | index |
@@ -64,6 +66,7 @@ Containers are either ordered or unordered. All ordered containers provide [stat
 | [TreeMap](#treemap) | yes | yes | yes | key |
 | [RedBlackTree](#redblacktree) | yes | yes | no | key |
 | [BinaryHeap](#binaryheap) | yes | yes | no | index |
+|  |  | <sub><sup>*reversible</sup></sub> |  |  |
 
 ### Lists
 
@@ -642,7 +645,7 @@ func main() {
 
 ### Iterator
 
-All ordered containers have stateful iterators. Typically an iterator is obtained by _Iterator()_ function of an ordered container. Once obtained, iterator's _Next()_ function moves the iterator to the next element and returns true if there was a next element. If there was an element, then element's can be obtained by iterator's _Value()_ function. Depending on the ordering type, it's position can be obtained by iterator's _Index()_ or _Key()_ functions.
+All ordered containers have stateful iterators. Typically an iterator is obtained by _Iterator()_ function of an ordered container. Once obtained, iterator's _Next()_ function moves the iterator to the next element and returns true if there was a next element. If there was an element, then element's can be obtained by iterator's _Value()_ function. Depending on the ordering type, it's position can be obtained by iterator's _Index()_ or _Key()_ functions. Some containers even provide reversible iterators, essentially the same, but provide another extra _Prev()_ function that moves the iterator to the previous element and returns true if there was a previous element.
 
 #### IteratorWithIndex
 
@@ -663,6 +666,32 @@ A [iterator](#iterator) whose elements are referenced by a key. Typical usage:
 ```go
 it := map.Iterator()
 for it.Next() {
+	key, value := it.Key(), it.Value()
+    ...
+}
+```
+
+#### ReverseIteratorWithIndex
+
+A [iterator](#iterator) whose elements are referenced by an index. Typical usage:
+
+```go
+it := list.Iterator()
+for it.Next() { /* Move to end */ }
+for it.Prev() {
+	index, value := it.Index(), it.Value()
+    ...
+}
+```
+
+#### ReverseIteratorWithKey
+
+A [iterator](#iterator) whose elements are referenced by a key. Typical usage:
+
+```go
+it := map.Iterator()
+for it.Next() { /* Move to end */ }
+for it.Prev() {
 	key, value := it.Key(), it.Value()
     ...
 }

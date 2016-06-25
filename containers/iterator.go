@@ -53,3 +53,33 @@ type IteratorWithKey interface {
 	// Does not modify the state of the iterator.
 	Key() interface{}
 }
+
+// ReverseIteratorWithIndex is stateful iterator for ordered containers whose values can be fetched by an index.
+//
+// Essentially it is the same as IteratorWithIndex, but provides additional Prev() function to enable traversal in reverse.
+type ReverseIteratorWithIndex interface {
+	// Prev moves the iterator to the previous element and returns true if there was a previous element in the container.
+	// If Prev() returns true, then previous element's index and value can be retrieved by Index() and Value().
+	// Modifies the state of the iterator.
+	Prev() bool
+
+	IteratorWithIndex
+	// Next() bool
+	// Value() interface{}
+	// Index() int
+}
+
+// ReverseIteratorWithKey is a stateful iterator for ordered containers whose elements are key value pairs.
+//
+// Essentially it is the same as IteratorWithKey, but provides additional Prev() function to enable traversal in reverse.
+type ReverseIteratorWithKey interface {
+	// Prev moves the iterator to the previous element and returns true if there was a previous element in the container.
+	// If Prev() returns true, then previous element's index and value can be retrieved by Key() and Value().
+	// Modifies the state of the iterator.
+	Prev() bool
+
+	IteratorWithKey
+	// Next() bool
+	// Value() interface{}
+	// Key() interface{}
+}

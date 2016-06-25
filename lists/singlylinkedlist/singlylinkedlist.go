@@ -288,15 +288,17 @@ func (list *List) Iterator() Iterator {
 // If Next() returns true, then next element's index and value can be retrieved by Index() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator) Next() bool {
-	iterator.index++
+	if iterator.index < iterator.list.size {
+		iterator.index++
+	}
 	if !iterator.list.withinRange(iterator.index) {
 		iterator.element = nil
 		return false
 	}
-	if iterator.element != nil {
-		iterator.element = iterator.element.next
-	} else {
+	if iterator.index == 0 {
 		iterator.element = iterator.list.first
+	} else {
+		iterator.element = iterator.element.next
 	}
 	return true
 }

@@ -24,7 +24,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Package containers provides core interfaces and functions data structures.
+// Package containers provides core interfaces and functions for data structures.
 //
 // Container is the base interface for all data structures to implement.
 //
