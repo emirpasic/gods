@@ -407,7 +407,7 @@ func TestRedBlackTreeIterator3Prev(t *testing.T) {
 	}
 }
 
-func TestRedBlackTreeIterator4(t *testing.T) {
+func TestRedBlackTreeIterator4Next(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(13, 5)
 	tree.Put(8, 3)
@@ -419,7 +419,6 @@ func TestRedBlackTreeIterator4(t *testing.T) {
 	tree.Put(6, 2)
 	tree.Put(22, 8)
 	tree.Put(27, 10)
-
 	// │           ┌── 27
 	// │       ┌── 25
 	// │       │   └── 22
@@ -430,10 +429,7 @@ func TestRedBlackTreeIterator4(t *testing.T) {
 	//     └── 8
 	//         │   ┌── 6
 	//         └── 1
-
 	it := tree.Iterator()
-
-	// Iterator (next)
 	count := 0
 	for it.Next() {
 		count++
@@ -452,8 +448,34 @@ func TestRedBlackTreeIterator4(t *testing.T) {
 	if actualValue, expectedValue := count, tree.Size(); actualValue != expectedValue {
 		t.Errorf("Size different. Got %v expected %v", actualValue, expectedValue)
 	}
+}
 
-	// Iterator (prev)
+func TestRedBlackTreeIterator4(t *testing.T) {
+	tree := NewWithIntComparator()
+	tree.Put(13, 5)
+	tree.Put(8, 3)
+	tree.Put(17, 7)
+	tree.Put(1, 1)
+	tree.Put(11, 4)
+	tree.Put(15, 6)
+	tree.Put(25, 9)
+	tree.Put(6, 2)
+	tree.Put(22, 8)
+	tree.Put(27, 10)
+	// │           ┌── 27
+	// │       ┌── 25
+	// │       │   └── 22
+	// │   ┌── 17
+	// │   │   └── 15
+	// └── 13
+	//     │   ┌── 11
+	//     └── 8
+	//         │   ┌── 6
+	//         └── 1
+	it := tree.Iterator()
+	count := tree.Size()
+	for it.Next() {
+	}
 	for it.Prev() {
 		count--
 		value := it.Value()

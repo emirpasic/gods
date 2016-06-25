@@ -192,10 +192,25 @@ func TestSetChaining(t *testing.T) {
 	set.Add("c", "a", "b")
 }
 
-func TestSetIterator(t *testing.T) {
+func TestSetIteratorNextOnEmpty(t *testing.T) {
+	set := NewWithStringComparator()
+	it := set.Iterator()
+	for it.Next() {
+		t.Errorf("Shouldn't iterate on empty set")
+	}
+}
+
+func TestSetIteratorPrevOnEmpty(t *testing.T) {
+	set := NewWithStringComparator()
+	it := set.Iterator()
+	for it.Prev() {
+		t.Errorf("Shouldn't iterate on empty set")
+	}
+}
+
+func TestSetIteratorNext(t *testing.T) {
 	set := NewWithStringComparator()
 	set.Add("c", "a", "b")
-
 	it := set.Iterator()
 	count := 0
 	for it.Next() {
@@ -225,11 +240,41 @@ func TestSetIterator(t *testing.T) {
 	if actualValue, expectedValue := count, 3; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
+}
 
-	set.Clear()
-	it = set.Iterator()
+func TestSetIteratorPrev(t *testing.T) {
+	set := NewWithStringComparator()
+	set.Add("c", "a", "b")
+	it := set.Iterator()
+	for it.Prev() {
+	}
+	count := 0
 	for it.Next() {
-		t.Errorf("Shouldn't iterate on empty set")
+		count++
+		index := it.Index()
+		value := it.Value()
+		switch index {
+		case 0:
+			if actualValue, expectedValue := value, "a"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case 1:
+			if actualValue, expectedValue := value, "b"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case 2:
+			if actualValue, expectedValue := value, "c"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		default:
+			t.Errorf("Too many")
+		}
+		if actualValue, expectedValue := index, count-1; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+	}
+	if actualValue, expectedValue := count, 3; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 }
 

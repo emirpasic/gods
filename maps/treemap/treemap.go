@@ -43,7 +43,7 @@ import (
 func assertInterfaceImplementation() {
 	var _ maps.Map = (*Map)(nil)
 	var _ containers.EnumerableWithKey = (*Map)(nil)
-	var _ containers.IteratorWithKey = (*Iterator)(nil)
+	var _ containers.ReverseIteratorWithKey = (*Iterator)(nil)
 }
 
 // Map holds the elements in a red-black tree
@@ -143,6 +143,13 @@ func (m *Map) Iterator() Iterator {
 // Modifies the state of the iterator.
 func (iterator *Iterator) Next() bool {
 	return iterator.iterator.Next()
+}
+
+// Prev moves the iterator to the previous element and returns true if there was a previous element in the container.
+// If Prev() returns true, then previous element's index and value can be retrieved by Key() and Value().
+// Modifies the state of the iterator.
+func (iterator *Iterator) Prev() bool {
+	return iterator.iterator.Prev()
 }
 
 // Value returns the current element's value.
