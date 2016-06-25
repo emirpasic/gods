@@ -24,10 +24,11 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Implementation of set backed by a hash table.
+// Package hashset implements a set backed by a hash table.
+//
 // Structure is not thread safe.
+//
 // References: http://en.wikipedia.org/wiki/Set_%28abstract_data_type%29
-
 package hashset
 
 import (

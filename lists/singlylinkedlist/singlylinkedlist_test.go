@@ -299,11 +299,21 @@ func TestListChaining(t *testing.T) {
 	}
 }
 
-func TestListIterator(t *testing.T) {
+func TestListIteratorNextOnEmpty(t *testing.T) {
+	list := New()
+	it := list.Iterator()
+	for it.Next() {
+		t.Errorf("Shouldn't iterate on empty list")
+	}
+}
+
+func TestListIteratorNext(t *testing.T) {
 	list := New()
 	list.Add("a", "b", "c")
 	it := list.Iterator()
+	count := 0
 	for it.Next() {
+		count++
 		index := it.Index()
 		value := it.Value()
 		switch index {
@@ -323,10 +333,8 @@ func TestListIterator(t *testing.T) {
 			t.Errorf("Too many")
 		}
 	}
-	list.Clear()
-	it = list.Iterator()
-	for it.Next() {
-		t.Errorf("Shouldn't iterate on empty list")
+	if actualValue, expectedValue := count, 3; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 }
 

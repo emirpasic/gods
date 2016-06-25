@@ -311,14 +311,34 @@ func TestMapChaining(t *testing.T) {
 	}
 }
 
-func TestMapIterator(t *testing.T) {
+func TestMapIteratorNextOnEmpty(t *testing.T) {
+	m := NewWithStringComparator()
+	it := m.Iterator()
+	it = m.Iterator()
+	for it.Next() {
+		t.Errorf("Shouldn't iterate on empty map")
+	}
+}
+
+func TestMapIteratorPrevOnEmpty(t *testing.T) {
+	m := NewWithStringComparator()
+	it := m.Iterator()
+	it = m.Iterator()
+	for it.Prev() {
+		t.Errorf("Shouldn't iterate on empty map")
+	}
+}
+
+func TestMapIteratorNext(t *testing.T) {
 	m := NewWithStringComparator()
 	m.Put("c", 3)
 	m.Put("a", 1)
 	m.Put("b", 2)
 
 	it := m.Iterator()
+	count := 0
 	for it.Next() {
+		count++
 		key := it.Key()
 		value := it.Value()
 		switch key {
@@ -337,12 +357,52 @@ func TestMapIterator(t *testing.T) {
 		default:
 			t.Errorf("Too many")
 		}
+		if actualValue, expectedValue := value, count; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
 	}
+	if actualValue, expectedValue := count, 3; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+}
 
-	m.Clear()
-	it = m.Iterator()
+func TestMapIteratorPrev(t *testing.T) {
+	m := NewWithStringComparator()
+	m.Put("c", 3)
+	m.Put("a", 1)
+	m.Put("b", 2)
+
+	it := m.Iterator()
 	for it.Next() {
-		t.Errorf("Shouldn't iterate on empty map")
+	}
+	countDown := m.Size()
+	for it.Prev() {
+		countDown--
+		key := it.Key()
+		value := it.Value()
+		switch key {
+		case "a":
+			if actualValue, expectedValue := value, 1; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case "b":
+			if actualValue, expectedValue := value, 2; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case "c":
+			if actualValue, expectedValue := value, 3; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		default:
+			t.Errorf("Too many")
+		}
+		if actualValue, expectedValue := value, countDown; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+	}
+	// one less that in Next(), thus "1"
+	if actualValue, expectedValue := countDown, 1; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 }
 

@@ -107,19 +107,24 @@ func TestBinaryHeapRandom(t *testing.T) {
 	}
 }
 
-func TestBinaryHeapIterator(t *testing.T) {
+func TestBinaryHeapIteratorOnEmpty(t *testing.T) {
 	heap := NewWithIntComparator()
-
-	if actualValue := heap.Empty(); actualValue != true {
-		t.Errorf("Got %v expected %v", actualValue, true)
+	it := heap.Iterator()
+	for it.Next() {
+		t.Errorf("Shouldn't iterate on empty heap")
 	}
+}
 
+func TestBinaryHeapIteratorNext(t *testing.T) {
+	heap := NewWithIntComparator()
 	heap.Push(3) // [3]
 	heap.Push(2) // [2,3]
 	heap.Push(1) // [1,3,2](2 swapped with 1, hence last)
 
 	it := heap.Iterator()
+	count := 0
 	for it.Next() {
+		count++
 		index := it.Index()
 		value := it.Value()
 		switch index {
@@ -138,12 +143,51 @@ func TestBinaryHeapIterator(t *testing.T) {
 		default:
 			t.Errorf("Too many")
 		}
+		if actualValue, expectedValue := index, count-1; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
 	}
+	if actualValue, expectedValue := count, 3; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+}
 
-	heap.Clear()
-	it = heap.Iterator()
+func TestBinaryHeapIteratorPrev(t *testing.T) {
+	heap := NewWithIntComparator()
+	heap.Push(3) // [3]
+	heap.Push(2) // [2,3]
+	heap.Push(1) // [1,3,2](2 swapped with 1, hence last)
+
+	it := heap.Iterator()
 	for it.Next() {
-		t.Errorf("Shouldn't iterate on empty stack")
+	}
+	count := 0
+	for it.Prev() {
+		count++
+		index := it.Index()
+		value := it.Value()
+		switch index {
+		case 0:
+			if actualValue, expectedValue := value, 1; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case 1:
+			if actualValue, expectedValue := value, 3; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case 2:
+			if actualValue, expectedValue := value, 2; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		default:
+			t.Errorf("Too many")
+		}
+		if actualValue, expectedValue := index, 3-count; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+	}
+	if actualValue, expectedValue := count, 3; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 }
 

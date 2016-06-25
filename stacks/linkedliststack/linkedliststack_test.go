@@ -100,7 +100,9 @@ func TestStackIterator(t *testing.T) {
 
 	// Iterator
 	it := stack.Iterator()
+	count := 0
 	for it.Next() {
+		count++
 		index := it.Index()
 		value := it.Value()
 		switch index {
@@ -119,7 +121,14 @@ func TestStackIterator(t *testing.T) {
 		default:
 			t.Errorf("Too many")
 		}
+		if actualValue, expectedValue := index, count-1; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
 	}
+	if actualValue, expectedValue := count, 3; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+
 	stack.Clear()
 	it = stack.Iterator()
 	for it.Next() {

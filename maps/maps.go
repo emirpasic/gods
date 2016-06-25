@@ -24,6 +24,17 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+// Package maps provides an abstract Map interface.
+//
+// In computer science, an associative array, map, symbol table, or dictionary is an abstract data type composed of a collection of (key, value) pairs, such that each possible key appears just once in the collection.
+//
+// Operations associated with this data type allow:
+// - the addition of a pair to the collection
+// - the removal of a pair from the collection
+// - the modification of an existing pair
+// - the lookup of a value associated with a particular key
+//
+// Reference: https://en.wikipedia.org/wiki/Associative_array
 package maps
 
 import "github.com/emirpasic/gods/containers"

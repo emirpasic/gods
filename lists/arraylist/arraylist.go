@@ -24,10 +24,11 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Implementation of list using a slice.
+// Package arraylist implements the array list.
+//
 // Structure is not thread safe.
-// References: http://en.wikipedia.org/wiki/List_%28abstract_data_type%29
-
+//
+// Reference: https://en.wikipedia.org/wiki/List_%28abstract_data_type%29
 package arraylist
 
 import (
@@ -41,7 +42,7 @@ import (
 func assertInterfaceImplementation() {
 	var _ lists.List = (*List)(nil)
 	var _ containers.EnumerableWithIndex = (*List)(nil)
-	var _ containers.IteratorWithIndex = (*Iterator)(nil)
+	var _ containers.ReverseIteratorWithIndex = (*Iterator)(nil)
 }
 
 // List holds the elements in a slice
@@ -194,7 +195,19 @@ func (list *List) Iterator() Iterator {
 // If Next() returns true, then next element's index and value can be retrieved by Index() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator) Next() bool {
-	iterator.index++
+	if iterator.index < iterator.list.size {
+		iterator.index++
+	}
+	return iterator.list.withinRange(iterator.index)
+}
+
+// Prev moves the iterator to the previous element and returns true if there was a previous element in the container.
+// If Prev() returns true, then previous element's index and value can be retrieved by Index() and Value().
+// Modifies the state of the iterator.
+func (iterator *Iterator) Prev() bool {
+	if iterator.index >= 0 {
+		iterator.index--
+	}
 	return iterator.list.withinRange(iterator.index)
 }
 

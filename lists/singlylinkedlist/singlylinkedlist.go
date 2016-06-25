@@ -24,10 +24,11 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Implementation of doubly linked list.
+// Package singlylinkedlist implements the singly-linked list.
+//
 // Structure is not thread safe.
-// References: http://en.wikipedia.org/wiki/Linked_list#Singly_linked_list
-
+//
+// Reference: https://en.wikipedia.org/wiki/List_%28abstract_data_type%29
 package singlylinkedlist
 
 import (
@@ -287,15 +288,17 @@ func (list *List) Iterator() Iterator {
 // If Next() returns true, then next element's index and value can be retrieved by Index() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator) Next() bool {
-	iterator.index++
+	if iterator.index < iterator.list.size {
+		iterator.index++
+	}
 	if !iterator.list.withinRange(iterator.index) {
 		iterator.element = nil
 		return false
 	}
-	if iterator.element != nil {
-		iterator.element = iterator.element.next
-	} else {
+	if iterator.index == 0 {
 		iterator.element = iterator.list.first
+	} else {
+		iterator.element = iterator.element.next
 	}
 	return true
 }

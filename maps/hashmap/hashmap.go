@@ -24,11 +24,13 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Implementation of unorder map backed by a hash table.
+// Package hashmap implements a map backed by a hash table.
+//
 // Elements are unordered in the map.
+//
 // Structure is not thread safe.
-// References: http://en.wikipedia.org/wiki/Associative_array
-
+//
+// Reference: http://en.wikipedia.org/wiki/Associative_array
 package hashmap
 
 import (

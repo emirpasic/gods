@@ -92,15 +92,24 @@ func TestStackPop(t *testing.T) {
 	}
 }
 
-func TestStackIterator(t *testing.T) {
+func TestStackIteratorOnEmpty(t *testing.T) {
+	stack := New()
+	it := stack.Iterator()
+	for it.Next() {
+		t.Errorf("Shouldn't iterate on empty stack")
+	}
+}
+
+func TestStackIteratorNext(t *testing.T) {
 	stack := New()
 	stack.Push("a")
 	stack.Push("b")
 	stack.Push("c")
 
-	// Iterator
 	it := stack.Iterator()
+	count := 0
 	for it.Next() {
+		count++
 		index := it.Index()
 		value := it.Value()
 		switch index {
@@ -119,11 +128,51 @@ func TestStackIterator(t *testing.T) {
 		default:
 			t.Errorf("Too many")
 		}
+		if actualValue, expectedValue := index, count-1; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
 	}
-	stack.Clear()
-	it = stack.Iterator()
+	if actualValue, expectedValue := count, 3; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+}
+
+func TestStackIteratorPrev(t *testing.T) {
+	stack := New()
+	stack.Push("a")
+	stack.Push("b")
+	stack.Push("c")
+
+	it := stack.Iterator()
 	for it.Next() {
-		t.Errorf("Shouldn't iterate on empty stack")
+	}
+	count := 0
+	for it.Prev() {
+		count++
+		index := it.Index()
+		value := it.Value()
+		switch index {
+		case 0:
+			if actualValue, expectedValue := value, "c"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case 1:
+			if actualValue, expectedValue := value, "b"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case 2:
+			if actualValue, expectedValue := value, "a"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		default:
+			t.Errorf("Too many")
+		}
+		if actualValue, expectedValue := index, 3-count; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+	}
+	if actualValue, expectedValue := count, 3; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 }
 

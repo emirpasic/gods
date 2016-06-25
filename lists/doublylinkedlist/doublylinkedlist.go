@@ -24,10 +24,11 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Implementation of doubly linked list.
+// Package doublylinkedlist implements the doubly-linked list.
+//
 // Structure is not thread safe.
-// References: http://en.wikipedia.org/wiki/Doubly_linked_list
-
+//
+// Reference: https://en.wikipedia.org/wiki/List_%28abstract_data_type%29
 package doublylinkedlist
 
 import (
@@ -41,7 +42,7 @@ import (
 func assertInterfaceImplementation() {
 	var _ lists.List = (*List)(nil)
 	var _ containers.EnumerableWithIndex = (*List)(nil)
-	var _ containers.IteratorWithIndex = (*Iterator)(nil)
+	var _ containers.ReverseIteratorWithIndex = (*Iterator)(nil)
 }
 
 // List holds the elements, where each element points to the next and previous element
@@ -315,17 +316,38 @@ func (list *List) Iterator() Iterator {
 // If Next() returns true, then next element's index and value can be retrieved by Index() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator) Next() bool {
-	iterator.index++
+	if iterator.index < iterator.list.size {
+		iterator.index++
+	}
 	if !iterator.list.withinRange(iterator.index) {
 		iterator.element = nil
 		return false
 	}
-	if iterator.element != nil {
+	if iterator.index != 0 {
 		iterator.element = iterator.element.next
 	} else {
 		iterator.element = iterator.list.first
 	}
 	return true
+}
+
+// Prev moves the iterator to the previous element and returns true if there was a previous element in the container.
+// If Prev() returns true, then previous element's index and value can be retrieved by Index() and Value().
+// Modifies the state of the iterator.
+func (iterator *Iterator) Prev() bool {
+	if iterator.index >= 0 {
+		iterator.index--
+	}
+	if !iterator.list.withinRange(iterator.index) {
+		iterator.element = nil
+		return false
+	}
+	if iterator.index == iterator.list.size-1 {
+		iterator.element = iterator.list.last
+	} else {
+		iterator.element = iterator.element.prev
+	}
+	return iterator.list.withinRange(iterator.index)
 }
 
 // Value returns the current element's value.

@@ -24,9 +24,6 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Enumerable functions for ordered containers.
-// Ruby's enumerable inspired package.
-
 package containers
 
 // EnumerableWithIndex provides functions for ordered containers whose values can be fetched by an index.

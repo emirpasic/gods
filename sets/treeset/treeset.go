@@ -16,10 +16,11 @@ License along with this library. See the file LICENSE included
 with this distribution for more information.
 */
 
-// Implementation of an ordered set backed by a red-black tree.
+// Package treeset implements a tree backed by a red-black tree.
+//
 // Structure is not thread safe.
-// References: http://en.wikipedia.org/wiki/Set_%28abstract_data_type%29
-
+//
+// Reference: http://en.wikipedia.org/wiki/Set_%28abstract_data_type%29
 package treeset
 
 import (
@@ -34,7 +35,7 @@ import (
 func assertInterfaceImplementation() {
 	var _ sets.Set = (*Set)(nil)
 	var _ containers.EnumerableWithIndex = (*Set)(nil)
-	var _ containers.IteratorWithIndex = (*Iterator)(nil)
+	var _ containers.ReverseIteratorWithIndex = (*Iterator)(nil)
 }
 
 // Set holds elements in a red-black tree
@@ -109,19 +110,32 @@ func (set *Set) Values() []interface{} {
 type Iterator struct {
 	index    int
 	iterator rbt.Iterator
+	tree     *rbt.Tree
 }
 
 // Iterator holding the iterator's state
 func (set *Set) Iterator() Iterator {
-	return Iterator{index: -1, iterator: set.tree.Iterator()}
+	return Iterator{index: -1, iterator: set.tree.Iterator(), tree: set.tree}
 }
 
 // Next moves the iterator to the next element and returns true if there was a next element in the container.
 // If Next() returns true, then next element's index and value can be retrieved by Index() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator) Next() bool {
-	iterator.index++
+	if iterator.index < iterator.tree.Size() {
+		iterator.index++
+	}
 	return iterator.iterator.Next()
+}
+
+// Prev moves the iterator to the previous element and returns true if there was a previous element in the container.
+// If Prev() returns true, then previous element's index and value can be retrieved by Index() and Value().
+// Modifies the state of the iterator.
+func (iterator *Iterator) Prev() bool {
+	if iterator.index >= 0 {
+		iterator.index--
+	}
+	return iterator.iterator.Prev()
 }
 
 // Value returns the current element's value.
