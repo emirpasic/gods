@@ -43,7 +43,7 @@ import (
 
 func assertInterfaceImplementation() {
 	var _ trees.Tree = (*Tree)(nil)
-	var _ containers.IteratorWithKey = (*Iterator)(nil)
+	var _ containers.ReverseIteratorWithKey = (*Iterator)(nil)
 }
 
 type color bool
@@ -281,37 +281,65 @@ func (tree *Tree) Clear() {
 // Iterator holding the iterator's state
 type Iterator struct {
 	tree *Tree
-	left *Node
+	node *Node
 }
 
 // Iterator returns a stateful iterator whose elements are key/value pairs.
 func (tree *Tree) Iterator() Iterator {
-	return Iterator{tree: tree, left: nil}
+	return Iterator{tree: tree, node: nil}
 }
 
 // Next moves the iterator to the next element and returns true if there was a next element in the container.
 // If Next() returns true, then next element's key and value can be retrieved by Key() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator) Next() bool {
-	if iterator.left == nil {
-		iterator.left = iterator.tree.Left()
-		return iterator.left != nil
+	if iterator.node == nil {
+		iterator.node = iterator.tree.Left()
+		return iterator.node != nil
 	}
-	if iterator.left.Right != nil {
-		iterator.left = iterator.left.Right
-		for iterator.left.Left != nil {
-			iterator.left = iterator.left.Left
+	if iterator.node.Right != nil {
+		iterator.node = iterator.node.Right
+		for iterator.node.Left != nil {
+			iterator.node = iterator.node.Left
 		}
 		return true
 	}
-	if iterator.left.Parent != nil {
-		key := iterator.left.Key
-		for iterator.left.Parent != nil {
-			iterator.left = iterator.left.Parent
-			if iterator.tree.Comparator(key, iterator.left.Key) <= 0 {
+	if iterator.node.Parent != nil {
+		node := iterator.node
+		for iterator.node.Parent != nil {
+			iterator.node = iterator.node.Parent
+			if iterator.tree.Comparator(node.Key, iterator.node.Key) <= 0 {
 				return true
 			}
 		}
+		iterator.node = node // fix: if parent didn't satisfy the comparator criteria
+	}
+	return false
+}
+
+// Prev moves the iterator to the previous element and returns true if there was a previous element in the container.
+// If Prev() returns true, then previous element's index and value can be retrieved by Key() and Value().
+// Modifies the state of the iterator.
+func (iterator *Iterator) Prev() bool {
+	if iterator.node == nil {
+		return false
+	}
+	if iterator.node.Left != nil {
+		iterator.node = iterator.node.Left
+		for iterator.node.Right != nil {
+			iterator.node = iterator.node.Right
+		}
+		return true
+	}
+	if iterator.node.Parent != nil {
+		node := iterator.node
+		for iterator.node.Parent != nil {
+			iterator.node = iterator.node.Parent
+			if iterator.tree.Comparator(node.Key, iterator.node.Key) >= 0 {
+				return true
+			}
+		}
+		iterator.node = node // fix: if parent didn't satisfy the comparator criteria
 	}
 	return false
 }
@@ -319,13 +347,13 @@ func (iterator *Iterator) Next() bool {
 // Value returns the current element's value.
 // Does not modify the state of the iterator.
 func (iterator *Iterator) Value() interface{} {
-	return iterator.left.Value
+	return iterator.node.Value
 }
 
 // Key returns the current element's key.
 // Does not modify the state of the iterator.
 func (iterator *Iterator) Key() interface{} {
-	return iterator.left.Key
+	return iterator.node.Key
 }
 
 // String returns a string representation of container
