@@ -995,8 +995,17 @@ Biggest contribution towards this library is to use it and give us feedback for 
 
 For direct contributions, _pull request_ into master or ask to become a contributor.
 
+Coding style:
+
+```shell
+# Install tooling:
+go build github.com/golang/lint/golint
+go build github.com/fzipp/gocyclo
+
+# Fix errors and warnings:
+go fmt ./... && gofmt -s -w . && go vet ./... && go get ./... && go test ./... && golint ./... && gocyclo -avg -over 15 .
+```
+
 ### License
 
 This library is distributed under the BSD-style license found in the [LICENSE](https://github.com/emirpasic/gods/blob/master/LICENSE) file.
-
-TimSort copied from [https://github.com/psilva261/timsort](https://github.com/psilva261/timsort) with MIT [LICENSE](https://github.com/emirpasic/gods/blob/master/utils/timsort/LICENSE) file.

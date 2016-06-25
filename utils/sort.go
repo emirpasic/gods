@@ -28,10 +28,25 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package utils
 
-import "github.com/emirpasic/gods/utils/timsort"
+import "sort"
 
-// Sort sorts values (in-place) using timsort
+// Sort sorts values (in-place)
+// Uses Go's sort (hybrid of quicksort for large and then insertion sort for smaller slices)
 func Sort(values []interface{}, comparator Comparator) {
-	less := func(a, b interface{}) bool { return comparator(a, b) < 0 }
-	timsort.Sort(values, less)
+	sort.Sort(sortable{values, comparator})
+}
+
+type sortable struct {
+	values     []interface{}
+	comparator Comparator
+}
+
+func (s sortable) Len() int {
+	return len(s.values)
+}
+func (s sortable) Swap(i, j int) {
+	s.values[i], s.values[j] = s.values[j], s.values[i]
+}
+func (s sortable) Less(i, j int) bool {
+	return s.comparator(s.values[i], s.values[j]) < 0
 }
