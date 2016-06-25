@@ -214,7 +214,7 @@ func (list *List) Clear() {
 	list.last = nil
 }
 
-// Sort sorts values (in-place) using timsort.
+// Sort sorts values (in-place) using.
 func (list *List) Sort(comparator utils.Comparator) {
 
 	if list.size < 2 {

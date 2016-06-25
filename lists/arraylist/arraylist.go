@@ -138,7 +138,7 @@ func (list *List) Clear() {
 	list.elements = []interface{}{}
 }
 
-// Sort sorts values (in-place) using timsort.
+// Sort sorts values (in-place) using.
 func (list *List) Sort(comparator utils.Comparator) {
 	if len(list.elements) < 2 {
 		return

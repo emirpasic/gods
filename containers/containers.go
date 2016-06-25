@@ -38,7 +38,6 @@ type Container interface {
 
 // GetSortedValues returns sorted container's elements with respect to the passed comparator.
 // Does not effect the ordering of elements within the container.
-// Uses timsort.
 func GetSortedValues(container Container, comparator utils.Comparator) []interface{} {
 	values := container.Values()
 	if len(values) < 2 {

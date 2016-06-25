@@ -902,9 +902,11 @@ func main() {
 
 ### Sort
 
-Sort uses timsort for best performance on real-world data. Lists have an in-place _Sort()_ method. All containers can return their sorted elements via _GetSortedValues()_ call.
+Sort is a general purpose sort function.
 
-Internally they use the _utils.Sort()_ method:
+Lists have an in-place _Sort()_ function and all containers can return their sorted elements via _containers.GetSortedValues()_ function.
+
+Internally these all use the _utils.Sort()_ method:
 
 ```go
 package main
@@ -928,7 +930,6 @@ Container specific operations:
 ```go
 // Returns sorted container''s elements with respect to the passed comparator.
 // Does not effect the ordering of elements within the container.
-// Uses timsort.
 func GetSortedValues(container Container, comparator utils.Comparator) []interface{}
 ```
 
