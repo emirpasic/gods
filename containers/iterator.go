@@ -24,8 +24,6 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Stateful iterator pattern for ordered containers.
-
 package containers
 
 // IteratorWithIndex is stateful iterator for ordered containers whose values can be fetched by an index.

@@ -24,11 +24,13 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Implementation of binary heap backed by ArrayList.
+// Package binaryheap implements a binary heap backed by array list.
+//
 // Comparator defines this heap as either min or max heap.
+//
 // Structure is not thread safe.
+//
 // References: http://en.wikipedia.org/wiki/Binary_heap
-
 package binaryheap
 
 import (

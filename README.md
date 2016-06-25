@@ -572,12 +572,12 @@ Some data structures (e.g. TreeMap, TreeSet) require a comparator function to au
 
 Comparator is defined as:
 
-Return values:
+Return values (int):
 
 ```go
--1, if a < b
- 0, if a == b
- 1, if a > b
+negative , if a < b
+zero     , if a == b
+positive , if a > b
 ```
 
 Comparator signature:

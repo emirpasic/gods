@@ -24,10 +24,11 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Implementation of doubly linked list.
+// Package doublylinkedlist implements the doubly-linked list.
+//
 // Structure is not thread safe.
-// References: http://en.wikipedia.org/wiki/Doubly_linked_list
-
+//
+// Reference: https://en.wikipedia.org/wiki/List_%28abstract_data_type%29
 package doublylinkedlist
 
 import (

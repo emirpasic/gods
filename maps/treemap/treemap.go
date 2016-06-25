@@ -24,11 +24,13 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Implementation of order map backed by red-black tree.
+// Package treemap implements a map backed by red-black tree.
+//
 // Elements are ordered by key in the map.
+//
 // Structure is not thread safe.
-// References: http://en.wikipedia.org/wiki/Associative_array
-
+//
+// Reference: http://en.wikipedia.org/wiki/Associative_array
 package treemap
 
 import (

@@ -24,10 +24,11 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Implementation of stack backed by ArrayList.
+// Package arraystack implements a stack backed by array list.
+//
 // Structure is not thread safe.
-// References: http://en.wikipedia.org/wiki/Stack_%28abstract_data_type%29
-
+//
+// Reference: https://en.wikipedia.org/wiki/Stack_%28abstract_data_type%29#Array
 package arraystack
 
 import (

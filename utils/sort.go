@@ -24,14 +24,13 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Util methods for sorting a slice of values with respect to the comparator
-
 package utils
 
 import "sort"
 
-// Sort sorts values (in-place)
-// Uses Go's sort (hybrid of quicksort for large and then insertion sort for smaller slices)
+// Sort sorts values (in-place) with respect to the given comparator.
+//
+// Uses Go's sort (hybrid of quicksort for large and then insertion sort for smaller slices).
 func Sort(values []interface{}, comparator Comparator) {
 	sort.Sort(sortable{values, comparator})
 }

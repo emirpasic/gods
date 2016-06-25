@@ -16,10 +16,11 @@ License along with this library. See the file LICENSE included
 with this distribution for more information.
 */
 
-// Implementation of an ordered set backed by a red-black tree.
+// Package treeset implements a tree backed by a red-black tree.
+//
 // Structure is not thread safe.
-// References: http://en.wikipedia.org/wiki/Set_%28abstract_data_type%29
-
+//
+// Reference: http://en.wikipedia.org/wiki/Set_%28abstract_data_type%29
 package treeset
 
 import (

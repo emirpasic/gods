@@ -24,11 +24,11 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Implementation of stack backed by our singly linked list.
-// Used by red-black tree during in-order traversal.
+// Package linkedliststack implements a stack backed by a singly-linked list.
+//
 // Structure is not thread safe.
-// References: http://en.wikipedia.org/wiki/Stack_%28abstract_data_type%29
-
+//
+// Reference:https://en.wikipedia.org/wiki/Stack_%28abstract_data_type%29#Linked_list
 package linkedliststack
 
 import (
