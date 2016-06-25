@@ -92,13 +92,20 @@ func TestStackPop(t *testing.T) {
 	}
 }
 
-func TestStackIterator(t *testing.T) {
+func TestStackIteratorOnEmpty(t *testing.T) {
+	stack := New()
+	it := stack.Iterator()
+	for it.Next() {
+		t.Errorf("Shouldn't iterate on empty stack")
+	}
+}
+
+func TestStackIteratorNext(t *testing.T) {
 	stack := New()
 	stack.Push("a")
 	stack.Push("b")
 	stack.Push("c")
 
-	// Iterator (next)
 	it := stack.Iterator()
 	count := 0
 	for it.Next() {
@@ -128,9 +135,18 @@ func TestStackIterator(t *testing.T) {
 	if actualValue, expectedValue := count, 3; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
+}
 
-	// Iterator (prev)
-	count = 0
+func TestStackIteratorPrev(t *testing.T) {
+	stack := New()
+	stack.Push("a")
+	stack.Push("b")
+	stack.Push("c")
+
+	it := stack.Iterator()
+	for it.Next() {
+	}
+	count := 0
 	for it.Prev() {
 		count++
 		index := it.Index()
@@ -157,12 +173,6 @@ func TestStackIterator(t *testing.T) {
 	}
 	if actualValue, expectedValue := count, 3; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
-
-	stack.Clear()
-	it = stack.Iterator()
-	for it.Next() {
-		t.Errorf("Shouldn't iterate on empty stack")
 	}
 }
 

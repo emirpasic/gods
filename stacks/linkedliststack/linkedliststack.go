@@ -108,7 +108,9 @@ func (stack *Stack) Iterator() Iterator {
 // If Next() returns true, then next element's index and value can be retrieved by Index() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator) Next() bool {
-	iterator.index++
+	if iterator.index < iterator.stack.Size() {
+		iterator.index++
+	}
 	return iterator.stack.withinRange(iterator.index)
 }
 

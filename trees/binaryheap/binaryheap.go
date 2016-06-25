@@ -44,7 +44,7 @@ import (
 
 func assertInterfaceImplementation() {
 	var _ trees.Tree = (*Heap)(nil)
-	var _ containers.IteratorWithIndex = (*Iterator)(nil)
+	var _ containers.ReverseIteratorWithIndex = (*Iterator)(nil)
 }
 
 // Heap holds elements in an array-list
@@ -129,7 +129,19 @@ func (heap *Heap) Iterator() Iterator {
 // If Next() returns true, then next element's index and value can be retrieved by Index() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator) Next() bool {
-	iterator.index++
+	if iterator.index < iterator.heap.Size() {
+		iterator.index++
+	}
+	return iterator.heap.withinRange(iterator.index)
+}
+
+// Prev moves the iterator to the previous element and returns true if there was a previous element in the container.
+// If Prev() returns true, then previous element's index and value can be retrieved by Index() and Value().
+// Modifies the state of the iterator.
+func (iterator *Iterator) Prev() bool {
+	if iterator.index >= 0 {
+		iterator.index--
+	}
 	return iterator.heap.withinRange(iterator.index)
 }
 
