@@ -56,16 +56,16 @@ Containers are either ordered or unordered. All ordered containers provide [stat
 | Container | Ordered | [Iterator](#iterator) | [Enumerable](#enumerable) | Ordered by |
 | :--- | :---: | :---: | :---: | :---: |
 | [ArrayList](#arraylist) | yes | yes* | yes | index |
-| [SinglyLinkedList](#singlylinkedlist) | yes | yes* | yes | index |
+| [SinglyLinkedList](#singlylinkedlist) | yes | yes | yes | index |
 | [DoublyLinkedList](#doublylinkedlist) | yes | yes* | yes | index |
 | [HashSet](#hashset) | no | no | no | index |
-| [TreeSet](#treeset) | yes | yes | yes | index |
+| [TreeSet](#treeset) | yes | yes* | yes | index |
 | [LinkedListStack](#linkedliststack) | yes | yes | no | index |
-| [ArrayStack](#arraystack) | yes | yes | no | index |
+| [ArrayStack](#arraystack) | yes | yes* | no | index |
 | [HashMap](#hashmap) | no | no | no | key |
-| [TreeMap](#treemap) | yes | yes | yes | key |
-| [RedBlackTree](#redblacktree) | yes | yes | no | key |
-| [BinaryHeap](#binaryheap) | yes | yes | no | index |
+| [TreeMap](#treemap) | yes | yes* | yes | key |
+| [RedBlackTree](#redblacktree) | yes | yes* | no | key |
+| [BinaryHeap](#binaryheap) | yes | yes* | no | index |
 |  |  | <sub><sup>*reversible</sup></sub> |  |  |
 
 ### Lists

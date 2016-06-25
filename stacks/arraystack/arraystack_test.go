@@ -98,9 +98,11 @@ func TestStackIterator(t *testing.T) {
 	stack.Push("b")
 	stack.Push("c")
 
-	// Iterator
+	// Iterator (next)
 	it := stack.Iterator()
+	count := 0
 	for it.Next() {
+		count++
 		index := it.Index()
 		value := it.Value()
 		switch index {
@@ -119,7 +121,44 @@ func TestStackIterator(t *testing.T) {
 		default:
 			t.Errorf("Too many")
 		}
+		if actualValue, expectedValue := index, count-1; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
 	}
+	if actualValue, expectedValue := count, 3; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+
+	// Iterator (prev)
+	count = 0
+	for it.Prev() {
+		count++
+		index := it.Index()
+		value := it.Value()
+		switch index {
+		case 0:
+			if actualValue, expectedValue := value, "c"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case 1:
+			if actualValue, expectedValue := value, "b"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case 2:
+			if actualValue, expectedValue := value, "a"; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		default:
+			t.Errorf("Too many")
+		}
+		if actualValue, expectedValue := index, 3-count; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+	}
+	if actualValue, expectedValue := count, 3; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+
 	stack.Clear()
 	it = stack.Iterator()
 	for it.Next() {

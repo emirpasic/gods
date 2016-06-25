@@ -318,7 +318,9 @@ func TestMapIterator(t *testing.T) {
 	m.Put("b", 2)
 
 	it := m.Iterator()
+	count := 0
 	for it.Next() {
+		count++
 		key := it.Key()
 		value := it.Value()
 		switch key {
@@ -337,6 +339,12 @@ func TestMapIterator(t *testing.T) {
 		default:
 			t.Errorf("Too many")
 		}
+		if actualValue, expectedValue := value, count; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+	}
+	if actualValue, expectedValue := count, 3; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
 	m.Clear()
