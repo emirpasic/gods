@@ -165,17 +165,17 @@ func (iterator *Iterator) Key() interface{} {
 	return iterator.iterator.Key()
 }
 
-// Reset sets the iterator to the initial state.
+// Begin resets the iterator to its initial state (one-before-first)
 // Call Next() to fetch the first element if any.
-func (iterator *Iterator) Reset() {
-	iterator.iterator.Reset()
+func (iterator *Iterator) Begin() {
+	iterator.iterator.Begin()
 }
 
 // First moves the iterator to the first element and returns true if there was a first element in the container.
 // If First() returns true, then first element's key and value can be retrieved by Key() and Value().
 // Modifies the state of the iterator
 func (iterator *Iterator) First() bool {
-	iterator.Reset()
+	iterator.Begin()
 	return iterator.Next()
 }
 

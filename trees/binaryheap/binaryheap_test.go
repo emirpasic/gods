@@ -191,16 +191,16 @@ func TestBinaryHeapIteratorPrev(t *testing.T) {
 	}
 }
 
-func TestBinaryHeapIteratorReset(t *testing.T) {
+func TestBinaryHeapIteratorBegin(t *testing.T) {
 	heap := NewWithIntComparator()
 	it := heap.Iterator()
-	it.Reset()
+	it.Begin()
 	heap.Push(2)
 	heap.Push(3)
 	heap.Push(1)
 	for it.Next() {
 	}
-	it.Reset()
+	it.Begin()
 	it.Next()
 	if index, value := it.Index(), it.Value(); index != 0 || value != 1 {
 		t.Errorf("Got %v,%v expected %v,%v", index, value, 0, 1)

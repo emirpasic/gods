@@ -338,14 +338,14 @@ func TestListIteratorNext(t *testing.T) {
 	}
 }
 
-func TestListIteratorReset(t *testing.T) {
+func TestListIteratorBegin(t *testing.T) {
 	list := New()
 	it := list.Iterator()
-	it.Reset()
+	it.Begin()
 	list.Add("a", "b", "c")
 	for it.Next() {
 	}
-	it.Reset()
+	it.Begin()
 	it.Next()
 	if index, value := it.Index(), it.Value(); index != 0 || value != "a" {
 		t.Errorf("Got %v,%v expected %v,%v", index, value, 0, "a")

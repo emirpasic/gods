@@ -176,16 +176,16 @@ func TestStackIteratorPrev(t *testing.T) {
 	}
 }
 
-func TestStackIteratorReset(t *testing.T) {
+func TestStackIteratorBegin(t *testing.T) {
 	stack := New()
 	it := stack.Iterator()
-	it.Reset()
+	it.Begin()
 	stack.Push("a")
 	stack.Push("b")
 	stack.Push("c")
 	for it.Next() {
 	}
-	it.Reset()
+	it.Begin()
 	it.Next()
 	if index, value := it.Index(), it.Value(); index != 0 || value != "c" {
 		t.Errorf("Got %v,%v expected %v,%v", index, value, 0, "c")

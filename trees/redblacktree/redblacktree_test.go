@@ -496,16 +496,16 @@ func TestRedBlackTreeIterator4(t *testing.T) {
 	}
 }
 
-func TestRedBlackTreeIteratorReset(t *testing.T) {
+func TestRedBlackTreeIteratorBegin(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(3, "c")
 	tree.Put(1, "a")
 	tree.Put(2, "b")
 	it := tree.Iterator()
-	it.Reset()
+	it.Begin()
 	for it.Next() {
 	}
-	it.Reset()
+	it.Begin()
 	it.Next()
 	if key, value := it.Key(), it.Value(); key != 1 || value != "a" {
 		t.Errorf("Got %v,%v expected %v,%v", key, value, 1, "a")

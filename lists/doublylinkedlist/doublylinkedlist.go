@@ -363,9 +363,9 @@ func (iterator *Iterator) Index() int {
 	return iterator.index
 }
 
-// Reset sets the iterator to the initial state.
+// Begin resets the iterator to its initial state (one-before-first)
 // Call Next() to fetch the first element if any.
-func (iterator *Iterator) Reset() {
+func (iterator *Iterator) Begin() {
 	iterator.index = -1
 	iterator.element = nil
 }
@@ -374,7 +374,7 @@ func (iterator *Iterator) Reset() {
 // If First() returns true, then first element's index and value can be retrieved by Index() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator) First() bool {
-	iterator.Reset()
+	iterator.Begin()
 	return iterator.Next()
 }
 

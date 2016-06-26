@@ -357,9 +357,9 @@ func (iterator *Iterator) Key() interface{} {
 	return iterator.node.Key
 }
 
-// Reset sets the iterator to the initial state.
+// Begin resets the iterator to its initial state (one-before-first)
 // Call Next() to fetch the first element if any.
-func (iterator *Iterator) Reset() {
+func (iterator *Iterator) Begin() {
 	iterator.node = nil
 }
 
@@ -367,7 +367,7 @@ func (iterator *Iterator) Reset() {
 // If First() returns true, then first element's key and value can be retrieved by Key() and Value().
 // Modifies the state of the iterator
 func (iterator *Iterator) First() bool {
-	iterator.Reset()
+	iterator.Begin()
 	return iterator.Next()
 }
 
