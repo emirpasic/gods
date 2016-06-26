@@ -30,6 +30,7 @@ package containers
 type IteratorWithIndex interface {
 	// Next moves the iterator to the next element and returns true if there was a next element in the container.
 	// If Next() returns true, then next element's index and value can be retrieved by Index() and Value().
+	// If Next() was called for the first time, then it will point the iterator to the first element if it exists.
 	// Modifies the state of the iterator.
 	Next() bool
 	// Value returns the current element's value.
@@ -38,12 +39,16 @@ type IteratorWithIndex interface {
 	// Index returns the current element's index.
 	// Does not modify the state of the iterator.
 	Index() int
+	// Reset sets the iterator to the initial state.
+	// Call Next() to fetch the first element if any.
+	Reset()
 }
 
 // IteratorWithKey is a stateful iterator for ordered containers whose elements are key value pairs.
 type IteratorWithKey interface {
 	// Next moves the iterator to the next element and returns true if there was a next element in the container.
 	// If Next() returns true, then next element's key and value can be retrieved by Key() and Value().
+	// If Next() was called for the first time, then it will point the iterator to the first element if it exists.
 	// Modifies the state of the iterator.
 	Next() bool
 	// Value returns the current element's value.
@@ -52,6 +57,9 @@ type IteratorWithKey interface {
 	// Key returns the current element's key.
 	// Does not modify the state of the iterator.
 	Key() interface{}
+	// Reset sets the iterator to the initial state.
+	// Call Next() to fetch the first element if any.
+	Reset()
 }
 
 // ReverseIteratorWithIndex is stateful iterator for ordered containers whose values can be fetched by an index.

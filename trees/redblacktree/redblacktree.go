@@ -291,6 +291,7 @@ func (tree *Tree) Iterator() Iterator {
 
 // Next moves the iterator to the next element and returns true if there was a next element in the container.
 // If Next() returns true, then next element's key and value can be retrieved by Key() and Value().
+// If Next() was called for the first time, then it will point the iterator to the first element if it exists.
 // Modifies the state of the iterator.
 func (iterator *Iterator) Next() bool {
 	if iterator.node == nil {
@@ -354,6 +355,12 @@ func (iterator *Iterator) Value() interface{} {
 // Does not modify the state of the iterator.
 func (iterator *Iterator) Key() interface{} {
 	return iterator.node.Key
+}
+
+// Reset sets the iterator to the initial state.
+// Call Next() to fetch the first element if any.
+func (iterator *Iterator) Reset() {
+	iterator.node = nil
 }
 
 // String returns a string representation of container

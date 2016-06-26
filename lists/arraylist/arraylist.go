@@ -193,6 +193,7 @@ func (list *List) Iterator() Iterator {
 
 // Next moves the iterator to the next element and returns true if there was a next element in the container.
 // If Next() returns true, then next element's index and value can be retrieved by Index() and Value().
+// If Next() was called for the first time, then it will point the iterator to the first element if it exists.
 // Modifies the state of the iterator.
 func (iterator *Iterator) Next() bool {
 	if iterator.index < iterator.list.size {
@@ -221,6 +222,12 @@ func (iterator *Iterator) Value() interface{} {
 // Does not modify the state of the iterator.
 func (iterator *Iterator) Index() int {
 	return iterator.index
+}
+
+// Reset sets the iterator to the initial state.
+// Call Next() to fetch the first element if any.
+func (iterator *Iterator) Reset() {
+	iterator.index = -1
 }
 
 // Each calls the given function once for each element, passing that element's index and value.
