@@ -496,7 +496,7 @@ func TestRedBlackTreeIterator4(t *testing.T) {
 	}
 }
 
-func TestListIteratorReset(t *testing.T) {
+func TestRedBlackTreeIteratorReset(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(3, "c")
 	tree.Put(1, "a")
@@ -509,6 +509,20 @@ func TestListIteratorReset(t *testing.T) {
 	it.Next()
 	if key, value := it.Key(), it.Value(); key != 1 || value != "a" {
 		t.Errorf("Got %v,%v expected %v,%v", key, value, 1, "a")
+	}
+}
+
+func TestRedBlackTreeIteratorLast(t *testing.T) {
+	tree := NewWithIntComparator()
+	tree.Put(3, "c")
+	tree.Put(1, "a")
+	tree.Put(2, "b")
+	it := tree.Iterator()
+	if actualValue, expectedValue := it.Last(), true; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if key, value := it.Key(), it.Value(); key != 3 || value != "c" {
+		t.Errorf("Got %v,%v expected %v,%v", key, value, 3, "c")
 	}
 }
 

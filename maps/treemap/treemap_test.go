@@ -406,7 +406,7 @@ func TestMapIteratorPrev(t *testing.T) {
 	}
 }
 
-func TestListIteratorReset(t *testing.T) {
+func TestMapIteratorReset(t *testing.T) {
 	m := NewWithIntComparator()
 	it := m.Iterator()
 	it.Reset()
@@ -419,6 +419,20 @@ func TestListIteratorReset(t *testing.T) {
 	it.Next()
 	if key, value := it.Key(), it.Value(); key != 1 || value != "a" {
 		t.Errorf("Got %v,%v expected %v,%v", key, value, 1, "a")
+	}
+}
+
+func TestMapIteratorLast(t *testing.T) {
+	m := NewWithIntComparator()
+	m.Put(3, "c")
+	m.Put(1, "a")
+	m.Put(2, "b")
+	it := m.Iterator()
+	if actualValue, expectedValue := it.Last(), true; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if key, value := it.Key(), it.Value(); key != 3 || value != "c" {
+		t.Errorf("Got %v,%v expected %v,%v", key, value, 3, "c")
 	}
 }
 

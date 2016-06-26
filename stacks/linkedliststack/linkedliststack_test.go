@@ -136,7 +136,7 @@ func TestStackIterator(t *testing.T) {
 	}
 }
 
-func TestListIteratorReset(t *testing.T) {
+func TestStackIteratorReset(t *testing.T) {
 	stack := New()
 	it := stack.Iterator()
 	it.Reset()

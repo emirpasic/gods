@@ -176,7 +176,7 @@ func TestStackIteratorPrev(t *testing.T) {
 	}
 }
 
-func TestListIteratorReset(t *testing.T) {
+func TestStackIteratorReset(t *testing.T) {
 	stack := New()
 	it := stack.Iterator()
 	it.Reset()
@@ -189,6 +189,23 @@ func TestListIteratorReset(t *testing.T) {
 	it.Next()
 	if index, value := it.Index(), it.Value(); index != 0 || value != "c" {
 		t.Errorf("Got %v,%v expected %v,%v", index, value, 0, "c")
+	}
+}
+
+func TestStackIteratorLast(t *testing.T) {
+	stack := New()
+	it := stack.Iterator()
+	if actualValue, expectedValue := it.Last(), false; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	stack.Push("a")
+	stack.Push("b")
+	stack.Push("c")
+	if actualValue, expectedValue := it.Last(), true; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if index, value := it.Index(), it.Value(); index != 2 || value != "a" {
+		t.Errorf("Got %v,%v expected %v,%v", index, value, 2, "a")
 	}
 }
 

@@ -393,6 +393,21 @@ func TestListIteratorReset(t *testing.T) {
 	}
 }
 
+func TestListIteratorLast(t *testing.T) {
+	list := New()
+	it := list.Iterator()
+	if actualValue, expectedValue := it.Last(), false; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	list.Add("a", "b", "c")
+	if actualValue, expectedValue := it.Last(), true; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if index, value := it.Index(), it.Value(); index != 2 || value != "c" {
+		t.Errorf("Got %v,%v expected %v,%v", index, value, 2, "c")
+	}
+}
+
 func BenchmarkList(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		list := New()
