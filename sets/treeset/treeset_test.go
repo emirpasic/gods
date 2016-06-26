@@ -278,6 +278,20 @@ func TestSetIteratorPrev(t *testing.T) {
 	}
 }
 
+func TestListIteratorReset(t *testing.T) {
+	m := NewWithStringComparator()
+	it := m.Iterator()
+	it.Reset()
+	m.Add("a", "b", "c")
+	for it.Next() {
+	}
+	it.Reset()
+	it.Next()
+	if index, value := it.Index(), it.Value(); index != 0 || value != "a" {
+		t.Errorf("Got %v,%v expected %v,%v", index, value, 0, "a")
+	}
+}
+
 func BenchmarkSet(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		set := NewWithIntComparator()

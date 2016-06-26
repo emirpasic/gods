@@ -136,6 +136,22 @@ func TestStackIterator(t *testing.T) {
 	}
 }
 
+func TestListIteratorReset(t *testing.T) {
+	stack := New()
+	it := stack.Iterator()
+	it.Reset()
+	stack.Push("a")
+	stack.Push("b")
+	stack.Push("c")
+	for it.Next() {
+	}
+	it.Reset()
+	it.Next()
+	if index, value := it.Index(), it.Value(); index != 0 || value != "c" {
+		t.Errorf("Got %v,%v expected %v,%v", index, value, 0, "c")
+	}
+}
+
 func BenchmarkStack(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		stack := New()

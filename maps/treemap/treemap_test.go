@@ -406,6 +406,22 @@ func TestMapIteratorPrev(t *testing.T) {
 	}
 }
 
+func TestListIteratorReset(t *testing.T) {
+	m := NewWithIntComparator()
+	it := m.Iterator()
+	it.Reset()
+	m.Put(3, "c")
+	m.Put(1, "a")
+	m.Put(2, "b")
+	for it.Next() {
+	}
+	it.Reset()
+	it.Next()
+	if key, value := it.Key(), it.Value(); key != 1 || value != "a" {
+		t.Errorf("Got %v,%v expected %v,%v", key, value, 1, "a")
+	}
+}
+
 func BenchmarkMap(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		m := NewWithIntComparator()

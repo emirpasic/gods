@@ -191,6 +191,22 @@ func TestBinaryHeapIteratorPrev(t *testing.T) {
 	}
 }
 
+func TestListIteratorReset(t *testing.T) {
+	tree := NewWithIntComparator()
+	it := tree.Iterator()
+	it.Reset()
+	tree.Push(2)
+	tree.Push(3)
+	tree.Push(1)
+	for it.Next() {
+	}
+	it.Reset()
+	it.Next()
+	if index, value := it.Index(), it.Value(); index != 0 || value != 1 {
+		t.Errorf("Got %v,%v expected %v,%v", index, value, 0, 1)
+	}
+}
+
 func BenchmarkBinaryHeap(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		heap := NewWithIntComparator()

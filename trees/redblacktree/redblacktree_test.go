@@ -496,6 +496,22 @@ func TestRedBlackTreeIterator4(t *testing.T) {
 	}
 }
 
+func TestListIteratorReset(t *testing.T) {
+	tree := NewWithIntComparator()
+	tree.Put(3, "c")
+	tree.Put(1, "a")
+	tree.Put(2, "b")
+	it := tree.Iterator()
+	it.Reset()
+	for it.Next() {
+	}
+	it.Reset()
+	it.Next()
+	if key, value := it.Key(), it.Value(); key != 1 || value != "a" {
+		t.Errorf("Got %v,%v expected %v,%v", key, value, 1, "a")
+	}
+}
+
 func BenchmarkRedBlackTree(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		tree := NewWithIntComparator()

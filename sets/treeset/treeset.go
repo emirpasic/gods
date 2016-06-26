@@ -154,6 +154,7 @@ func (iterator *Iterator) Index() int {
 // Reset sets the iterator to the initial state.
 // Call Next() to fetch the first element if any.
 func (iterator *Iterator) Reset() {
+	iterator.index = -1
 	iterator.iterator.Reset()
 }
 
