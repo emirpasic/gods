@@ -85,11 +85,17 @@ type IteratorWithKey interface {
 // Prev() function to enable traversal in reverse
 //
 // Last() function to move the iterator to the last element.
+//
+// End() function to move the iterator past the last element (one-past-the-end).
 type ReverseIteratorWithIndex interface {
 	// Prev moves the iterator to the previous element and returns true if there was a previous element in the container.
 	// If Prev() returns true, then previous element's index and value can be retrieved by Index() and Value().
 	// Modifies the state of the iterator.
 	Prev() bool
+
+	// End moves the iterator past the last element (one-past-the-end).
+	// Call Prev() to fetch the last element if any.
+	End()
 
 	// Last moves the iterator to the last element and returns true if there was a last element in the container.
 	// If Last() returns true, then last element's index and value can be retrieved by Index() and Value().
@@ -97,9 +103,6 @@ type ReverseIteratorWithIndex interface {
 	Last() bool
 
 	IteratorWithIndex
-	// Next() bool
-	// Value() interface{}
-	// Index() int
 }
 
 // ReverseIteratorWithKey is a stateful iterator for ordered containers whose elements are key value pairs.
@@ -115,13 +118,14 @@ type ReverseIteratorWithKey interface {
 	// Modifies the state of the iterator.
 	Prev() bool
 
+	// End moves the iterator past the last element (one-past-the-end).
+	// Call Prev() to fetch the last element if any.
+	End()
+
 	// Last moves the iterator to the last element and returns true if there was a last element in the container.
 	// If Last() returns true, then last element's key and value can be retrieved by Key() and Value().
 	// Modifies the state of the iterator.
 	Last() bool
 
 	IteratorWithKey
-	// Next() bool
-	// Value() interface{}
-	// Key() interface{}
 }

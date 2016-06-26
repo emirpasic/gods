@@ -363,6 +363,13 @@ func (iterator *Iterator) Begin() {
 	iterator.node = nil
 }
 
+// End moves the iterator past the last element (one-past-the-end).
+// Call Prev() to fetch the last element if any.
+func (iterator *Iterator) End() {
+	right := iterator.tree.Right() // ugly hack (TODO: use flags)
+	iterator.node = &Node{Parent: right, Key: right.Key}
+}
+
 // First moves the iterator to the first element and returns true if there was a first element in the container.
 // If First() returns true, then first element's key and value can be retrieved by Key() and Value().
 // Modifies the state of the iterator
@@ -375,8 +382,8 @@ func (iterator *Iterator) First() bool {
 // If Last() returns true, then last element's key and value can be retrieved by Key() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator) Last() bool {
-	iterator.node = iterator.tree.Right()
-	return iterator.node != nil
+	iterator.End()
+	return iterator.Prev()
 }
 
 // String returns a string representation of container

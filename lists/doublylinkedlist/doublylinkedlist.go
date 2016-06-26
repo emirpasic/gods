@@ -370,6 +370,13 @@ func (iterator *Iterator) Begin() {
 	iterator.element = nil
 }
 
+// End moves the iterator past the last element (one-past-the-end).
+// Call Prev() to fetch the last element if any.
+func (iterator *Iterator) End() {
+	iterator.index = iterator.list.size
+	iterator.element = iterator.list.last
+}
+
 // First moves the iterator to the first element and returns true if there was a first element in the container.
 // If First() returns true, then first element's index and value can be retrieved by Index() and Value().
 // Modifies the state of the iterator.
@@ -382,8 +389,7 @@ func (iterator *Iterator) First() bool {
 // If Last() returns true, then last element's index and value can be retrieved by Index() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator) Last() bool {
-	iterator.index = iterator.list.size
-	iterator.element = iterator.list.last
+	iterator.End()
 	return iterator.Prev()
 }
 
