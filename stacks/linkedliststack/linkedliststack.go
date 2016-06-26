@@ -134,6 +134,14 @@ func (iterator *Iterator) Reset() {
 	iterator.index = -1
 }
 
+// First moves the iterator to the first element and returns true if there was a first element in the container.
+// If First() returns true, then first element's index and value can be retrieved by Index() and Value().
+// Modifies the state of the iterator.
+func (iterator *Iterator) First() bool {
+	iterator.Reset()
+	return iterator.Next()
+}
+
 // String returns a string representation of container
 func (stack *Stack) String() string {
 	str := "LinkedListStack\n"

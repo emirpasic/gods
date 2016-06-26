@@ -230,6 +230,14 @@ func (iterator *Iterator) Reset() {
 	iterator.index = -1
 }
 
+// First moves the iterator to the first element and returns true if there was a first element in the container.
+// If First() returns true, then first element's index and value can be retrieved by Index() and Value().
+// Modifies the state of the iterator.
+func (iterator *Iterator) First() bool {
+	iterator.Reset()
+	return iterator.Next()
+}
+
 // Last moves the iterator to the last element and returns true if there was a last element in the container.
 // If Last() returns true, then last element's index and value can be retrieved by Index() and Value().
 // Modifies the state of the iterator.

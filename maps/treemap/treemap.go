@@ -147,7 +147,7 @@ func (iterator *Iterator) Next() bool {
 }
 
 // Prev moves the iterator to the previous element and returns true if there was a previous element in the container.
-// If Prev() returns true, then previous element's index and value can be retrieved by Key() and Value().
+// If Prev() returns true, then previous element's key and value can be retrieved by Key() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator) Prev() bool {
 	return iterator.iterator.Prev()
@@ -171,8 +171,16 @@ func (iterator *Iterator) Reset() {
 	iterator.iterator.Reset()
 }
 
+// First moves the iterator to the first element and returns true if there was a first element in the container.
+// If First() returns true, then first element's key and value can be retrieved by Key() and Value().
+// Modifies the state of the iterator
+func (iterator *Iterator) First() bool {
+	iterator.Reset()
+	return iterator.Next()
+}
+
 // Last moves the iterator to the last element and returns true if there was a last element in the container.
-// If Last() returns true, then last element's index and value can be retrieved by Key() and Value().
+// If Last() returns true, then last element's key and value can be retrieved by Key() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator) Last() bool {
 	return iterator.iterator.Last()
