@@ -171,6 +171,13 @@ func (iterator *Iterator) Reset() {
 	iterator.iterator.Reset()
 }
 
+// Last moves the iterator to the last element and returns true if there was a last element in the container.
+// If Last() returns true, then last element's index and value can be retrieved by Key() and Value().
+// Modifies the state of the iterator.
+func (iterator *Iterator) Last() bool {
+	return iterator.iterator.Last()
+}
+
 // Each calls the given function once for each element, passing that element's key and value.
 func (m *Map) Each(f func(key interface{}, value interface{})) {
 	iterator := m.Iterator()

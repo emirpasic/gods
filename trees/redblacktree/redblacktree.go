@@ -363,6 +363,14 @@ func (iterator *Iterator) Reset() {
 	iterator.node = nil
 }
 
+// Last moves the iterator to the last element and returns true if there was a last element in the container.
+// If Last() returns true, then last element's index and value can be retrieved by Key() and Value().
+// Modifies the state of the iterator.
+func (iterator *Iterator) Last() bool {
+	iterator.node = iterator.tree.Right()
+	return iterator.node != nil
+}
+
 // String returns a string representation of container
 func (tree *Tree) String() string {
 	str := "RedBlackTree\n"

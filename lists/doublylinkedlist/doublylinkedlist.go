@@ -370,6 +370,15 @@ func (iterator *Iterator) Reset() {
 	iterator.element = nil
 }
 
+// Last moves the iterator to the last element and returns true if there was a last element in the container.
+// If Last() returns true, then last element's index and value can be retrieved by Index() and Value().
+// Modifies the state of the iterator.
+func (iterator *Iterator) Last() bool {
+	iterator.index = iterator.list.size
+	iterator.element = iterator.list.last
+	return iterator.Prev()
+}
+
 // Each calls the given function once for each element, passing that element's index and value.
 func (list *List) Each(f func(index int, value interface{})) {
 	iterator := list.Iterator()
