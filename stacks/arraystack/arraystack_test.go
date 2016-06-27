@@ -176,6 +176,83 @@ func TestStackIteratorPrev(t *testing.T) {
 	}
 }
 
+func TestStackIteratorBegin(t *testing.T) {
+	stack := New()
+	it := stack.Iterator()
+	it.Begin()
+	stack.Push("a")
+	stack.Push("b")
+	stack.Push("c")
+	for it.Next() {
+	}
+	it.Begin()
+	it.Next()
+	if index, value := it.Index(), it.Value(); index != 0 || value != "c" {
+		t.Errorf("Got %v,%v expected %v,%v", index, value, 0, "c")
+	}
+}
+
+func TestStackIteratorEnd(t *testing.T) {
+	stack := New()
+	it := stack.Iterator()
+
+	if index := it.Index(); index != -1 {
+		t.Errorf("Got %v expected %v", index, -1)
+	}
+
+	it.End()
+	if index := it.Index(); index != 0 {
+		t.Errorf("Got %v expected %v", index, 0)
+	}
+
+	stack.Push("a")
+	stack.Push("b")
+	stack.Push("c")
+	it.End()
+	if index := it.Index(); index != stack.Size() {
+		t.Errorf("Got %v expected %v", index, stack.Size())
+	}
+
+	it.Prev()
+	if index, value := it.Index(), it.Value(); index != stack.Size()-1 || value != "a" {
+		t.Errorf("Got %v,%v expected %v,%v", index, value, stack.Size()-1, "a")
+	}
+}
+
+func TestStackIteratorFirst(t *testing.T) {
+	stack := New()
+	it := stack.Iterator()
+	if actualValue, expectedValue := it.First(), false; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	stack.Push("a")
+	stack.Push("b")
+	stack.Push("c")
+	if actualValue, expectedValue := it.First(), true; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if index, value := it.Index(), it.Value(); index != 0 || value != "c" {
+		t.Errorf("Got %v,%v expected %v,%v", index, value, 0, "c")
+	}
+}
+
+func TestStackIteratorLast(t *testing.T) {
+	stack := New()
+	it := stack.Iterator()
+	if actualValue, expectedValue := it.Last(), false; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	stack.Push("a")
+	stack.Push("b")
+	stack.Push("c")
+	if actualValue, expectedValue := it.Last(), true; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if index, value := it.Index(), it.Value(); index != 2 || value != "a" {
+		t.Errorf("Got %v,%v expected %v,%v", index, value, 2, "a")
+	}
+}
+
 func BenchmarkStack(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		stack := New()

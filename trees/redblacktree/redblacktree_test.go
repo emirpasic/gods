@@ -282,7 +282,6 @@ func TestRedBlackTreeIterator1Prev(t *testing.T) {
 	}
 	countDown := tree.size
 	for it.Prev() {
-		countDown--
 		key := it.Key()
 		switch key {
 		case countDown:
@@ -294,9 +293,9 @@ func TestRedBlackTreeIterator1Prev(t *testing.T) {
 				t.Errorf("Got %v expected %v", actualValue, expectedValue)
 			}
 		}
+		countDown--
 	}
-	// one less that in Next(), thus "1"
-	if actualValue, expectedValue := countDown, 1; actualValue != expectedValue {
+	if actualValue, expectedValue := countDown, 0; actualValue != expectedValue {
 		t.Errorf("Size different. Got %v expected %v", actualValue, expectedValue)
 	}
 }
@@ -337,7 +336,6 @@ func TestRedBlackTreeIterator2Prev(t *testing.T) {
 	}
 	countDown := tree.size
 	for it.Prev() {
-		countDown--
 		key := it.Key()
 		switch key {
 		case countDown:
@@ -349,9 +347,9 @@ func TestRedBlackTreeIterator2Prev(t *testing.T) {
 				t.Errorf("Got %v expected %v", actualValue, expectedValue)
 			}
 		}
+		countDown--
 	}
-	// one less that in Next(), thus "1"
-	if actualValue, expectedValue := countDown, 1; actualValue != expectedValue {
+	if actualValue, expectedValue := countDown, 0; actualValue != expectedValue {
 		t.Errorf("Size different. Got %v expected %v", actualValue, expectedValue)
 	}
 }
@@ -388,7 +386,6 @@ func TestRedBlackTreeIterator3Prev(t *testing.T) {
 	}
 	countDown := tree.size
 	for it.Prev() {
-		countDown--
 		key := it.Key()
 		switch key {
 		case countDown:
@@ -400,9 +397,9 @@ func TestRedBlackTreeIterator3Prev(t *testing.T) {
 				t.Errorf("Got %v expected %v", actualValue, expectedValue)
 			}
 		}
+		countDown--
 	}
-	// one less that in Next(), thus "1"
-	if actualValue, expectedValue := countDown, 1; actualValue != expectedValue {
+	if actualValue, expectedValue := countDown, 0; actualValue != expectedValue {
 		t.Errorf("Size different. Got %v expected %v", actualValue, expectedValue)
 	}
 }
@@ -450,7 +447,7 @@ func TestRedBlackTreeIterator4Next(t *testing.T) {
 	}
 }
 
-func TestRedBlackTreeIterator4(t *testing.T) {
+func TestRedBlackTreeIterator4Prev(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(13, 5)
 	tree.Put(8, 3)
@@ -477,7 +474,6 @@ func TestRedBlackTreeIterator4(t *testing.T) {
 	for it.Next() {
 	}
 	for it.Prev() {
-		count--
 		value := it.Value()
 		switch value {
 		case count:
@@ -489,10 +485,97 @@ func TestRedBlackTreeIterator4(t *testing.T) {
 				t.Errorf("Got %v expected %v", actualValue, expectedValue)
 			}
 		}
+		count--
 	}
-	// one less that in Next(), thus "1"
-	if actualValue, expectedValue := count, 1; actualValue != expectedValue {
+	if actualValue, expectedValue := count, 0; actualValue != expectedValue {
 		t.Errorf("Size different. Got %v expected %v", actualValue, expectedValue)
+	}
+}
+
+func TestRedBlackTreeIteratorBegin(t *testing.T) {
+	tree := NewWithIntComparator()
+	tree.Put(3, "c")
+	tree.Put(1, "a")
+	tree.Put(2, "b")
+	it := tree.Iterator()
+
+	if it.node != nil {
+		t.Errorf("Got %v expected %v", it.node, nil)
+	}
+
+	it.Begin()
+
+	if it.node != nil {
+		t.Errorf("Got %v expected %v", it.node, nil)
+	}
+
+	for it.Next() {
+	}
+
+	it.Begin()
+
+	if it.node != nil {
+		t.Errorf("Got %v expected %v", it.node, nil)
+	}
+
+	it.Next()
+	if key, value := it.Key(), it.Value(); key != 1 || value != "a" {
+		t.Errorf("Got %v,%v expected %v,%v", key, value, 1, "a")
+	}
+}
+
+func TestRedBlackTreeIteratorEnd(t *testing.T) {
+	tree := NewWithIntComparator()
+	it := tree.Iterator()
+
+	if it.node != nil {
+		t.Errorf("Got %v expected %v", it.node, nil)
+	}
+
+	it.End()
+	if it.node != nil {
+		t.Errorf("Got %v expected %v", it.node, nil)
+	}
+
+	tree.Put(3, "c")
+	tree.Put(1, "a")
+	tree.Put(2, "b")
+	it.End()
+	if it.node != nil {
+		t.Errorf("Got %v expected %v", it.node, nil)
+	}
+
+	it.Prev()
+	if key, value := it.Key(), it.Value(); key != 3 || value != "c" {
+		t.Errorf("Got %v,%v expected %v,%v", key, value, 3, "c")
+	}
+}
+
+func TestRedBlackTreeIteratorFirst(t *testing.T) {
+	tree := NewWithIntComparator()
+	tree.Put(3, "c")
+	tree.Put(1, "a")
+	tree.Put(2, "b")
+	it := tree.Iterator()
+	if actualValue, expectedValue := it.First(), true; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if key, value := it.Key(), it.Value(); key != 1 || value != "a" {
+		t.Errorf("Got %v,%v expected %v,%v", key, value, 1, "a")
+	}
+}
+
+func TestRedBlackTreeIteratorLast(t *testing.T) {
+	tree := NewWithIntComparator()
+	tree.Put(3, "c")
+	tree.Put(1, "a")
+	tree.Put(2, "b")
+	it := tree.Iterator()
+	if actualValue, expectedValue := it.Last(), true; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if key, value := it.Key(), it.Value(); key != 3 || value != "c" {
+		t.Errorf("Got %v,%v expected %v,%v", key, value, 3, "c")
 	}
 }
 

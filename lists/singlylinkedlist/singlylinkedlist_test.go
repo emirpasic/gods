@@ -338,6 +338,35 @@ func TestListIteratorNext(t *testing.T) {
 	}
 }
 
+func TestListIteratorBegin(t *testing.T) {
+	list := New()
+	it := list.Iterator()
+	it.Begin()
+	list.Add("a", "b", "c")
+	for it.Next() {
+	}
+	it.Begin()
+	it.Next()
+	if index, value := it.Index(), it.Value(); index != 0 || value != "a" {
+		t.Errorf("Got %v,%v expected %v,%v", index, value, 0, "a")
+	}
+}
+
+func TestListIteratorFirst(t *testing.T) {
+	list := New()
+	it := list.Iterator()
+	if actualValue, expectedValue := it.First(), false; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	list.Add("a", "b", "c")
+	if actualValue, expectedValue := it.First(), true; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if index, value := it.Index(), it.Value(); index != 0 || value != "a" {
+		t.Errorf("Got %v,%v expected %v,%v", index, value, 0, "a")
+	}
+}
+
 func BenchmarkList(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		list := New()

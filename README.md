@@ -649,51 +649,97 @@ All ordered containers have stateful iterators. Typically an iterator is obtaine
 
 #### IteratorWithIndex
 
-A [iterator](#iterator) whose elements are referenced by an index. Typical usage:
+An [iterator](#iterator) whose elements are referenced by an index.
 
+Typical usage:
 ```go
 it := list.Iterator()
 for it.Next() {
 	index, value := it.Index(), it.Value()
     ...
+}
+```
+
+Other usages:
+```go
+if it.First() {
+	firstIndex, firstValue := it.Index(), it.Value()
+	...
+}
+```
+
+```go
+for it.Begin(); it.Next(); {
+	...
 }
 ```
 
 #### IteratorWithKey
 
-A [iterator](#iterator) whose elements are referenced by a key. Typical usage:
+An [iterator](#iterator) whose elements are referenced by a key.
 
+Typical usage:
 ```go
-it := map.Iterator()
+it := tree.Iterator()
 for it.Next() {
 	key, value := it.Key(), it.Value()
     ...
 }
 ```
 
-#### ReverseIteratorWithIndex
-
-A [iterator](#iterator) whose elements are referenced by an index. Typical usage:
+Other usages:
+```go
+if it.First() {
+	firstKey, firstValue := it.Key(), it.Value()
+	...
+}
+```
 
 ```go
+for it.Begin(); it.Next(); {
+	...
+}
+```
+
+#### ReverseIteratorWithIndex
+
+An [iterator](#iterator) whose elements are referenced by an index. Provides all functions as [IteratorWithIndex](#iteratorwithindex), but can also be used for reverse iteration.
+
+Typical usage of iteration in reverse:
+```go
 it := list.Iterator()
-for it.Next() { /* Move to end */ }
-for it.Prev() {
+for it.End(); it.Prev(); {
 	index, value := it.Index(), it.Value()
     ...
 }
 ```
 
+Other usages:
+```go
+if it.Last() {
+	lastIndex, lastValue := it.Index(), it.Value()
+	...
+}
+```
+
 #### ReverseIteratorWithKey
 
-A [iterator](#iterator) whose elements are referenced by a key. Typical usage:
+An [iterator](#iterator) whose elements are referenced by a key. Provides all functions as [IteratorWithKey](#iteratorwithkey), but can also be used for reverse iteration.
 
+Typical usage of iteration in reverse:
 ```go
-it := map.Iterator()
-for it.Next() { /* Move to end */ }
-for it.Prev() {
+it := tree.Iterator()
+for it.End(); it.Prev(); {
 	key, value := it.Key(), it.Value()
     ...
+}
+```
+
+Other usages:
+```go
+if it.Last() {
+	lastKey, lastValue := it.Key(), it.Value()
+	...
 }
 ```
 

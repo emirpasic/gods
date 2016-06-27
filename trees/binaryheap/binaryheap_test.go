@@ -191,6 +191,83 @@ func TestBinaryHeapIteratorPrev(t *testing.T) {
 	}
 }
 
+func TestBinaryHeapIteratorBegin(t *testing.T) {
+	heap := NewWithIntComparator()
+	it := heap.Iterator()
+	it.Begin()
+	heap.Push(2)
+	heap.Push(3)
+	heap.Push(1)
+	for it.Next() {
+	}
+	it.Begin()
+	it.Next()
+	if index, value := it.Index(), it.Value(); index != 0 || value != 1 {
+		t.Errorf("Got %v,%v expected %v,%v", index, value, 0, 1)
+	}
+}
+
+func TestListIteratorEnd(t *testing.T) {
+	heap := NewWithIntComparator()
+	it := heap.Iterator()
+
+	if index := it.Index(); index != -1 {
+		t.Errorf("Got %v expected %v", index, -1)
+	}
+
+	it.End()
+	if index := it.Index(); index != 0 {
+		t.Errorf("Got %v expected %v", index, 0)
+	}
+
+	heap.Push(3) // [3]
+	heap.Push(2) // [2,3]
+	heap.Push(1) // [1,3,2](2 swapped with 1, hence last)
+	it.End()
+	if index := it.Index(); index != heap.Size() {
+		t.Errorf("Got %v expected %v", index, heap.Size())
+	}
+
+	it.Prev()
+	if index, value := it.Index(), it.Value(); index != heap.Size()-1 || value != 2 {
+		t.Errorf("Got %v,%v expected %v,%v", index, value, heap.Size()-1, 2)
+	}
+}
+
+func TestStackIteratorFirst(t *testing.T) {
+	heap := NewWithIntComparator()
+	it := heap.Iterator()
+	if actualValue, expectedValue := it.First(), false; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	heap.Push(3) // [3]
+	heap.Push(2) // [2,3]
+	heap.Push(1) // [1,3,2](2 swapped with 1, hence last)
+	if actualValue, expectedValue := it.First(), true; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if index, value := it.Index(), it.Value(); index != 0 || value != 1 {
+		t.Errorf("Got %v,%v expected %v,%v", index, value, 0, 1)
+	}
+}
+
+func TestBinaryHeapIteratorLast(t *testing.T) {
+	tree := NewWithIntComparator()
+	it := tree.Iterator()
+	if actualValue, expectedValue := it.Last(), false; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	tree.Push(2)
+	tree.Push(3)
+	tree.Push(1) // [1,3,2](2 swapped with 1, hence last)
+	if actualValue, expectedValue := it.Last(), true; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if index, value := it.Index(), it.Value(); index != 2 || value != 2 {
+		t.Errorf("Got %v,%v expected %v,%v", index, value, 2, 2)
+	}
+}
+
 func BenchmarkBinaryHeap(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		heap := NewWithIntComparator()

@@ -111,6 +111,7 @@ func (stack *Stack) Iterator() Iterator {
 
 // Next moves the iterator to the next element and returns true if there was a next element in the container.
 // If Next() returns true, then next element's index and value can be retrieved by Index() and Value().
+// If Next() was called for the first time, then it will point the iterator to the first element if it exists.
 // Modifies the state of the iterator.
 func (iterator *Iterator) Next() bool {
 	if iterator.index < iterator.stack.Size() {
@@ -140,6 +141,34 @@ func (iterator *Iterator) Value() interface{} {
 // Does not modify the state of the iterator.
 func (iterator *Iterator) Index() int {
 	return iterator.index
+}
+
+// Begin resets the iterator to its initial state (one-before-first)
+// Call Next() to fetch the first element if any.
+func (iterator *Iterator) Begin() {
+	iterator.index = -1
+}
+
+// End moves the iterator past the last element (one-past-the-end).
+// Call Prev() to fetch the last element if any.
+func (iterator *Iterator) End() {
+	iterator.index = iterator.stack.Size()
+}
+
+// First moves the iterator to the first element and returns true if there was a first element in the container.
+// If First() returns true, then first element's index and value can be retrieved by Index() and Value().
+// Modifies the state of the iterator.
+func (iterator *Iterator) First() bool {
+	iterator.Begin()
+	return iterator.Next()
+}
+
+// Last moves the iterator to the last element and returns true if there was a last element in the container.
+// If Last() returns true, then last element's index and value can be retrieved by Index() and Value().
+// Modifies the state of the iterator.
+func (iterator *Iterator) Last() bool {
+	iterator.End()
+	return iterator.Prev()
 }
 
 // String returns a string representation of container
