@@ -24,32 +24,52 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package main
+package examples
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/sets/treeset"
+	"github.com/emirpasic/gods/maps/treemap"
 )
 
-// IteratorWithIndexExample to demonstrate basic usage of IteratorWithIndex
-//func IteratorWithIndexExample() {
-func main() {
-	set := treeset.NewWithIntComparator()
-	set.Add(1, 2, 3)
+// IteratorWithKeyExample to demonstrate basic usage of IteratorWithKey
+func IteratorWithKeyExample() {
+	m := treemap.NewWithIntComparator()
+	m.Put(1, "a")
+	m.Put(2, "b")
+	m.Put(3, "a")
+	it := m.Iterator()
 
-	// Forward iteration
-	it := set.Iterator()
+	fmt.Print("\nForward iteration\n")
 	for it.Next() {
-		index, value := it.Index(), it.Value()
-		fmt.Println("Index: ", index, "Value: ", value)
+		key, value := it.Key(), it.Value()
+		fmt.Print("[", key, ":", value, "]") // [0:a][1:b][2:c]
 	}
 
-	// Backward iteration (reverse)
-	for it.Last(); ; {
-		index, value := it.Index(), it.Value()
-		fmt.Println("Index: ", index, "Value: ", value)
-		if !it.Prev() {
-			break
-		}
+	fmt.Print("\nForward iteration (again)\n")
+	for it.Begin(); it.Next(); {
+		key, value := it.Key(), it.Value()
+		fmt.Print("[", key, ":", value, "]") // [0:a][1:b][2:c]
+	}
+
+	fmt.Print("\nBackward iteration\n")
+	for it.Prev() {
+		key, value := it.Key(), it.Value()
+		fmt.Print("[", key, ":", value, "]") // [2:c][1:b][0:a]
+	}
+
+	fmt.Print("\nBackward iteration (again)\n")
+	for it.End(); it.Prev(); {
+		key, value := it.Key(), it.Value()
+		fmt.Print("[", key, ":", value, "]") // [2:c][1:b][0:a]
+	}
+
+	if it.First() {
+		fmt.Print("\nFirst key: ", it.Key())     // First key: 0
+		fmt.Print("\nFirst value: ", it.Value()) // First value: a
+	}
+
+	if it.Last() {
+		fmt.Print("\nLast key: ", it.Key())     // Last key: 3
+		fmt.Print("\nLast value: ", it.Value()) // Last value: c
 	}
 }
