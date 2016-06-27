@@ -1,28 +1,6 @@
-/*
-Copyright (c) 2015, Emir Pasic
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-* Redistributions of source code must retain the above copyright notice, this
-  list of conditions and the following disclaimer.
-
-* Redistributions in binary form must reproduce the above copyright notice,
-  this list of conditions and the following disclaimer in the documentation
-  and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+// Copyright (c) 2015, Emir Pasic. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 // Package arraylist implements the array list.
 //
@@ -33,16 +11,13 @@ package arraylist
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/containers"
 	"github.com/emirpasic/gods/lists"
 	"github.com/emirpasic/gods/utils"
 	"strings"
 )
 
-func assertInterfaceImplementation() {
+func assertListImplementation() {
 	var _ lists.List = (*List)(nil)
-	var _ containers.EnumerableWithIndex = (*List)(nil)
-	var _ containers.ReverseIteratorWithIndex = (*Iterator)(nil)
 }
 
 // List holds the elements in a slice
@@ -178,146 +153,6 @@ func (list *List) Insert(index int, values ...interface{}) {
 	for i, value := range values {
 		list.elements[index+i] = value
 	}
-}
-
-// Iterator holding the iterator's state
-type Iterator struct {
-	list  *List
-	index int
-}
-
-// Iterator returns a stateful iterator whose values can be fetched by an index.
-func (list *List) Iterator() Iterator {
-	return Iterator{list: list, index: -1}
-}
-
-// Next moves the iterator to the next element and returns true if there was a next element in the container.
-// If Next() returns true, then next element's index and value can be retrieved by Index() and Value().
-// If Next() was called for the first time, then it will point the iterator to the first element if it exists.
-// Modifies the state of the iterator.
-func (iterator *Iterator) Next() bool {
-	if iterator.index < iterator.list.size {
-		iterator.index++
-	}
-	return iterator.list.withinRange(iterator.index)
-}
-
-// Prev moves the iterator to the previous element and returns true if there was a previous element in the container.
-// If Prev() returns true, then previous element's index and value can be retrieved by Index() and Value().
-// Modifies the state of the iterator.
-func (iterator *Iterator) Prev() bool {
-	if iterator.index >= 0 {
-		iterator.index--
-	}
-	return iterator.list.withinRange(iterator.index)
-}
-
-// Value returns the current element's value.
-// Does not modify the state of the iterator.
-func (iterator *Iterator) Value() interface{} {
-	return iterator.list.elements[iterator.index]
-}
-
-// Index returns the current element's index.
-// Does not modify the state of the iterator.
-func (iterator *Iterator) Index() int {
-	return iterator.index
-}
-
-// Begin resets the iterator to its initial state (one-before-first)
-// Call Next() to fetch the first element if any.
-func (iterator *Iterator) Begin() {
-	iterator.index = -1
-}
-
-// End moves the iterator past the last element (one-past-the-end).
-// Call Prev() to fetch the last element if any.
-func (iterator *Iterator) End() {
-	iterator.index = iterator.list.size
-}
-
-// First moves the iterator to the first element and returns true if there was a first element in the container.
-// If First() returns true, then first element's index and value can be retrieved by Index() and Value().
-// Modifies the state of the iterator.
-func (iterator *Iterator) First() bool {
-	iterator.Begin()
-	return iterator.Next()
-}
-
-// Last moves the iterator to the last element and returns true if there was a last element in the container.
-// If Last() returns true, then last element's index and value can be retrieved by Index() and Value().
-// Modifies the state of the iterator.
-func (iterator *Iterator) Last() bool {
-	iterator.End()
-	return iterator.Prev()
-}
-
-// Each calls the given function once for each element, passing that element's index and value.
-func (list *List) Each(f func(index int, value interface{})) {
-	iterator := list.Iterator()
-	for iterator.Next() {
-		f(iterator.Index(), iterator.Value())
-	}
-}
-
-// Map invokes the given function once for each element and returns a
-// container containing the values returned by the given function.
-func (list *List) Map(f func(index int, value interface{}) interface{}) *List {
-	newList := &List{}
-	iterator := list.Iterator()
-	for iterator.Next() {
-		newList.Add(f(iterator.Index(), iterator.Value()))
-	}
-	return newList
-}
-
-// Select returns a new container containing all elements for which the given function returns a true value.
-func (list *List) Select(f func(index int, value interface{}) bool) *List {
-	newList := &List{}
-	iterator := list.Iterator()
-	for iterator.Next() {
-		if f(iterator.Index(), iterator.Value()) {
-			newList.Add(iterator.Value())
-		}
-	}
-	return newList
-}
-
-// Any passes each element of the collection to the given function and
-// returns true if the function ever returns true for any element.
-func (list *List) Any(f func(index int, value interface{}) bool) bool {
-	iterator := list.Iterator()
-	for iterator.Next() {
-		if f(iterator.Index(), iterator.Value()) {
-			return true
-		}
-	}
-	return false
-}
-
-// All passes each element of the collection to the given function and
-// returns true if the function returns true for all elements.
-func (list *List) All(f func(index int, value interface{}) bool) bool {
-	iterator := list.Iterator()
-	for iterator.Next() {
-		if !f(iterator.Index(), iterator.Value()) {
-			return false
-		}
-	}
-	return true
-}
-
-// Find passes each element of the container to the given function and returns
-// the first (index,value) for which the function is true or -1,nil otherwise
-// if no element matches the criteria.
-func (list *List) Find(f func(index int, value interface{}) bool) (int, interface{}) {
-	iterator := list.Iterator()
-	for iterator.Next() {
-		if f(iterator.Index(), iterator.Value()) {
-			return iterator.Index(), iterator.Value()
-		}
-	}
-	return -1, nil
 }
 
 // String returns a string representation of container
