@@ -377,7 +377,6 @@ func TestMapIteratorPrev(t *testing.T) {
 	}
 	countDown := m.Size()
 	for it.Prev() {
-		countDown--
 		key := it.Key()
 		value := it.Value()
 		switch key {
@@ -399,9 +398,9 @@ func TestMapIteratorPrev(t *testing.T) {
 		if actualValue, expectedValue := value, countDown; actualValue != expectedValue {
 			t.Errorf("Got %v expected %v", actualValue, expectedValue)
 		}
+		countDown--
 	}
-	// one less that in Next(), thus "1"
-	if actualValue, expectedValue := countDown, 1; actualValue != expectedValue {
+	if actualValue, expectedValue := countDown, 0; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 }
@@ -419,6 +418,19 @@ func TestMapIteratorBegin(t *testing.T) {
 	it.Next()
 	if key, value := it.Key(), it.Value(); key != 1 || value != "a" {
 		t.Errorf("Got %v,%v expected %v,%v", key, value, 1, "a")
+	}
+}
+
+func TestMapTreeIteratorEnd(t *testing.T) {
+	m := NewWithIntComparator()
+	it := m.Iterator()
+	m.Put(3, "c")
+	m.Put(1, "a")
+	m.Put(2, "b")
+	it.End()
+	it.Prev()
+	if key, value := it.Key(), it.Value(); key != 3 || value != "c" {
+		t.Errorf("Got %v,%v expected %v,%v", key, value, 3, "c")
 	}
 }
 

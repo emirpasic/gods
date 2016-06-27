@@ -280,13 +280,20 @@ func (tree *Tree) Clear() {
 
 // Iterator holding the iterator's state
 type Iterator struct {
-	tree *Tree
-	node *Node
+	tree     *Tree
+	node     *Node
+	position position
 }
+
+type position byte
+
+const (
+	begin, between, end position = 0, 1, 2
+)
 
 // Iterator returns a stateful iterator whose elements are key/value pairs.
 func (tree *Tree) Iterator() Iterator {
-	return Iterator{tree: tree, node: nil}
+	return Iterator{tree: tree, node: nil, position: begin}
 }
 
 // Next moves the iterator to the next element and returns true if there was a next element in the container.
@@ -294,55 +301,84 @@ func (tree *Tree) Iterator() Iterator {
 // If Next() was called for the first time, then it will point the iterator to the first element if it exists.
 // Modifies the state of the iterator.
 func (iterator *Iterator) Next() bool {
-	if iterator.node == nil {
-		iterator.node = iterator.tree.Left()
-		return iterator.node != nil
+	if iterator.position == end {
+		goto end
+	}
+	if iterator.position == begin {
+		left := iterator.tree.Left()
+		if left == nil {
+			goto end
+		}
+		iterator.node = left
+		goto between
 	}
 	if iterator.node.Right != nil {
 		iterator.node = iterator.node.Right
 		for iterator.node.Left != nil {
 			iterator.node = iterator.node.Left
 		}
-		return true
+		goto between
 	}
 	if iterator.node.Parent != nil {
 		node := iterator.node
 		for iterator.node.Parent != nil {
 			iterator.node = iterator.node.Parent
 			if iterator.tree.Comparator(node.Key, iterator.node.Key) <= 0 {
-				return true
+				goto between
 			}
 		}
-		iterator.node = node // fix: if parent didn't satisfy the comparator criteria
 	}
+
+end:
+	iterator.node = nil
+	iterator.position = end
 	return false
+
+between:
+	iterator.position = between
+	return true
 }
 
 // Prev moves the iterator to the previous element and returns true if there was a previous element in the container.
 // If Prev() returns true, then previous element's key and value can be retrieved by Key() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator) Prev() bool {
-	if iterator.node == nil {
-		return false
+	if iterator.position == begin {
+		goto begin
+	}
+	if iterator.position == end {
+		right := iterator.tree.Right()
+		if right == nil {
+			goto begin
+		}
+		iterator.node = right
+		goto between
 	}
 	if iterator.node.Left != nil {
 		iterator.node = iterator.node.Left
 		for iterator.node.Right != nil {
 			iterator.node = iterator.node.Right
 		}
-		return true
+		goto between
 	}
 	if iterator.node.Parent != nil {
 		node := iterator.node
 		for iterator.node.Parent != nil {
 			iterator.node = iterator.node.Parent
 			if iterator.tree.Comparator(node.Key, iterator.node.Key) >= 0 {
-				return true
+				goto between
 			}
 		}
-		iterator.node = node // fix: if parent didn't satisfy the comparator criteria
 	}
+
+begin:
+	iterator.node = nil
+	iterator.position = begin
 	return false
+
+between:
+	iterator.position = between
+	return true
 }
 
 // Value returns the current element's value.
@@ -361,13 +397,14 @@ func (iterator *Iterator) Key() interface{} {
 // Call Next() to fetch the first element if any.
 func (iterator *Iterator) Begin() {
 	iterator.node = nil
+	iterator.position = begin
 }
 
 // End moves the iterator past the last element (one-past-the-end).
 // Call Prev() to fetch the last element if any.
 func (iterator *Iterator) End() {
-	right := iterator.tree.Right() // ugly hack (TODO: use flags)
-	iterator.node = &Node{Parent: right, Key: right.Key}
+	iterator.node = nil
+	iterator.position = end
 }
 
 // First moves the iterator to the first element and returns true if there was a first element in the container.

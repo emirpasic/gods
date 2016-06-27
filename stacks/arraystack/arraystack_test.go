@@ -192,6 +192,33 @@ func TestStackIteratorBegin(t *testing.T) {
 	}
 }
 
+func TestStackIteratorEnd(t *testing.T) {
+	stack := New()
+	it := stack.Iterator()
+
+	if index := it.Index(); index != -1 {
+		t.Errorf("Got %v expected %v", index, -1)
+	}
+
+	it.End()
+	if index := it.Index(); index != 0 {
+		t.Errorf("Got %v expected %v", index, 0)
+	}
+
+	stack.Push("a")
+	stack.Push("b")
+	stack.Push("c")
+	it.End()
+	if index := it.Index(); index != stack.Size() {
+		t.Errorf("Got %v expected %v", index, stack.Size())
+	}
+
+	it.Prev()
+	if index, value := it.Index(), it.Value(); index != stack.Size()-1 || value != "a" {
+		t.Errorf("Got %v,%v expected %v,%v", index, value, stack.Size()-1, "a")
+	}
+}
+
 func TestStackIteratorFirst(t *testing.T) {
 	stack := New()
 	it := stack.Iterator()

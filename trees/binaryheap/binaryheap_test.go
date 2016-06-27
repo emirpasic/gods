@@ -207,6 +207,33 @@ func TestBinaryHeapIteratorBegin(t *testing.T) {
 	}
 }
 
+func TestListIteratorEnd(t *testing.T) {
+	heap := NewWithIntComparator()
+	it := heap.Iterator()
+
+	if index := it.Index(); index != -1 {
+		t.Errorf("Got %v expected %v", index, -1)
+	}
+
+	it.End()
+	if index := it.Index(); index != 0 {
+		t.Errorf("Got %v expected %v", index, 0)
+	}
+
+	heap.Push(3) // [3]
+	heap.Push(2) // [2,3]
+	heap.Push(1) // [1,3,2](2 swapped with 1, hence last)
+	it.End()
+	if index := it.Index(); index != heap.Size() {
+		t.Errorf("Got %v expected %v", index, heap.Size())
+	}
+
+	it.Prev()
+	if index, value := it.Index(), it.Value(); index != heap.Size()-1 || value != 2 {
+		t.Errorf("Got %v,%v expected %v,%v", index, value, heap.Size()-1, 2)
+	}
+}
+
 func TestStackIteratorFirst(t *testing.T) {
 	heap := NewWithIntComparator()
 	it := heap.Iterator()

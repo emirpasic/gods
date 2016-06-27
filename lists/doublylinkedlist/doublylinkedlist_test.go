@@ -393,6 +393,31 @@ func TestListIteratorBegin(t *testing.T) {
 	}
 }
 
+func TestListIteratorEnd(t *testing.T) {
+	list := New()
+	it := list.Iterator()
+
+	if index := it.Index(); index != -1 {
+		t.Errorf("Got %v expected %v", index, -1)
+	}
+
+	it.End()
+	if index := it.Index(); index != 0 {
+		t.Errorf("Got %v expected %v", index, 0)
+	}
+
+	list.Add("a", "b", "c")
+	it.End()
+	if index := it.Index(); index != list.Size() {
+		t.Errorf("Got %v expected %v", index, list.Size())
+	}
+
+	it.Prev()
+	if index, value := it.Index(), it.Value(); index != list.Size()-1 || value != "c" {
+		t.Errorf("Got %v,%v expected %v,%v", index, value, list.Size()-1, "c")
+	}
+}
+
 func TestListIteratorFirst(t *testing.T) {
 	list := New()
 	it := list.Iterator()

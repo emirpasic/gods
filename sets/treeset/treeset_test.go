@@ -292,6 +292,31 @@ func TestSetIteratorBegin(t *testing.T) {
 	}
 }
 
+func TestSetIteratorEnd(t *testing.T) {
+	set := NewWithStringComparator()
+	it := set.Iterator()
+
+	if index := it.Index(); index != -1 {
+		t.Errorf("Got %v expected %v", index, -1)
+	}
+
+	it.End()
+	if index := it.Index(); index != 0 {
+		t.Errorf("Got %v expected %v", index, 0)
+	}
+
+	set.Add("a", "b", "c")
+	it.End()
+	if index := it.Index(); index != set.Size() {
+		t.Errorf("Got %v expected %v", index, set.Size())
+	}
+
+	it.Prev()
+	if index, value := it.Index(), it.Value(); index != set.Size()-1 || value != "c" {
+		t.Errorf("Got %v,%v expected %v,%v", index, value, set.Size()-1, "c")
+	}
+}
+
 func TestSetIteratorFirst(t *testing.T) {
 	set := NewWithStringComparator()
 	set.Add("a", "b", "c")
