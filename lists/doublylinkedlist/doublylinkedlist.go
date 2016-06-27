@@ -33,16 +33,13 @@ package doublylinkedlist
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/containers"
 	"github.com/emirpasic/gods/lists"
 	"github.com/emirpasic/gods/utils"
 	"strings"
 )
 
-func assertInterfaceImplementation() {
+func assertListImplementation() {
 	var _ lists.List = (*List)(nil)
-	var _ containers.EnumerableWithIndex = (*List)(nil)
-	var _ containers.ReverseIteratorWithIndex = (*Iterator)(nil)
 }
 
 // List holds the elements, where each element points to the next and previous element
@@ -298,167 +295,6 @@ func (list *List) Insert(index int, values ...interface{}) {
 		}
 		beforeElement.next = oldNextElement
 	}
-}
-
-// Iterator holding the iterator's state
-type Iterator struct {
-	list    *List
-	index   int
-	element *element
-}
-
-// Iterator returns a stateful iterator whose values can be fetched by an index.
-func (list *List) Iterator() Iterator {
-	return Iterator{list: list, index: -1, element: nil}
-}
-
-// Next moves the iterator to the next element and returns true if there was a next element in the container.
-// If Next() returns true, then next element's index and value can be retrieved by Index() and Value().
-// If Next() was called for the first time, then it will point the iterator to the first element if it exists.
-// Modifies the state of the iterator.
-func (iterator *Iterator) Next() bool {
-	if iterator.index < iterator.list.size {
-		iterator.index++
-	}
-	if !iterator.list.withinRange(iterator.index) {
-		iterator.element = nil
-		return false
-	}
-	if iterator.index != 0 {
-		iterator.element = iterator.element.next
-	} else {
-		iterator.element = iterator.list.first
-	}
-	return true
-}
-
-// Prev moves the iterator to the previous element and returns true if there was a previous element in the container.
-// If Prev() returns true, then previous element's index and value can be retrieved by Index() and Value().
-// Modifies the state of the iterator.
-func (iterator *Iterator) Prev() bool {
-	if iterator.index >= 0 {
-		iterator.index--
-	}
-	if !iterator.list.withinRange(iterator.index) {
-		iterator.element = nil
-		return false
-	}
-	if iterator.index == iterator.list.size-1 {
-		iterator.element = iterator.list.last
-	} else {
-		iterator.element = iterator.element.prev
-	}
-	return iterator.list.withinRange(iterator.index)
-}
-
-// Value returns the current element's value.
-// Does not modify the state of the iterator.
-func (iterator *Iterator) Value() interface{} {
-	return iterator.element.value
-}
-
-// Index returns the current element's index.
-// Does not modify the state of the iterator.
-func (iterator *Iterator) Index() int {
-	return iterator.index
-}
-
-// Begin resets the iterator to its initial state (one-before-first)
-// Call Next() to fetch the first element if any.
-func (iterator *Iterator) Begin() {
-	iterator.index = -1
-	iterator.element = nil
-}
-
-// End moves the iterator past the last element (one-past-the-end).
-// Call Prev() to fetch the last element if any.
-func (iterator *Iterator) End() {
-	iterator.index = iterator.list.size
-	iterator.element = iterator.list.last
-}
-
-// First moves the iterator to the first element and returns true if there was a first element in the container.
-// If First() returns true, then first element's index and value can be retrieved by Index() and Value().
-// Modifies the state of the iterator.
-func (iterator *Iterator) First() bool {
-	iterator.Begin()
-	return iterator.Next()
-}
-
-// Last moves the iterator to the last element and returns true if there was a last element in the container.
-// If Last() returns true, then last element's index and value can be retrieved by Index() and Value().
-// Modifies the state of the iterator.
-func (iterator *Iterator) Last() bool {
-	iterator.End()
-	return iterator.Prev()
-}
-
-// Each calls the given function once for each element, passing that element's index and value.
-func (list *List) Each(f func(index int, value interface{})) {
-	iterator := list.Iterator()
-	for iterator.Next() {
-		f(iterator.Index(), iterator.Value())
-	}
-}
-
-// Map invokes the given function once for each element and returns a
-// container containing the values returned by the given function.
-func (list *List) Map(f func(index int, value interface{}) interface{}) *List {
-	newList := &List{}
-	iterator := list.Iterator()
-	for iterator.Next() {
-		newList.Add(f(iterator.Index(), iterator.Value()))
-	}
-	return newList
-}
-
-// Select returns a new container containing all elements for which the given function returns a true value.
-func (list *List) Select(f func(index int, value interface{}) bool) *List {
-	newList := &List{}
-	iterator := list.Iterator()
-	for iterator.Next() {
-		if f(iterator.Index(), iterator.Value()) {
-			newList.Add(iterator.Value())
-		}
-	}
-	return newList
-}
-
-// Any passes each element of the container to the given function and
-// returns true if the function ever returns true for any element.
-func (list *List) Any(f func(index int, value interface{}) bool) bool {
-	iterator := list.Iterator()
-	for iterator.Next() {
-		if f(iterator.Index(), iterator.Value()) {
-			return true
-		}
-	}
-	return false
-}
-
-// All passes each element of the container to the given function and
-// returns true if the function returns true for all elements.
-func (list *List) All(f func(index int, value interface{}) bool) bool {
-	iterator := list.Iterator()
-	for iterator.Next() {
-		if !f(iterator.Index(), iterator.Value()) {
-			return false
-		}
-	}
-	return true
-}
-
-// Find passes each element of the container to the given function and returns
-// the first (index,value) for which the function is true or -1,nil otherwise
-// if no element matches the criteria.
-func (list *List) Find(f func(index int, value interface{}) bool) (index int, value interface{}) {
-	iterator := list.Iterator()
-	for iterator.Next() {
-		if f(iterator.Index(), iterator.Value()) {
-			return iterator.Index(), iterator.Value()
-		}
-	}
-	return -1, nil
 }
 
 // String returns a string representation of container

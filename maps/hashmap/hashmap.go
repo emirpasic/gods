@@ -38,7 +38,7 @@ import (
 	"github.com/emirpasic/gods/maps"
 )
 
-func assertInterfaceImplementation() {
+func assertMapImplementation() {
 	var _ maps.Map = (*Map)(nil)
 }
 

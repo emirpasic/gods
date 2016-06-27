@@ -37,7 +37,7 @@ import (
 	"strings"
 )
 
-func assertInterfaceImplementation() {
+func assertSetImplementation() {
 	var _ sets.Set = (*Set)(nil)
 }
 
