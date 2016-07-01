@@ -35,7 +35,7 @@ func (m *Map) Put(key interface{}, value interface{}) {
 	m.m[key] = value
 }
 
-// Get searches the elemnt in the map by key and returns its value or nil if key is not found in map.
+// Get searches the element in the map by key and returns its value or nil if key is not found in map.
 // Second return parameter is true if key was found, otherwise false.
 func (m *Map) Get(key interface{}) (value interface{}, found bool) {
 	value, found = m.m[key]
