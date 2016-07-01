@@ -31,7 +31,7 @@ type Map interface {
 	// Values() []interface{}
 }
 
-// BidiMap interface that all bidirectional maps implement
+// BidiMap interface that all bidirectional maps implement (extends the Map interface)
 type BidiMap interface {
 	GetKey(value interface{}) (key interface{}, found bool)
 
