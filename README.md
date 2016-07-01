@@ -20,6 +20,7 @@ Implementation of various data structures and algorithms in Go.
   - [Maps](#maps)
     - [HashMap](#hashmap)
     - [TreeMap](#treemap)
+    - [HashBidiMap](#hashbidimap)
   - [Trees](#trees)
     - [RedBlackTree](#redblacktree)
     - [BinaryHeap](#binaryheap)
@@ -53,7 +54,7 @@ type Container interface {
 
 Containers are either ordered or unordered. All ordered containers provide [stateful iterators](#iterator) and some of them allow [enumerable functions](#enumerable).
 
-| Container | Ordered | [Iterator](#iterator) | [Enumerable](#enumerable) | Ordered by |
+| Container | Ordered | [Iterator](#iterator) | [Enumerable](#enumerable) | Referenced by |
 | :--- | :---: | :---: | :---: | :---: |
 | [ArrayList](#arraylist) | yes | yes* | yes | index |
 | [SinglyLinkedList](#singlylinkedlist) | yes | yes | yes | index |
@@ -64,9 +65,10 @@ Containers are either ordered or unordered. All ordered containers provide [stat
 | [ArrayStack](#arraystack) | yes | yes* | no | index |
 | [HashMap](#hashmap) | no | no | no | key |
 | [TreeMap](#treemap) | yes | yes* | yes | key |
+| [HashBidiMap](#hashbidimap) | no | no | no | key* |
 | [RedBlackTree](#redblacktree) | yes | yes* | no | key |
 | [BinaryHeap](#binaryheap) | yes | yes* | no | index |
-|  |  | <sub><sup>*reversible</sup></sub> |  |  |
+|  |  | <sub><sup>*reversible</sup></sub> |  | <sub><sup>*bidirectional</sup></sub> |
 
 ### Lists
 
@@ -372,6 +374,16 @@ type Map interface {
 }
 ```
 
+A BidiMap is an extension to the Map. A bidirectional map (BidiMap), also called a hash bag, is an associative data structure in which the key-value pairs form a one-to-one relation. This relation works in both directions by allow the value to also act as a key to key, e.g. a pair (a,b) thus provides a coupling between 'a' and 'b' so that 'b' can be found when 'a' is used as a key and 'a' can be found when 'b' is used as a key.
+
+```go
+type BidiMap interface {
+	GetKey(value interface{}) (key interface{}, found bool)
+
+	Map
+}
+```
+
 #### HashMap
 
 A [map](#maps) based on hash tables. Keys are unordered.
@@ -427,6 +439,35 @@ func main() {
     // Other:
     m.Min() // Returns the minimum key and its value from map.
     m.Max() // Returns the maximum key and its value from map.
+}
+```
+
+#### HashBidiMap
+
+A [map](#maps) based on two hashmaps. Keys are unordered.
+
+Implements [BidiMap](#maps) interface.
+
+```go
+package main
+
+import "github.com/emirpasic/gods/maps/hashbidimap"
+
+func main() {
+	m := hashbidimap.New() // empty
+	m.Put(1, "x")          // 1->x
+	m.Put(3, "b")          // 1->x, 3->b (random order)
+	m.Put(1, "a")          // 1->a, 3->b (random order)
+	m.Put(2, "b")          // 1->a, 2->b (random order)
+	_, _ = m.GetKey("a")   // 1, true
+	_, _ = m.Get(2)        // b, true
+	_, _ = m.Get(3)        // nil, false
+	_ = m.Values()         // []interface {}{"a", "b"} (random order)
+	_ = m.Keys()           // []interface {}{1, 2} (random order)
+	m.Remove(1)            // 2->b
+	m.Clear()              // empty
+	m.Empty()              // true
+	m.Size()               // 0
 }
 ```
 
@@ -1056,6 +1097,10 @@ Collections and data structures found in other languages: Java Collections, C++ 
 **Production ready**:
 
   - Used in production.
+
+**No dependencies**:
+
+  - No external imports.
 
 There is often a tug of war between speed and memory when crafting algorithms. We choose to optimize for speed in most cases within reasonable limits on memory consumption.
 
