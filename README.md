@@ -1119,9 +1119,10 @@ For direct contributions, _pull request_ into master or ask to become a contribu
 Coding style:
 
 ```shell
-# Install tooling:
-go build github.com/golang/lint/golint
-go build github.com/fzipp/gocyclo
+# Install tooling and set path:
+go get github.com/golang/lint/golint
+go get github.com/fzipp/gocyclo
+export PATH=$PATH:$GOPATH/bin
 
 # Fix errors and warnings:
 go fmt ./... && gofmt -s -w . && go vet ./... && go get ./... && go test ./... && golint ./... && gocyclo -avg -over 15 .
