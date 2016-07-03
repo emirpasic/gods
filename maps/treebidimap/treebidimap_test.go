@@ -6,11 +6,12 @@ package treebidimap
 
 import (
 	"fmt"
+	"github.com/emirpasic/gods/utils"
 	"testing"
 )
 
 func TestMapPut(t *testing.T) {
-	m := New()
+	m := NewWith(utils.IntComparator, utils.StringComparator)
 	m.Put(5, "e")
 	m.Put(6, "f")
 	m.Put(7, "g")
@@ -52,7 +53,7 @@ func TestMapPut(t *testing.T) {
 }
 
 func TestMapRemove(t *testing.T) {
-	m := New()
+	m := NewWith(utils.IntComparator, utils.StringComparator)
 	m.Put(5, "e")
 	m.Put(6, "f")
 	m.Put(7, "g")
@@ -119,7 +120,7 @@ func TestMapRemove(t *testing.T) {
 }
 
 func TestMapGetKey(t *testing.T) {
-	m := New()
+	m := NewWith(utils.IntComparator, utils.StringComparator)
 	m.Put(5, "e")
 	m.Put(6, "f")
 	m.Put(7, "g")
@@ -171,7 +172,7 @@ func sameElements(a []interface{}, b []interface{}) bool {
 
 func BenchmarkMap(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		m := New()
+		m := NewWithIntComparators()
 		for n := 0; n < 1000; n++ {
 			m.Put(n, n)
 		}
