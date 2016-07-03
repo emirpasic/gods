@@ -21,6 +21,7 @@ Implementation of various data structures and algorithms in Go.
     - [HashMap](#hashmap)
     - [TreeMap](#treemap)
     - [HashBidiMap](#hashbidimap)
+    - [TreeBidiMap](#treebidimap)
   - [Trees](#trees)
     - [RedBlackTree](#redblacktree)
     - [BinaryHeap](#binaryheap)
@@ -66,6 +67,7 @@ Containers are either ordered or unordered. All ordered containers provide [stat
 | [HashMap](#hashmap) | no | no | no | key |
 | [TreeMap](#treemap) | yes | yes* | yes | key |
 | [HashBidiMap](#hashbidimap) | no | no | no | key* |
+| [TreeBidiMap](#treebidimap) | yes | yes* | yes | key* |
 | [RedBlackTree](#redblacktree) | yes | yes* | no | key |
 | [BinaryHeap](#binaryheap) | yes | yes* | no | index |
 |  |  | <sub><sup>*reversible</sup></sub> |  | <sub><sup>*bidirectional</sup></sub> |
@@ -468,6 +470,38 @@ func main() {
 	m.Clear()              // empty
 	m.Empty()              // true
 	m.Size()               // 0
+}
+```
+
+#### TreeBidiMap
+
+A [map](#maps) based on red-black tree. This map guarantees that the map will be in both ascending key and value order.  Other than key and value ordering, the goal with this structure is to avoid duplication of elements (unlike in [HashBidiMap](#hashbidimap)), which can be significant if contained elements are large.
+
+Implements [BidiMap](#maps), [IteratorWithKey](#iteratorwithkey) and [EnumerableWithKey](#enumerablewithkey) interfaces.
+
+```go
+package main
+
+import (
+	"github.com/emirpasic/gods/maps/treebidimap"
+	"github.com/emirpasic/gods/utils"
+)
+
+func main() {
+	m := treebidimap.NewWith(utils.IntComparator, utils.StringComparator)
+	m.Put(1, "x")        // 1->x
+	m.Put(3, "b")        // 1->x, 3->b (ordered)
+	m.Put(1, "a")        // 1->a, 3->b (ordered)
+	m.Put(2, "b")        // 1->a, 2->b (ordered)
+	_, _ = m.GetKey("a") // 1, true
+	_, _ = m.Get(2)      // b, true
+	_, _ = m.Get(3)      // nil, false
+	_ = m.Values()       // []interface {}{"a", "b"} (ordered)
+	_ = m.Keys()         // []interface {}{1, 2} (ordered)
+	m.Remove(1)          // 2->b
+	m.Clear()            // empty
+	m.Empty()            // true
+	m.Size()             // 0
 }
 ```
 
