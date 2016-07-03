@@ -22,6 +22,7 @@ import (
 	"github.com/emirpasic/gods/maps"
 	"github.com/emirpasic/gods/trees/redblacktree"
 	"github.com/emirpasic/gods/utils"
+	"strings"
 )
 
 func assertMapImplementation() {
@@ -128,7 +129,10 @@ func (m *Map) Clear() {
 
 // String returns a string representation of container
 func (m *Map) String() string {
-	str := "TreeBidiMap\n"
-	str += fmt.Sprintf("%v", m.forwardMap)
-	return str
+	str := "TreeBidiMap\nmap["
+	it := m.Iterator()
+	for it.Next() {
+		str += fmt.Sprintf("%v:%v ", it.Key(), it.Value())
+	}
+	return strings.TrimRight(str, " ") + "]"
 }
