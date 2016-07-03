@@ -96,7 +96,7 @@ func (m *Map) Clear() {
 
 // String returns a string representation of container
 func (m *Map) String() string {
-	str := "HashMap\n"
+	str := "HashBidiMap\n"
 	str += fmt.Sprintf("%v", m.forwardMap)
 	return str
 }
