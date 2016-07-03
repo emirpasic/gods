@@ -170,6 +170,157 @@ func sameElements(a []interface{}, b []interface{}) bool {
 	return true
 }
 
+func TestMapIteratorNextOnEmpty(t *testing.T) {
+	m := NewWithStringComparators()
+	it := m.Iterator()
+	it = m.Iterator()
+	for it.Next() {
+		t.Errorf("Shouldn't iterate on empty map")
+	}
+}
+
+func TestMapIteratorPrevOnEmpty(t *testing.T) {
+	m := NewWithStringComparators()
+	it := m.Iterator()
+	it = m.Iterator()
+	for it.Prev() {
+		t.Errorf("Shouldn't iterate on empty map")
+	}
+}
+
+func TestMapIteratorNext(t *testing.T) {
+	m := NewWith(utils.StringComparator, utils.IntComparator)
+	m.Put("c", 3)
+	m.Put("a", 1)
+	m.Put("b", 2)
+
+	it := m.Iterator()
+	count := 0
+	for it.Next() {
+		count++
+		key := it.Key()
+		value := it.Value()
+		switch key {
+		case "a":
+			if actualValue, expectedValue := value, 1; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case "b":
+			if actualValue, expectedValue := value, 2; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case "c":
+			if actualValue, expectedValue := value, 3; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		default:
+			t.Errorf("Too many")
+		}
+		if actualValue, expectedValue := value, count; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+	}
+	if actualValue, expectedValue := count, 3; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+}
+
+func TestMapIteratorPrev(t *testing.T) {
+	m := NewWith(utils.StringComparator, utils.IntComparator)
+	m.Put("c", 3)
+	m.Put("a", 1)
+	m.Put("b", 2)
+
+	it := m.Iterator()
+	for it.Next() {
+	}
+	countDown := m.Size()
+	for it.Prev() {
+		key := it.Key()
+		value := it.Value()
+		switch key {
+		case "a":
+			if actualValue, expectedValue := value, 1; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case "b":
+			if actualValue, expectedValue := value, 2; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		case "c":
+			if actualValue, expectedValue := value, 3; actualValue != expectedValue {
+				t.Errorf("Got %v expected %v", actualValue, expectedValue)
+			}
+		default:
+			t.Errorf("Too many")
+		}
+		if actualValue, expectedValue := value, countDown; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+		countDown--
+	}
+	if actualValue, expectedValue := countDown, 0; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+}
+
+func TestMapIteratorBegin(t *testing.T) {
+	m := NewWith(utils.IntComparator, utils.StringComparator)
+	it := m.Iterator()
+	it.Begin()
+	m.Put(3, "c")
+	m.Put(1, "a")
+	m.Put(2, "b")
+	for it.Next() {
+	}
+	it.Begin()
+	it.Next()
+	if key, value := it.Key(), it.Value(); key != 1 || value != "a" {
+		t.Errorf("Got %v,%v expected %v,%v", key, value, 1, "a")
+	}
+}
+
+func TestMapTreeIteratorEnd(t *testing.T) {
+	m := NewWith(utils.IntComparator, utils.StringComparator)
+	it := m.Iterator()
+	m.Put(3, "c")
+	m.Put(1, "a")
+	m.Put(2, "b")
+	it.End()
+	it.Prev()
+	if key, value := it.Key(), it.Value(); key != 3 || value != "c" {
+		t.Errorf("Got %v,%v expected %v,%v", key, value, 3, "c")
+	}
+}
+
+func TestMapIteratorFirst(t *testing.T) {
+	m := NewWith(utils.IntComparator, utils.StringComparator)
+	m.Put(3, "c")
+	m.Put(1, "a")
+	m.Put(2, "b")
+	it := m.Iterator()
+	if actualValue, expectedValue := it.First(), true; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if key, value := it.Key(), it.Value(); key != 1 || value != "a" {
+		t.Errorf("Got %v,%v expected %v,%v", key, value, 1, "a")
+	}
+}
+
+func TestMapIteratorLast(t *testing.T) {
+	m := NewWith(utils.IntComparator, utils.StringComparator)
+	m.Put(3, "c")
+	m.Put(1, "a")
+	m.Put(2, "b")
+	it := m.Iterator()
+	if actualValue, expectedValue := it.Last(), true; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if key, value := it.Key(), it.Value(); key != 3 || value != "c" {
+		t.Errorf("Got %v,%v expected %v,%v", key, value, 3, "c")
+	}
+}
+
 func BenchmarkMap(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		m := NewWithIntComparators()
