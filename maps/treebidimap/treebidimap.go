@@ -30,8 +30,10 @@ func assertMapImplementation() {
 
 // Map holds the elements in two red-black trees.
 type Map struct {
-	forwardMap redblacktree.Tree
-	inverseMap redblacktree.Tree
+	forwardMap      redblacktree.Tree
+	inverseMap      redblacktree.Tree
+	keyComparator   utils.Comparator
+	valueComparator utils.Comparator
 }
 
 type data struct {
@@ -42,8 +44,10 @@ type data struct {
 // NewWith instantiates a bidirectional map.
 func NewWith(keyComparator utils.Comparator, valueComparator utils.Comparator) *Map {
 	return &Map{
-		forwardMap: *redblacktree.NewWith(keyComparator),
-		inverseMap: *redblacktree.NewWith(valueComparator),
+		forwardMap:      *redblacktree.NewWith(keyComparator),
+		inverseMap:      *redblacktree.NewWith(valueComparator),
+		keyComparator:   keyComparator,
+		valueComparator: valueComparator,
 	}
 }
 

@@ -173,15 +173,15 @@ func TestMapMap(t *testing.T) {
 	m.Put("a", 1)
 	m.Put("b", 2)
 	mappedMap := m.Map(func(key1 interface{}, value1 interface{}) (key2 interface{}, value2 interface{}) {
-		return key1, "mapped: " + key1.(string)
+		return key1, value1.(int) * value1.(int)
 	})
-	if actualValue, _ := mappedMap.Get("a"); actualValue != "mapped: a" {
+	if actualValue, _ := mappedMap.Get("a"); actualValue != 1 {
 		t.Errorf("Got %v expected %v", actualValue, "mapped: a")
 	}
-	if actualValue, _ := mappedMap.Get("b"); actualValue != "mapped: b" {
+	if actualValue, _ := mappedMap.Get("b"); actualValue != 4 {
 		t.Errorf("Got %v expected %v", actualValue, "mapped: b")
 	}
-	if actualValue, _ := mappedMap.Get("c"); actualValue != "mapped: c" {
+	if actualValue, _ := mappedMap.Get("c"); actualValue != 9 {
 		t.Errorf("Got %v expected %v", actualValue, "mapped: c")
 	}
 	if mappedMap.Size() != 3 {
