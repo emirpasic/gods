@@ -259,9 +259,6 @@ func (tree *Tree) split(node *Node) {
 func (tree *Tree) splitNonRoot(node *Node) {
 	middle := tree.middle()
 	parent := node.Parent
-	if node.Parent == nil {
-		panic("test") //TODO
-	}
 
 	left := &Node{Entries: append([]*Entry(nil), node.Entries[:middle]...), Parent: parent}
 	right := &Node{Entries: append([]*Entry(nil), node.Entries[middle+1:]...), Parent: parent}
@@ -270,6 +267,8 @@ func (tree *Tree) splitNonRoot(node *Node) {
 	if !tree.isLeaf(node) {
 		left.Children = node.Children[:middle+1]
 		right.Children = node.Children[middle+1:]
+		setParent(left.Children, left)
+		setParent(right.Children, right)
 	}
 
 	insertPosition, _ := tree.search(parent, node.Entries[middle].Key)
@@ -300,6 +299,8 @@ func (tree *Tree) splitRoot() {
 	if !tree.isLeaf(tree.Root) {
 		left.Children = tree.Root.Children[:middle+1]
 		right.Children = tree.Root.Children[middle+1:]
+		setParent(left.Children, left)
+		setParent(right.Children, right)
 	}
 
 	// Root is a node with one entry and two children (left and right)
@@ -311,4 +312,10 @@ func (tree *Tree) splitRoot() {
 	left.Parent = newRoot
 	right.Parent = newRoot
 	tree.Root = newRoot
+}
+
+func setParent(nodes []*Node, parent *Node) {
+	for _, node := range nodes {
+		node.Parent = parent
+	}
 }
