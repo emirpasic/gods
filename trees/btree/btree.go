@@ -10,9 +10,11 @@
 package btree
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/emirpasic/gods/trees"
 	"github.com/emirpasic/gods/utils"
+	"strings"
 )
 
 func assertTreeImplementation() {
@@ -114,21 +116,47 @@ func (tree *Tree) Clear() {
 	tree.size = 0
 }
 
-// String returns a string representation of container
-func (tree *Tree) String() string {
-	str := "BTree\n"
-	if !tree.Empty() {
-		str += tree.Root.String()
-	}
-	return str
+// Height returns the height of the tree.
+func (tree *Tree) Height() int {
+	return tree.Root.height()
 }
 
-func (node *Node) String() string {
-	return fmt.Sprintf("%v", node.Entries)
+// String returns a string representation of container (for debugging purposes)
+func (tree *Tree) String() string {
+	var buffer bytes.Buffer
+	buffer.WriteString("BTree\n")
+	if !tree.Empty() {
+		tree.output(&buffer, tree.Root, 0, true)
+	}
+	return buffer.String()
 }
 
 func (entry *Entry) String() string {
 	return fmt.Sprintf("%v", entry.Key)
+}
+
+func (tree *Tree) output(buffer *bytes.Buffer, node *Node, level int, isTail bool) {
+	for e := 0; e < len(node.Entries)+1; e++ {
+		if e < len(node.Children) {
+			buffer.WriteString(strings.Repeat("   ", level))
+			tree.output(buffer, node.Children[e], level+1, true)
+		}
+		if e < len(node.Entries) {
+			buffer.WriteString(strings.Repeat("   ", level))
+			buffer.WriteString(fmt.Sprintf("%v", node.Entries[e].Key) + "\n")
+		}
+	}
+}
+
+func (node *Node) height() int {
+	height := 0
+	for ; node != nil; node = node.Children[0] {
+		height++
+		if len(node.Children) == 0 {
+			break
+		}
+	}
+	return height
 }
 
 func (tree *Tree) isLeaf(node *Node) bool {
@@ -183,7 +211,6 @@ func (tree *Tree) insert(node *Node, entry *Entry) (inserted bool) {
 func (tree *Tree) insertIntoLeaf(node *Node, entry *Entry) (inserted bool) {
 	insertPosition, found := tree.search(node, entry)
 	if found {
-		node.Entries[insertPosition] = nil // GC
 		node.Entries[insertPosition] = entry
 		return false
 	}
@@ -197,7 +224,6 @@ func (tree *Tree) insertIntoLeaf(node *Node, entry *Entry) (inserted bool) {
 func (tree *Tree) insertIntoInternal(node *Node, entry *Entry) (inserted bool) {
 	insertPosition, found := tree.search(node, entry)
 	if found {
-		node.Entries[insertPosition] = nil // GC
 		node.Entries[insertPosition] = entry
 		return false
 	}
@@ -239,8 +265,6 @@ func (tree *Tree) splitNonRoot(node *Node) {
 	parent.Children = append(parent.Children, nil)
 	copy(parent.Children[insertPosition+2:], parent.Children[insertPosition+1:])
 	parent.Children[insertPosition+1] = right
-
-	node = nil // GC
 
 	tree.split(parent)
 }

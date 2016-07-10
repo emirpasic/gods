@@ -192,6 +192,48 @@ func TestBTree_insert3(t *testing.T) {
 	assertValidTreeNode(t, tree.Root.Children[2], 3, 0, []int{70, 80, 90})
 }
 
+func TestBTree_height(t *testing.T) {
+	tree := NewWithIntComparator(3)
+	if actualValue, expectedValue := tree.Height(), 0; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+
+	tree.Put(1, 0)
+	if actualValue, expectedValue := tree.Height(), 1; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+
+	tree.Put(2, 1)
+	if actualValue, expectedValue := tree.Height(), 1; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+
+	tree.Put(3, 2)
+	if actualValue, expectedValue := tree.Height(), 2; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+
+	tree.Put(4, 2)
+	if actualValue, expectedValue := tree.Height(), 2; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+
+	tree.Put(5, 2)
+	if actualValue, expectedValue := tree.Height(), 2; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+
+	tree.Put(6, 2)
+	if actualValue, expectedValue := tree.Height(), 2; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+
+	tree.Put(7, 2)
+	if actualValue, expectedValue := tree.Height(), 3; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+}
+
 func assertValidTree(t *testing.T, tree *Tree, expectedSize int) {
 	if actualValue, expectedValue := tree.size, expectedSize; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v for tree size", actualValue, expectedValue)

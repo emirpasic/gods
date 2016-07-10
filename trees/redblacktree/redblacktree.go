@@ -268,7 +268,6 @@ func (node *Node) String() string {
 	return fmt.Sprintf("%v", node.Key)
 }
 
-// String returns a string representation of container
 func output(node *Node, prefix string, isTail bool, str *string) {
 	if node.Right != nil {
 		newPrefix := prefix
