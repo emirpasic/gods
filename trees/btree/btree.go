@@ -154,7 +154,7 @@ func (tree *Tree) output(buffer *bytes.Buffer, node *Node, level int, isTail boo
 			tree.output(buffer, node.Children[e], level+1, true)
 		}
 		if e < len(node.Entries) {
-			buffer.WriteString(strings.Repeat("   ", level))
+			buffer.WriteString(strings.Repeat("    ", level))
 			buffer.WriteString(fmt.Sprintf("%v", node.Entries[e].Key) + "\n")
 		}
 	}
@@ -195,6 +195,7 @@ func (tree *Tree) middle() int {
 	return (tree.m - 1) / 2 // "-1" to favor right nodes to have more keys when splitting
 }
 
+// search searches only within the single node among its entries
 func (tree *Tree) search(node *Node, key interface{}) (index int, found bool) {
 	low, high := 0, len(node.Entries)-1
 	var mid int
@@ -265,8 +266,8 @@ func (tree *Tree) splitNonRoot(node *Node) {
 
 	// Move children from the node to be split into left and right nodes
 	if !tree.isLeaf(node) {
-		left.Children = node.Children[:middle+1]
-		right.Children = node.Children[middle+1:]
+		left.Children = append([]*Node(nil), node.Children[:middle+1]...)
+		right.Children = append([]*Node(nil), node.Children[middle+1:]...)
 		setParent(left.Children, left)
 		setParent(right.Children, right)
 	}
@@ -297,8 +298,8 @@ func (tree *Tree) splitRoot() {
 
 	// Move children from the node to be split into left and right nodes
 	if !tree.isLeaf(tree.Root) {
-		left.Children = tree.Root.Children[:middle+1]
-		right.Children = tree.Root.Children[middle+1:]
+		left.Children = append([]*Node(nil), tree.Root.Children[:middle+1]...)
+		right.Children = append([]*Node(nil), tree.Root.Children[middle+1:]...)
 		setParent(left.Children, left)
 		setParent(right.Children, right)
 	}
