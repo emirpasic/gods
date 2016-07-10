@@ -26,7 +26,7 @@ type Tree struct {
 	Root       *Node            // Root node
 	Comparator utils.Comparator // Key comparator
 	size       int              // Total number of keys in the tree
-	m          int              // Knuth order (maximum number of children)
+	m          int              // order (maximum number of children)
 }
 
 // Node is a single element within the tree
@@ -42,7 +42,7 @@ type Entry struct {
 	Value interface{}
 }
 
-// NewWith instantiates a B-tree with the Knuth order (maximum number of children) and a custom key comparator.
+// NewWith instantiates a B-tree with the order (maximum number of children) and a custom key comparator.
 func NewWith(order int, comparator utils.Comparator) *Tree {
 	if order < 2 {
 		panic("Invalid order, should be at least 2")
@@ -50,12 +50,12 @@ func NewWith(order int, comparator utils.Comparator) *Tree {
 	return &Tree{m: order, Comparator: comparator}
 }
 
-// NewWithIntComparator instantiates a B-tree with the Knuth order (maximum number of children) and the IntComparator, i.e. keys are of type int.
+// NewWithIntComparator instantiates a B-tree with the order (maximum number of children) and the IntComparator, i.e. keys are of type int.
 func NewWithIntComparator(order int) *Tree {
 	return NewWith(order, utils.IntComparator)
 }
 
-// NewWithStringComparator instantiates a B-tree with the Knuth order (maximum number of children) and the StringComparator, i.e. keys are of type string.
+// NewWithStringComparator instantiates a B-tree with the order (maximum number of children) and the StringComparator, i.e. keys are of type string.
 func NewWithStringComparator(order int) *Tree {
 	return NewWith(order, utils.StringComparator)
 }
@@ -81,7 +81,20 @@ func (tree *Tree) Put(key interface{}, value interface{}) {
 // Second return parameter is true if key was found, otherwise false.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (tree *Tree) Get(key interface{}) (value interface{}, found bool) {
-	return nil, false
+	if tree.Empty() {
+		return nil, false
+	}
+	node := tree.Root
+	for {
+		index, found := tree.search(node, key)
+		if found {
+			return node.Entries[index].Value, true
+		}
+		if tree.isLeaf(node) {
+			return nil, false
+		}
+		node = node.Children[index]
+	}
 }
 
 // Remove remove the node from the tree by key.
@@ -138,7 +151,6 @@ func (entry *Entry) String() string {
 func (tree *Tree) output(buffer *bytes.Buffer, node *Node, level int, isTail bool) {
 	for e := 0; e < len(node.Entries)+1; e++ {
 		if e < len(node.Children) {
-			buffer.WriteString(strings.Repeat("   ", level))
 			tree.output(buffer, node.Children[e], level+1, true)
 		}
 		if e < len(node.Entries) {
@@ -183,12 +195,12 @@ func (tree *Tree) middle() int {
 	return (tree.m - 1) / 2 // "-1" to favor right nodes to have more keys when splitting
 }
 
-func (tree *Tree) search(node *Node, entry *Entry) (index int, found bool) {
+func (tree *Tree) search(node *Node, key interface{}) (index int, found bool) {
 	low, high := 0, len(node.Entries)-1
 	var mid int
 	for low <= high {
 		mid = (high + low) / 2
-		compare := tree.Comparator(entry.Key, node.Entries[mid].Key)
+		compare := tree.Comparator(key, node.Entries[mid].Key)
 		switch {
 		case compare > 0:
 			low = mid + 1
@@ -209,11 +221,12 @@ func (tree *Tree) insert(node *Node, entry *Entry) (inserted bool) {
 }
 
 func (tree *Tree) insertIntoLeaf(node *Node, entry *Entry) (inserted bool) {
-	insertPosition, found := tree.search(node, entry)
+	insertPosition, found := tree.search(node, entry.Key)
 	if found {
 		node.Entries[insertPosition] = entry
 		return false
 	}
+	// Insert entry's key in the middle of the node
 	node.Entries = append(node.Entries, nil)
 	copy(node.Entries[insertPosition+1:], node.Entries[insertPosition:])
 	node.Entries[insertPosition] = entry
@@ -222,7 +235,7 @@ func (tree *Tree) insertIntoLeaf(node *Node, entry *Entry) (inserted bool) {
 }
 
 func (tree *Tree) insertIntoInternal(node *Node, entry *Entry) (inserted bool) {
-	insertPosition, found := tree.search(node, entry)
+	insertPosition, found := tree.search(node, entry.Key)
 	if found {
 		node.Entries[insertPosition] = entry
 		return false
@@ -246,22 +259,30 @@ func (tree *Tree) split(node *Node) {
 func (tree *Tree) splitNonRoot(node *Node) {
 	middle := tree.middle()
 	parent := node.Parent
+	if node.Parent == nil {
+		panic("test") //TODO
+	}
 
-	left := &Node{Entries: node.Entries[:middle], Parent: parent}
-	right := &Node{Entries: node.Entries[middle+1:], Parent: parent}
+	left := &Node{Entries: append([]*Entry(nil), node.Entries[:middle]...), Parent: parent}
+	right := &Node{Entries: append([]*Entry(nil), node.Entries[middle+1:]...), Parent: parent}
 
+	// Move children from the node to be split into left and right nodes
 	if !tree.isLeaf(node) {
 		left.Children = node.Children[:middle+1]
 		right.Children = node.Children[middle+1:]
 	}
 
-	insertPosition, _ := tree.search(parent, node.Entries[middle])
+	insertPosition, _ := tree.search(parent, node.Entries[middle].Key)
+
+	// Insert middle key into parent
 	parent.Entries = append(parent.Entries, nil)
 	copy(parent.Entries[insertPosition+1:], parent.Entries[insertPosition:])
 	parent.Entries[insertPosition] = node.Entries[middle]
 
+	// Set child left of inserted key in parent to the created left node
 	parent.Children[insertPosition] = left
 
+	// Set child right of inserted key in parent to the created right node
 	parent.Children = append(parent.Children, nil)
 	copy(parent.Children[insertPosition+2:], parent.Children[insertPosition+1:])
 	parent.Children[insertPosition+1] = right
@@ -272,14 +293,16 @@ func (tree *Tree) splitNonRoot(node *Node) {
 func (tree *Tree) splitRoot() {
 	middle := tree.middle()
 
-	left := &Node{Entries: tree.Root.Entries[:middle]}
-	right := &Node{Entries: tree.Root.Entries[middle+1:]}
+	left := &Node{Entries: append([]*Entry(nil), tree.Root.Entries[:middle]...)}
+	right := &Node{Entries: append([]*Entry(nil), tree.Root.Entries[middle+1:]...)}
 
+	// Move children from the node to be split into left and right nodes
 	if !tree.isLeaf(tree.Root) {
 		left.Children = tree.Root.Children[:middle+1]
 		right.Children = tree.Root.Children[middle+1:]
 	}
 
+	// Root is a node with one entry and two children (left and right)
 	newRoot := &Node{
 		Entries:  []*Entry{tree.Root.Entries[middle]},
 		Children: []*Node{left, right},
