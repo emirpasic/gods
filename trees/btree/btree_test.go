@@ -350,6 +350,40 @@ func TestBTreeHeight(t *testing.T) {
 	}
 }
 
+func TestBTreeLeftAndRight(t *testing.T) {
+	tree := NewWithIntComparator(3)
+
+	if actualValue := tree.Left(); actualValue != nil {
+		t.Errorf("Got %v expected %v", actualValue, nil)
+	}
+	if actualValue := tree.Right(); actualValue != nil {
+		t.Errorf("Got %v expected %v", actualValue, nil)
+	}
+
+	tree.Put(1, "a")
+	tree.Put(5, "e")
+	tree.Put(6, "f")
+	tree.Put(7, "g")
+	tree.Put(3, "c")
+	tree.Put(4, "d")
+	tree.Put(1, "x") // overwrite
+	tree.Put(2, "b")
+
+	if actualValue, expectedValue := tree.LeftKey(), 1; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if actualValue, expectedValue := tree.LeftValue(), "x"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+
+	if actualValue, expectedValue := tree.RightKey(), 7; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if actualValue, expectedValue := tree.RightValue(), "g"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+}
+
 func TestBTree_search(t *testing.T) {
 	{
 		tree := NewWithIntComparator(3)

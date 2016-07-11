@@ -44,8 +44,8 @@ type Entry struct {
 
 // NewWith instantiates a B-tree with the order (maximum number of children) and a custom key comparator.
 func NewWith(order int, comparator utils.Comparator) *Tree {
-	if order < 2 {
-		panic("Invalid order, should be at least 2")
+	if order < 3 {
+		panic("Invalid order, should be at least 3")
 	}
 	return &Tree{m: order, Comparator: comparator}
 }
@@ -132,6 +132,66 @@ func (tree *Tree) Clear() {
 // Height returns the height of the tree.
 func (tree *Tree) Height() int {
 	return tree.Root.height()
+}
+
+// Left returns the left-most (min) node or nil if tree is empty.
+func (tree *Tree) Left() *Node {
+	if tree.Empty() {
+		return nil
+	}
+	node := tree.Root
+	for {
+		if tree.isLeaf(node) {
+			return node
+		}
+		node = node.Children[0]
+	}
+}
+
+// LeftKey returns the left-most (min) key or nil if tree is empty.
+func (tree *Tree) LeftKey() interface{} {
+	if left := tree.Left(); left != nil {
+		return left.Entries[0].Key
+	}
+	return nil
+}
+
+// LeftValue returns the left-most value or nil if tree is empty.
+func (tree *Tree) LeftValue() interface{} {
+	if left := tree.Left(); left != nil {
+		return left.Entries[0].Value
+	}
+	return nil
+}
+
+// Right returns the right-most (max) node or nil if tree is empty.
+func (tree *Tree) Right() *Node {
+	if tree.Empty() {
+		return nil
+	}
+	node := tree.Root
+	for {
+		if tree.isLeaf(node) {
+			return node
+		}
+		node = node.Children[len(node.Children)-1]
+	}
+}
+
+// RightKey returns the right-most (max) key or nil if tree is empty.
+func (tree *Tree) RightKey() interface{} {
+	if right := tree.Right(); right != nil {
+		return right.Entries[len(right.Entries)-1].Key
+	}
+	return nil
+}
+
+// RightValue returns the right-most value or nil if tree is empty.
+func (tree *Tree) RightValue() interface{} {
+	if right := tree.Right(); right != nil {
+		return right.Entries[len(right.Entries)-1].Value
+	}
+	return nil
 }
 
 // String returns a string representation of container (for debugging purposes)
