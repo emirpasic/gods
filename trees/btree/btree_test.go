@@ -5,7 +5,7 @@
 package btree
 
 import (
-	_ "fmt"
+	"fmt"
 	"testing"
 )
 
@@ -381,6 +381,27 @@ func TestBTreeLeftAndRight(t *testing.T) {
 	}
 	if actualValue, expectedValue := tree.RightValue(), "g"; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+}
+
+func TestBTreeIteratorValuesAndKeys(t *testing.T) {
+	tree := NewWithIntComparator(4)
+	tree.Put(4, "d")
+	tree.Put(5, "e")
+	tree.Put(6, "f")
+	tree.Put(3, "c")
+	tree.Put(1, "a")
+	tree.Put(7, "g")
+	tree.Put(2, "b")
+	tree.Put(1, "x") // override
+	if actualValue, expectedValue := fmt.Sprintf("%d%d%d%d%d%d%d", tree.Keys()...), "1234567"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if actualValue, expectedValue := fmt.Sprintf("%s%s%s%s%s%s%s", tree.Values()...), "xbcdefg"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if actualValue := tree.Size(); actualValue != 7 {
+		t.Errorf("Got %v expected %v", actualValue, 7)
 	}
 }
 

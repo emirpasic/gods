@@ -115,12 +115,22 @@ func (tree *Tree) Size() int {
 
 // Keys returns all keys in-order
 func (tree *Tree) Keys() []interface{} {
-	return nil // TODO
+	keys := make([]interface{}, tree.size)
+	it := tree.Iterator()
+	for i := 0; it.Next(); i++ {
+		keys[i] = it.Key()
+	}
+	return keys
 }
 
 // Values returns all values in-order based on the key.
 func (tree *Tree) Values() []interface{} {
-	return nil // TODO
+	values := make([]interface{}, tree.size)
+	it := tree.Iterator()
+	for i := 0; it.Next(); i++ {
+		values[i] = it.Value()
+	}
+	return values
 }
 
 // Clear removes all nodes from the tree.
