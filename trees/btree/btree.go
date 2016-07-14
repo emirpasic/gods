@@ -97,13 +97,12 @@ func (tree *Tree) Get(key interface{}) (value interface{}, found bool) {
 
 // Remove remove the node from the tree by key.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
-func (tree *Tree) Remove(key interface{}) bool {
+func (tree *Tree) Remove(key interface{}) {
 	node, index, found := tree.searchRecursively(tree.Root, key)
 	if found {
 		tree.delete(node, index)
 		tree.size--
 	}
-	return found
 }
 
 // Empty returns true if tree does not contain any nodes
@@ -463,11 +462,14 @@ func (tree *Tree) delete(node *Node, index int) {
 		deletedKey := node.Entries[index].Key
 		tree.deleteEntry(node, index)
 		tree.rebalance(node, deletedKey)
+		if len(tree.Root.Entries) == 0 {
+			tree.Root = nil
+		}
 		return
 	}
 
 	// deleting from an internal node
-	leftLargestNode := tree.right(node.Children[index]) // largest node in the left sub-tree (exists)
+	leftLargestNode := tree.right(node.Children[index]) // largest node in the left sub-tree (assumed to exist)
 	leftLargestEntryIndex := len(leftLargestNode.Entries) - 1
 	node.Entries[index] = leftLargestNode.Entries[leftLargestEntryIndex]
 	deletedKey := leftLargestNode.Entries[leftLargestEntryIndex].Key
@@ -479,7 +481,7 @@ func (tree *Tree) delete(node *Node, index int) {
 // Note that we first delete the entry and then call rebalance, thus the passed deleted key as reference.
 func (tree *Tree) rebalance(node *Node, deletedKey interface{}) {
 	// check if rebalancing is needed
-	if len(node.Entries) >= tree.minEntries() {
+	if node == nil || len(node.Entries) >= tree.minEntries() {
 		return
 	}
 
@@ -490,6 +492,12 @@ func (tree *Tree) rebalance(node *Node, deletedKey interface{}) {
 		node.Entries = append([]*Entry{node.Parent.Entries[leftSiblingIndex]}, node.Entries...) // prepend parent's separator entry to node's entries
 		node.Parent.Entries[leftSiblingIndex] = leftSibling.Entries[len(leftSibling.Entries)-1]
 		tree.deleteEntry(leftSibling, len(leftSibling.Entries)-1)
+		if !tree.isLeaf(leftSibling) {
+			leftSiblingRightMostChild := leftSibling.Children[len(leftSibling.Children)-1]
+			leftSiblingRightMostChild.Parent = node
+			node.Children = append([]*Node{leftSiblingRightMostChild}, node.Children...)
+			tree.deleteChild(leftSibling, len(leftSibling.Children)-1)
+		}
 		return
 	}
 
@@ -500,6 +508,12 @@ func (tree *Tree) rebalance(node *Node, deletedKey interface{}) {
 		node.Entries = append(node.Entries, node.Parent.Entries[rightSiblingIndex-1]) // append parent's separator entry to node's entries
 		node.Parent.Entries[rightSiblingIndex-1] = rightSibling.Entries[0]
 		tree.deleteEntry(rightSibling, 0)
+		if !tree.isLeaf(rightSibling) {
+			rightSiblingLeftMostChild := rightSibling.Children[0]
+			rightSiblingLeftMostChild.Parent = node
+			node.Children = append(node.Children, rightSiblingLeftMostChild)
+			tree.deleteChild(rightSibling, 0)
+		}
 		return
 	}
 
@@ -521,11 +535,6 @@ func (tree *Tree) rebalance(node *Node, deletedKey interface{}) {
 		tree.deleteEntry(node.Parent, leftSiblingIndex)
 		tree.prependChildren(node.Parent.Children[leftSiblingIndex], node)
 		tree.deleteChild(node.Parent, leftSiblingIndex)
-	} else {
-		// node is empty root
-		tree.Root = node
-		node.Parent = nil
-		return
 	}
 
 	// make the merged node the root if its parent was the root and the root is empty
@@ -542,14 +551,15 @@ func (tree *Tree) rebalance(node *Node, deletedKey interface{}) {
 func (tree *Tree) prependChildren(fromNode *Node, toNode *Node) {
 	children := append([]*Node(nil), fromNode.Children...)
 	toNode.Children = append(children, toNode.Children...)
+	setParent(fromNode.Children, toNode)
 }
 
 func (tree *Tree) appendChildren(fromNode *Node, toNode *Node) {
 	toNode.Children = append(toNode.Children, fromNode.Children...)
+	setParent(fromNode.Children, toNode)
 }
 
 func (tree *Tree) deleteEntry(node *Node, index int) {
-	node.Entries[index] = nil
 	copy(node.Entries[index:], node.Entries[index+1:])
 	node.Entries[len(node.Entries)-1] = nil
 	node.Entries = node.Entries[:len(node.Entries)-1]
@@ -559,8 +569,6 @@ func (tree *Tree) deleteChild(node *Node, index int) {
 	if index >= len(node.Children) {
 		return
 	}
-	node.Children[index].Entries = nil // GC
-	node.Children[index] = nil         // GC
 	copy(node.Children[index:], node.Children[index+1:])
 	node.Children[len(node.Children)-1] = nil
 	node.Children = node.Children[:len(node.Children)-1]

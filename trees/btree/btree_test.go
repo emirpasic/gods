@@ -327,7 +327,6 @@ func TestBTreeRemove2(t *testing.T) {
 
 	tree.Remove(2)
 	assertValidTree(t, tree, 0)
-	assertValidTreeNode(t, tree.Root, 0, 0, []int{}, false)
 }
 
 func TestBTreeRemove3(t *testing.T) {
@@ -484,6 +483,85 @@ func TestBTreeRemove7(t *testing.T) {
 	assertValidTree(t, tree, 0)
 }
 
+func TestBTreeRemove8(t *testing.T) {
+	// use simulator: https://www.cs.usfca.edu/~galles/visualization/BTree.html
+	tree := NewWithIntComparator(3)
+	tree.Put(1, nil)
+	tree.Put(2, nil)
+	tree.Put(3, nil)
+	tree.Put(4, nil)
+	tree.Put(5, nil)
+	tree.Put(6, nil)
+	tree.Put(7, nil)
+	tree.Put(8, nil)
+	tree.Put(9, nil)
+
+	assertValidTree(t, tree, 9)
+	assertValidTreeNode(t, tree.Root, 1, 2, []int{4}, false)
+	assertValidTreeNode(t, tree.Root.Children[0], 1, 2, []int{2}, true)
+	assertValidTreeNode(t, tree.Root.Children[1], 2, 3, []int{6, 8}, true)
+	assertValidTreeNode(t, tree.Root.Children[0].Children[0], 1, 0, []int{1}, true)
+	assertValidTreeNode(t, tree.Root.Children[0].Children[1], 1, 0, []int{3}, true)
+	assertValidTreeNode(t, tree.Root.Children[1].Children[0], 1, 0, []int{5}, true)
+	assertValidTreeNode(t, tree.Root.Children[1].Children[1], 1, 0, []int{7}, true)
+	assertValidTreeNode(t, tree.Root.Children[1].Children[2], 1, 0, []int{9}, true)
+
+	tree.Remove(1)
+	assertValidTree(t, tree, 8)
+	assertValidTreeNode(t, tree.Root, 1, 2, []int{6}, false)
+	assertValidTreeNode(t, tree.Root.Children[0], 1, 2, []int{4}, true)
+	assertValidTreeNode(t, tree.Root.Children[1], 1, 2, []int{8}, true)
+	assertValidTreeNode(t, tree.Root.Children[0].Children[0], 2, 0, []int{2, 3}, true)
+	assertValidTreeNode(t, tree.Root.Children[0].Children[1], 1, 0, []int{5}, true)
+	assertValidTreeNode(t, tree.Root.Children[1].Children[0], 1, 0, []int{7}, true)
+	assertValidTreeNode(t, tree.Root.Children[1].Children[1], 1, 0, []int{9}, true)
+}
+
+func TestBTreeRemove9(t *testing.T) {
+	const max = 1000
+	orders := []int{3, 4, 5, 6, 7, 8, 9, 10, 20, 100, 500, 1000, 5000, 10000}
+	for _, order := range orders {
+
+		tree := NewWithIntComparator(order)
+
+		{
+			for i := 1; i <= max; i++ {
+				tree.Put(i, i)
+			}
+			assertValidTree(t, tree, max)
+
+			for i := 1; i <= max; i++ {
+				if _, found := tree.Get(i); !found {
+					t.Errorf("Not found %v", i)
+				}
+			}
+
+			for i := 1; i <= max; i++ {
+				tree.Remove(i)
+			}
+			assertValidTree(t, tree, 0)
+		}
+
+		{
+			for i := max; i > 0; i-- {
+				tree.Put(i, i)
+			}
+			assertValidTree(t, tree, max)
+
+			for i := max; i > 0; i-- {
+				if _, found := tree.Get(i); !found {
+					t.Errorf("Not found %v", i)
+				}
+			}
+
+			for i := max; i > 0; i-- {
+				tree.Remove(i)
+			}
+			assertValidTree(t, tree, 0)
+		}
+	}
+}
+
 func TestBTreeHeight(t *testing.T) {
 	tree := NewWithIntComparator(3)
 	if actualValue, expectedValue := tree.Height(), 0; actualValue != expectedValue {
@@ -522,6 +600,17 @@ func TestBTreeHeight(t *testing.T) {
 
 	tree.Put(7, 2)
 	if actualValue, expectedValue := tree.Height(), 3; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+
+	tree.Remove(1)
+	tree.Remove(2)
+	tree.Remove(3)
+	tree.Remove(4)
+	tree.Remove(5)
+	tree.Remove(6)
+	tree.Remove(7)
+	if actualValue, expectedValue := tree.Height(), 0; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 }
