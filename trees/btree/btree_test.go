@@ -308,6 +308,182 @@ func TestBTreePut4(t *testing.T) {
 	assertValidTreeNode(t, tree.Root.Children[2].Children[1], 1, 0, []int{6}, true)
 }
 
+func TestBTreeRemove1(t *testing.T) {
+	// empty
+	tree := NewWithIntComparator(3)
+	tree.Remove(1)
+	assertValidTree(t, tree, 0)
+}
+
+func TestBTreeRemove2(t *testing.T) {
+	// leaf node (no underflow)
+	tree := NewWithIntComparator(3)
+	tree.Put(1, nil)
+	tree.Put(2, nil)
+
+	tree.Remove(1)
+	assertValidTree(t, tree, 1)
+	assertValidTreeNode(t, tree.Root, 1, 0, []int{2}, false)
+
+	tree.Remove(2)
+	assertValidTree(t, tree, 0)
+	assertValidTreeNode(t, tree.Root, 0, 0, []int{}, false)
+}
+
+func TestBTreeRemove3(t *testing.T) {
+	// merge with right (underflow)
+	{
+		tree := NewWithIntComparator(3)
+		tree.Put(1, nil)
+		tree.Put(2, nil)
+		tree.Put(3, nil)
+
+		tree.Remove(1)
+		assertValidTree(t, tree, 2)
+		assertValidTreeNode(t, tree.Root, 2, 0, []int{2, 3}, false)
+	}
+	// merge with left (underflow)
+	{
+		tree := NewWithIntComparator(3)
+		tree.Put(1, nil)
+		tree.Put(2, nil)
+		tree.Put(3, nil)
+
+		tree.Remove(3)
+		assertValidTree(t, tree, 2)
+		assertValidTreeNode(t, tree.Root, 2, 0, []int{1, 2}, false)
+	}
+}
+
+func TestBTreeRemove4(t *testing.T) {
+	// rotate left (underflow)
+	tree := NewWithIntComparator(3)
+	tree.Put(1, nil)
+	tree.Put(2, nil)
+	tree.Put(3, nil)
+	tree.Put(4, nil)
+
+	assertValidTree(t, tree, 4)
+	assertValidTreeNode(t, tree.Root, 1, 2, []int{2}, false)
+	assertValidTreeNode(t, tree.Root.Children[0], 1, 0, []int{1}, true)
+	assertValidTreeNode(t, tree.Root.Children[1], 2, 0, []int{3, 4}, true)
+
+	tree.Remove(1)
+	assertValidTree(t, tree, 3)
+	assertValidTreeNode(t, tree.Root, 1, 2, []int{3}, false)
+	assertValidTreeNode(t, tree.Root.Children[0], 1, 0, []int{2}, true)
+	assertValidTreeNode(t, tree.Root.Children[1], 1, 0, []int{4}, true)
+}
+
+func TestBTreeRemove5(t *testing.T) {
+	// rotate right (underflow)
+	tree := NewWithIntComparator(3)
+	tree.Put(1, nil)
+	tree.Put(2, nil)
+	tree.Put(3, nil)
+	tree.Put(0, nil)
+
+	assertValidTree(t, tree, 4)
+	assertValidTreeNode(t, tree.Root, 1, 2, []int{2}, false)
+	assertValidTreeNode(t, tree.Root.Children[0], 2, 0, []int{0, 1}, true)
+	assertValidTreeNode(t, tree.Root.Children[1], 1, 0, []int{3}, true)
+
+	tree.Remove(3)
+	assertValidTree(t, tree, 3)
+	assertValidTreeNode(t, tree.Root, 1, 2, []int{1}, false)
+	assertValidTreeNode(t, tree.Root.Children[0], 1, 0, []int{0}, true)
+	assertValidTreeNode(t, tree.Root.Children[1], 1, 0, []int{2}, true)
+}
+
+func TestBTreeRemove6(t *testing.T) {
+	// root height reduction after a series of underflows on right side
+	// use simulator: https://www.cs.usfca.edu/~galles/visualization/BTree.html
+	tree := NewWithIntComparator(3)
+	tree.Put(1, nil)
+	tree.Put(2, nil)
+	tree.Put(3, nil)
+	tree.Put(4, nil)
+	tree.Put(5, nil)
+	tree.Put(6, nil)
+	tree.Put(7, nil)
+
+	assertValidTree(t, tree, 7)
+	assertValidTreeNode(t, tree.Root, 1, 2, []int{4}, false)
+	assertValidTreeNode(t, tree.Root.Children[0], 1, 2, []int{2}, true)
+	assertValidTreeNode(t, tree.Root.Children[1], 1, 2, []int{6}, true)
+	assertValidTreeNode(t, tree.Root.Children[0].Children[0], 1, 0, []int{1}, true)
+	assertValidTreeNode(t, tree.Root.Children[0].Children[1], 1, 0, []int{3}, true)
+	assertValidTreeNode(t, tree.Root.Children[1].Children[0], 1, 0, []int{5}, true)
+	assertValidTreeNode(t, tree.Root.Children[1].Children[1], 1, 0, []int{7}, true)
+
+	tree.Remove(7)
+	assertValidTree(t, tree, 6)
+	assertValidTreeNode(t, tree.Root, 2, 3, []int{2, 4}, false)
+	assertValidTreeNode(t, tree.Root.Children[0], 1, 0, []int{1}, true)
+	assertValidTreeNode(t, tree.Root.Children[1], 1, 0, []int{3}, true)
+	assertValidTreeNode(t, tree.Root.Children[2], 2, 0, []int{5, 6}, true)
+}
+
+func TestBTreeRemove7(t *testing.T) {
+	// root height reduction after a series of underflows on left side
+	// use simulator: https://www.cs.usfca.edu/~galles/visualization/BTree.html
+	tree := NewWithIntComparator(3)
+	tree.Put(1, nil)
+	tree.Put(2, nil)
+	tree.Put(3, nil)
+	tree.Put(4, nil)
+	tree.Put(5, nil)
+	tree.Put(6, nil)
+	tree.Put(7, nil)
+
+	assertValidTree(t, tree, 7)
+	assertValidTreeNode(t, tree.Root, 1, 2, []int{4}, false)
+	assertValidTreeNode(t, tree.Root.Children[0], 1, 2, []int{2}, true)
+	assertValidTreeNode(t, tree.Root.Children[1], 1, 2, []int{6}, true)
+	assertValidTreeNode(t, tree.Root.Children[0].Children[0], 1, 0, []int{1}, true)
+	assertValidTreeNode(t, tree.Root.Children[0].Children[1], 1, 0, []int{3}, true)
+	assertValidTreeNode(t, tree.Root.Children[1].Children[0], 1, 0, []int{5}, true)
+	assertValidTreeNode(t, tree.Root.Children[1].Children[1], 1, 0, []int{7}, true)
+
+	tree.Remove(1) // series of underflows
+	assertValidTree(t, tree, 6)
+	assertValidTreeNode(t, tree.Root, 2, 3, []int{4, 6}, false)
+	assertValidTreeNode(t, tree.Root.Children[0], 2, 0, []int{2, 3}, true)
+	assertValidTreeNode(t, tree.Root.Children[1], 1, 0, []int{5}, true)
+	assertValidTreeNode(t, tree.Root.Children[2], 1, 0, []int{7}, true)
+
+	// clear all remaining
+	tree.Remove(2)
+	assertValidTree(t, tree, 5)
+	assertValidTreeNode(t, tree.Root, 2, 3, []int{4, 6}, false)
+	assertValidTreeNode(t, tree.Root.Children[0], 1, 0, []int{3}, true)
+	assertValidTreeNode(t, tree.Root.Children[1], 1, 0, []int{5}, true)
+	assertValidTreeNode(t, tree.Root.Children[2], 1, 0, []int{7}, true)
+
+	tree.Remove(3)
+	assertValidTree(t, tree, 4)
+	assertValidTreeNode(t, tree.Root, 1, 2, []int{6}, false)
+	assertValidTreeNode(t, tree.Root.Children[0], 2, 0, []int{4, 5}, true)
+	assertValidTreeNode(t, tree.Root.Children[1], 1, 0, []int{7}, true)
+
+	tree.Remove(4)
+	assertValidTree(t, tree, 3)
+	assertValidTreeNode(t, tree.Root, 1, 2, []int{6}, false)
+	assertValidTreeNode(t, tree.Root.Children[0], 1, 0, []int{5}, true)
+	assertValidTreeNode(t, tree.Root.Children[1], 1, 0, []int{7}, true)
+
+	tree.Remove(5)
+	assertValidTree(t, tree, 2)
+	assertValidTreeNode(t, tree.Root, 2, 0, []int{6, 7}, false)
+
+	tree.Remove(6)
+	assertValidTree(t, tree, 1)
+	assertValidTreeNode(t, tree.Root, 1, 0, []int{7}, false)
+
+	tree.Remove(7)
+	assertValidTree(t, tree, 0)
+}
+
 func TestBTreeHeight(t *testing.T) {
 	tree := NewWithIntComparator(3)
 	if actualValue, expectedValue := tree.Height(), 0; actualValue != expectedValue {

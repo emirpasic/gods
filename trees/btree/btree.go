@@ -4,6 +4,13 @@
 
 // Package btree implements a B tree.
 //
+// According to Knuth's definition, a B-tree of order m is a tree which satisfies the following properties:
+// - Every node has at most m children.
+// - Every non-leaf node (except root) has at least ⌈m/2⌉ children.
+// - The root has at least two children if it is not a leaf node.
+// - A non-leaf node with k children contains k−1 keys.
+// - All leaves appear in the same level
+//
 // Structure is not thread safe.
 //
 // References: https://en.wikipedia.org/wiki/B-tree
@@ -81,26 +88,22 @@ func (tree *Tree) Put(key interface{}, value interface{}) {
 // Second return parameter is true if key was found, otherwise false.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (tree *Tree) Get(key interface{}) (value interface{}, found bool) {
-	if tree.Empty() {
-		return nil, false
+	node, index, found := tree.searchRecursively(tree.Root, key)
+	if found {
+		return node.Entries[index].Value, true
 	}
-	node := tree.Root
-	for {
-		index, found := tree.search(node, key)
-		if found {
-			return node.Entries[index].Value, true
-		}
-		if tree.isLeaf(node) {
-			return nil, false
-		}
-		node = node.Children[index]
-	}
+	return nil, false
 }
 
 // Remove remove the node from the tree by key.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
-func (tree *Tree) Remove(key interface{}) {
-	// TODO
+func (tree *Tree) Remove(key interface{}) bool {
+	node, index, found := tree.searchRecursively(tree.Root, key)
+	if found {
+		tree.delete(node, index)
+		tree.size--
+	}
+	return found
 }
 
 // Empty returns true if tree does not contain any nodes
@@ -146,16 +149,7 @@ func (tree *Tree) Height() int {
 
 // Left returns the left-most (min) node or nil if tree is empty.
 func (tree *Tree) Left() *Node {
-	if tree.Empty() {
-		return nil
-	}
-	node := tree.Root
-	for {
-		if tree.isLeaf(node) {
-			return node
-		}
-		node = node.Children[0]
-	}
+	return tree.left(tree.Root)
 }
 
 // LeftKey returns the left-most (min) key or nil if tree is empty.
@@ -176,16 +170,7 @@ func (tree *Tree) LeftValue() interface{} {
 
 // Right returns the right-most (max) node or nil if tree is empty.
 func (tree *Tree) Right() *Node {
-	if tree.Empty() {
-		return nil
-	}
-	node := tree.Root
-	for {
-		if tree.isLeaf(node) {
-			return node
-		}
-		node = node.Children[len(node.Children)-1]
-	}
+	return tree.right(tree.Root)
 }
 
 // RightKey returns the right-most (max) key or nil if tree is empty.
@@ -257,8 +242,16 @@ func (tree *Tree) maxChildren() int {
 	return tree.m
 }
 
+func (tree *Tree) minChildren() int {
+	return (tree.m + 1) / 2 // ceil(m/2)
+}
+
 func (tree *Tree) maxEntries() int {
-	return tree.m - 1
+	return tree.maxChildren() - 1
+}
+
+func (tree *Tree) minEntries() int {
+	return tree.minChildren() - 1
 }
 
 func (tree *Tree) middle() int {
@@ -282,6 +275,24 @@ func (tree *Tree) search(node *Node, key interface{}) (index int, found bool) {
 		}
 	}
 	return low, false
+}
+
+// searchRecursively searches recursively down the tree starting at the startNode
+func (tree *Tree) searchRecursively(startNode *Node, key interface{}) (node *Node, index int, found bool) {
+	if tree.Empty() {
+		return nil, -1, false
+	}
+	node = startNode
+	for {
+		index, found = tree.search(node, key)
+		if found {
+			return node, index, true
+		}
+		if tree.isLeaf(node) {
+			return nil, -1, false
+		}
+		node = node.Children[index]
+	}
 }
 
 func (tree *Tree) insert(node *Node, entry *Entry) (inserted bool) {
@@ -345,6 +356,7 @@ func (tree *Tree) splitNonRoot(node *Node) {
 	insertPosition, _ := tree.search(parent, node.Entries[middle].Key)
 
 	// Insert middle key into parent
+	// TODO check for memory leaks: node should be nilled and all its entries
 	parent.Entries = append(parent.Entries, nil)
 	copy(parent.Entries[insertPosition+1:], parent.Entries[insertPosition:])
 	parent.Entries[insertPosition] = node.Entries[middle]
@@ -389,4 +401,167 @@ func setParent(nodes []*Node, parent *Node) {
 	for _, node := range nodes {
 		node.Parent = parent
 	}
+}
+
+func (tree *Tree) left(node *Node) *Node {
+	if tree.Empty() {
+		return nil
+	}
+	current := node
+	for {
+		if tree.isLeaf(current) {
+			return current
+		}
+		current = current.Children[0]
+	}
+}
+
+func (tree *Tree) right(node *Node) *Node {
+	if tree.Empty() {
+		return nil
+	}
+	current := node
+	for {
+		if tree.isLeaf(current) {
+			return current
+		}
+		current = current.Children[len(current.Children)-1]
+	}
+}
+
+// leftSibling returns the node's left sibling and child index (in parent) if it exists, otherwise (nil,-1)
+// key is any of keys in node (could even be deleted).
+func (tree *Tree) leftSibling(node *Node, key interface{}) (*Node, int) {
+	if node.Parent != nil {
+		index, _ := tree.search(node.Parent, key)
+		index--
+		if index >= 0 && index < len(node.Parent.Children) {
+			return node.Parent.Children[index], index
+		}
+	}
+	return nil, -1
+}
+
+// rightSibling returns the node's right sibling and child index (in parent) if it exists, otherwise (nil,-1)
+// key is any of keys in node (could even be deleted).
+func (tree *Tree) rightSibling(node *Node, key interface{}) (*Node, int) {
+	if node.Parent != nil {
+		index, _ := tree.search(node.Parent, key)
+		index++
+		if index < len(node.Parent.Children) {
+			return node.Parent.Children[index], index
+		}
+	}
+	return nil, -1
+}
+
+// delete deletes an entry in node at entries' index
+// ref.: https://en.wikipedia.org/wiki/B-tree#Deletion
+func (tree *Tree) delete(node *Node, index int) {
+	// deleting from a leaf node
+	if tree.isLeaf(node) {
+		deletedKey := node.Entries[index].Key
+		tree.deleteEntry(node, index)
+		tree.rebalance(node, deletedKey)
+		return
+	}
+
+	// deleting from an internal node
+	leftLargestNode := tree.right(node.Children[index]) // largest node in the left sub-tree (exists)
+	leftLargestEntryIndex := len(leftLargestNode.Entries) - 1
+	node.Entries[index] = leftLargestNode.Entries[leftLargestEntryIndex]
+	deletedKey := leftLargestNode.Entries[leftLargestEntryIndex].Key
+	tree.deleteEntry(leftLargestNode, leftLargestEntryIndex)
+	tree.rebalance(leftLargestNode, deletedKey)
+}
+
+// rebalance rebalances the tree after deletion if necessary and returns true, otherwise false.
+// Note that we first delete the entry and then call rebalance, thus the passed deleted key as reference.
+func (tree *Tree) rebalance(node *Node, deletedKey interface{}) {
+	// check if rebalancing is needed
+	if len(node.Entries) >= tree.minEntries() {
+		return
+	}
+
+	// try to borrow from left sibling
+	leftSibling, leftSiblingIndex := tree.leftSibling(node, deletedKey)
+	if leftSibling != nil && len(leftSibling.Entries) > tree.minEntries() {
+		// rotate right
+		node.Entries = append([]*Entry{node.Parent.Entries[leftSiblingIndex]}, node.Entries...) // prepend parent's separator entry to node's entries
+		node.Parent.Entries[leftSiblingIndex] = leftSibling.Entries[len(leftSibling.Entries)-1]
+		tree.deleteEntry(leftSibling, len(leftSibling.Entries)-1)
+		return
+	}
+
+	// try to borrow from right sibling
+	rightSibling, rightSiblingIndex := tree.rightSibling(node, deletedKey)
+	if rightSibling != nil && len(rightSibling.Entries) > tree.minEntries() {
+		// rotate left
+		node.Entries = append(node.Entries, node.Parent.Entries[rightSiblingIndex-1]) // append parent's separator entry to node's entries
+		node.Parent.Entries[rightSiblingIndex-1] = rightSibling.Entries[0]
+		tree.deleteEntry(rightSibling, 0)
+		return
+	}
+
+	// merge with siblings
+	if rightSibling != nil {
+		// merge with right sibling
+		node.Entries = append(node.Entries, node.Parent.Entries[rightSiblingIndex-1])
+		node.Entries = append(node.Entries, rightSibling.Entries...)
+		deletedKey = node.Parent.Entries[rightSiblingIndex-1].Key
+		tree.deleteEntry(node.Parent, rightSiblingIndex-1)
+		tree.appendChildren(node.Parent.Children[rightSiblingIndex], node)
+		tree.deleteChild(node.Parent, rightSiblingIndex)
+	} else if leftSibling != nil {
+		// merge with left sibling
+		entries := append([]*Entry(nil), leftSibling.Entries...)
+		entries = append(entries, node.Parent.Entries[leftSiblingIndex])
+		node.Entries = append(entries, node.Entries...)
+		deletedKey = node.Parent.Entries[leftSiblingIndex].Key
+		tree.deleteEntry(node.Parent, leftSiblingIndex)
+		tree.prependChildren(node.Parent.Children[leftSiblingIndex], node)
+		tree.deleteChild(node.Parent, leftSiblingIndex)
+	} else {
+		// node is empty root
+		tree.Root = node
+		node.Parent = nil
+		return
+	}
+
+	// make the merged node the root if its parent was the root and the root is empty
+	if node.Parent == tree.Root && len(tree.Root.Entries) == 0 {
+		tree.Root = node
+		node.Parent = nil
+		return
+	}
+
+	// parent might underflow, so try to rebalance if necessary
+	tree.rebalance(node.Parent, deletedKey)
+}
+
+func (tree *Tree) prependChildren(fromNode *Node, toNode *Node) {
+	children := append([]*Node(nil), fromNode.Children...)
+	toNode.Children = append(children, toNode.Children...)
+}
+
+func (tree *Tree) appendChildren(fromNode *Node, toNode *Node) {
+	toNode.Children = append(toNode.Children, fromNode.Children...)
+}
+
+func (tree *Tree) deleteEntry(node *Node, index int) {
+	node.Entries[index] = nil
+	copy(node.Entries[index:], node.Entries[index+1:])
+	node.Entries[len(node.Entries)-1] = nil
+	node.Entries = node.Entries[:len(node.Entries)-1]
+}
+
+func (tree *Tree) deleteChild(node *Node, index int) {
+	if index >= len(node.Children) {
+		return
+	}
+	node.Children[index].Entries = nil // GC
+	node.Children[index] = nil         // GC
+	copy(node.Children[index:], node.Children[index+1:])
+	node.Children[len(node.Children)-1] = nil
+	node.Children = node.Children[:len(node.Children)-1]
 }
