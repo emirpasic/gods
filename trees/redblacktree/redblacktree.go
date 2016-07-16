@@ -13,7 +13,6 @@ package redblacktree
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/stacks/linkedliststack"
 	"github.com/emirpasic/gods/trees"
 	"github.com/emirpasic/gods/utils"
 )
@@ -153,8 +152,9 @@ func (tree *Tree) Size() int {
 // Keys returns all keys in-order
 func (tree *Tree) Keys() []interface{} {
 	keys := make([]interface{}, tree.size)
-	for i, node := range tree.inOrder() {
-		keys[i] = node.Key
+	it := tree.Iterator()
+	for i := 0; it.Next(); i++ {
+		keys[i] = it.Key()
 	}
 	return keys
 }
@@ -162,8 +162,9 @@ func (tree *Tree) Keys() []interface{} {
 // Values returns all values in-order based on the key.
 func (tree *Tree) Values() []interface{} {
 	values := make([]interface{}, tree.size)
-	for i, node := range tree.inOrder() {
-		values[i] = node.Value
+	it := tree.Iterator()
+	for i := 0; it.Next(); i++ {
+		values[i] = it.Value()
 	}
 	return values
 }
@@ -267,35 +268,6 @@ func (node *Node) String() string {
 	return fmt.Sprintf("%v", node.Key)
 }
 
-// Returns all nodes in order
-func (tree *Tree) inOrder() []*Node {
-	nodes := make([]*Node, tree.size)
-	if tree.size > 0 {
-		current := tree.Root
-		stack := linkedliststack.New()
-		done := false
-		count := 0
-		for !done {
-			if current != nil {
-				stack.Push(current)
-				current = current.Left
-			} else {
-				if !stack.Empty() {
-					currentPop, _ := stack.Pop()
-					current = currentPop.(*Node)
-					nodes[count] = current
-					count++
-					current = current.Right
-				} else {
-					done = true
-				}
-			}
-		}
-	}
-	return nodes
-}
-
-// String returns a string representation of container
 func output(node *Node, prefix string, isTail bool, str *string) {
 	if node.Right != nil {
 		newPrefix := prefix

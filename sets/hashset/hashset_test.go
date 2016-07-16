@@ -62,14 +62,155 @@ func TestSetRemove(t *testing.T) {
 	}
 }
 
-func BenchmarkSet(b *testing.B) {
+func benchmarkContains(b *testing.B, set *Set, size int) {
 	for i := 0; i < b.N; i++ {
-		set := New()
-		for n := 0; n < 1000; n++ {
-			set.Add(i)
+		for n := 0; n < size; n++ {
+			set.Contains(n)
 		}
-		for n := 0; n < 1000; n++ {
+	}
+}
+
+func benchmarkAdd(b *testing.B, set *Set, size int) {
+	for i := 0; i < b.N; i++ {
+		for n := 0; n < size; n++ {
+			set.Add(n)
+		}
+	}
+}
+
+func benchmarkRemove(b *testing.B, set *Set, size int) {
+	for i := 0; i < b.N; i++ {
+		for n := 0; n < size; n++ {
 			set.Remove(n)
 		}
 	}
+}
+
+func BenchmarkHashSetContains100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	set := New()
+	for n := 0; n < size; n++ {
+		set.Add(n)
+	}
+	b.StartTimer()
+	benchmarkContains(b, set, size)
+}
+
+func BenchmarkHashSetContains1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	set := New()
+	for n := 0; n < size; n++ {
+		set.Add(n)
+	}
+	b.StartTimer()
+	benchmarkContains(b, set, size)
+}
+
+func BenchmarkHashSetContains10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	set := New()
+	for n := 0; n < size; n++ {
+		set.Add(n)
+	}
+	b.StartTimer()
+	benchmarkContains(b, set, size)
+}
+
+func BenchmarkHashSetContains100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	set := New()
+	for n := 0; n < size; n++ {
+		set.Add(n)
+	}
+	b.StartTimer()
+	benchmarkContains(b, set, size)
+}
+
+func BenchmarkHashSetAdd100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	set := New()
+	b.StartTimer()
+	benchmarkAdd(b, set, size)
+}
+
+func BenchmarkHashSetAdd1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	set := New()
+	for n := 0; n < size; n++ {
+		set.Add(n)
+	}
+	b.StartTimer()
+	benchmarkAdd(b, set, size)
+}
+
+func BenchmarkHashSetAdd10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	set := New()
+	for n := 0; n < size; n++ {
+		set.Add(n)
+	}
+	b.StartTimer()
+	benchmarkAdd(b, set, size)
+}
+
+func BenchmarkHashSetAdd100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	set := New()
+	for n := 0; n < size; n++ {
+		set.Add(n)
+	}
+	b.StartTimer()
+	benchmarkAdd(b, set, size)
+}
+
+func BenchmarkHashSetRemove100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	set := New()
+	for n := 0; n < size; n++ {
+		set.Add(n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, set, size)
+}
+
+func BenchmarkHashSetRemove1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	set := New()
+	for n := 0; n < size; n++ {
+		set.Add(n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, set, size)
+}
+
+func BenchmarkHashSetRemove10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	set := New()
+	for n := 0; n < size; n++ {
+		set.Add(n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, set, size)
+}
+
+func BenchmarkHashSetRemove100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	set := New()
+	for n := 0; n < size; n++ {
+		set.Add(n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, set, size)
 }

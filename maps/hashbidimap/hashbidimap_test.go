@@ -169,14 +169,155 @@ func sameElements(a []interface{}, b []interface{}) bool {
 	return true
 }
 
-func BenchmarkMap(b *testing.B) {
+func benchmarkGet(b *testing.B, m *Map, size int) {
 	for i := 0; i < b.N; i++ {
-		m := New()
-		for n := 0; n < 1000; n++ {
+		for n := 0; n < size; n++ {
+			m.Get(n)
+		}
+	}
+}
+
+func benchmarkPut(b *testing.B, m *Map, size int) {
+	for i := 0; i < b.N; i++ {
+		for n := 0; n < size; n++ {
 			m.Put(n, n)
 		}
-		for n := 0; n < 1000; n++ {
+	}
+}
+
+func benchmarkRemove(b *testing.B, m *Map, size int) {
+	for i := 0; i < b.N; i++ {
+		for n := 0; n < size; n++ {
 			m.Remove(n)
 		}
 	}
+}
+
+func BenchmarkHashBidiMapGet100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	m := New()
+	for n := 0; n < size; n++ {
+		m.Put(n, n)
+	}
+	b.StartTimer()
+	benchmarkGet(b, m, size)
+}
+
+func BenchmarkHashBidiMapGet1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	m := New()
+	for n := 0; n < size; n++ {
+		m.Put(n, n)
+	}
+	b.StartTimer()
+	benchmarkGet(b, m, size)
+}
+
+func BenchmarkHashBidiMapGet10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	m := New()
+	for n := 0; n < size; n++ {
+		m.Put(n, n)
+	}
+	b.StartTimer()
+	benchmarkGet(b, m, size)
+}
+
+func BenchmarkHashBidiMapGet100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	m := New()
+	for n := 0; n < size; n++ {
+		m.Put(n, n)
+	}
+	b.StartTimer()
+	benchmarkGet(b, m, size)
+}
+
+func BenchmarkHashBidiMapPut100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	m := New()
+	b.StartTimer()
+	benchmarkPut(b, m, size)
+}
+
+func BenchmarkHashBidiMapPut1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	m := New()
+	for n := 0; n < size; n++ {
+		m.Put(n, n)
+	}
+	b.StartTimer()
+	benchmarkPut(b, m, size)
+}
+
+func BenchmarkHashBidiMapPut10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	m := New()
+	for n := 0; n < size; n++ {
+		m.Put(n, n)
+	}
+	b.StartTimer()
+	benchmarkPut(b, m, size)
+}
+
+func BenchmarkHashBidiMapPut100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	m := New()
+	for n := 0; n < size; n++ {
+		m.Put(n, n)
+	}
+	b.StartTimer()
+	benchmarkPut(b, m, size)
+}
+
+func BenchmarkHashBidiMapRemove100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	m := New()
+	for n := 0; n < size; n++ {
+		m.Put(n, n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, m, size)
+}
+
+func BenchmarkHashBidiMapRemove1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	m := New()
+	for n := 0; n < size; n++ {
+		m.Put(n, n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, m, size)
+}
+
+func BenchmarkHashBidiMapRemove10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	m := New()
+	for n := 0; n < size; n++ {
+		m.Put(n, n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, m, size)
+}
+
+func BenchmarkHashBidiMapRemove100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	m := New()
+	for n := 0; n < size; n++ {
+		m.Put(n, n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, m, size)
 }

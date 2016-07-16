@@ -137,14 +137,155 @@ func sameElements(a []interface{}, b []interface{}) bool {
 	return true
 }
 
-func BenchmarkMap(b *testing.B) {
+func benchmarkGet(b *testing.B, m *Map, size int) {
 	for i := 0; i < b.N; i++ {
-		m := New()
-		for n := 0; n < 1000; n++ {
-			m.Put(n, n)
+		for n := 0; n < size; n++ {
+			m.Get(n)
 		}
-		for n := 0; n < 1000; n++ {
+	}
+}
+
+func benchmarkPut(b *testing.B, m *Map, size int) {
+	for i := 0; i < b.N; i++ {
+		for n := 0; n < size; n++ {
+			m.Put(n, struct{}{})
+		}
+	}
+}
+
+func benchmarkRemove(b *testing.B, m *Map, size int) {
+	for i := 0; i < b.N; i++ {
+		for n := 0; n < size; n++ {
 			m.Remove(n)
 		}
 	}
+}
+
+func BenchmarkHashMapGet100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	m := New()
+	for n := 0; n < size; n++ {
+		m.Put(n, struct{}{})
+	}
+	b.StartTimer()
+	benchmarkGet(b, m, size)
+}
+
+func BenchmarkHashMapGet1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	m := New()
+	for n := 0; n < size; n++ {
+		m.Put(n, struct{}{})
+	}
+	b.StartTimer()
+	benchmarkGet(b, m, size)
+}
+
+func BenchmarkHashMapGet10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	m := New()
+	for n := 0; n < size; n++ {
+		m.Put(n, struct{}{})
+	}
+	b.StartTimer()
+	benchmarkGet(b, m, size)
+}
+
+func BenchmarkHashMapGet100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	m := New()
+	for n := 0; n < size; n++ {
+		m.Put(n, struct{}{})
+	}
+	b.StartTimer()
+	benchmarkGet(b, m, size)
+}
+
+func BenchmarkHashMapPut100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	m := New()
+	b.StartTimer()
+	benchmarkPut(b, m, size)
+}
+
+func BenchmarkHashMapPut1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	m := New()
+	for n := 0; n < size; n++ {
+		m.Put(n, struct{}{})
+	}
+	b.StartTimer()
+	benchmarkPut(b, m, size)
+}
+
+func BenchmarkHashMapPut10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	m := New()
+	for n := 0; n < size; n++ {
+		m.Put(n, struct{}{})
+	}
+	b.StartTimer()
+	benchmarkPut(b, m, size)
+}
+
+func BenchmarkHashMapPut100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	m := New()
+	for n := 0; n < size; n++ {
+		m.Put(n, struct{}{})
+	}
+	b.StartTimer()
+	benchmarkPut(b, m, size)
+}
+
+func BenchmarkHashMapRemove100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	m := New()
+	for n := 0; n < size; n++ {
+		m.Put(n, struct{}{})
+	}
+	b.StartTimer()
+	benchmarkRemove(b, m, size)
+}
+
+func BenchmarkHashMapRemove1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	m := New()
+	for n := 0; n < size; n++ {
+		m.Put(n, struct{}{})
+	}
+	b.StartTimer()
+	benchmarkRemove(b, m, size)
+}
+
+func BenchmarkHashMapRemove10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	m := New()
+	for n := 0; n < size; n++ {
+		m.Put(n, struct{}{})
+	}
+	b.StartTimer()
+	benchmarkRemove(b, m, size)
+}
+
+func BenchmarkHashMapRemove100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	m := New()
+	for n := 0; n < size; n++ {
+		m.Put(n, struct{}{})
+	}
+	b.StartTimer()
+	benchmarkRemove(b, m, size)
 }
