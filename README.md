@@ -24,6 +24,7 @@ Implementation of various data structures and algorithms in Go.
     - [TreeBidiMap](#treebidimap)
   - [Trees](#trees)
     - [RedBlackTree](#redblacktree)
+    - [BTree](#btree)
     - [BinaryHeap](#binaryheap)
 - [Functions](#functions)
     - [Comparator](#comparator)
@@ -69,6 +70,7 @@ Containers are either ordered or unordered. All ordered containers provide [stat
 | [HashBidiMap](#hashbidimap) | no | no | no | key* |
 | [TreeBidiMap](#treebidimap) | yes | yes* | yes | key* |
 | [RedBlackTree](#redblacktree) | yes | yes* | no | key |
+| [BTree](#btree) | yes | yes* | no | key |
 | [BinaryHeap](#binaryheap) | yes | yes* | no | index |
 |  |  | <sub><sup>*reversible</sup></sub> |  | <sub><sup>*bidirectional</sup></sub> |
 
@@ -525,11 +527,11 @@ type Tree interface {
 
 A red–black [tree](#trees) is a binary search tree with an extra bit of data per node, its color, which can be either red or black. The extra bit of storage ensures an approximately balanced tree by constraining how nodes are colored from any path from the root to the leaf. Thus, it is a data structure which is a type of self-balancing binary search tree.
 
-The balancing of the tree is not perfect but it is good enough to allow it to guarantee searching in O(log n) time, where n is the total number of elements in the tree. The insertion and deletion operations, along with the tree rearrangement and recoloring, are also performed in O(log n) time. <small>[Wikipedia](http://en.wikipedia.org/wiki/Red%E2%80%93black_tree)</small>
+The balancing of the tree is not perfect but it is good enough to allow it to guarantee searching in O(log n) time, where n is the total number of elements in the tree. The insertion and deletion operations, along with the tree rearrangement and recoloring, are also performed in O(log n) time. <sub><sup>[Wikipedia](http://en.wikipedia.org/wiki/Red%E2%80%93black_tree)</sup></sub>
 
-Implements [Tree](#trees) and [IteratorWithKey](#iteratorwithkey) interfaces.
+Implements [Tree](#trees) and [ReverseIteratorWithKey](#reverseiteratorwithkey) interfaces.
 
-<center><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Red-black_tree_example.svg/500px-Red-black_tree_example.svg.png" width="400px" height="200px" /></center>
+<p align="center"><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Red-black_tree_example.svg/500px-Red-black_tree_example.svg.png" width="400px" height="200px" /></p>
 
 ```go
 package main
@@ -550,7 +552,7 @@ func main() {
 	tree.Put(5, "e") // 1->a, 2->b, 3->c, 4->d, 5->e (in order)
 	tree.Put(6, "f") // 1->a, 2->b, 3->c, 4->d, 5->e, 6->f (in order)
 
-	fmt.Println(m)
+	fmt.Println(tree)
 	//
 	//  RedBlackTree
 	//  │           ┌── 6
@@ -564,7 +566,7 @@ func main() {
 	_ = tree.Keys()   // []interface {}{1, 2, 3, 4, 5, 6} (in order)
 
 	tree.Remove(2) // 1->a, 3->c, 4->d, 5->e, 6->f (in order)
-	fmt.Println(m)
+	fmt.Println(tree)
 	//
 	//  RedBlackTree
 	//  │       ┌── 6
@@ -587,6 +589,81 @@ func main() {
 
 Extending the red-black tree's functionality  has been demonstrated in the following [example](https://github.com/emirpasic/gods/blob/master/examples/redblacktreeextended.go).
 
+#### BTree
+
+B-tree is a self-balancing tree data structure that keeps data sorted and allows searches, sequential access, insertions, and deletions in logarithmic time. The B-tree is a generalization of a binary search tree in that a node can have more than two children.
+
+According to Knuth's definition, a B-tree of order m is a tree which satisfies the following properties:
+
+- Every node has at most m children.
+- Every non-leaf node (except root) has at least ⌈m/2⌉ children.
+- The root has at least two children if it is not a leaf node.
+- A non-leaf node with k children contains k−1 keys.
+- All leaves appear in the same level
+
+Each internal node’s keys act as separation values which divide its subtrees. For example, if an internal node has 3 child nodes (or subtrees) then it must have 2 keys: a1 and a2. All values in the leftmost subtree will be less than a1, all values in the middle subtree will be between a1 and a2, and all values in the rightmost subtree will be greater than a2.<sub><sup>[Wikipedia](http://en.wikipedia.org/wiki/Red%E2%80%93black_tree)</sub></sup>
+
+Implements [Tree](#trees) and [ReverseIteratorWithKey](#reverseiteratorwithkey) interfaces.
+
+<p align="center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/B-tree.svg/831px-B-tree.svg.png" width="400px" height="111px" /></p>
+
+```go
+package main
+
+import (
+	"fmt"
+	"github.com/emirpasic/gods/trees/btree"
+)
+
+func main() {
+	tree := btree.NewWithIntComparator(3) // empty (keys are of type int)
+
+	tree.Put(1, "x") // 1->x
+	tree.Put(2, "b") // 1->x, 2->b (in order)
+	tree.Put(1, "a") // 1->a, 2->b (in order, replacement)
+	tree.Put(3, "c") // 1->a, 2->b, 3->c (in order)
+	tree.Put(4, "d") // 1->a, 2->b, 3->c, 4->d (in order)
+	tree.Put(5, "e") // 1->a, 2->b, 3->c, 4->d, 5->e (in order)
+	tree.Put(6, "f") // 1->a, 2->b, 3->c, 4->d, 5->e, 6->f (in order)
+	tree.Put(7, "g") // 1->a, 2->b, 3->c, 4->d, 5->e, 6->f, 7->g (in order)
+
+	fmt.Println(tree)
+	// BTree
+	//         1
+	//     2
+	//         3
+	// 4
+	//         5
+	//     6
+	//         7
+
+	_ = tree.Values() // []interface {}{"a", "b", "c", "d", "e", "f", "g"} (in order)
+	_ = tree.Keys()   // []interface {}{1, 2, 3, 4, 5, 6, 7} (in order)
+
+	tree.Remove(2) // 1->a, 3->c, 4->d, 5->e, 6->f (in order)
+	fmt.Println(tree)
+	// BTree
+	//     1
+	//     3
+	// 4
+	//     5
+	//     6
+
+	tree.Clear() // empty
+	tree.Empty() // true
+	tree.Size()  // 0
+
+	// Other:
+	tree.Height() // gets the height of the tree
+	tree.Left() // gets the left-most (min) node
+	tree.LeftKey() // get the left-most (min) node's key
+	tree.LeftValue() // get the left-most (min) node's value
+	tree.Right() // get the right-most (max) node
+	tree.RightKey() // get the right-most (max) node's key
+	tree.RightValue() // get the right-most (max) node's value
+}
+```
+
 #### BinaryHeap
 
 A binary heap is a [tree](#trees) created using a binary tree. It can be seen as a binary tree with two additional constraints:
@@ -596,11 +673,11 @@ A binary heap is a [tree](#trees) created using a binary tree. It can be seen as
   A binary heap is a complete binary tree; that is, all levels of the tree, except possibly the last one (deepest) are fully filled, and, if the last level of the tree is not complete, the nodes of that level are filled from left to right.
 - Heap property:
 
-  All nodes are either greater than or equal to or less than or equal to each of its children, according to a comparison predicate defined for the heap. <small>[Wikipedia](http://en.wikipedia.org/wiki/Binary_heap)</small>
+  All nodes are either greater than or equal to or less than or equal to each of its children, according to a comparison predicate defined for the heap. <sub><sup>[Wikipedia](http://en.wikipedia.org/wiki/Binary_heap)</sub></sup>
 
-Implements [Tree](#trees) and [IteratorWithIndex](#iteratorwithindex) interfaces.
+Implements [Tree](#trees) and [ReverseIteratorWithIndex](#reverseiteratorwithindex) interfaces.
 
-<center><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Max-Heap.svg/501px-Max-Heap.svg.png" width="300px" height="200px" /></center>
+<p align="center"><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Max-Heap.svg/501px-Max-Heap.svg.png" width="300px" height="200px" /></p>
 
 ```go
 package main
@@ -1142,7 +1219,9 @@ Thread safety is not a concern of this project, this should be handled at a high
 
 ### Testing and Benchmarking
 
-`go test -run=NO_TEST -bench . -benchmem  -benchtime 5s ./...`
+This takes a while, so test within sub-packages:
+
+`go test -run=NO_TEST -bench . -benchmem  -benchtime 1s ./...`
 
 ### Contributing
 
