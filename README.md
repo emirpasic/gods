@@ -1223,7 +1223,7 @@ This takes a while, so test within sub-packages:
 
 `go test -run=NO_TEST -bench . -benchmem  -benchtime 1s ./...`
 
-<p align="center"><img src="https://cloud.githubusercontent.com/assets/3115942/16892949/e4a70b60-4b25-11e6-8914-b294f3a5a1aa.png" /></p>
+<p align="center"><img src="https://cloud.githubusercontent.com/assets/3115942/16892979/5e698d46-4b27-11e6-864b-cb2b865327b6.png" /></p>
 
 ### Contributing
 
