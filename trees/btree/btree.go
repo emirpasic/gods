@@ -355,7 +355,6 @@ func (tree *Tree) splitNonRoot(node *Node) {
 	insertPosition, _ := tree.search(parent, node.Entries[middle].Key)
 
 	// Insert middle key into parent
-	// TODO check for memory leaks: node should be nilled and all its entries
 	parent.Entries = append(parent.Entries, nil)
 	copy(parent.Entries[insertPosition+1:], parent.Entries[insertPosition:])
 	parent.Entries[insertPosition] = node.Entries[middle]

@@ -327,14 +327,155 @@ func TestSetIteratorLast(t *testing.T) {
 	}
 }
 
-func BenchmarkSet(b *testing.B) {
+func benchmarkContains(b *testing.B, set *Set, size int) {
 	for i := 0; i < b.N; i++ {
-		set := NewWithIntComparator()
-		for n := 0; n < 1000; n++ {
-			set.Add(i)
+		for n := 0; n < size; n++ {
+			set.Contains(n)
 		}
-		for n := 0; n < 1000; n++ {
+	}
+}
+
+func benchmarkAdd(b *testing.B, set *Set, size int) {
+	for i := 0; i < b.N; i++ {
+		for n := 0; n < size; n++ {
+			set.Add(n)
+		}
+	}
+}
+
+func benchmarkRemove(b *testing.B, set *Set, size int) {
+	for i := 0; i < b.N; i++ {
+		for n := 0; n < size; n++ {
 			set.Remove(n)
 		}
 	}
+}
+
+func BenchmarkTreeSetContains100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	set := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		set.Add(n)
+	}
+	b.StartTimer()
+	benchmarkContains(b, set, size)
+}
+
+func BenchmarkTreeSetContains1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	set := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		set.Add(n)
+	}
+	b.StartTimer()
+	benchmarkContains(b, set, size)
+}
+
+func BenchmarkTreeSetContains10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	set := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		set.Add(n)
+	}
+	b.StartTimer()
+	benchmarkContains(b, set, size)
+}
+
+func BenchmarkTreeSetContains100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	set := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		set.Add(n)
+	}
+	b.StartTimer()
+	benchmarkContains(b, set, size)
+}
+
+func BenchmarkTreeSetAdd100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	set := NewWithIntComparator()
+	b.StartTimer()
+	benchmarkAdd(b, set, size)
+}
+
+func BenchmarkTreeSetAdd1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	set := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		set.Add(n)
+	}
+	b.StartTimer()
+	benchmarkAdd(b, set, size)
+}
+
+func BenchmarkTreeSetAdd10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	set := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		set.Add(n)
+	}
+	b.StartTimer()
+	benchmarkAdd(b, set, size)
+}
+
+func BenchmarkTreeSetAdd100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	set := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		set.Add(n)
+	}
+	b.StartTimer()
+	benchmarkAdd(b, set, size)
+}
+
+func BenchmarkTreeSetRemove100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	set := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		set.Add(n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, set, size)
+}
+
+func BenchmarkTreeSetRemove1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	set := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		set.Add(n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, set, size)
+}
+
+func BenchmarkTreeSetRemove10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	set := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		set.Add(n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, set, size)
+}
+
+func BenchmarkTreeSetRemove100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	set := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		set.Add(n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, set, size)
 }

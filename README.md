@@ -1142,7 +1142,7 @@ Thread safety is not a concern of this project, this should be handled at a high
 
 ### Testing and Benchmarking
 
-`go test -v -bench . -benchmem  -benchtime 1s ./...`
+`go test -run=NO_TEST -bench . -benchmem  -benchtime 5s ./...`
 
 ### Contributing
 

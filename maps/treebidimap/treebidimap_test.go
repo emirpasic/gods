@@ -473,14 +473,155 @@ func TestMapIteratorLast(t *testing.T) {
 	}
 }
 
-func BenchmarkMap(b *testing.B) {
+func benchmarkGet(b *testing.B, m *Map, size int) {
 	for i := 0; i < b.N; i++ {
-		m := NewWithIntComparators()
-		for n := 0; n < 1000; n++ {
+		for n := 0; n < size; n++ {
+			m.Get(n)
+		}
+	}
+}
+
+func benchmarkPut(b *testing.B, m *Map, size int) {
+	for i := 0; i < b.N; i++ {
+		for n := 0; n < size; n++ {
 			m.Put(n, n)
 		}
-		for n := 0; n < 1000; n++ {
+	}
+}
+
+func benchmarkRemove(b *testing.B, m *Map, size int) {
+	for i := 0; i < b.N; i++ {
+		for n := 0; n < size; n++ {
 			m.Remove(n)
 		}
 	}
+}
+
+func BenchmarkTreeBidiMapGet100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	m := NewWithIntComparators()
+	for n := 0; n < size; n++ {
+		m.Put(n, n)
+	}
+	b.StartTimer()
+	benchmarkGet(b, m, size)
+}
+
+func BenchmarkTreeBidiMapGet1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	m := NewWithIntComparators()
+	for n := 0; n < size; n++ {
+		m.Put(n, n)
+	}
+	b.StartTimer()
+	benchmarkGet(b, m, size)
+}
+
+func BenchmarkTreeBidiMapGet10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	m := NewWithIntComparators()
+	for n := 0; n < size; n++ {
+		m.Put(n, n)
+	}
+	b.StartTimer()
+	benchmarkGet(b, m, size)
+}
+
+func BenchmarkTreeBidiMapGet100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	m := NewWithIntComparators()
+	for n := 0; n < size; n++ {
+		m.Put(n, n)
+	}
+	b.StartTimer()
+	benchmarkGet(b, m, size)
+}
+
+func BenchmarkTreeBidiMapPut100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	m := NewWithIntComparators()
+	b.StartTimer()
+	benchmarkPut(b, m, size)
+}
+
+func BenchmarkTreeBidiMapPut1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	m := NewWithIntComparators()
+	for n := 0; n < size; n++ {
+		m.Put(n, n)
+	}
+	b.StartTimer()
+	benchmarkPut(b, m, size)
+}
+
+func BenchmarkTreeBidiMapPut10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	m := NewWithIntComparators()
+	for n := 0; n < size; n++ {
+		m.Put(n, n)
+	}
+	b.StartTimer()
+	benchmarkPut(b, m, size)
+}
+
+func BenchmarkTreeBidiMapPut100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	m := NewWithIntComparators()
+	for n := 0; n < size; n++ {
+		m.Put(n, n)
+	}
+	b.StartTimer()
+	benchmarkPut(b, m, size)
+}
+
+func BenchmarkTreeBidiMapRemove100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	m := NewWithIntComparators()
+	for n := 0; n < size; n++ {
+		m.Put(n, n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, m, size)
+}
+
+func BenchmarkTreeBidiMapRemove1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	m := NewWithIntComparators()
+	for n := 0; n < size; n++ {
+		m.Put(n, n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, m, size)
+}
+
+func BenchmarkTreeBidiMapRemove10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	m := NewWithIntComparators()
+	for n := 0; n < size; n++ {
+		m.Put(n, n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, m, size)
+}
+
+func BenchmarkTreeBidiMapRemove100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	m := NewWithIntComparators()
+	for n := 0; n < size; n++ {
+		m.Put(n, n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, m, size)
 }

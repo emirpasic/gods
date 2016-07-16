@@ -246,15 +246,103 @@ func TestBinaryHeapIteratorLast(t *testing.T) {
 	}
 }
 
-func BenchmarkBinaryHeap(b *testing.B) {
+func benchmarkPush(b *testing.B, heap *Heap, size int) {
 	for i := 0; i < b.N; i++ {
-		heap := NewWithIntComparator()
-		for n := 0; n < 1000; n++ {
-			heap.Push(i)
+		for n := 0; n < size; n++ {
+			heap.Push(n)
 		}
-		for !heap.Empty() {
+	}
+}
+
+func benchmarkPop(b *testing.B, heap *Heap, size int) {
+	for i := 0; i < b.N; i++ {
+		for n := 0; n < size; n++ {
 			heap.Pop()
 		}
 	}
+}
 
+func BenchmarkBinaryHeapPop100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	heap := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		heap.Push(n)
+	}
+	b.StartTimer()
+	benchmarkPop(b, heap, size)
+}
+
+func BenchmarkBinaryHeapPop1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	heap := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		heap.Push(n)
+	}
+	b.StartTimer()
+	benchmarkPop(b, heap, size)
+}
+
+func BenchmarkBinaryHeapPop10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	heap := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		heap.Push(n)
+	}
+	b.StartTimer()
+	benchmarkPop(b, heap, size)
+}
+
+func BenchmarkBinaryHeapPop100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	heap := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		heap.Push(n)
+	}
+	b.StartTimer()
+	benchmarkPop(b, heap, size)
+}
+
+func BenchmarkBinaryHeapPush100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	heap := NewWithIntComparator()
+	b.StartTimer()
+	benchmarkPush(b, heap, size)
+}
+
+func BenchmarkBinaryHeapPush1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	heap := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		heap.Push(n)
+	}
+	b.StartTimer()
+	benchmarkPush(b, heap, size)
+}
+
+func BenchmarkBinaryHeapPush10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	heap := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		heap.Push(n)
+	}
+	b.StartTimer()
+	benchmarkPush(b, heap, size)
+}
+
+func BenchmarkBinaryHeapPush100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	heap := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		heap.Push(n)
+	}
+	b.StartTimer()
+	benchmarkPush(b, heap, size)
 }

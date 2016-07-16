@@ -440,14 +440,155 @@ func TestMapIteratorLast(t *testing.T) {
 	}
 }
 
-func BenchmarkMap(b *testing.B) {
+func benchmarkGet(b *testing.B, m *Map, size int) {
 	for i := 0; i < b.N; i++ {
-		m := NewWithIntComparator()
-		for n := 0; n < 1000; n++ {
-			m.Put(n, n)
+		for n := 0; n < size; n++ {
+			m.Get(n)
 		}
-		for n := 0; n < 1000; n++ {
+	}
+}
+
+func benchmarkPut(b *testing.B, m *Map, size int) {
+	for i := 0; i < b.N; i++ {
+		for n := 0; n < size; n++ {
+			m.Put(n, struct{}{})
+		}
+	}
+}
+
+func benchmarkRemove(b *testing.B, m *Map, size int) {
+	for i := 0; i < b.N; i++ {
+		for n := 0; n < size; n++ {
 			m.Remove(n)
 		}
 	}
+}
+
+func BenchmarkTreeMapGet100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	m := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		m.Put(n, struct{}{})
+	}
+	b.StartTimer()
+	benchmarkGet(b, m, size)
+}
+
+func BenchmarkTreeMapGet1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	m := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		m.Put(n, struct{}{})
+	}
+	b.StartTimer()
+	benchmarkGet(b, m, size)
+}
+
+func BenchmarkTreeMapGet10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	m := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		m.Put(n, struct{}{})
+	}
+	b.StartTimer()
+	benchmarkGet(b, m, size)
+}
+
+func BenchmarkTreeMapGet100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	m := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		m.Put(n, struct{}{})
+	}
+	b.StartTimer()
+	benchmarkGet(b, m, size)
+}
+
+func BenchmarkTreeMapPut100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	m := NewWithIntComparator()
+	b.StartTimer()
+	benchmarkPut(b, m, size)
+}
+
+func BenchmarkTreeMapPut1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	m := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		m.Put(n, struct{}{})
+	}
+	b.StartTimer()
+	benchmarkPut(b, m, size)
+}
+
+func BenchmarkTreeMapPut10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	m := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		m.Put(n, struct{}{})
+	}
+	b.StartTimer()
+	benchmarkPut(b, m, size)
+}
+
+func BenchmarkTreeMapPut100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	m := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		m.Put(n, struct{}{})
+	}
+	b.StartTimer()
+	benchmarkPut(b, m, size)
+}
+
+func BenchmarkTreeMapRemove100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	m := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		m.Put(n, struct{}{})
+	}
+	b.StartTimer()
+	benchmarkRemove(b, m, size)
+}
+
+func BenchmarkTreeMapRemove1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	m := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		m.Put(n, struct{}{})
+	}
+	b.StartTimer()
+	benchmarkRemove(b, m, size)
+}
+
+func BenchmarkTreeMapRemove10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	m := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		m.Put(n, struct{}{})
+	}
+	b.StartTimer()
+	benchmarkRemove(b, m, size)
+}
+
+func BenchmarkTreeMapRemove100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	m := NewWithIntComparator()
+	for n := 0; n < size; n++ {
+		m.Put(n, struct{}{})
+	}
+	b.StartTimer()
+	benchmarkRemove(b, m, size)
 }

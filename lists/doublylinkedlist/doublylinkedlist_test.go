@@ -426,14 +426,155 @@ func TestListIteratorLast(t *testing.T) {
 	}
 }
 
-func BenchmarkList(b *testing.B) {
+func benchmarkGet(b *testing.B, list *List, size int) {
 	for i := 0; i < b.N; i++ {
-		list := New()
-		for n := 0; n < 1000; n++ {
-			list.Add(i)
-		}
-		for !list.Empty() {
-			list.Remove(0)
+		for n := 0; n < size; n++ {
+			list.Get(n)
 		}
 	}
+}
+
+func benchmarkAdd(b *testing.B, list *List, size int) {
+	for i := 0; i < b.N; i++ {
+		for n := 0; n < size; n++ {
+			list.Add(n)
+		}
+	}
+}
+
+func benchmarkRemove(b *testing.B, list *List, size int) {
+	for i := 0; i < b.N; i++ {
+		for n := 0; n < size; n++ {
+			list.Remove(n)
+		}
+	}
+}
+
+func BenchmarkDoublyLinkedListGet100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	list := New()
+	for n := 0; n < size; n++ {
+		list.Add(n)
+	}
+	b.StartTimer()
+	benchmarkGet(b, list, size)
+}
+
+func BenchmarkDoublyLinkedListGet1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	list := New()
+	for n := 0; n < size; n++ {
+		list.Add(n)
+	}
+	b.StartTimer()
+	benchmarkGet(b, list, size)
+}
+
+func BenchmarkDoublyLinkedListGet10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	list := New()
+	for n := 0; n < size; n++ {
+		list.Add(n)
+	}
+	b.StartTimer()
+	benchmarkGet(b, list, size)
+}
+
+func BenchmarkDoublyLinkedListGet100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	list := New()
+	for n := 0; n < size; n++ {
+		list.Add(n)
+	}
+	b.StartTimer()
+	benchmarkGet(b, list, size)
+}
+
+func BenchmarkDoublyLinkedListAdd100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	list := New()
+	b.StartTimer()
+	benchmarkAdd(b, list, size)
+}
+
+func BenchmarkDoublyLinkedListAdd1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	list := New()
+	for n := 0; n < size; n++ {
+		list.Add(n)
+	}
+	b.StartTimer()
+	benchmarkAdd(b, list, size)
+}
+
+func BenchmarkDoublyLinkedListAdd10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	list := New()
+	for n := 0; n < size; n++ {
+		list.Add(n)
+	}
+	b.StartTimer()
+	benchmarkAdd(b, list, size)
+}
+
+func BenchmarkDoublyLinkedListAdd100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	list := New()
+	for n := 0; n < size; n++ {
+		list.Add(n)
+	}
+	b.StartTimer()
+	benchmarkAdd(b, list, size)
+}
+
+func BenchmarkDoublyLinkedListRemove100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	list := New()
+	for n := 0; n < size; n++ {
+		list.Add(n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, list, size)
+}
+
+func BenchmarkDoublyLinkedListRemove1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	list := New()
+	for n := 0; n < size; n++ {
+		list.Add(n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, list, size)
+}
+
+func BenchmarkDoublyLinkedListRemove10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	list := New()
+	for n := 0; n < size; n++ {
+		list.Add(n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, list, size)
+}
+
+func BenchmarkDoublyLinkedListRemove100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	list := New()
+	for n := 0; n < size; n++ {
+		list.Add(n)
+	}
+	b.StartTimer()
+	benchmarkRemove(b, list, size)
 }

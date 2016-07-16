@@ -147,14 +147,103 @@ func TestStackIteratorFirst(t *testing.T) {
 	}
 }
 
-func BenchmarkStack(b *testing.B) {
+func benchmarkPush(b *testing.B, stack *Stack, size int) {
 	for i := 0; i < b.N; i++ {
-		stack := New()
-		for n := 0; n < 1000; n++ {
-			stack.Push(i)
+		for n := 0; n < size; n++ {
+			stack.Push(n)
 		}
-		for !stack.Empty() {
+	}
+}
+
+func benchmarkPop(b *testing.B, stack *Stack, size int) {
+	for i := 0; i < b.N; i++ {
+		for n := 0; n < size; n++ {
 			stack.Pop()
 		}
 	}
+}
+
+func BenchmarkLinkedListStackPop100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	stack := New()
+	for n := 0; n < size; n++ {
+		stack.Push(n)
+	}
+	b.StartTimer()
+	benchmarkPop(b, stack, size)
+}
+
+func BenchmarkLinkedListStackPop1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	stack := New()
+	for n := 0; n < size; n++ {
+		stack.Push(n)
+	}
+	b.StartTimer()
+	benchmarkPop(b, stack, size)
+}
+
+func BenchmarkLinkedListStackPop10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	stack := New()
+	for n := 0; n < size; n++ {
+		stack.Push(n)
+	}
+	b.StartTimer()
+	benchmarkPop(b, stack, size)
+}
+
+func BenchmarkLinkedListStackPop100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	stack := New()
+	for n := 0; n < size; n++ {
+		stack.Push(n)
+	}
+	b.StartTimer()
+	benchmarkPop(b, stack, size)
+}
+
+func BenchmarkLinkedListStackPush100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	stack := New()
+	b.StartTimer()
+	benchmarkPush(b, stack, size)
+}
+
+func BenchmarkLinkedListStackPush1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	stack := New()
+	for n := 0; n < size; n++ {
+		stack.Push(n)
+	}
+	b.StartTimer()
+	benchmarkPush(b, stack, size)
+}
+
+func BenchmarkLinkedListStackPush10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	stack := New()
+	for n := 0; n < size; n++ {
+		stack.Push(n)
+	}
+	b.StartTimer()
+	benchmarkPush(b, stack, size)
+}
+
+func BenchmarkLinkedListStackPush100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	stack := New()
+	for n := 0; n < size; n++ {
+		stack.Push(n)
+	}
+	b.StartTimer()
+	benchmarkPush(b, stack, size)
 }
