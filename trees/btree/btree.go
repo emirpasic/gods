@@ -191,7 +191,8 @@ func (tree *Tree) RightValue() interface{} {
 // String returns a string representation of container (for debugging purposes)
 func (tree *Tree) String() string {
 	var buffer bytes.Buffer
-	buffer.WriteString("BTree\n")
+	if _, err := buffer.WriteString("BTree\n"); err != nil {
+	}
 	if !tree.Empty() {
 		tree.output(&buffer, tree.Root, 0, true)
 	}
@@ -208,8 +209,10 @@ func (tree *Tree) output(buffer *bytes.Buffer, node *Node, level int, isTail boo
 			tree.output(buffer, node.Children[e], level+1, true)
 		}
 		if e < len(node.Entries) {
-			buffer.WriteString(strings.Repeat("    ", level))
-			buffer.WriteString(fmt.Sprintf("%v", node.Entries[e].Key) + "\n")
+			if _, err := buffer.WriteString(strings.Repeat("    ", level)); err != nil {
+			}
+			if _, err := buffer.WriteString(fmt.Sprintf("%v", node.Entries[e].Key) + "\n"); err != nil {
+			}
 		}
 	}
 }
