@@ -15,16 +15,7 @@ type Comparator func(a, b interface{}) int
 
 // IntComparator provides a basic comparison on ints
 func IntComparator(a, b interface{}) int {
-	aInt := a.(int)
-	bInt := b.(int)
-	switch {
-	case aInt > bInt:
-		return 1
-	case aInt < bInt:
-		return -1
-	default:
-		return 0
-	}
+	return a.(int) - b.(int)
 }
 
 // StringComparator provides a fast comparison on strings
