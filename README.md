@@ -1237,10 +1237,11 @@ Coding style:
 # Install tooling and set path:
 go get github.com/golang/lint/golint
 go get github.com/fzipp/gocyclo
+go get github.com/kisielk/errcheck
 export PATH=$PATH:$GOPATH/bin
 
 # Fix errors and warnings:
-go fmt ./... && gofmt -s -w . && go vet ./... && go get ./... && go test ./... && golint ./... && gocyclo -avg -over 15 .
+go fmt ./... && gofmt -s -w . && go vet ./... && go get ./... && go test ./... && golint ./... && gocyclo -avg -over 15 . && errcheck ./...
 ```
 
 ### License
