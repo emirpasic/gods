@@ -799,6 +799,8 @@ func main() {
 
 All ordered containers have stateful iterators. Typically an iterator is obtained by _Iterator()_ function of an ordered container. Once obtained, iterator's _Next()_ function moves the iterator to the next element and returns true if there was a next element. If there was an element, then element's can be obtained by iterator's _Value()_ function. Depending on the ordering type, it's position can be obtained by iterator's _Index()_ or _Key()_ functions. Some containers even provide reversible iterators, essentially the same, but provide another extra _Prev()_ function that moves the iterator to the previous element and returns true if there was a previous element.
 
+Note: it is unsafe to remove elements from container while iterating.
+
 #### IteratorWithIndex
 
 An [iterator](#iterator) whose elements are referenced by an index.
