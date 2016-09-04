@@ -50,6 +50,17 @@ func (heap *Heap) Push(value interface{}) {
 	heap.bubbleUp()
 }
 
+// Build adds a values onto the heap and order them up accordingly.
+func (heap *Heap) Build(values ...interface{}) {
+	for _, value := range values {
+		heap.list.Add(value)
+	}
+	size := heap.list.Size()/2 + 1
+	for i := size; i >= 0; i-- {
+		heap.bubbleDownIndex(i)
+	}
+}
+
 // Pop removes top element on heap and returns it, or nil if heap is empty.
 // Second return parameter is true, unless the heap was empty and there was nothing to pop.
 func (heap *Heap) Pop() (value interface{}, ok bool) {
@@ -101,10 +112,14 @@ func (heap *Heap) String() string {
 	return str
 }
 
+// Performs the "bubble down" operation for the 1st element.
+func (heap *Heap) bubbleDown() {
+	heap.bubbleDownIndex(0)
+}
+
 // Performs the "bubble down" operation. This is to place the element that is at the
 // root of the heap in its correct place so that the heap maintains the min/max-heap order property.
-func (heap *Heap) bubbleDown() {
-	index := 0
+func (heap *Heap) bubbleDownIndex(index int) {
 	size := heap.list.Size()
 	for leftIndex := index<<1 + 1; leftIndex < size; leftIndex = index<<1 + 1 {
 		rightIndex := index<<1 + 2
