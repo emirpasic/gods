@@ -710,9 +710,7 @@ func main() {
 		return -utils.IntComparator(a, b)
 	}
 	heap = binaryheap.NewWith(inverseIntComparator) // empty (min-heap)
-	heap.Push(2)                                    // 2
-	heap.Push(3)                                    // 3, 2
-	heap.Push(1)                                    // 3, 2, 1
+	heap.Push(2, 3, 1)                              // 3, 2, 1 (bulk optimized)
 	heap.Values()                                   // 3, 2, 1
 }
 ```
