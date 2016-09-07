@@ -72,6 +72,7 @@ func (tree *Tree) Put(key interface{}, value interface{}) {
 			compare := tree.Comparator(key, node.Key)
 			switch {
 			case compare == 0:
+				node.Key = key
 				node.Value = value
 				return
 			case compare < 0:
