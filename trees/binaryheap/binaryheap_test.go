@@ -34,6 +34,19 @@ func TestBinaryHeapPush(t *testing.T) {
 	}
 }
 
+func TestBinaryHeapPushBulk(t *testing.T) {
+	heap := NewWithIntComparator()
+
+	heap.Push(15, 20, 3, 1, 2)
+
+	if actualValue := heap.Values(); actualValue[0].(int) != 1 || actualValue[1].(int) != 2 || actualValue[2].(int) != 3 {
+		t.Errorf("Got %v expected %v", actualValue, "[1,2,3]")
+	}
+	if actualValue, ok := heap.Pop(); actualValue != 1 || !ok {
+		t.Errorf("Got %v expected %v", actualValue, 1)
+	}
+}
+
 func TestBinaryHeapPop(t *testing.T) {
 	heap := NewWithIntComparator()
 
