@@ -337,26 +337,52 @@ func (node *Node) sibling() *Node {
 	return node.Parent.Left
 }
 
-func (tree *Tree) rotateLeft(node *Node) {
-	right := node.Right
-	tree.replaceNode(node, right)
-	node.Right = right.Left
-	if right.Left != nil {
-		right.Left.Parent = node
+// Rotate the subtree rooted at node to the left and return the new root.
+// Will make the right child of node the new root and the left child of the
+// new root will be colored the same as the old root and the new root left
+// child will be colored red. Will also update the parent pointers accordingly.
+func rotateLeft(node *Node) *Node {
+	newRoot := node.Right
+	// rotate
+	node.Right = newRoot.Left
+	newRoot.Left = node
+	// fix Parents
+	newRoot.Parent = node.Parent
+	node.Parent = newRoot
+	if node.Right != nil {
+		node.Right.Parent = node
 	}
-	right.Left = node
-	node.Parent = right
+	// fix colors
+	newRoot.color = newRoot.Left.color
+	newRoot.Left.color = red
+	// fix sizes
+	node.Size = size(node)
+	newRoot.Size = size(newRoot)
+	return newRoot
 }
 
-func (tree *Tree) rotateRight(node *Node) {
-	left := node.Left
-	tree.replaceNode(node, left)
-	node.Left = left.Right
-	if left.Right != nil {
-		left.Right.Parent = node
+// Rotate the subtree rooted at node to the right and return the new root.
+// Will make the left child of node the new root and the right child of the
+// new root will be colored the same as the old root and the new root right
+// child will be colored red.
+func rotateRight(node *Node) *Node {
+	newRoot := node.Left
+	// rotate
+	node.Left = newRoot.Right
+	newRoot.Right = node
+	// fix Parents
+	newRoot.Parent = node.Parent
+	node.Parent = newRoot
+	if node.Left != nil {
+		node.Left.Parent = node
 	}
-	left.Right = node
-	node.Parent = left
+	// fix colors
+	newRoot.color = newRoot.Right.color
+	newRoot.Right.color = red
+	// fix sizes
+	node.Size = size(node)
+	newRoot.Size = size(newRoot)
+	return newRoot
 }
 
 func (tree *Tree) replaceNode(old *Node, new *Node) {
