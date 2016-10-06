@@ -60,43 +60,6 @@ func NewWithStringComparator() *Tree {
 	return &Tree{Comparator: utils.StringComparator}
 }
 
-// Put inserts node into the tree.
-// Key should adhere to the comparator's type assertion, otherwise method panics.
-func (tree *Tree) Put(key interface{}, value interface{}) {
-	insertedNode := &Node{Key: key, Value: value, color: red}
-	if tree.Root == nil {
-		tree.Root = insertedNode
-	} else {
-		node := tree.Root
-		loop := true
-		for loop {
-			compare := tree.Comparator(key, node.Key)
-			switch {
-			case compare == 0:
-				node.Value = value
-				return
-			case compare < 0:
-				if node.Left == nil {
-					node.Left = insertedNode
-					loop = false
-				} else {
-					node = node.Left
-				}
-			case compare > 0:
-				if node.Right == nil {
-					node.Right = insertedNode
-					loop = false
-				} else {
-					node = node.Right
-				}
-			}
-		}
-		insertedNode.Parent = node
-	}
-	tree.insertCase1(insertedNode)
-	tree.size++
-}
-
 // Get searches the node in the tree by key and returns its value or nil if key is not found in tree.
 // Second return parameter is true if key was found, otherwise false.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
@@ -106,6 +69,45 @@ func (tree *Tree) Get(key interface{}) (value interface{}, found bool) {
 		return node.Value, true
 	}
 	return nil, false
+}
+
+// Put inserts node into the tree.
+// Key should adhere to the comparator's type assertion,
+// otherwise method panics.
+func (tree *Tree) Put(key interface{}, value interface{}) {
+	tree.Root = put(tree, tree.Root, key, value)
+	tree.size = size(tree.Root)
+	// always color the Root black
+	if isRed(tree.Root) {
+		tree.Root.color = black
+	}
+}
+
+func put(tree *Tree, node *Node, key interface{}, value interface{}) *Node{
+	if node == nil {
+		return &Node{Key: key, Value: value, color: red, Size: 1}
+	}
+	compare := tree.Comparator(key, node.Key)
+	if compare == 0 {
+		node.Value = value
+		return node
+	} else if compare < 0 {
+		node.Left = put(tree, node.Left, key, value)
+	} else {
+		node.Right = put(tree, node.Right, key, value)
+	}
+
+	var subRoot *Node = node
+	if isRed(subRoot.Right) && !isRed(subRoot.Left){
+		subRoot = rotateLeft(subRoot)
+	}
+	if isRed(subRoot.Left) && isRed(subRoot.Left.Left) {
+		subRoot = rotateRight(subRoot)
+	}
+	if (childrenAreRed(subRoot)) {
+		flipColors(subRoot)
+	}
+	return subRoot
 }
 
 // Remove remove the node from the tree by key.
@@ -397,56 +399,6 @@ func (tree *Tree) replaceNode(old *Node, new *Node) {
 	}
 	if new != nil {
 		new.Parent = old.Parent
-	}
-}
-
-func (tree *Tree) insertCase1(node *Node) {
-	if node.Parent == nil {
-		node.color = black
-	} else {
-		tree.insertCase2(node)
-	}
-}
-
-func (tree *Tree) insertCase2(node *Node) {
-	if nodeColor(node.Parent) == black {
-		return
-	}
-	tree.insertCase3(node)
-}
-
-func (tree *Tree) insertCase3(node *Node) {
-	uncle := node.uncle()
-	if nodeColor(uncle) == red {
-		node.Parent.color = black
-		uncle.color = black
-		node.grandparent().color = red
-		tree.insertCase1(node.grandparent())
-	} else {
-		tree.insertCase4(node)
-	}
-}
-
-func (tree *Tree) insertCase4(node *Node) {
-	grandparent := node.grandparent()
-	if node == node.Parent.Right && node.Parent == grandparent.Left {
-		tree.rotateLeft(node.Parent)
-		node = node.Left
-	} else if node == node.Parent.Left && node.Parent == grandparent.Right {
-		tree.rotateRight(node.Parent)
-		node = node.Right
-	}
-	tree.insertCase5(node)
-}
-
-func (tree *Tree) insertCase5(node *Node) {
-	node.Parent.color = black
-	grandparent := node.grandparent()
-	grandparent.color = red
-	if node == node.Parent.Left && node.Parent == grandparent.Left {
-		tree.rotateRight(grandparent)
-	} else if node == node.Parent.Right && node.Parent == grandparent.Right {
-		tree.rotateLeft(grandparent)
 	}
 }
 
