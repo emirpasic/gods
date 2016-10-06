@@ -520,3 +520,17 @@ func nodeColor(node *Node) color {
 	}
 	return node.color
 }
+
+
+////////////////////////////////////////////////////////////////////////////
+// Helpers
+////////////////////////////////////////////////////////////////////////////
+
+// Returns whether or not the node is red. If the node is null it will return
+// false.
+func isRed(node *Node) bool {
+	if node == nil {
+		return false
+	}
+	return node.color == red
+}
