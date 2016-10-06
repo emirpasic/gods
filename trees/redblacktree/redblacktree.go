@@ -42,6 +42,7 @@ type Node struct {
 	Left   *Node
 	Right  *Node
 	Parent *Node
+	Size int
 }
 
 // NewWith instantiates a red-black tree with the custom comparator.
