@@ -534,3 +534,12 @@ func isRed(node *Node) bool {
 	}
 	return node.color == red
 }
+
+// Will return true iff subRoot is black and both children are non-nil and red.
+func childrenAreRed(subRoot *Node) bool {
+	// If the root or any of the children are nil return false
+	if (subRoot == nil || subRoot.Left == nil || subRoot.Right == nil) {
+		return false
+	}
+	return !isRed(subRoot) && isRed(subRoot.Left) && isRed(subRoot.Right)
+}
