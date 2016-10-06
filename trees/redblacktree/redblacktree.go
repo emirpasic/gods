@@ -268,6 +268,9 @@ func (tree *Tree) String() string {
 }
 
 func (node *Node) String() string {
+	if isRed(node) {
+		return fmt.Sprintf("(%v)", node.Key)
+	}
 	return fmt.Sprintf("%v", node.Key)
 }
 
