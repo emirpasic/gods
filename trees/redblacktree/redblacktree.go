@@ -543,3 +543,20 @@ func childrenAreRed(subRoot *Node) bool {
 	}
 	return !isRed(subRoot) && isRed(subRoot.Left) && isRed(subRoot.Right)
 }
+
+// Flip the colors the subroot and the children.
+// Calling function must make sure that node has two non-nil children.
+// Also the two children must have the opposite color of the root.
+func flipColors(node *Node) {
+	if isRed(node) {
+		node.color = black
+		node.Left.color = red
+		node.Right.color = red
+	} else {
+		node.color = red
+		node.Left.color = black
+		node.Right.color = black
+	}
+}
+
+
