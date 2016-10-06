@@ -10,7 +10,7 @@ import (
 )
 
 func TestRedBlackTreePut(t *testing.T) {
-		tree := NewWithIntComparator()
+	tree := NewWithIntComparator()
 	tree.Put(5, "e")
 	tree.Put(6, "f")
 	tree.Put(7, "g")
