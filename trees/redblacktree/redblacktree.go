@@ -318,20 +318,6 @@ func (tree *Tree) lookup(key interface{}) *Node {
 	return nil
 }
 
-func (node *Node) grandparent() *Node {
-	if node != nil && node.Parent != nil {
-		return node.Parent.Parent
-	}
-	return nil
-}
-
-func (node *Node) uncle() *Node {
-	if node == nil || node.Parent == nil || node.Parent.Parent == nil {
-		return nil
-	}
-	return node.Parent.sibling()
-}
-
 func (node *Node) sibling() *Node {
 	if node == nil || node.Parent == nil {
 		return nil
