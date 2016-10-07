@@ -313,9 +313,12 @@ func output(node *Node, prefix string, isTail bool, str *string) {
 	}
 	*str += prefix
 	if isTail {
-		*str += "└── "
+		*str += "└──"
 	} else {
-		*str += "┌── "
+		*str += "┌──"
+	}
+	if (!isRed(node)) {
+		*str += " "
 	}
 	*str += node.String() + "\n"
 	if node.Left != nil {
