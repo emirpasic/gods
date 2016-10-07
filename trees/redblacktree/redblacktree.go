@@ -329,9 +329,9 @@ func (node *Node) sibling() *Node {
 }
 
 // Rotate the subtree rooted at node to the left and return the new root.
-// Will make the right child of node the new root and the left child of the
-// new root will be colored the same as the old root and the new root left
-// child will be colored red. Will also update the parent pointers accordingly.
+// Will make the right child of node the new root and will also update the
+// parent pointers accordingly. The new root will have the same color as the
+// old one and the left child of the root will be colored RED.
 func rotateLeft(node *Node) *Node {
 	newRoot := node.Right
 	// rotate
