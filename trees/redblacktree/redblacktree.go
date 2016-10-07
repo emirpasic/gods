@@ -500,9 +500,14 @@ func countBlackNodes(node *Node) int {
 	}
 	count1 := countBlackNodes(node.Left)
 	count2 := countBlackNodes(node.Right)
+	// There is a different amount of black links to leaves from this node
 	if (count1 != count2) {
 		panic("Subtree rooted at node " + node.String() + " does not have an " +
 			"equal number of black nodes to all leaves")
+	}
+	// There are two consecutive red links
+	if (isRed(node) && (isRed(node.Right) || isRed(node.Left))) {
+		panic("There are two consecutive links starting from node " + node.String())
 	}
 	if (isRed(node)) {
 		return count1
