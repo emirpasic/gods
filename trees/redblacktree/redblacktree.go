@@ -518,6 +518,7 @@ func countBlackNodes(node *Node) int {
 	if (isRed(node) && (isRed(node.Right) || isRed(node.Left))) {
 		panic("There are two consecutive links starting from node " + node.String())
 	}
+	// red nodes are not counted only black ones.
 	if (isRed(node)) {
 		return count1
 	}
