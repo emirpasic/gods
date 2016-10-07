@@ -553,12 +553,14 @@ func childrenAreRed(subRoot *Node) bool {
 func flipColors(node *Node) {
 	if isRed(node) {
 		node.color = black
-		node.Left.color = red
-		node.Right.color = red
 	} else {
 		node.color = red
-		node.Left.color = black
-		node.Right.color = black
+	}
+	if (node.Left != nil) {
+		node.Left.color = !node.color
+	}
+	if (node.Right != nil) {
+		node.Right.color = !node.color
 	}
 }
 
