@@ -502,6 +502,27 @@ func nodeColor(node *Node) color {
 	return node.color
 }
 
+func (tree *Tree) Validate() {
+	if (tree.Root != nil) {
+		countBlackNodes(tree.Root)
+	}
+}
+
+func countBlackNodes(node *Node) int {
+	if (node == nil) {
+		return 0
+	}
+	count1 := countBlackNodes(node.Left)
+	count2 := countBlackNodes(node.Right)
+	if (count1 != count2) {
+		panic("Subtree rooted at node " + node.String() + " does not have an " +
+			"equal number of black nodes to all leaves")
+	}
+	if (isRed(node)) {
+		return count1
+	}
+	return count1 + 1
+}
 
 ////////////////////////////////////////////////////////////////////////////
 // Helpers
