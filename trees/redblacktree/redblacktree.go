@@ -110,6 +110,7 @@ func (tree *Tree) Remove(key interface{}) {
 	if (tree.Root != nil) {
 		tree.Root.color = black
 	}
+	tree.size = size(tree.Root)
 }
 
 func remove(tree *Tree, node *Node, key interface{}) *Node {
@@ -164,13 +165,6 @@ func replaceNodeWithMin(node *Node) *Node {
 	return subTreeMin
 }
 
-func getMin(node *Node) *Node {
-	if (node.Left == nil) {
-		return node
-	}
-	return getMin(node.Left)
-}
-
 // Empty returns true if tree does not contain any nodes
 func (tree *Tree) Empty() bool {
 	return tree.size == 0
@@ -203,24 +197,18 @@ func (tree *Tree) Values() []interface{} {
 
 // Left returns the left-most (min) node or nil if tree is empty.
 func (tree *Tree) Left() *Node {
-	var parent *Node
-	current := tree.Root
-	for current != nil {
-		parent = current
-		current = current.Left
+	if (tree.Root == nil) {
+		return nil
 	}
-	return parent
+	return getMin(tree.Root)
 }
 
 // Right returns the right-most (max) node or nil if tree is empty.
 func (tree *Tree) Right() *Node {
-	var parent *Node
-	current := tree.Root
-	for current != nil {
-		parent = current
-		current = current.Right
+	if (tree.Root == nil) {
+		return nil
 	}
-	return parent
+	return getMax(tree.Root)
 }
 
 // Floor Finds floor node of the input key, return the floor node or nil if no ceiling is found.
@@ -516,4 +504,18 @@ func size(node *Node) int {
 		return 0
 	}
 	return size(node.Left) + size(node.Right) + 1
+}
+
+func getMin(node *Node) *Node {
+	if (node.Left == nil) {
+		return node
+	}
+	return getMin(node.Left)
+}
+
+func getMax(node *Node) *Node {
+	if (node.Right == nil) {
+		return node
+	}
+	return getMax(node.Right)
 }
