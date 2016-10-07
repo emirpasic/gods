@@ -497,6 +497,9 @@ func nodeColor(node *Node) color {
 	return node.color
 }
 
+// All valid LLRBs must have two properties. All paths from the root to the
+// leaves must have the same number of black nodes and there must never be
+// two consecutive red nodes.
 func (tree *Tree) Validate() {
 	if (tree.Root != nil) {
 		countBlackNodes(tree.Root)
