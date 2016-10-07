@@ -64,6 +64,8 @@ func TestRedBlackTreePut(t *testing.T) {
 			t.Errorf("Got %v expected %v", actualValue, test[1])
 		}
 	}
+
+	tree.Validate()
 }
 
 func TestRedBlackTreeRemove(t *testing.T) {
