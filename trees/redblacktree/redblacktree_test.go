@@ -66,6 +66,8 @@ func TestRedBlackTreePut(t *testing.T) {
 	}
 
 	tree.Validate()
+	tree.Clear()
+	tree.Validate()
 }
 
 func TestRedBlackTreeRemove(t *testing.T) {

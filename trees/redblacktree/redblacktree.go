@@ -254,8 +254,17 @@ func (tree *Tree) Ceiling(key interface{}) (ceiling *Node, found bool) {
 
 // Clear removes all nodes from the tree.
 func (tree *Tree) Clear() {
-	tree.Root = nil
+	clearNode(tree.Root)
 	tree.size = 0
+}
+
+// Helper to ensure that all the nodes are disconnected to allow for GC
+func clearNode(node *Node) {
+	if (node != nil) {
+		node.Parent = nil
+		clearNode(node.Left)
+		clearNode(node.Right)
+	}
 }
 
 // String returns a string representation of container
