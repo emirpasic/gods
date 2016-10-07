@@ -96,50 +96,79 @@ func put(tree *Tree, node *Node, key interface{}, value interface{}) *Node{
 	} else {
 		node.Right = put(tree, node.Right, key, value)
 	}
-
-	var subRoot *Node = node
-	if isRed(subRoot.Right) && !isRed(subRoot.Left){
-		subRoot = rotateLeft(subRoot)
-	}
-	if isRed(subRoot.Left) && isRed(subRoot.Left.Left) {
-		subRoot = rotateRight(subRoot)
-	}
-	if (childrenAreRed(subRoot)) {
-		flipColors(subRoot)
-	}
-	return subRoot
+	return fixUp(node)
 }
 
 // Remove remove the node from the tree by key.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (tree *Tree) Remove(key interface{}) {
-	var child *Node
-	node := tree.lookup(key)
-	if node == nil {
+	if (tree.Root == nil) {
 		return
 	}
-	if node.Left != nil && node.Right != nil {
-		pred := node.Left.maximumNode()
-		node.Key = pred.Key
-		node.Value = pred.Value
-		node = pred
+	tree.Root.color = red
+	tree.Root = remove(tree, tree.Root, key)
+	if (tree.Root != nil) {
+		tree.Root.color = black
 	}
-	if node.Left == nil || node.Right == nil {
-		if node.Right == nil {
-			child = node.Left
+}
+
+func remove(tree *Tree, node *Node, key interface{}) *Node {
+	if (node == nil) {
+		return nil
+	}
+	//fmt.Println("Entering delete for node", node.Key, tree.String())
+	if (tree.Comparator(key, node.Key) < 0) {
+		// go Left
+		if (!isRed(node.Left) && !isRed(node.Left.Left)) {
+			node = moveRedLeft(node)
+		}
+		node.Left = remove(tree, node.Left, key)
+	} else {
+		// go Right
+		if (isRed(node.Left)) {
+			node = rotateRight(node)
+		}
+		if (tree.Comparator(key, node.Key) == 0 && node.Right == nil) {
+			return nil
+		}
+		if (node.Right != nil && !isRed(node.Right) && !isRed(node.Right.Left)) {
+			node = moveRedRight(node)
+		}
+		if (tree.Comparator(key, node.Key) == 0) {
+			node = replaceNodeWithMin(node)
 		} else {
-			child = node.Right
-		}
-		if node.color == black {
-			node.color = nodeColor(child)
-			tree.deleteCase1(node)
-		}
-		tree.replaceNode(node, child)
-		if node.Parent == nil && child != nil {
-			child.color = black
+			node.Right = remove(tree, node.Right, key)
 		}
 	}
-	tree.size--
+	return fixUp(node)
+}
+
+// delete the key-value pair with the minimum key rooted at node
+func removeMin(node *Node) *Node {
+	if (node.Left == nil) {
+		return nil
+	}
+	if (!isRed(node.Left) && !isRed(node.Left.Left)) {
+		node = moveRedLeft(node)
+	}
+	node.Left = removeMin(node.Left);
+	return fixUp(node);
+}
+
+// replace the node with minimum of the Tree rooted at the subTree
+func replaceNodeWithMin(node *Node) *Node {
+	subTreeMin := getMin(node.Right)
+	rightChild := removeMin(node.Right)
+	subTreeMin.Left = node.Left
+	subTreeMin.Right = rightChild
+	return subTreeMin
+}
+
+func getMin(node *Node) *Node {
+	if (node.Left == nil) {
+		return node
+	}
+	return getMin(node.Left)
 }
 
 // Empty returns true if tree does not contain any nodes
@@ -327,16 +356,6 @@ func (tree *Tree) lookup(key interface{}) *Node {
 	return nil
 }
 
-func (node *Node) sibling() *Node {
-	if node == nil || node.Parent == nil {
-		return nil
-	}
-	if node == node.Parent.Left {
-		return node.Parent.Right
-	}
-	return node.Parent.Left
-}
-
 // Rotate the subtree rooted at node to the left and return the new root.
 // Will make the right child of node the new root and will also update the
 // parent pointers accordingly. The new root will have the same color as the
@@ -385,121 +404,43 @@ func rotateRight(node *Node) *Node {
 	return newRoot
 }
 
-func (tree *Tree) replaceNode(old *Node, new *Node) {
-	if old.Parent == nil {
-		tree.Root = new
-	} else {
-		if old == old.Parent.Left {
-			old.Parent.Left = new
-		} else {
-			old.Parent.Right = new
-		}
-	}
-	if new != nil {
-		new.Parent = old.Parent
-	}
-}
-
-func (node *Node) maximumNode() *Node {
-	if node == nil {
-		return nil
-	}
-	for node.Right != nil {
-		node = node.Right
+func moveRedLeft(node *Node) *Node {
+	flipColors(node)
+	if (node.Right != nil && isRed(node.Right.Left)) {
+		node.Right = rotateRight(node.Right)
+		node = rotateLeft(node)
+		flipColors(node)
 	}
 	return node
 }
 
-func (tree *Tree) deleteCase1(node *Node) {
-	if node.Parent == nil {
-		return
+func moveRedRight(node *Node) *Node {
+	flipColors(node)
+	if (isRed(node.Left.Left)) {
+		node = rotateRight(node)
+		flipColors(node)
 	}
-	tree.deleteCase2(node)
+	return node
 }
 
-func (tree *Tree) deleteCase2(node *Node) {
-	sibling := node.sibling()
-	if nodeColor(sibling) == red {
-		node.Parent.color = red
-		sibling.color = black
-		if node == node.Parent.Left {
-			tree.rotateLeft(node.Parent)
-		} else {
-			tree.rotateRight(node.Parent)
-		}
+func fixUp(node *Node) *Node {
+	if (isRed(node.Right)) {
+		node = rotateLeft(node)
 	}
-	tree.deleteCase3(node)
+	if (isRed(node.Left) && isRed(node.Left.Left)) {
+		node = rotateRight(node)
+	}
+	if (childrenAreRed(node)) {
+		flipColors(node)
+	}
+	node.Size = size(node.Left) + size(node.Right) + 1;
+	return node;
 }
 
-func (tree *Tree) deleteCase3(node *Node) {
-	sibling := node.sibling()
-	if nodeColor(node.Parent) == black &&
-		nodeColor(sibling) == black &&
-		nodeColor(sibling.Left) == black &&
-		nodeColor(sibling.Right) == black {
-		sibling.color = red
-		tree.deleteCase1(node.Parent)
-	} else {
-		tree.deleteCase4(node)
-	}
-}
-
-func (tree *Tree) deleteCase4(node *Node) {
-	sibling := node.sibling()
-	if nodeColor(node.Parent) == red &&
-		nodeColor(sibling) == black &&
-		nodeColor(sibling.Left) == black &&
-		nodeColor(sibling.Right) == black {
-		sibling.color = red
-		node.Parent.color = black
-	} else {
-		tree.deleteCase5(node)
-	}
-}
-
-func (tree *Tree) deleteCase5(node *Node) {
-	sibling := node.sibling()
-	if node == node.Parent.Left &&
-		nodeColor(sibling) == black &&
-		nodeColor(sibling.Left) == red &&
-		nodeColor(sibling.Right) == black {
-		sibling.color = red
-		sibling.Left.color = black
-		tree.rotateRight(sibling)
-	} else if node == node.Parent.Right &&
-		nodeColor(sibling) == black &&
-		nodeColor(sibling.Right) == red &&
-		nodeColor(sibling.Left) == black {
-		sibling.color = red
-		sibling.Right.color = black
-		tree.rotateLeft(sibling)
-	}
-	tree.deleteCase6(node)
-}
-
-func (tree *Tree) deleteCase6(node *Node) {
-	sibling := node.sibling()
-	sibling.color = nodeColor(node.Parent)
-	node.Parent.color = black
-	if node == node.Parent.Left && nodeColor(sibling.Right) == red {
-		sibling.Right.color = black
-		tree.rotateLeft(node.Parent)
-	} else if nodeColor(sibling.Left) == red {
-		sibling.Left.color = black
-		tree.rotateRight(node.Parent)
-	}
-}
-
-func nodeColor(node *Node) color {
-	if node == nil {
-		return black
-	}
-	return node.color
-}
-
-// All valid LLRBs must have two properties. All paths from the root to the
-// leaves must have the same number of black nodes and there must never be
-// two consecutive red nodes.
+// All valid LLRBs must have two properties:
+// 1. All paths from the root to the leaves must have the same number of black
+// nodes and
+// 2. there must never be two consecutive red nodes.
 func (tree *Tree) Validate() {
 	if (tree.Root != nil) {
 		countBlackNodes(tree.Root)
