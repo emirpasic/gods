@@ -4,7 +4,9 @@
 
 package redblacktree
 
-import "github.com/emirpasic/gods/containers"
+import (
+	"github.com/emirpasic/gods/containers"
+)
 
 func assertIteratorImplementation() {
 	var _ containers.ReverseIteratorWithKey = (*Iterator)(nil)
@@ -28,47 +30,57 @@ func (tree *Tree) Iterator() Iterator {
 	return Iterator{tree: tree, node: nil, position: begin}
 }
 
-// Next moves the iterator to the next element and returns true if there was a next element in the container.
-// If Next() returns true, then next element's key and value can be retrieved by Key() and Value().
-// If Next() was called for the first time, then it will point the iterator to the first element if it exists.
+func traverseParents(node *Node) *Node {
+	switch {
+	case node.Parent == nil:
+		return nil
+	case node.Parent.Left == node:
+		return node.Parent
+	case node.Parent.Right == node:
+		return traverseParents(node.Parent)
+	}
+	return nil
+}
+
+func getLeftMost(node *Node) *Node {
+	if (node.Left == nil) {
+		return node
+	}
+	return getLeftMost(node.Left)
+}
+
+// Next moves the iterator to the next element and returns true if there was a
+// next element in the container.
+// If Next() returns true, then next element's key and value can be retrieved
+// by Key() and Value().
+// If Next() was called for the first time, then it will point the iterator to
+// the first element if it exists.
 // Modifies the state of the iterator.
 func (iterator *Iterator) Next() bool {
-	if iterator.position == end {
-		goto end
-	}
-	if iterator.position == begin {
-		left := iterator.tree.Left()
-		if left == nil {
-			goto end
+	switch iterator.position {
+	case begin:
+		if (iterator.tree.Empty()) {
+			iterator.position = end
+			return false
 		}
-		iterator.node = left
-		goto between
-	}
-	if iterator.node.Right != nil {
-		iterator.node = iterator.node.Right
-		for iterator.node.Left != nil {
-			iterator.node = iterator.node.Left
-		}
-		goto between
-	}
-	if iterator.node.Parent != nil {
-		node := iterator.node
-		for iterator.node.Parent != nil {
-			iterator.node = iterator.node.Parent
-			if iterator.tree.Comparator(node.Key, iterator.node.Key) <= 0 {
-				goto between
+		iterator.node = iterator.tree.Left()
+		iterator.position = between
+		return true
+	case between:
+		var next_node *Node
+		if (iterator.node.Right != nil) {
+			next_node = getLeftMost(iterator.node.Right)
+		} else {
+			next_node = traverseParents(iterator.node)
+			if (next_node == nil) {
+				iterator.position = end
+				return false
 			}
 		}
+		iterator.node = next_node
+		return true
 	}
-
-end:
-	iterator.node = nil
-	iterator.position = end
 	return false
-
-between:
-	iterator.position = between
-	return true
 }
 
 // Prev moves the iterator to the previous element and returns true if there was a previous element in the container.
