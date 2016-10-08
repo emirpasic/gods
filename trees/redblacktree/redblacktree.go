@@ -75,7 +75,7 @@ func (tree *Tree) Get(key interface{}) (value interface{}, found bool) {
 // Key should adhere to the comparator's type assertion,
 // otherwise method panics.
 func (tree *Tree) Put(key interface{}, value interface{}) {
-	tree.Root = put(tree, tree.Root, key, value)
+	tree.Root = put(tree, tree.Root, nil, key, value)
 	tree.size = size(tree.Root)
 	// always color the Root black
 	if isRed(tree.Root) {
@@ -83,18 +83,18 @@ func (tree *Tree) Put(key interface{}, value interface{}) {
 	}
 }
 
-func put(tree *Tree, node *Node, key interface{}, value interface{}) *Node{
+func put(tree *Tree, node *Node, parent *Node, key interface{}, value interface{}) *Node{
 	if node == nil {
-		return &Node{Key: key, Value: value, color: red, Size: 1}
+		return &Node{Key: key, Value: value, Parent: parent, color: red, Size: 1}
 	}
 	compare := tree.Comparator(key, node.Key)
 	if compare == 0 {
 		node.Value = value
 		return node
 	} else if compare < 0 {
-		node.Left = put(tree, node.Left, key, value)
+		node.Left = put(tree, node.Left, node, key, value)
 	} else {
-		node.Right = put(tree, node.Right, key, value)
+		node.Right = put(tree, node.Right, node, key, value)
 	}
 	return fixUp(node)
 }
