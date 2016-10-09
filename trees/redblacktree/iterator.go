@@ -114,6 +114,7 @@ func (iterator *Iterator) Prev() bool {
 		}
 		iterator.position = between
 		iterator.node = iterator.tree.Right()
+		return true
 	}
 	return false
 }
