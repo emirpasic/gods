@@ -30,13 +30,13 @@ func TestRedBlackTreeIterator1Next(t *testing.T) {
 	tree.Put(1, "x")
 	tree.Put(2, "b")
 	tree.Put(1, "a") //overwrite
-	// │   ┌── 7
-	// └── 6
-	//     │   ┌── 5
-	//     └── 4
-	//         │   ┌── 3
-	//         └── 2
-	//             └── 1
+	//│       ┌── 7
+	//│   ┌── 6
+	//│   │   └── 5
+	//└── 4
+	//	  │   ┌── 3
+	//	  └── 2
+	//		  └── 1
 	it := tree.Iterator()
 	count := 0
 	for it.Next() {
