@@ -110,7 +110,7 @@ func (tree *Tree) Remove(key interface{}) {
 	if (tree.Root != nil) {
 		tree.Root.color = black
 	}
-	tree.size = size(tree.Root)
+ 	tree.size = getSize(tree.Root)
 }
 
 func remove(tree *Tree, node *Node, key interface{}) *Node {
@@ -503,12 +503,6 @@ func flipColors(node *Node) {
 // Returns the size of the subtree rooted at this node.
 // It will re-calculate the size of the subtree using recursion so it should be
 // used only when the size of the tree changes.
-func size(node *Node) int {
-	if node == nil {
-		return 0
-	}
-	return size(node.Left) + size(node.Right) + 1
-}
 
 func getMin(node *Node) *Node {
 	if (node.Left == nil) {
@@ -522,4 +516,11 @@ func getMax(node *Node) *Node {
 		return node
 	}
 	return getMax(node.Right)
+}
+
+func getSize(node *Node) int {
+	if (node == nil) {
+		return 0
+	}
+	return node.Size
 }
