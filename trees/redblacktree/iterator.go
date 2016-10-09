@@ -30,14 +30,14 @@ func (tree *Tree) Iterator() Iterator {
 	return Iterator{tree: tree, node: nil, position: begin}
 }
 
-func traverseParents(node *Node) *Node {
+func traverseParents(node *Node, toTheRight bool) *Node {
 	switch {
 	case node.Parent == nil:
 		return nil
-	case node.Parent.Left == node:
+	case (node.Parent.Left == node && toTheRight) || (node.Parent.Right == node && !toTheRight):
 		return node.Parent
-	case node.Parent.Right == node:
-		return traverseParents(node.Parent)
+	case (node.Parent.Right == node && toTheRight) || (node.Parent.Left == node && !toTheRight):
+		return traverseParents(node.Parent, toTheRight)
 	}
 	return nil
 }
@@ -47,6 +47,13 @@ func getLeftMost(node *Node) *Node {
 		return node
 	}
 	return getLeftMost(node.Left)
+}
+
+func getRightMost(node *Node) *Node {
+	if (node.Right == nil) {
+		return node
+	}
+	return getRightMost(node.Right)
 }
 
 // Next moves the iterator to the next element and returns true if there was a
@@ -71,7 +78,7 @@ func (iterator *Iterator) Next() bool {
 		if (iterator.node.Right != nil) {
 			next_node = getLeftMost(iterator.node.Right)
 		} else {
-			next_node = traverseParents(iterator.node)
+			next_node = traverseParents(iterator.node, true)
 			if (next_node == nil) {
 				iterator.position = end
 				return false
@@ -87,42 +94,28 @@ func (iterator *Iterator) Next() bool {
 // If Prev() returns true, then previous element's key and value can be retrieved by Key() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator) Prev() bool {
-	if iterator.position == begin {
-		goto begin
-	}
-	if iterator.position == end {
-		right := iterator.tree.Right()
-		if right == nil {
-			goto begin
-		}
-		iterator.node = right
-		goto between
-	}
-	if iterator.node.Left != nil {
-		iterator.node = iterator.node.Left
-		for iterator.node.Right != nil {
-			iterator.node = iterator.node.Right
-		}
-		goto between
-	}
-	if iterator.node.Parent != nil {
-		node := iterator.node
-		for iterator.node.Parent != nil {
-			iterator.node = iterator.node.Parent
-			if iterator.tree.Comparator(node.Key, iterator.node.Key) >= 0 {
-				goto between
+	switch iterator.position {
+	case between:
+		var next_node *Node
+		if (iterator.node.Left != nil) {
+			next_node = getRightMost(iterator.node.Left)
+		} else {
+			next_node = traverseParents(iterator.node, false)
+			if (next_node == nil) {
+				iterator.position = begin
+				return false
 			}
 		}
+		iterator.node = next_node
+		return true
+	case end:
+		if (iterator.tree.Empty()) {
+			return false
+		}
+		iterator.position = between
+		iterator.node = iterator.tree.Right()
 	}
-
-begin:
-	iterator.node = nil
-	iterator.position = begin
 	return false
-
-between:
-	iterator.position = between
-	return true
 }
 
 // Value returns the current element's value.
