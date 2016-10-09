@@ -500,10 +500,6 @@ func flipColors(node *Node) {
 	}
 }
 
-// Returns the size of the subtree rooted at this node.
-// It will re-calculate the size of the subtree using recursion so it should be
-// used only when the size of the tree changes.
-
 func getMin(node *Node) *Node {
 	if (node.Left == nil) {
 		return node
