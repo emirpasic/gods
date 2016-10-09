@@ -76,7 +76,7 @@ func (tree *Tree) Get(key interface{}) (value interface{}, found bool) {
 // otherwise method panics.
 func (tree *Tree) Put(key interface{}, value interface{}) {
 	tree.Root = put(tree, tree.Root, nil, key, value)
-	tree.size = size(tree.Root)
+	tree.size = getSize(tree.Root)
 	// always color the Root black
 	if isRed(tree.Root) {
 		tree.Root.color = black
@@ -367,8 +367,8 @@ func rotateLeft(node *Node) *Node {
 	newRoot.color = newRoot.Left.color
 	newRoot.Left.color = red
 	// fix sizes
-	node.Size = size(node)
-	newRoot.Size = size(newRoot)
+	node.Size = getSize(node.Right) + getSize(node.Right) + 1
+	newRoot.Size = getSize(newRoot.Left) + getSize(newRoot.Right) + 1
 	return newRoot
 }
 
@@ -391,8 +391,8 @@ func rotateRight(node *Node) *Node {
 	newRoot.color = newRoot.Right.color
 	newRoot.Right.color = red
 	// fix sizes
-	node.Size = size(node)
-	newRoot.Size = size(newRoot)
+	node.Size = getSize(node.Right) + getSize(node.Right) + 1
+	newRoot.Size = getSize(newRoot.Left) + getSize(newRoot.Right) + 1
 	return newRoot
 }
 
@@ -425,7 +425,7 @@ func fixUp(node *Node) *Node {
 	if (childrenAreRed(node)) {
 		flipColors(node)
 	}
-	node.Size = size(node.Left) + size(node.Right) + 1;
+	node.Size = getSize(node.Left) + getSize(node.Right) + 1;
 	return node;
 }
 
