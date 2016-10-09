@@ -300,9 +300,6 @@ func BenchmarkRedBlackTreePut1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
 	tree := NewWithIntComparator()
-	for n := 0; n < size; n++ {
-		tree.Put(n, struct{}{})
-	}
 	b.StartTimer()
 	benchmarkPut(b, tree, size)
 }
@@ -311,9 +308,6 @@ func BenchmarkRedBlackTreePut10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
 	tree := NewWithIntComparator()
-	for n := 0; n < size; n++ {
-		tree.Put(n, struct{}{})
-	}
 	b.StartTimer()
 	benchmarkPut(b, tree, size)
 }
@@ -322,9 +316,6 @@ func BenchmarkRedBlackTreePut100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
 	tree := NewWithIntComparator()
-	for n := 0; n < size; n++ {
-		tree.Put(n, struct{}{})
-	}
 	b.StartTimer()
 	benchmarkPut(b, tree, size)
 }
