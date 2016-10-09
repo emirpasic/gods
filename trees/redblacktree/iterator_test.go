@@ -376,3 +376,46 @@ func TestRedBlackTreeIteratorLast(t *testing.T) {
 		t.Errorf("Got %v,%v expected %v,%v", key, value, 3, "c")
 	}
 }
+
+func TestRedBlackTreeIteratorCombinedPrevNext(t *testing.T) {
+	tree := NewWithIntComparator()
+	tree.Put(13, 5)
+	tree.Put(8, 3)
+	tree.Put(17, 7)
+	tree.Put(1, 1)
+	tree.Put(11, 4)
+	tree.Put(15, 6)
+	tree.Put(25, 9)
+	tree.Put(6, 2)
+	tree.Put(22, 8)
+	tree.Put(27, 10)
+	//│       ┌── 27
+	//│   ┌── 25
+	//│   │   │   ┌── 22
+	//│   │   └──(17)
+	//│   │       └── 15
+	//└── 13
+	//	  │   ┌── 11
+	//	  └── 8
+	//		  └── 6
+	//			  └──(1)
+	it := tree.Iterator()
+	it.First()
+	for i:=1 ; i<9 ; i++ {
+		if (it.Value() != i) {
+			t.Errorf("Expected %v and instead got %v", i, it.Value())
+		}
+		it.Next()
+	}
+	for i:=9 ; i>3 ; i-- {
+		if (it.Value() != i) {
+			t.Errorf("Expected %v and instead got %v", i, it.Value())
+		}
+		it.Prev()
+	}
+	for i:=4 ; it.Next() ; i++ {
+		if (it.Value() != i) {
+			t.Errorf("Expected %v and instead got %v", i, it.Value())
+		}
+	}
+}
