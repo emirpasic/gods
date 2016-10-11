@@ -75,17 +75,17 @@ func (iterator *Iterator) Next() bool {
 		iterator.position = between
 		return true
 	case between:
-		var next_node *Node
+		var nextNode *Node
 		if iterator.node.Right != nil {
-			next_node = getLeftMost(iterator.node.Right)
+			nextNode = getLeftMost(iterator.node.Right)
 		} else {
-			next_node = traverseParents(iterator.node, true)
-			if next_node == nil {
+			nextNode = traverseParents(iterator.node, true)
+			if nextNode == nil {
 				iterator.position = end
 				return false
 			}
 		}
-		iterator.node = next_node
+		iterator.node = nextNode
 		return true
 	}
 	return false
@@ -97,17 +97,17 @@ func (iterator *Iterator) Next() bool {
 func (iterator *Iterator) Prev() bool {
 	switch iterator.position {
 	case between:
-		var next_node *Node
+		var nextNode *Node
 		if iterator.node.Left != nil {
-			next_node = getRightMost(iterator.node.Left)
+			nextNode = getRightMost(iterator.node.Left)
 		} else {
-			next_node = traverseParents(iterator.node, false)
-			if next_node == nil {
+			nextNode = traverseParents(iterator.node, false)
+			if nextNode == nil {
 				iterator.position = begin
 				return false
 			}
 		}
-		iterator.node = next_node
+		iterator.node = nextNode
 		return true
 	case end:
 		if iterator.tree.Empty() {
