@@ -227,7 +227,7 @@ func (iterator *RangedIterator) Last() bool {
 // value that is also less or equal to high
 func exploreAndGetClosestLargerElement(tree *Tree, lo interface{}, high interface{}) *Node {
 	node := tree.Root
-	var possibleNode *Node = nil
+	var possibleNode *Node
 	var compare int
 	for node != nil {
 		compare = tree.Comparator(node.Key, lo)
@@ -252,7 +252,7 @@ func exploreAndGetClosestLargerElement(tree *Tree, lo interface{}, high interfac
 // value that is also less or equal to high
 func exploreAndGetClosestSmallerElement(tree *Tree, high interface{}, lo interface{}) *Node {
 	node := tree.Root
-	var possibleNode *Node = nil
+	var possibleNode *Node
 	for node != nil {
 		compare := tree.Comparator(node.Key, high)
 		if compare == 0 {
