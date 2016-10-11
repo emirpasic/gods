@@ -153,10 +153,170 @@ func (iterator *Iterator) First() bool {
 	return iterator.Next()
 }
 
-// Last moves the iterator to the last element and returns true if there was a last element in the container.
-// If Last() returns true, then last element's key and value can be retrieved by Key() and Value().
-// Modifies the state of the iterator.
+// Last moves the iterator to the last element and returns true if there was a
+// last element in the container. If Last() returns true, then last element's
+// key and value can be retrieved by Key() and Value(). Modifies the state of the iterator.
 func (iterator *Iterator) Last() bool {
 	iterator.End()
 	return iterator.Prev()
+}
+
+type RangedIterator struct {
+	iterator *Iterator
+	lo interface{}
+	high interface{}
+}
+
+// Will return an iterator that will iterate through the nodes with keys
+// within the range provided.
+func (tree *Tree) IteratorWithin(lo interface{}, high interface{}) *RangedIterator {
+	it := tree.Iterator()
+	return &RangedIterator{
+		iterator: &it,
+		high: high,
+		lo: lo}
+}
+
+// Value returns the current element's value.
+// Does not modify the state of the iterator.
+func (iterator *RangedIterator) Value() interface{} {
+	return iterator.iterator.node.Value
+}
+
+// Key returns the current element's key.
+// Does not modify the state of the iterator.
+func (iterator *RangedIterator) Key() interface{} {
+	return iterator.iterator.node.Key
+}
+
+// Begin resets the iterator to its initial state (one-before-first)
+// Call Next() to fetch the first element if any.
+func (iterator *RangedIterator) Begin() {
+	iterator.iterator.node = nil
+	iterator.iterator.position = begin
+}
+
+// End moves the iterator past the last element (one-past-the-end).
+// Call Prev() to fetch the last element if any.
+func (iterator *RangedIterator) End() {
+	iterator.iterator.node = nil
+	iterator.iterator.position = end
+}
+
+// First moves the iterator to the first element and returns true if there was a first element in the container.
+// If First() returns true, then first element's key and value can be retrieved by Key() and Value().
+// Modifies the state of the iterator
+func (iterator *RangedIterator) First() bool {
+	iterator.Begin()
+	return iterator.Next()
+}
+
+// Last moves the iterator to the last element and returns true if there was a
+// last element in the container. If Last() returns true, then last element's
+// key and value can be retrieved by Key() and Value(). Modifies the state of the iterator.
+func (iterator *RangedIterator) Last() bool {
+	iterator.End()
+	return iterator.Prev()
+}
+
+
+// Search in the tree for key equal to lo or a key as close as possible to it's
+// value that is also less or equal to high
+func exploreAndGetClosestLargerElement(tree *Tree, lo interface{}, high interface{}) *Node {
+	node := tree.Root
+	var possible_node *Node = nil
+	var compare int
+	for node != nil {
+		compare = tree.Comparator(node.Key, lo)
+		if (compare == 0) {
+			return node
+		} else if (compare < 0) {
+			// we need to go right to find larger keys
+			node = node.Right
+		} else {
+			// we need to go left to smaller keys
+			if (tree.Comparator(node.Key, high) <= 0) {
+				// this key is within the range so we should mark it
+				possible_node = node
+			}
+			node = node.Left
+		}
+	}
+	return possible_node
+}
+
+// Search in the tree for key equal to lo or a key as close as possible to it's
+// value that is also less or equal to high
+func exploreAndGetClosestSmallerElement(tree *Tree, high interface{}, lo interface{}) *Node {
+	node := tree.Root
+	var possible_node *Node = nil
+	for node != nil {
+		compare := tree.Comparator(node.Key, high)
+		if (compare == 0) {
+			return node
+		} else if (compare > 0) {
+			// we need to go left to find smaller keys
+			node = node.Left
+		} else {
+			// we need to go right to larger keys
+			if (tree.Comparator(lo, node.Key) <= 0) {
+				// this key is within the range so we should mark it
+				possible_node = node
+			}
+			node = node.Right
+		}
+	}
+	return possible_node
+}
+
+func (iterator *RangedIterator) Next() bool {
+	switch iterator.iterator.position {
+	case begin:
+		closestLo := exploreAndGetClosestLargerElement(iterator.iterator.tree,
+			iterator.lo, iterator.high)
+		if (closestLo == nil) {
+			iterator.iterator.position = end
+			return false
+		}
+		iterator.iterator.node = closestLo
+		iterator.iterator.position = between
+		return true
+	case between:
+		if (!iterator.iterator.Next()) {
+			return false
+		}
+		if (iterator.iterator.tree.Comparator(iterator.iterator.node.Key, iterator.high) > 0){
+			iterator.iterator.position = end
+			iterator.iterator.node = nil
+			return false
+		}
+		return true
+	default: return false
+	}
+}
+
+func (iterator *RangedIterator) Prev() bool {
+	switch iterator.iterator.position {
+	case end:
+		closestHigh := exploreAndGetClosestSmallerElement(iterator.iterator.tree,
+			iterator.high, iterator.lo)
+		if (closestHigh == nil) {
+			iterator.iterator.position = begin
+			return false
+		}
+		iterator.iterator.node = closestHigh
+		iterator.iterator.position = between
+		return true
+	case between:
+		if (!iterator.iterator.Prev()) {
+			return false
+		}
+		if (iterator.iterator.tree.Comparator(iterator.iterator.node.Key, iterator.lo) < 0){
+			iterator.iterator.position = begin
+			iterator.iterator.node = nil
+			return false
+		}
+		return true
+	default: return false
+	}
 }

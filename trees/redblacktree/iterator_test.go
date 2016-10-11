@@ -419,3 +419,155 @@ func TestRedBlackTreeIteratorCombinedPrevNext(t *testing.T) {
 		}
 	}
 }
+
+func TestRedBlackTreeRangedIteratorOnEmptyTree(t *testing.T) {
+	tree := NewWithIntComparator()
+	it := tree.IteratorWithin(10, 15)
+	if (it.First()) {
+		t.Errorf("There should be no key available through the iterator")
+	}
+}
+
+func TestRedBlackTreeRangedIteratorNext(t *testing.T) {
+	tree := NewWithIntComparator()
+	tree.Put(13, 5)
+	tree.Put(8, 3)
+	tree.Put(17, 7)
+	tree.Put(1, 1)
+	tree.Put(11, 4)
+	tree.Put(15, 6)
+	tree.Put(25, 9)
+	tree.Put(6, 2)
+	tree.Put(22, 8)
+	tree.Put(27, 10)
+	//│       ┌── 27
+	//│   ┌── 25
+	//│   │   │   ┌── 22
+	//│   │   └──(17)
+	//│   │       └── 15
+	//└── 13
+	//	  │   ┌── 11
+	//	  └── 8
+	//		  └── 6
+	//			  └──(1)
+	it := tree.IteratorWithin(8, 15)
+	it.First()
+	for i:=3 ; i<7 ; i++ {
+		if (it.Value() != i) {
+			t.Errorf("Expected %v and instead got %v", i, it.Value())
+		}
+		it.Next()
+	}
+	if (it.Next()) {
+		t.Errorf("There should be no more values from this iterator")
+	}
+}
+
+func TestRedBlackTreeRangedIteratorEnd(t *testing.T) {
+	tree := NewWithIntComparator()
+	tree.Put(13, 5)
+	tree.Put(8, 3)
+	tree.Put(17, 7)
+	tree.Put(1, 1)
+	tree.Put(11, 4)
+	tree.Put(15, 6)
+	tree.Put(25, 9)
+	tree.Put(6, 2)
+	tree.Put(22, 8)
+	tree.Put(27, 10)
+	//│       ┌── 27
+	//│   ┌── 25
+	//│   │   │   ┌── 22
+	//│   │   └──(17)
+	//│   │       └── 15
+	//└── 13
+	//	  │   ┌── 11
+	//	  └── 8
+	//		  └── 6
+	//			  └──(1)
+	it := tree.IteratorWithin(8, 15)
+	it.First()
+	it.End()
+	if (it.Next()) {
+		t.Errorf("There should be no more values from this iterator")
+	}
+}
+
+func TestRedBlackTreeRangedIteratorPrev(t *testing.T) {
+	tree := NewWithIntComparator()
+	tree.Put(13, 5)
+	tree.Put(8, 3)
+	tree.Put(17, 7)
+	tree.Put(1, 1)
+	tree.Put(11, 4)
+	tree.Put(15, 6)
+	tree.Put(25, 9)
+	tree.Put(6, 2)
+	tree.Put(22, 8)
+	tree.Put(27, 10)
+	//│       ┌── 27
+	//│   ┌── 25
+	//│   │   │   ┌── 22
+	//│   │   └──(17)
+	//│   │       └── 15
+	//└── 13
+	//	  │   ┌── 11
+	//	  └── 8
+	//		  └── 6
+	//			  └──(1)
+	it := tree.IteratorWithin(8, 15)
+	it.Last()
+	for i:=6 ; i>2 ; i-- {
+		if (it.Value() != i) {
+			t.Errorf("Expected %v and instead got %v", i, it.Value())
+		}
+		it.Prev()
+	}
+	if (it.Prev()) {
+		t.Errorf("There should be no more values from this iterator")
+	}
+}
+
+
+func TestRedBlackTreeRangedIteratorCombinedPrevNext(t *testing.T) {
+	tree := NewWithIntComparator()
+	tree.Put(13, 5)
+	tree.Put(8, 3)
+	tree.Put(17, 7)
+	tree.Put(1, 1)
+	tree.Put(11, 4)
+	tree.Put(15, 6)
+	tree.Put(25, 9)
+	tree.Put(6, 2)
+	tree.Put(22, 8)
+	tree.Put(27, 10)
+	//│       ┌── 27
+	//│   ┌── 25
+	//│   │   │   ┌── 22
+	//│   │   └──(17)
+	//│   │       └── 15
+	//└── 13
+	//	  │   ┌── 11
+	//	  └── 8
+	//		  └── 6
+	//			  └──(1)
+	it := tree.IteratorWithin(8, 15)
+	it.First()
+	for i:=3 ; i<6 ; i++ {
+		if (it.Value() != i) {
+			t.Errorf("Expected %v and instead got %v", i, it.Value())
+		}
+		it.Next()
+	}
+	for i:=6 ; i>3 ; i-- {
+		if (it.Value() != i) {
+			t.Errorf("Expected %v and instead got %v", i, it.Value())
+		}
+		it.Prev()
+	}
+	for i:=4 ; it.Next() ; i++ {
+		if (it.Value() != i) {
+			t.Errorf("Expected %v and instead got %v", i, it.Value())
+		}
+	}
+}
