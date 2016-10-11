@@ -6,6 +6,7 @@ package redblacktree
 
 import (
 	"github.com/emirpasic/gods/containers"
+	"errors"
 )
 
 func assertIteratorImplementation() {
@@ -169,15 +170,15 @@ type RangedIterator struct {
 
 // Will return an iterator that will iterate through the nodes with keys
 // within the range provided.
-func (tree *Tree) IteratorWithin(lo interface{}, high interface{}) *RangedIterator {
+func (tree *Tree) IteratorWithin(lo interface{}, high interface{}) (*RangedIterator, error) {
 	if (tree.Comparator(lo, high) >=0) {
-		panic("The lo value should be strctly less than the high value")
+		return nil, errors.New("The lo value should be strictly less than the high value")
 	}
 	it := tree.Iterator()
 	return &RangedIterator{
 		iterator: &it,
 		high: high,
-		lo: lo}
+		lo: lo}, nil
 }
 
 // Value returns the current element's value.

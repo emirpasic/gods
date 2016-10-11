@@ -422,7 +422,7 @@ func TestRedBlackTreeIteratorCombinedPrevNext(t *testing.T) {
 
 func TestRedBlackTreeRangedIteratorOnEmptyTree(t *testing.T) {
 	tree := NewWithIntComparator()
-	it := tree.IteratorWithin(10, 15)
+	it, _ := tree.IteratorWithin(10, 15)
 	if (it.First()) {
 		t.Errorf("There should be no key available through the iterator")
 	}
@@ -450,7 +450,7 @@ func TestRedBlackTreeRangedIteratorNext(t *testing.T) {
 	//	  └── 8
 	//		  └── 6
 	//			  └──(1)
-	it := tree.IteratorWithin(8, 15)
+	it, _ := tree.IteratorWithin(8, 15)
 	it.First()
 	for i:=3 ; i<7 ; i++ {
 		if (it.Value() != i) {
@@ -485,7 +485,7 @@ func TestRedBlackTreeRangedIteratorEnd(t *testing.T) {
 	//	  └── 8
 	//		  └── 6
 	//			  └──(1)
-	it := tree.IteratorWithin(8, 15)
+	it, _ := tree.IteratorWithin(8, 15)
 	it.First()
 	it.End()
 	if (it.Next()) {
@@ -515,7 +515,7 @@ func TestRedBlackTreeRangedIteratorPrev(t *testing.T) {
 	//	  └── 8
 	//		  └── 6
 	//			  └──(1)
-	it := tree.IteratorWithin(8, 15)
+	it, _ := tree.IteratorWithin(8, 15)
 	it.Last()
 	for i:=6 ; i>2 ; i-- {
 		if (it.Value() != i) {
@@ -551,7 +551,7 @@ func TestRedBlackTreeRangedIteratorCombinedPrevNext(t *testing.T) {
 	//	  └── 8
 	//		  └── 6
 	//			  └──(1)
-	it := tree.IteratorWithin(8, 15)
+	it, _ := tree.IteratorWithin(8, 15)
 	it.First()
 	for i:=3 ; i<6 ; i++ {
 		if (it.Value() != i) {
