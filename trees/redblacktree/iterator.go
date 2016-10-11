@@ -6,6 +6,7 @@ package redblacktree
 
 import (
 	"errors"
+
 	"github.com/emirpasic/gods/containers"
 )
 
