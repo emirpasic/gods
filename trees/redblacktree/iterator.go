@@ -162,14 +162,16 @@ func (iterator *Iterator) Last() bool {
 	return iterator.Prev()
 }
 
+// RangedIterator is a special type of Iterator for LLRB that will iterate only
+// over elements whose keys are within the range provided during initialization
 type RangedIterator struct {
 	iterator *Iterator
 	lo       interface{}
 	high     interface{}
 }
 
-// Will return an iterator that will iterate through the nodes with keys
-// within the range provided.
+// IteratorWithin will return an iterator that will iterate through the nodes
+// with keys within the range provided. The range is inclusive.
 func (tree *Tree) IteratorWithin(lo interface{}, high interface{}) (*RangedIterator, error) {
 	if tree.Comparator(lo, high) >= 0 {
 		return nil, errors.New("The lo value should be strictly less than the high value")
@@ -272,6 +274,13 @@ func exploreAndGetClosestSmallerElement(tree *Tree, high interface{}, lo interfa
 	return possibleNode
 }
 
+// Next will move the iterator to the node of the tree whose key is
+// immediately larger. If the key value is outside the range provided during
+// the initialization of the RangedIterator instance false is returned and the
+// iterator posistion is set to end. Also, if there are no more larger keys
+// available again false will be returned and the iterator will be set to position
+// end. If the iterator is already at position end then false will be returned
+// again
 func (iterator *RangedIterator) Next() bool {
 	switch iterator.iterator.position {
 	case begin:
@@ -299,6 +308,11 @@ func (iterator *RangedIterator) Next() bool {
 	}
 }
 
+// Prev will move the iterator to the first node whose key is smaller than the
+// current one. If no node is available, or if there is a node but the node's
+// key is outside the range provided when initializing the iterator, then the
+// iterator will be set to position being and false will be returned. If the
+// iterator is already at the position begin, again false will be returned
 func (iterator *RangedIterator) Prev() bool {
 	switch iterator.iterator.position {
 	case end:

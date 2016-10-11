@@ -429,7 +429,7 @@ func fixUp(node *Node) *Node {
 	return node
 }
 
-// All valid LLRBs must have two properties:
+// Validate will make sure that the tree has the two basic properties of all LLRBs:
 // 1. All paths from the root to the leaves must have the same number of black
 // nodes and
 // 2. there must never be two consecutive red nodes.
