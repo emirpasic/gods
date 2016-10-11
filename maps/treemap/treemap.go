@@ -32,8 +32,8 @@ type Map struct {
 // It allows for a view of the map to be created with the minimum amount of
 // overhead.
 type SubMap struct {
-	tree *rbt.Tree
-	root *rbt.Node
+	tree      *rbt.Tree
+	root      *rbt.Node
 	low, high int
 }
 

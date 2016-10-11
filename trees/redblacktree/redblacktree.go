@@ -42,7 +42,7 @@ type Node struct {
 	Left   *Node
 	Right  *Node
 	Parent *Node
-	Size int
+	Size   int
 }
 
 // NewWith instantiates a red-black tree with the custom comparator.
@@ -83,7 +83,7 @@ func (tree *Tree) Put(key interface{}, value interface{}) {
 	}
 }
 
-func put(tree *Tree, node *Node, parent *Node, key interface{}, value interface{}) *Node{
+func put(tree *Tree, node *Node, parent *Node, key interface{}, value interface{}) *Node {
 	if node == nil {
 		return &Node{Key: key, Value: value, Parent: parent, color: red, Size: 1}
 	}
@@ -102,40 +102,40 @@ func put(tree *Tree, node *Node, parent *Node, key interface{}, value interface{
 // Remove remove the node from the tree by key.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (tree *Tree) Remove(key interface{}) {
-	if (tree.Root == nil) {
+	if tree.Root == nil {
 		return
 	}
 	tree.Root.color = red
 	tree.Root = remove(tree, tree.Root, key)
-	if (tree.Root != nil) {
+	if tree.Root != nil {
 		tree.Root.color = black
 	}
- 	tree.size = getSize(tree.Root)
+	tree.size = getSize(tree.Root)
 }
 
 func remove(tree *Tree, node *Node, key interface{}) *Node {
-	if (node == nil) {
+	if node == nil {
 		return nil
 	}
 	//fmt.Println("Entering delete for node", node.Key, tree.String())
-	if (tree.Comparator(key, node.Key) < 0) {
+	if tree.Comparator(key, node.Key) < 0 {
 		// go Left
-		if (!isRed(node.Left) && !isRed(node.Left.Left)) {
+		if !isRed(node.Left) && !isRed(node.Left.Left) {
 			node = moveRedLeft(node)
 		}
 		node.Left = remove(tree, node.Left, key)
 	} else {
 		// go Right
-		if (isRed(node.Left)) {
+		if isRed(node.Left) {
 			node = rotateRight(node)
 		}
-		if (tree.Comparator(key, node.Key) == 0 && node.Right == nil) {
+		if tree.Comparator(key, node.Key) == 0 && node.Right == nil {
 			return nil
 		}
-		if (node.Right != nil && !isRed(node.Right) && !isRed(node.Right.Left)) {
+		if node.Right != nil && !isRed(node.Right) && !isRed(node.Right.Left) {
 			node = moveRedRight(node)
 		}
-		if (tree.Comparator(key, node.Key) == 0) {
+		if tree.Comparator(key, node.Key) == 0 {
 			node = replaceNodeWithMin(node)
 		} else {
 			node.Right = remove(tree, node.Right, key)
@@ -146,14 +146,14 @@ func remove(tree *Tree, node *Node, key interface{}) *Node {
 
 // delete the key-value pair with the minimum key rooted at node
 func removeMin(node *Node) *Node {
-	if (node.Left == nil) {
+	if node.Left == nil {
 		return nil
 	}
-	if (!isRed(node.Left) && !isRed(node.Left.Left)) {
+	if !isRed(node.Left) && !isRed(node.Left.Left) {
 		node = moveRedLeft(node)
 	}
-	node.Left = removeMin(node.Left);
-	return fixUp(node);
+	node.Left = removeMin(node.Left)
+	return fixUp(node)
 }
 
 // replace the node with minimum of the Tree rooted at the subTree
@@ -197,7 +197,7 @@ func (tree *Tree) Values() []interface{} {
 
 // Left returns the left-most (min) node or nil if tree is empty.
 func (tree *Tree) Left() *Node {
-	if (tree.Root == nil) {
+	if tree.Root == nil {
 		return nil
 	}
 	return getMin(tree.Root)
@@ -205,7 +205,7 @@ func (tree *Tree) Left() *Node {
 
 // Right returns the right-most (max) node or nil if tree is empty.
 func (tree *Tree) Right() *Node {
-	if (tree.Root == nil) {
+	if tree.Root == nil {
 		return nil
 	}
 	return getMax(tree.Root)
@@ -278,7 +278,7 @@ func (tree *Tree) Clear() {
 
 // Helper to ensure that all the nodes are disconnected to allow for GC
 func clearNode(node *Node) {
-	if (node != nil) {
+	if node != nil {
 		node.Parent = nil
 		clearNode(node.Left)
 		clearNode(node.Right)
@@ -317,7 +317,7 @@ func output(node *Node, prefix string, isTail bool, str *string) {
 	} else {
 		*str += "┌──"
 	}
-	if (!isRed(node)) {
+	if !isRed(node) {
 		*str += " "
 	}
 	*str += node.String() + "\n"
@@ -398,7 +398,7 @@ func rotateRight(node *Node) *Node {
 
 func moveRedLeft(node *Node) *Node {
 	flipColors(node)
-	if (node.Right != nil && isRed(node.Right.Left)) {
+	if node.Right != nil && isRed(node.Right.Left) {
 		node.Right = rotateRight(node.Right)
 		node = rotateLeft(node)
 		flipColors(node)
@@ -408,7 +408,7 @@ func moveRedLeft(node *Node) *Node {
 
 func moveRedRight(node *Node) *Node {
 	flipColors(node)
-	if (isRed(node.Left.Left)) {
+	if isRed(node.Left.Left) {
 		node = rotateRight(node)
 		flipColors(node)
 	}
@@ -416,17 +416,17 @@ func moveRedRight(node *Node) *Node {
 }
 
 func fixUp(node *Node) *Node {
-	if (isRed(node.Right)) {
+	if isRed(node.Right) {
 		node = rotateLeft(node)
 	}
-	if (isRed(node.Left) && isRed(node.Left.Left)) {
+	if isRed(node.Left) && isRed(node.Left.Left) {
 		node = rotateRight(node)
 	}
-	if (childrenAreRed(node)) {
+	if childrenAreRed(node) {
 		flipColors(node)
 	}
-	node.Size = getSize(node.Left) + getSize(node.Right) + 1;
-	return node;
+	node.Size = getSize(node.Left) + getSize(node.Right) + 1
+	return node
 }
 
 // All valid LLRBs must have two properties:
@@ -434,28 +434,28 @@ func fixUp(node *Node) *Node {
 // nodes and
 // 2. there must never be two consecutive red nodes.
 func (tree *Tree) Validate() {
-	if (tree.Root != nil) {
+	if tree.Root != nil {
 		countBlackNodes(tree.Root)
 	}
 }
 
 func countBlackNodes(node *Node) int {
-	if (node == nil) {
+	if node == nil {
 		return 0
 	}
 	count1 := countBlackNodes(node.Left)
 	count2 := countBlackNodes(node.Right)
 	// There is a different amount of black links to leaves from this node
-	if (count1 != count2) {
+	if count1 != count2 {
 		panic("Subtree rooted at node " + node.String() + " does not have an " +
 			"equal number of black nodes to all leaves")
 	}
 	// There are two consecutive red links
-	if (isRed(node) && (isRed(node.Right) || isRed(node.Left))) {
+	if isRed(node) && (isRed(node.Right) || isRed(node.Left)) {
 		panic("There are two consecutive links starting from node " + node.String())
 	}
 	// red nodes are not counted only black ones.
-	if (isRed(node)) {
+	if isRed(node) {
 		return count1
 	}
 	return count1 + 1
@@ -477,7 +477,7 @@ func isRed(node *Node) bool {
 // Will return true iff subRoot is black and both children are non-nil and red.
 func childrenAreRed(subRoot *Node) bool {
 	// If the root or any of the children are nil return false
-	if (subRoot == nil || subRoot.Left == nil || subRoot.Right == nil) {
+	if subRoot == nil || subRoot.Left == nil || subRoot.Right == nil {
 		return false
 	}
 	return !isRed(subRoot) && isRed(subRoot.Left) && isRed(subRoot.Right)
@@ -492,30 +492,30 @@ func flipColors(node *Node) {
 	} else {
 		node.color = red
 	}
-	if (node.Left != nil) {
+	if node.Left != nil {
 		node.Left.color = !node.color
 	}
-	if (node.Right != nil) {
+	if node.Right != nil {
 		node.Right.color = !node.color
 	}
 }
 
 func getMin(node *Node) *Node {
-	if (node.Left == nil) {
+	if node.Left == nil {
 		return node
 	}
 	return getMin(node.Left)
 }
 
 func getMax(node *Node) *Node {
-	if (node.Right == nil) {
+	if node.Right == nil {
 		return node
 	}
 	return getMax(node.Right)
 }
 
 func getSize(node *Node) int {
-	if (node == nil) {
+	if node == nil {
 		return 0
 	}
 	return node.Size

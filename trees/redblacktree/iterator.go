@@ -5,8 +5,8 @@
 package redblacktree
 
 import (
-	"github.com/emirpasic/gods/containers"
 	"errors"
+	"github.com/emirpasic/gods/containers"
 )
 
 func assertIteratorImplementation() {
@@ -44,14 +44,14 @@ func traverseParents(node *Node, toTheRight bool) *Node {
 }
 
 func getLeftMost(node *Node) *Node {
-	if (node.Left == nil) {
+	if node.Left == nil {
 		return node
 	}
 	return getLeftMost(node.Left)
 }
 
 func getRightMost(node *Node) *Node {
-	if (node.Right == nil) {
+	if node.Right == nil {
 		return node
 	}
 	return getRightMost(node.Right)
@@ -67,7 +67,7 @@ func getRightMost(node *Node) *Node {
 func (iterator *Iterator) Next() bool {
 	switch iterator.position {
 	case begin:
-		if (iterator.tree.Empty()) {
+		if iterator.tree.Empty() {
 			iterator.position = end
 			return false
 		}
@@ -76,11 +76,11 @@ func (iterator *Iterator) Next() bool {
 		return true
 	case between:
 		var next_node *Node
-		if (iterator.node.Right != nil) {
+		if iterator.node.Right != nil {
 			next_node = getLeftMost(iterator.node.Right)
 		} else {
 			next_node = traverseParents(iterator.node, true)
-			if (next_node == nil) {
+			if next_node == nil {
 				iterator.position = end
 				return false
 			}
@@ -98,11 +98,11 @@ func (iterator *Iterator) Prev() bool {
 	switch iterator.position {
 	case between:
 		var next_node *Node
-		if (iterator.node.Left != nil) {
+		if iterator.node.Left != nil {
 			next_node = getRightMost(iterator.node.Left)
 		} else {
 			next_node = traverseParents(iterator.node, false)
-			if (next_node == nil) {
+			if next_node == nil {
 				iterator.position = begin
 				return false
 			}
@@ -110,7 +110,7 @@ func (iterator *Iterator) Prev() bool {
 		iterator.node = next_node
 		return true
 	case end:
-		if (iterator.tree.Empty()) {
+		if iterator.tree.Empty() {
 			return false
 		}
 		iterator.position = between
@@ -164,21 +164,21 @@ func (iterator *Iterator) Last() bool {
 
 type RangedIterator struct {
 	iterator *Iterator
-	lo interface{}
-	high interface{}
+	lo       interface{}
+	high     interface{}
 }
 
 // Will return an iterator that will iterate through the nodes with keys
 // within the range provided.
 func (tree *Tree) IteratorWithin(lo interface{}, high interface{}) (*RangedIterator, error) {
-	if (tree.Comparator(lo, high) >=0) {
+	if tree.Comparator(lo, high) >= 0 {
 		return nil, errors.New("The lo value should be strictly less than the high value")
 	}
 	it := tree.Iterator()
 	return &RangedIterator{
 		iterator: &it,
-		high: high,
-		lo: lo}, nil
+		high:     high,
+		lo:       lo}, nil
 }
 
 // Value returns the current element's value.
@@ -223,7 +223,6 @@ func (iterator *RangedIterator) Last() bool {
 	return iterator.Prev()
 }
 
-
 // Search in the tree for key equal to lo or a key as close as possible to it's
 // value that is also less or equal to high
 func exploreAndGetClosestLargerElement(tree *Tree, lo interface{}, high interface{}) *Node {
@@ -232,14 +231,14 @@ func exploreAndGetClosestLargerElement(tree *Tree, lo interface{}, high interfac
 	var compare int
 	for node != nil {
 		compare = tree.Comparator(node.Key, lo)
-		if (compare == 0) {
+		if compare == 0 {
 			return node
-		} else if (compare < 0) {
+		} else if compare < 0 {
 			// we need to go right to find larger keys
 			node = node.Right
 		} else {
 			// we need to go left to smaller keys
-			if (tree.Comparator(node.Key, high) <= 0) {
+			if tree.Comparator(node.Key, high) <= 0 {
 				// this key is within the range so we should mark it
 				possible_node = node
 			}
@@ -256,14 +255,14 @@ func exploreAndGetClosestSmallerElement(tree *Tree, high interface{}, lo interfa
 	var possible_node *Node = nil
 	for node != nil {
 		compare := tree.Comparator(node.Key, high)
-		if (compare == 0) {
+		if compare == 0 {
 			return node
-		} else if (compare > 0) {
+		} else if compare > 0 {
 			// we need to go left to find smaller keys
 			node = node.Left
 		} else {
 			// we need to go right to larger keys
-			if (tree.Comparator(lo, node.Key) <= 0) {
+			if tree.Comparator(lo, node.Key) <= 0 {
 				// this key is within the range so we should mark it
 				possible_node = node
 			}
@@ -278,7 +277,7 @@ func (iterator *RangedIterator) Next() bool {
 	case begin:
 		closestLo := exploreAndGetClosestLargerElement(iterator.iterator.tree,
 			iterator.lo, iterator.high)
-		if (closestLo == nil) {
+		if closestLo == nil {
 			iterator.iterator.position = end
 			return false
 		}
@@ -286,16 +285,17 @@ func (iterator *RangedIterator) Next() bool {
 		iterator.iterator.position = between
 		return true
 	case between:
-		if (!iterator.iterator.Next()) {
+		if !iterator.iterator.Next() {
 			return false
 		}
-		if (iterator.iterator.tree.Comparator(iterator.iterator.node.Key, iterator.high) > 0){
+		if iterator.iterator.tree.Comparator(iterator.iterator.node.Key, iterator.high) > 0 {
 			iterator.iterator.position = end
 			iterator.iterator.node = nil
 			return false
 		}
 		return true
-	default: return false
+	default:
+		return false
 	}
 }
 
@@ -304,7 +304,7 @@ func (iterator *RangedIterator) Prev() bool {
 	case end:
 		closestHigh := exploreAndGetClosestSmallerElement(iterator.iterator.tree,
 			iterator.high, iterator.lo)
-		if (closestHigh == nil) {
+		if closestHigh == nil {
 			iterator.iterator.position = begin
 			return false
 		}
@@ -312,15 +312,16 @@ func (iterator *RangedIterator) Prev() bool {
 		iterator.iterator.position = between
 		return true
 	case between:
-		if (!iterator.iterator.Prev()) {
+		if !iterator.iterator.Prev() {
 			return false
 		}
-		if (iterator.iterator.tree.Comparator(iterator.iterator.node.Key, iterator.lo) < 0){
+		if iterator.iterator.tree.Comparator(iterator.iterator.node.Key, iterator.lo) < 0 {
 			iterator.iterator.position = begin
 			iterator.iterator.node = nil
 			return false
 		}
 		return true
-	default: return false
+	default:
+		return false
 	}
 }
