@@ -170,6 +170,9 @@ type RangedIterator struct {
 // Will return an iterator that will iterate through the nodes with keys
 // within the range provided.
 func (tree *Tree) IteratorWithin(lo interface{}, high interface{}) *RangedIterator {
+	if (tree.Comparator(lo, high) >=0) {
+		panic("The lo value should be strctly less than the high value")
+	}
 	it := tree.Iterator()
 	return &RangedIterator{
 		iterator: &it,
