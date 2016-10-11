@@ -28,15 +28,6 @@ type Map struct {
 	tree *rbt.Tree
 }
 
-// This struct holds one of the nodes of the RedBlack Tree that backs the map
-// It allows for a view of the map to be created with the minimum amount of
-// overhead.
-type SubMap struct {
-	tree      *rbt.Tree
-	root      *rbt.Node
-	low, high int
-}
-
 // NewWith instantiates a tree map with the custom comparator.
 func NewWith(comparator utils.Comparator) *Map {
 	return &Map{tree: rbt.NewWith(comparator)}
