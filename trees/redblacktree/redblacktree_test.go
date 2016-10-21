@@ -199,7 +199,7 @@ func TestRedBlackTreeCeilingAndFloor(t *testing.T) {
 
 	tree.Put(5, "e")
 	tree.Put(6, "f")
-	tree.Put(7, "g")
+	tree.Put(8, "g")
 	tree.Put(3, "c")
 	tree.Put(4, "d")
 	tree.Put(1, "x")
@@ -212,10 +212,19 @@ func TestRedBlackTreeCeilingAndFloor(t *testing.T) {
 		t.Errorf("Got %v expected %v", node, "<nil>")
 	}
 
+	if node, found := tree.Floor(7); node.Key != 6 || !found {
+		t.Errorf("Got %v expected %v", node.Key, 6)
+	}
+
 	if node, found := tree.Ceiling(4); node.Key != 4 || !found {
 		t.Errorf("Got %v expected %v", node.Key, 4)
 	}
-	if node, found := tree.Ceiling(8); node != nil || found {
+
+	if node, found := tree.Ceiling(7); node.Key != 8 || !found {
+		t.Errorf("Got %v expected %v", node.Key, 8)
+	}
+
+	if node, found := tree.Ceiling(9); node != nil || found {
 		t.Errorf("Got %v expected %v", node, "<nil>")
 	}
 }
