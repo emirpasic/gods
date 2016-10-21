@@ -220,25 +220,38 @@ func (tree *Tree) Right() *Node {
 // all nodes in the tree is larger than the given node.
 //
 // Key should adhere to the comparator's type assertion, otherwise method panics.
-func (tree *Tree) Floor(key interface{}) (floor *Node, found bool) {
-	found = false
-	node := tree.Root
-	for node != nil {
-		compare := tree.Comparator(key, node.Key)
-		switch {
-		case compare == 0:
-			return node, true
-		case compare < 0:
-			node = node.Left
-		case compare > 0:
-			floor, found = node, true
-			node = node.Right
+func (tree *Tree) Floor(key interface{}) (*Node, bool) {
+	return tree.floor(tree.Root, nil, key, false)
+}
+
+// This function will return the closest Key it can find to key argument. If
+// fromUp is set to false, it will return the largest Key that is less or equal
+// to key, otherwise it will return the smallest Key that is larger or equal to
+// to key.
+func (tree *Tree) floor(node *Node, parent *Node, key interface{}, fromUp bool) (*Node, bool) {
+	if node == nil {
+		return parent, parent != nil
+	}
+	var nextNode, nextParent *Node
+	compare := tree.Comparator(node.Key, key)
+	if compare == 0 {
+		return node, true
+	} else if compare < 0 {
+		nextNode = node.Right
+		if fromUp {
+			nextParent = parent
+		} else {
+			nextParent = node
+		}
+	} else {
+		nextNode = node.Left
+		if fromUp {
+			nextParent = node
+		} else {
+			nextParent = parent
 		}
 	}
-	if found {
-		return floor, true
-	}
-	return nil, false
+	return tree.floor(nextNode, nextParent, key, fromUp)
 }
 
 // Ceiling finds ceiling node of the input key, return the ceiling node or nil if no ceiling is found.
@@ -249,25 +262,34 @@ func (tree *Tree) Floor(key interface{}) (floor *Node, found bool) {
 // all nodes in the tree is smaller than the given node.
 //
 // Key should adhere to the comparator's type assertion, otherwise method panics.
-func (tree *Tree) Ceiling(key interface{}) (ceiling *Node, found bool) {
-	found = false
-	node := tree.Root
-	for node != nil {
-		compare := tree.Comparator(key, node.Key)
-		switch {
-		case compare == 0:
-			return node, true
-		case compare < 0:
-			ceiling, found = node, true
-			node = node.Left
-		case compare > 0:
-			node = node.Right
+func (tree *Tree) Ceiling(key interface{}) (*Node, bool) {
+	return tree.ceiling(tree.Root, nil, key, false)
+}
+
+func (tree *Tree) ceiling(node *Node, parent *Node, key interface{}, fromLower bool) (*Node, bool) {
+	if node == nil {
+		return parent, parent != nil
+	}
+	var nextNode, nextParent *Node
+	compare := tree.Comparator(node.Key, key)
+	if compare == 0 {
+		return node, true
+	} else if compare < 0 {
+		nextNode = node.Right
+		if fromLower {
+			nextParent = node
+		} else {
+			nextParent = parent
+		}
+	} else {
+		nextNode = node.Left
+		if fromLower {
+			nextParent = parent
+		} else {
+			nextParent = node
 		}
 	}
-	if found {
-		return ceiling, true
-	}
-	return nil, false
+	return tree.ceiling(nextNode, nextParent, key, fromLower)
 }
 
 // Clear removes all nodes from the tree.

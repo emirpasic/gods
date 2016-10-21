@@ -226,55 +226,6 @@ func (iterator *RangedIterator) Last() bool {
 	return iterator.Prev()
 }
 
-// Search in the tree for key equal to lo or a key as close as possible to it's
-// value that is also less or equal to high
-func exploreAndGetClosestLargerElement(tree *Tree, lo interface{}, high interface{}) *Node {
-	node := tree.Root
-	var possibleNode *Node
-	var compare int
-	for node != nil {
-		compare = tree.Comparator(node.Key, lo)
-		if compare == 0 {
-			return node
-		} else if compare < 0 {
-			// we need to go right to find larger keys
-			node = node.Right
-		} else {
-			// we need to go left to smaller keys
-			if tree.Comparator(node.Key, high) <= 0 {
-				// this key is within the range so we should mark it
-				possibleNode = node
-			}
-			node = node.Left
-		}
-	}
-	return possibleNode
-}
-
-// Search in the tree for key equal to lo or a key as close as possible to it's
-// value that is also less or equal to high
-func exploreAndGetClosestSmallerElement(tree *Tree, high interface{}, lo interface{}) *Node {
-	node := tree.Root
-	var possibleNode *Node
-	for node != nil {
-		compare := tree.Comparator(node.Key, high)
-		if compare == 0 {
-			return node
-		} else if compare > 0 {
-			// we need to go left to find smaller keys
-			node = node.Left
-		} else {
-			// we need to go right to larger keys
-			if tree.Comparator(lo, node.Key) <= 0 {
-				// this key is within the range so we should mark it
-				possibleNode = node
-			}
-			node = node.Right
-		}
-	}
-	return possibleNode
-}
-
 // Next will move the iterator to the node of the tree whose key is
 // immediately larger. If the key value is outside the range provided during
 // the initialization of the RangedIterator instance false is returned and the
@@ -285,9 +236,9 @@ func exploreAndGetClosestSmallerElement(tree *Tree, high interface{}, lo interfa
 func (iterator *RangedIterator) Next() bool {
 	switch iterator.iterator.position {
 	case begin:
-		closestLo := exploreAndGetClosestLargerElement(iterator.iterator.tree,
-			iterator.lo, iterator.high)
-		if closestLo == nil {
+		closestLo, found := iterator.iterator.tree.floor(iterator.iterator.tree.Root,
+			nil, iterator.lo, true)
+		if !found {
 			iterator.iterator.position = end
 			return false
 		}
@@ -317,9 +268,9 @@ func (iterator *RangedIterator) Next() bool {
 func (iterator *RangedIterator) Prev() bool {
 	switch iterator.iterator.position {
 	case end:
-		closestHigh := exploreAndGetClosestSmallerElement(iterator.iterator.tree,
-			iterator.high, iterator.lo)
-		if closestHigh == nil {
+		closestHigh, found := iterator.iterator.tree.ceiling(iterator.iterator.tree.Root,
+			nil, iterator.high, true)
+		if !found {
 			iterator.iterator.position = begin
 			return false
 		}
