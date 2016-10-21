@@ -45,9 +45,20 @@ func NewWithStringComparator() *Heap {
 }
 
 // Push adds a value onto the heap and bubbles it up accordingly.
-func (heap *Heap) Push(value interface{}) {
-	heap.list.Add(value)
-	heap.bubbleUp()
+func (heap *Heap) Push(values ...interface{}) {
+	if len(values) == 1 {
+		heap.list.Add(values[0])
+		heap.bubbleUp()
+	} else {
+		// Reference: https://en.wikipedia.org/wiki/Binary_heap#Building_a_heap
+		for _, value := range values {
+			heap.list.Add(value)
+		}
+		size := heap.list.Size()/2 + 1
+		for i := size; i >= 0; i-- {
+			heap.bubbleDownIndex(i)
+		}
+	}
 }
 
 // Pop removes top element on heap and returns it, or nil if heap is empty.
@@ -101,10 +112,15 @@ func (heap *Heap) String() string {
 	return str
 }
 
-// Performs the "bubble down" operation. This is to place the element that is at the
-// root of the heap in its correct place so that the heap maintains the min/max-heap order property.
+// Performs the "bubble down" operation. This is to place the element that is at the root
+// of the heap in its correct place so that the heap maintains the min/max-heap order property.
 func (heap *Heap) bubbleDown() {
-	index := 0
+	heap.bubbleDownIndex(0)
+}
+
+// Performs the "bubble down" operation. This is to place the element that is at the index
+// of the heap in its correct place so that the heap maintains the min/max-heap order property.
+func (heap *Heap) bubbleDownIndex(index int) {
 	size := heap.list.Size()
 	for leftIndex := index<<1 + 1; leftIndex < size; leftIndex = index<<1 + 1 {
 		rightIndex := index<<1 + 2

@@ -710,9 +710,7 @@ func main() {
 		return -utils.IntComparator(a, b)
 	}
 	heap = binaryheap.NewWith(inverseIntComparator) // empty (min-heap)
-	heap.Push(2)                                    // 2
-	heap.Push(3)                                    // 3, 2
-	heap.Push(1)                                    // 3, 2, 1
+	heap.Push(2, 3, 1)                              // 3, 2, 1 (bulk optimized)
 	heap.Values()                                   // 3, 2, 1
 }
 ```
@@ -741,14 +739,38 @@ Comparator signature:
 type Comparator func(a, b interface{}) int
 ```
 
-Two common comparators are included in the library:
-
-```go
-func IntComparator(a, b interface{}) int
-```
+All common comparators for builtin types are included in the library:
 
 ```go
 func StringComparator(a, b interface{}) int
+
+func IntComparator(a, b interface{}) int
+
+func Int8Comparator(a, b interface{}) int
+
+func Int16Comparator(a, b interface{}) int
+
+func Int32Comparator(a, b interface{}) int
+
+func Int64Comparator(a, b interface{}) int
+
+func UIntComparator(a, b interface{}) int
+
+func UInt8Comparator(a, b interface{}) int
+
+func UInt16Comparator(a, b interface{}) int
+
+func UInt32Comparator(a, b interface{}) int
+
+func UInt64Comparator(a, b interface{}) int
+
+func Float32Comparator(a, b interface{}) int
+
+func Float64Comparator(a, b interface{}) int
+
+func ByteComparator(a, b interface{}) int
+
+func RuneComparator(a, b interface{}) int
 ```
 
 Writing custom comparators is easy:
