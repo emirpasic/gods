@@ -204,6 +204,14 @@ func TestRedBlackTreeCeilingAndFloor(t *testing.T) {
 	tree.Put(4, "d")
 	tree.Put(1, "x")
 	tree.Put(2, "b")
+	//
+	//│       ┌── 8
+	//│   ┌── 6
+	//│   │   └── 5
+	//└── 4
+	//    │   ┌── 3
+	//    └── 2
+	//        └── 1
 
 	if node, found := tree.Floor(4); node.Key != 4 || !found {
 		t.Errorf("Got %v expected %v", node.Key, 4)
