@@ -8,7 +8,12 @@
 //
 // Structure is not thread safe.
 //
-// References: http://en.wikipedia.org/wiki/Red%E2%80%93black_tree
+// Implementation based on the latest changes proposed by Sedgewick in 2007.
+// More reading here:
+//   - http://www.cs.princeton.edu/~rs/talks/LLRB/LLRB.pdf
+//   - http://ranger.uta.edu/~kosmopo/cse5311/lectures/LeftLeaningRedBlackTrees.pdf
+//   - https://www.youtube.com/watch?v=lKmLBOJXZHI
+//   - http://www.mew.org/~kazu/proj/red-black-tree/
 package redblacktree
 
 import (
