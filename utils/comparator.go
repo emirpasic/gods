@@ -53,7 +53,7 @@ func IntComparator(a, b interface{}) int {
 	}
 }
 
-// IntComparator provides a basic comparison on int
+// TimeComparator provides a basic comparison on time.Time
 func TimeComparator(a, b interface{}) int {
 	aAsserted := a.(time.Time)
 	bAsserted := b.(time.Time)
