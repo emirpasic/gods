@@ -2,7 +2,7 @@
 
 # GoDS (Go Data Structures)
 
-Implementation of various data structures and algorithms in Go. 
+Implementation of various data structures and algorithms in Go.
 
 ## Data Structures
 
@@ -211,7 +211,7 @@ func main() {
 
 ### Sets
 
-A set is a data structure that can store elements and has no repeated values. It is a computer implementation of the mathematical concept of a finite set. Unlike most other collection types, rather than retrieving a specific element from a set, one typically tests an element for membership in a set. This structed is often used to ensure that no duplicates are present in a container.
+A set is a data structure that can store elements and has no repeated values. It is a computer implementation of the mathematical concept of a finite set. Unlike most other collection types, rather than retrieving a specific element from a set, one typically tests an element for membership in a set. This structure is often used to ensure that no duplicates are present in a container.
 
 Implements [Container](#containers) interface.
 
