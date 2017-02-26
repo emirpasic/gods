@@ -681,33 +681,33 @@ func BenchmarkAVLGet100000(b *testing.B) {
 func BenchmarkAVLGetRandom100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	tree := newRandomIntTree(size, size*5)
+	tree := newRandomIntTree(size, size*3)
 	b.StartTimer()
-	tree.benchmarkGetRandom(b, size, size*5)
+	tree.benchmarkGetRandom(b, size, size*3)
 }
 
 func BenchmarkAVLGetRandom1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	tree := newRandomIntTree(size, size*5)
+	tree := newRandomIntTree(size, size*3)
 	b.StartTimer()
-	tree.benchmarkGetRandom(b, size, size*5)
+	tree.benchmarkGetRandom(b, size, size*3)
 }
 
 func BenchmarkAVLGetRandom10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	tree := newRandomIntTree(size, size*5)
+	tree := newRandomIntTree(size, size*3)
 	b.StartTimer()
-	tree.benchmarkGetRandom(b, size, size*5)
+	tree.benchmarkGetRandom(b, size, size*3)
 }
 
 func BenchmarkAVLGetRandom100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	tree := newRandomIntTree(size, size*5)
+	tree := newRandomIntTree(size, size*3)
 	b.StartTimer()
-	tree.benchmarkGetRandom(b, size, size*5)
+	tree.benchmarkGetRandom(b, size, size*3)
 }
 
 func BenchmarkAVLPut100(b *testing.B) {
@@ -757,33 +757,33 @@ func BenchmarkAVLPut100000(b *testing.B) {
 func BenchmarkAVLPutRandom100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	tree := newRandomIntTree(size, size*5)
+	tree := newRandomIntTree(size, size*3)
 	b.StartTimer()
-	tree.benchmarkPutRandom(b, size, size*5)
+	tree.benchmarkPutRandom(b, size, size*3)
 }
 
 func BenchmarkAVLPutRandom1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	tree := newRandomIntTree(size, size*5)
+	tree := newRandomIntTree(size, size*3)
 	b.StartTimer()
-	tree.benchmarkPutRandom(b, size, size*5)
+	tree.benchmarkPutRandom(b, size, size*3)
 }
 
 func BenchmarkAVLPutRandom10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	tree := newRandomIntTree(size, size*5)
+	tree := newRandomIntTree(size, size*3)
 	b.StartTimer()
-	tree.benchmarkPutRandom(b, size, size*5)
+	tree.benchmarkPutRandom(b, size, size*3)
 }
 
 func BenchmarkAVLPutRandom100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	tree := newRandomIntTree(size, size*5)
+	tree := newRandomIntTree(size, size*3)
 	b.StartTimer()
-	tree.benchmarkPutRandom(b, size, size*5)
+	tree.benchmarkPutRandom(b, size, size*3)
 }
 
 func BenchmarkAVLPutAndRemove100(b *testing.B) {
@@ -828,4 +828,36 @@ func BenchmarkAVLPutAndRemove100000(b *testing.B) {
 	}
 	b.StartTimer()
 	tree.benchmarkPutAndRemove(b, size)
+}
+
+func BenchmarkAVLPutAndRemoveRandom100(b *testing.B) {
+	b.StopTimer()
+	size := 100
+	tree := newRandomIntTree(size, size*3)
+	b.StartTimer()
+	tree.benchmarkPutAndRemoveRandom(b, size, size*3)
+}
+
+func BenchmarkAVLPutAndRemoveRandom1000(b *testing.B) {
+	b.StopTimer()
+	size := 1000
+	tree := newRandomIntTree(size, size*3)
+	b.StartTimer()
+	tree.benchmarkPutAndRemoveRandom(b, size, size*3)
+}
+
+func BenchmarkAVLPutAndRemoveRandom10000(b *testing.B) {
+	b.StopTimer()
+	size := 10000
+	tree := newRandomIntTree(size, size*3)
+	b.StartTimer()
+	tree.benchmarkPutAndRemoveRandom(b, size, size*3)
+}
+
+func BenchmarkAVLPutAndRemoveRandom100000(b *testing.B) {
+	b.StopTimer()
+	size := 100000
+	tree := newRandomIntTree(size, size*3)
+	b.StartTimer()
+	tree.benchmarkPutAndRemoveRandom(b, size, size*3)
 }
