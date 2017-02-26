@@ -2,13 +2,13 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package avl implements an AVL balanced binary tree.
+// Package avltree implements an AVL balanced binary tree.
 //
 // Structure is not thread safe.
-//
-package avl
+package avltree
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 
@@ -20,7 +20,7 @@ func assertTreeImplementation() {
 	var _ trees.Tree = new(Tree)
 }
 
-var dbgLog = log.New(ioutil.Discard, "avl: ", log.LstdFlags)
+var dbgLog = log.New(ioutil.Discard, "avltree: ", log.LstdFlags)
 
 // Tree holds elements of the AVL tree.
 type Tree struct {
@@ -29,8 +29,7 @@ type Tree struct {
 	Comparator utils.Comparator
 }
 
-// A Node holds an Ordered element of the AVL tree in
-// the Val field.
+// Node is a single element within the tree
 type Node struct {
 	Key   interface{}
 	Value interface{}
@@ -70,20 +69,18 @@ func (t *Tree) Clear() {
 	t.size = 0
 }
 
-// Get looks up val and returns the matching element if
-// it is found.
-//
-// Val's Less implementation must be able to handle
-// comparisons to elements stored in this tree.
+// Get searches the node in the tree by key and returns its value or nil if key is not found in tree.
+// Second return parameter is true if key was found, otherwise false.
+// Key should adhere to the comparator's type assertion, otherwise method panics.
 func (t *Tree) Get(key interface{}) (value interface{}, found bool) {
 	n := t.Root
 	for n != nil {
 		cmp := t.Comparator(key, n.Key)
 		switch {
-		case cmp < 0:
-			n = n.c[0]
 		case cmp == 0:
 			return n.Value, true
+		case cmp < 0:
+			n = n.c[0]
 		case cmp > 0:
 			n = n.c[1]
 		}
@@ -205,7 +202,7 @@ func (t *Tree) Remove(key interface{}) {
 				*qp = q.c[0]
 				return true
 			}
-			fix := removemin(&q.c[1], &q.Key, &q.Value)
+			fix := removeMin(&q.c[1], &q.Key, &q.Value)
 			if fix {
 				return removeFix(-1, qp)
 			}
@@ -228,7 +225,7 @@ func (t *Tree) Remove(key interface{}) {
 	remove(&t.Root)
 }
 
-func removemin(qp **Node, minKey *interface{}, minVal *interface{}) bool {
+func removeMin(qp **Node, minKey *interface{}, minVal *interface{}) bool {
 	q := *qp
 	if q.c[0] == nil {
 		*minKey = q.Key
@@ -239,7 +236,7 @@ func removemin(qp **Node, minKey *interface{}, minVal *interface{}) bool {
 		*qp = q.c[1]
 		return true
 	}
-	fix := removemin(&q.c[0], minKey, minVal)
+	fix := removeMin(&q.c[0], minKey, minVal)
 	if fix {
 		return removeFix(1, qp)
 	}
@@ -422,4 +419,45 @@ func (n *Node) walk1(a int) *Node {
 		p = p.p
 	}
 	return p
+}
+
+// String returns a string representation of container
+func (t *Tree) String() string {
+	str := "AVLTree\n"
+	if !t.Empty() {
+		output(t.Root, "", true, &str)
+	}
+	return str
+}
+
+func (n *Node) String() string {
+	return fmt.Sprintf("%v", n.Key)
+}
+
+func output(node *Node, prefix string, isTail bool, str *string) {
+	if node.c[0] != nil {
+		newPrefix := prefix
+		if isTail {
+			newPrefix += "│   "
+		} else {
+			newPrefix += "    "
+		}
+		output(node.c[0], newPrefix, false, str)
+	}
+	*str += prefix
+	if isTail {
+		*str += "└── "
+	} else {
+		*str += "┌── "
+	}
+	*str += node.String() + "\n"
+	if node.c[1] != nil {
+		newPrefix := prefix
+		if isTail {
+			newPrefix += "    "
+		} else {
+			newPrefix += "│   "
+		}
+		output(node.c[1], newPrefix, true, str)
+	}
 }
