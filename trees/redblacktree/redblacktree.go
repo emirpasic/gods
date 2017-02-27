@@ -61,13 +61,13 @@ func NewWithStringComparator() *Tree {
 }
 
 // Comparator returns the comparator function for the tree.
-func (t *Tree) Comparator() utils.Comparator {
-	return t.comparator
+func (tree *Tree) Comparator() utils.Comparator {
+	return tree.comparator
 }
 
 // New returns a new empty tree with the same comparator.
-func (t *Tree) New() trees.Tree {
-	return &Tree{comparator: t.comparator}
+func (tree *Tree) New() trees.Tree {
+	return &Tree{comparator: tree.comparator}
 }
 
 // Put inserts node into the tree.
@@ -205,8 +205,8 @@ func (tree *Tree) Right() *Node {
 
 // Min returns the minimum key value pair of the AVL tree
 // or nils if the tree is empty.
-func (t *Tree) Min() (interface{}, interface{}) {
-	n := t.Left()
+func (tree *Tree) Min() (interface{}, interface{}) {
+	n := tree.Left()
 	if n == nil {
 		return nil, nil
 	}
@@ -215,8 +215,8 @@ func (t *Tree) Min() (interface{}, interface{}) {
 
 // Max returns the minimum key value pair of the AVL tree
 // or nils if the tree is empty.
-func (t *Tree) Max() (interface{}, interface{}) {
-	n := t.Right()
+func (tree *Tree) Max() (interface{}, interface{}) {
+	n := tree.Right()
 	if n == nil {
 		return nil, nil
 	}
