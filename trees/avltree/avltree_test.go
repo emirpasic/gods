@@ -477,25 +477,17 @@ func TestAVLTreeIteratorBegin(t *testing.T) {
 	tree.Put(2, "b")
 	it := tree.Iterator()
 
-	if it.node != nil {
-		t.Errorf("Got %v expected %v", it.node, nil)
-	}
-
 	it.Begin()
 
-	if it.node != nil {
-		t.Errorf("Got %v expected %v", it.node, nil)
-	}
-
+	i := 0
 	for it.Next() {
+		i++
+	}
+	if i != 3 {
+		t.Errorf("Got %d expected %d\n", i, tree.Size())
 	}
 
 	it.Begin()
-
-	if it.node != nil {
-		t.Errorf("Got %v expected %v", it.node, nil)
-	}
-
 	it.Next()
 	if key, value := it.Key(), it.Value(); key != 1 || value != "a" {
 		t.Errorf("Got %v,%v expected %v,%v", key, value, 1, "a")
@@ -504,25 +496,22 @@ func TestAVLTreeIteratorBegin(t *testing.T) {
 
 func TestAVLTreeIteratorEnd(t *testing.T) {
 	tree := NewWithIntComparator()
-	it := tree.Iterator()
-
-	if it.node != nil {
-		t.Errorf("Got %v expected %v", it.node, nil)
-	}
-
-	it.End()
-	if it.node != nil {
-		t.Errorf("Got %v expected %v", it.node, nil)
-	}
-
 	tree.Put(3, "c")
 	tree.Put(1, "a")
 	tree.Put(2, "b")
+	it := tree.Iterator()
+
 	it.End()
-	if it.node != nil {
-		t.Errorf("Got %v expected %v", it.node, nil)
+
+	i := 0
+	for it.Prev() {
+		i++
+	}
+	if i != 3 {
+		t.Errorf("Got %d expected %d\n", i, tree.Size())
 	}
 
+	it.End()
 	it.Prev()
 	if key, value := it.Key(), it.Value(); key != 3 || value != "c" {
 		t.Errorf("Got %v,%v expected %v,%v", key, value, 3, "c")
