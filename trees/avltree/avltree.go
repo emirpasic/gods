@@ -38,17 +38,17 @@ type Node struct {
 	b     int8
 }
 
-// NewWith instantiates a red-black tree with the custom comparator.
+// NewWith instantiates an AVL tree with the custom comparator.
 func NewWith(comparator utils.Comparator) *Tree {
 	return &Tree{Comparator: comparator}
 }
 
-// NewWithIntComparator instantiates a red-black tree with the IntComparator, i.e. keys are of type int.
+// NewWithIntComparator instantiates an AVL tree with the IntComparator, i.e. keys are of type int.
 func NewWithIntComparator() *Tree {
 	return &Tree{Comparator: utils.IntComparator}
 }
 
-// NewWithStringComparator instantiates a red-black tree with the StringComparator, i.e. keys are of type string.
+// NewWithStringComparator instantiates an AVL tree with the StringComparator, i.e. keys are of type string.
 func NewWithStringComparator() *Tree {
 	return &Tree{Comparator: utils.StringComparator}
 }
