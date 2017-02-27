@@ -4,10 +4,7 @@
 
 package treemap
 
-import (
-	"github.com/emirpasic/gods/containers"
-	rbt "github.com/emirpasic/gods/trees/redblacktree"
-)
+import "github.com/emirpasic/gods/containers"
 
 func assertEnumerableImplementation() {
 	var _ containers.EnumerableWithKey = (*Map)(nil)
@@ -24,7 +21,7 @@ func (m *Map) Each(f func(key interface{}, value interface{})) {
 // Map invokes the given function once for each element and returns a container
 // containing the values returned by the given function as key/value pairs.
 func (m *Map) Map(f func(key1 interface{}, value1 interface{}) (interface{}, interface{})) *Map {
-	newMap := &Map{tree: rbt.NewWith(m.tree.Comparator)}
+	newMap := &Map{tree: m.tree.New()}
 	iterator := m.Iterator()
 	for iterator.Next() {
 		key2, value2 := f(iterator.Key(), iterator.Value())
@@ -35,7 +32,7 @@ func (m *Map) Map(f func(key1 interface{}, value1 interface{}) (interface{}, int
 
 // Select returns a new container containing all elements for which the given function returns a true value.
 func (m *Map) Select(f func(key interface{}, value interface{}) bool) *Map {
-	newMap := &Map{tree: rbt.NewWith(m.tree.Comparator)}
+	newMap := &Map{tree: m.tree.New()}
 	iterator := m.Iterator()
 	for iterator.Next() {
 		if f(iterator.Key(), iterator.Value()) {

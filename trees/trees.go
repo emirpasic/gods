@@ -23,6 +23,8 @@ type Tree interface {
 	Remove(key interface{})
 	Get(key interface{}) (interface{}, bool)
 	Keys() []interface{}
+	Min() (interface{}, interface{})
+	Max() (interface{}, interface{})
 
 	containers.Container
 	// Empty() bool

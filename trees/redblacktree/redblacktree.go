@@ -203,6 +203,26 @@ func (tree *Tree) Right() *Node {
 	return parent
 }
 
+// Min returns the minimum key value pair of the AVL tree
+// or nils if the tree is empty.
+func (t *Tree) Min() (interface{}, interface{}) {
+	n := t.Left()
+	if n == nil {
+		return nil, nil
+	}
+	return n.Key, n.Value
+}
+
+// Max returns the minimum key value pair of the AVL tree
+// or nils if the tree is empty.
+func (t *Tree) Max() (interface{}, interface{}) {
+	n := t.Right()
+	if n == nil {
+		return nil, nil
+	}
+	return n.Key, n.Value
+}
+
 // Floor Finds floor node of the input key, return the floor node or nil if no ceiling is found.
 // Second return parameter is true if floor was found, otherwise false.
 //

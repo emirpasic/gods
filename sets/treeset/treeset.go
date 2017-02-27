@@ -46,7 +46,7 @@ func NewWithStringComparator() *Set {
 }
 
 // NewWithTree instantiates a new empty set with given tree
-func NewWithTree(tree trees.Tree) (set *Set) {
+func NewWithTree(tree trees.Tree) *Set {
 	return &Set{tree: tree}
 }
 
