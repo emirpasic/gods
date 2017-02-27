@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/emirpasic/gods/trees/avltree"
+	"github.com/spewspews/gods/trees/avltree"
 )
 
 func TestMapPut(t *testing.T) {
