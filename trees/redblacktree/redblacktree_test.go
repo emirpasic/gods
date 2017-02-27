@@ -6,19 +6,8 @@ package redblacktree
 
 import (
 	"fmt"
-	"math/rand"
-	"os"
 	"testing"
-	"time"
 )
-
-var rng *rand.Rand
-
-func TestMain(m *testing.M) {
-	seed := time.Now().UTC().UnixNano()
-	rng = rand.New(rand.NewSource(seed))
-	os.Exit(m.Run())
-}
 
 func TestRedBlackTreePut(t *testing.T) {
 	tree := NewWithIntComparator()
@@ -30,7 +19,7 @@ func TestRedBlackTreePut(t *testing.T) {
 	tree.Put(1, "x")
 	tree.Put(2, "b")
 	tree.Put(1, "a") //overwrite
-	t.Log(tree)
+
 	if actualValue := tree.Size(); actualValue != 7 {
 		t.Errorf("Got %v expected %v", actualValue, 7)
 	}
@@ -568,15 +557,7 @@ func TestRedBlackTreeIteratorLast(t *testing.T) {
 	}
 }
 
-func newRandomIntTree(size, randMax int) *Tree {
-	tree := NewWithIntComparator()
-	for i := 0; i < size; i++ {
-		tree.Put(rng.Intn(randMax), nil)
-	}
-	return tree
-}
-
-func (tree *Tree) benchmarkGet(b *testing.B, size int) {
+func benchmarkGet(b *testing.B, tree *Tree, size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			tree.Get(n)
@@ -584,280 +565,147 @@ func (tree *Tree) benchmarkGet(b *testing.B, size int) {
 	}
 }
 
-func (tree *Tree) benchmarkGetRandom(b *testing.B, size, randMax int) {
+func benchmarkPut(b *testing.B, tree *Tree, size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
-			tree.Get(rng.Intn(randMax))
+			tree.Put(n, struct{}{})
 		}
 	}
 }
 
-func (tree *Tree) benchmarkPut(b *testing.B, size int) {
+func benchmarkRemove(b *testing.B, tree *Tree, size int) {
 	for i := 0; i < b.N; i++ {
-		for n := 0; n < size; n++ {
-			tree.Put(n, nil)
-		}
-		tree.Empty()
-	}
-}
-
-func (tree *Tree) benchmarkPutRandom(b *testing.B, size, randMax int) {
-	for i := 0; i < b.N; i++ {
-		for n := 0; n < size; n++ {
-			tree.Put(rng.Intn(randMax), nil)
-		}
-		tree.Empty()
-	}
-}
-
-func (tree *Tree) benchmarkPutAndRemove(b *testing.B, size int) {
-	for i := 0; i < b.N; i++ {
-		for n := 0; n < size; n++ {
-			tree.Put(n, nil)
-		}
 		for n := 0; n < size; n++ {
 			tree.Remove(n)
 		}
-		tree.Empty()
 	}
 }
 
-func (tree *Tree) benchmarkPutAndRemoveRandom(b *testing.B, size int, randMax int) {
-	for i := 0; i < b.N; i++ {
-		for n := 0; n < size; n++ {
-			tree.Put(rng.Intn(randMax), nil)
-		}
-		for n := 0; n < size; n++ {
-			tree.Remove(rng.Intn(randMax))
-		}
-		tree.Empty()
-	}
-}
-
-func BenchmarkRBTGet100(b *testing.B) {
+func BenchmarkRedBlackTreeGet100(b *testing.B) {
 	b.StopTimer()
 	size := 100
 	tree := NewWithIntComparator()
 	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
+		tree.Put(n, struct{}{})
 	}
 	b.StartTimer()
-	tree.benchmarkGet(b, size)
+	benchmarkGet(b, tree, size)
 }
 
-func BenchmarkRBTGet1000(b *testing.B) {
+func BenchmarkRedBlackTreeGet1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
 	tree := NewWithIntComparator()
 	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
+		tree.Put(n, struct{}{})
 	}
 	b.StartTimer()
-	tree.benchmarkGet(b, size)
+	benchmarkGet(b, tree, size)
 }
 
-func BenchmarkRBTGet10000(b *testing.B) {
+func BenchmarkRedBlackTreeGet10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
 	tree := NewWithIntComparator()
 	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
+		tree.Put(n, struct{}{})
 	}
 	b.StartTimer()
-	tree.benchmarkGet(b, size)
+	benchmarkGet(b, tree, size)
 }
 
-func BenchmarkRBTGet100000(b *testing.B) {
+func BenchmarkRedBlackTreeGet100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
 	tree := NewWithIntComparator()
 	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
+		tree.Put(n, struct{}{})
 	}
 	b.StartTimer()
-	tree.benchmarkGet(b, size)
+	benchmarkGet(b, tree, size)
 }
 
-func BenchmarkRBTGetRandom100(b *testing.B) {
-	b.StopTimer()
-	size := 100
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkGetRandom(b, size, size*3)
-}
-
-func BenchmarkRBTGetRandom1000(b *testing.B) {
-	b.StopTimer()
-	size := 1000
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkGetRandom(b, size, size*3)
-}
-
-func BenchmarkRBTGetRandom10000(b *testing.B) {
-	b.StopTimer()
-	size := 10000
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkGetRandom(b, size, size*3)
-}
-
-func BenchmarkRBTGetRandom100000(b *testing.B) {
-	b.StopTimer()
-	size := 100000
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkGetRandom(b, size, size*3)
-}
-
-func BenchmarkRBTPut100(b *testing.B) {
+func BenchmarkRedBlackTreePut100(b *testing.B) {
 	b.StopTimer()
 	size := 100
 	tree := NewWithIntComparator()
-	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
-	}
 	b.StartTimer()
-	tree.benchmarkPut(b, size)
+	benchmarkPut(b, tree, size)
 }
 
-func BenchmarkRBTPut1000(b *testing.B) {
+func BenchmarkRedBlackTreePut1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
 	tree := NewWithIntComparator()
 	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
+		tree.Put(n, struct{}{})
 	}
 	b.StartTimer()
-	tree.benchmarkPut(b, size)
+	benchmarkPut(b, tree, size)
 }
 
-func BenchmarkRBTPut10000(b *testing.B) {
+func BenchmarkRedBlackTreePut10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
 	tree := NewWithIntComparator()
 	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
+		tree.Put(n, struct{}{})
 	}
 	b.StartTimer()
-	tree.benchmarkPut(b, size)
+	benchmarkPut(b, tree, size)
 }
 
-func BenchmarkRBTPut100000(b *testing.B) {
+func BenchmarkRedBlackTreePut100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
 	tree := NewWithIntComparator()
 	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
+		tree.Put(n, struct{}{})
 	}
 	b.StartTimer()
-	tree.benchmarkPut(b, size)
+	benchmarkPut(b, tree, size)
 }
 
-func BenchmarkRBTPutRandom100(b *testing.B) {
-	b.StopTimer()
-	size := 100
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkPutRandom(b, size, size*3)
-}
-
-func BenchmarkRBTPutRandom1000(b *testing.B) {
-	b.StopTimer()
-	size := 1000
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkPutRandom(b, size, size*3)
-}
-
-func BenchmarkRBTPutRandom10000(b *testing.B) {
-	b.StopTimer()
-	size := 10000
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkPutRandom(b, size, size*3)
-}
-
-func BenchmarkRBTPutRandom100000(b *testing.B) {
-	b.StopTimer()
-	size := 100000
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkPutRandom(b, size, size*3)
-}
-
-func BenchmarkRBTPutAndRemove100(b *testing.B) {
+func BenchmarkRedBlackTreeRemove100(b *testing.B) {
 	b.StopTimer()
 	size := 100
 	tree := NewWithIntComparator()
 	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
+		tree.Put(n, struct{}{})
 	}
 	b.StartTimer()
-	tree.benchmarkPutAndRemove(b, size)
+	benchmarkRemove(b, tree, size)
 }
 
-func BenchmarkRBTPutAndRemove1000(b *testing.B) {
+func BenchmarkRedBlackTreeRemove1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
 	tree := NewWithIntComparator()
 	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
+		tree.Put(n, struct{}{})
 	}
 	b.StartTimer()
-	tree.benchmarkPutAndRemove(b, size)
+	benchmarkRemove(b, tree, size)
 }
 
-func BenchmarkRBTPutAndRemove10000(b *testing.B) {
+func BenchmarkRedBlackTreeRemove10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
 	tree := NewWithIntComparator()
 	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
+		tree.Put(n, struct{}{})
 	}
 	b.StartTimer()
-	tree.benchmarkPutAndRemove(b, size)
+	benchmarkRemove(b, tree, size)
 }
 
-func BenchmarkRBTPutAndRemove100000(b *testing.B) {
+func BenchmarkRedBlackTreeRemove100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
 	tree := NewWithIntComparator()
 	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
+		tree.Put(n, struct{}{})
 	}
 	b.StartTimer()
-	tree.benchmarkPutAndRemove(b, size)
-}
-
-func BenchmarkRBTPutAndRemoveRandom100(b *testing.B) {
-	b.StopTimer()
-	size := 100
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkPutAndRemoveRandom(b, size, size*3)
-}
-
-func BenchmarkRBTPutAndRemoveRandom1000(b *testing.B) {
-	b.StopTimer()
-	size := 1000
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkPutAndRemoveRandom(b, size, size*3)
-}
-
-func BenchmarkRBTPutAndRemoveRandom10000(b *testing.B) {
-	b.StopTimer()
-	size := 10000
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkPutAndRemoveRandom(b, size, size*3)
-}
-
-func BenchmarkRBTPutAndRemoveRandom100000(b *testing.B) {
-	b.StopTimer()
-	size := 100000
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkPutAndRemoveRandom(b, size, size*3)
+	benchmarkRemove(b, tree, size)
 }

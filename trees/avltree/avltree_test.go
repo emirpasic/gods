@@ -6,21 +6,10 @@ package avltree
 
 import (
 	"fmt"
-	"math/rand"
-	"os"
 	"testing"
-	"time"
 )
 
-var rng *rand.Rand
-
-func TestMain(m *testing.M) {
-	seed := time.Now().UTC().UnixNano()
-	rng = rand.New(rand.NewSource(seed))
-	os.Exit(m.Run())
-}
-
-func TestAVLPut(t *testing.T) {
+func TestAVLTreePut(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(5, "e")
 	tree.Put(6, "f")
@@ -61,7 +50,7 @@ func TestAVLPut(t *testing.T) {
 	}
 }
 
-func TestAVLRemove(t *testing.T) {
+func TestAVLTreeRemove(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(5, "e")
 	tree.Put(6, "f")
@@ -128,7 +117,7 @@ func TestAVLRemove(t *testing.T) {
 
 }
 
-func TestAVLLeftAndRight(t *testing.T) {
+func TestAVLTreeLeftAndRight(t *testing.T) {
 	tree := NewWithIntComparator()
 
 	if actualValue := tree.Left(); actualValue != nil {
@@ -162,7 +151,7 @@ func TestAVLLeftAndRight(t *testing.T) {
 	}
 }
 
-func TestAVLCeilingAndFloor(t *testing.T) {
+func TestAVLTreeCeilingAndFloor(t *testing.T) {
 	tree := NewWithIntComparator()
 
 	if node, found := tree.Floor(0); node != nil || found {
@@ -195,7 +184,7 @@ func TestAVLCeilingAndFloor(t *testing.T) {
 	}
 }
 
-func TestAVLIteratorNextOnEmpty(t *testing.T) {
+func TestAVLTreeIteratorNextOnEmpty(t *testing.T) {
 	tree := NewWithIntComparator()
 	it := tree.Iterator()
 	for it.Next() {
@@ -203,7 +192,7 @@ func TestAVLIteratorNextOnEmpty(t *testing.T) {
 	}
 }
 
-func TestAVLIteratorPrevOnEmpty(t *testing.T) {
+func TestAVLTreeIteratorPrevOnEmpty(t *testing.T) {
 	tree := NewWithIntComparator()
 	it := tree.Iterator()
 	for it.Prev() {
@@ -211,7 +200,7 @@ func TestAVLIteratorPrevOnEmpty(t *testing.T) {
 	}
 }
 
-func TestAVLIterator1Next(t *testing.T) {
+func TestAVLTreeIterator1Next(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(5, "e")
 	tree.Put(6, "f")
@@ -249,7 +238,7 @@ func TestAVLIterator1Next(t *testing.T) {
 	}
 }
 
-func TestAVLIterator1Prev(t *testing.T) {
+func TestAVLTreeIterator1Prev(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(5, "e")
 	tree.Put(6, "f")
@@ -289,7 +278,7 @@ func TestAVLIterator1Prev(t *testing.T) {
 	}
 }
 
-func TestAVLIterator2Next(t *testing.T) {
+func TestAVLTreeIterator2Next(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(3, "c")
 	tree.Put(1, "a")
@@ -315,7 +304,7 @@ func TestAVLIterator2Next(t *testing.T) {
 	}
 }
 
-func TestAVLIterator2Prev(t *testing.T) {
+func TestAVLTreeIterator2Prev(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(3, "c")
 	tree.Put(1, "a")
@@ -343,7 +332,7 @@ func TestAVLIterator2Prev(t *testing.T) {
 	}
 }
 
-func TestAVLIterator3Next(t *testing.T) {
+func TestAVLTreeIterator3Next(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(1, "a")
 	it := tree.Iterator()
@@ -367,7 +356,7 @@ func TestAVLIterator3Next(t *testing.T) {
 	}
 }
 
-func TestAVLIterator3Prev(t *testing.T) {
+func TestAVLTreeIterator3Prev(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(1, "a")
 	it := tree.Iterator()
@@ -393,7 +382,7 @@ func TestAVLIterator3Prev(t *testing.T) {
 	}
 }
 
-func TestAVLIterator4Next(t *testing.T) {
+func TestAVLTreeIterator4Next(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(13, 5)
 	tree.Put(8, 3)
@@ -436,7 +425,7 @@ func TestAVLIterator4Next(t *testing.T) {
 	}
 }
 
-func TestAVLIterator4Prev(t *testing.T) {
+func TestAVLTreeIterator4Prev(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(13, 5)
 	tree.Put(8, 3)
@@ -481,7 +470,7 @@ func TestAVLIterator4Prev(t *testing.T) {
 	}
 }
 
-func TestAVLIteratorBegin(t *testing.T) {
+func TestAVLTreeIteratorBegin(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(3, "c")
 	tree.Put(1, "a")
@@ -513,7 +502,7 @@ func TestAVLIteratorBegin(t *testing.T) {
 	}
 }
 
-func TestAVLIteratorEnd(t *testing.T) {
+func TestAVLTreeIteratorEnd(t *testing.T) {
 	tree := NewWithIntComparator()
 	it := tree.Iterator()
 
@@ -540,7 +529,7 @@ func TestAVLIteratorEnd(t *testing.T) {
 	}
 }
 
-func TestAVLIteratorFirst(t *testing.T) {
+func TestAVLTreeIteratorFirst(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(3, "c")
 	tree.Put(1, "a")
@@ -554,7 +543,7 @@ func TestAVLIteratorFirst(t *testing.T) {
 	}
 }
 
-func TestAVLIteratorLast(t *testing.T) {
+func TestAVLTreeIteratorLast(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(3, "c")
 	tree.Put(1, "a")
@@ -568,15 +557,7 @@ func TestAVLIteratorLast(t *testing.T) {
 	}
 }
 
-func newRandomIntTree(size, randMax int) *Tree {
-	tree := NewWithIntComparator()
-	for i := 0; i < size; i++ {
-		tree.Put(rng.Intn(randMax), nil)
-	}
-	return tree
-}
-
-func (tree *Tree) benchmarkGet(b *testing.B, size int) {
+func benchmarkGet(b *testing.B, tree *Tree, size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			tree.Get(n)
@@ -584,280 +565,147 @@ func (tree *Tree) benchmarkGet(b *testing.B, size int) {
 	}
 }
 
-func (tree *Tree) benchmarkGetRandom(b *testing.B, size, randMax int) {
+func benchmarkPut(b *testing.B, tree *Tree, size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
-			tree.Get(rng.Intn(randMax))
+			tree.Put(n, struct{}{})
 		}
 	}
 }
 
-func (tree *Tree) benchmarkPut(b *testing.B, size int) {
+func benchmarkRemove(b *testing.B, tree *Tree, size int) {
 	for i := 0; i < b.N; i++ {
-		for n := 0; n < size; n++ {
-			tree.Put(n, nil)
-		}
-		tree.Empty()
-	}
-}
-
-func (tree *Tree) benchmarkPutRandom(b *testing.B, size, randMax int) {
-	for i := 0; i < b.N; i++ {
-		for n := 0; n < size; n++ {
-			tree.Put(rng.Intn(randMax), nil)
-		}
-		tree.Empty()
-	}
-}
-
-func (tree *Tree) benchmarkPutAndRemove(b *testing.B, size int) {
-	for i := 0; i < b.N; i++ {
-		for n := 0; n < size; n++ {
-			tree.Put(n, nil)
-		}
 		for n := 0; n < size; n++ {
 			tree.Remove(n)
 		}
-		tree.Empty()
 	}
 }
 
-func (tree *Tree) benchmarkPutAndRemoveRandom(b *testing.B, size int, randMax int) {
-	for i := 0; i < b.N; i++ {
-		for n := 0; n < size; n++ {
-			tree.Put(rng.Intn(randMax), nil)
-		}
-		for n := 0; n < size; n++ {
-			tree.Remove(rng.Intn(randMax))
-		}
-		tree.Empty()
-	}
-}
-
-func BenchmarkAVLGet100(b *testing.B) {
+func BenchmarkAVLTreeGet100(b *testing.B) {
 	b.StopTimer()
 	size := 100
 	tree := NewWithIntComparator()
 	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
+		tree.Put(n, struct{}{})
 	}
 	b.StartTimer()
-	tree.benchmarkGet(b, size)
+	benchmarkGet(b, tree, size)
 }
 
-func BenchmarkAVLGet1000(b *testing.B) {
+func BenchmarkAVLTreeGet1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
 	tree := NewWithIntComparator()
 	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
+		tree.Put(n, struct{}{})
 	}
 	b.StartTimer()
-	tree.benchmarkGet(b, size)
+	benchmarkGet(b, tree, size)
 }
 
-func BenchmarkAVLGet10000(b *testing.B) {
+func BenchmarkAVLTreeGet10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
 	tree := NewWithIntComparator()
 	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
+		tree.Put(n, struct{}{})
 	}
 	b.StartTimer()
-	tree.benchmarkGet(b, size)
+	benchmarkGet(b, tree, size)
 }
 
-func BenchmarkAVLGet100000(b *testing.B) {
+func BenchmarkAVLTreeGet100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
 	tree := NewWithIntComparator()
 	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
+		tree.Put(n, struct{}{})
 	}
 	b.StartTimer()
-	tree.benchmarkGet(b, size)
+	benchmarkGet(b, tree, size)
 }
 
-func BenchmarkAVLGetRandom100(b *testing.B) {
-	b.StopTimer()
-	size := 100
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkGetRandom(b, size, size*3)
-}
-
-func BenchmarkAVLGetRandom1000(b *testing.B) {
-	b.StopTimer()
-	size := 1000
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkGetRandom(b, size, size*3)
-}
-
-func BenchmarkAVLGetRandom10000(b *testing.B) {
-	b.StopTimer()
-	size := 10000
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkGetRandom(b, size, size*3)
-}
-
-func BenchmarkAVLGetRandom100000(b *testing.B) {
-	b.StopTimer()
-	size := 100000
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkGetRandom(b, size, size*3)
-}
-
-func BenchmarkAVLPut100(b *testing.B) {
+func BenchmarkAVLTreePut100(b *testing.B) {
 	b.StopTimer()
 	size := 100
 	tree := NewWithIntComparator()
-	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
-	}
 	b.StartTimer()
-	tree.benchmarkPut(b, size)
+	benchmarkPut(b, tree, size)
 }
 
-func BenchmarkAVLPut1000(b *testing.B) {
+func BenchmarkAVLTreePut1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
 	tree := NewWithIntComparator()
 	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
+		tree.Put(n, struct{}{})
 	}
 	b.StartTimer()
-	tree.benchmarkPut(b, size)
+	benchmarkPut(b, tree, size)
 }
 
-func BenchmarkAVLPut10000(b *testing.B) {
+func BenchmarkAVLTreePut10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
 	tree := NewWithIntComparator()
 	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
+		tree.Put(n, struct{}{})
 	}
 	b.StartTimer()
-	tree.benchmarkPut(b, size)
+	benchmarkPut(b, tree, size)
 }
 
-func BenchmarkAVLPut100000(b *testing.B) {
+func BenchmarkAVLTreePut100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
 	tree := NewWithIntComparator()
 	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
+		tree.Put(n, struct{}{})
 	}
 	b.StartTimer()
-	tree.benchmarkPut(b, size)
+	benchmarkPut(b, tree, size)
 }
 
-func BenchmarkAVLPutRandom100(b *testing.B) {
-	b.StopTimer()
-	size := 100
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkPutRandom(b, size, size*3)
-}
-
-func BenchmarkAVLPutRandom1000(b *testing.B) {
-	b.StopTimer()
-	size := 1000
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkPutRandom(b, size, size*3)
-}
-
-func BenchmarkAVLPutRandom10000(b *testing.B) {
-	b.StopTimer()
-	size := 10000
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkPutRandom(b, size, size*3)
-}
-
-func BenchmarkAVLPutRandom100000(b *testing.B) {
-	b.StopTimer()
-	size := 100000
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkPutRandom(b, size, size*3)
-}
-
-func BenchmarkAVLPutAndRemove100(b *testing.B) {
+func BenchmarkAVLTreeRemove100(b *testing.B) {
 	b.StopTimer()
 	size := 100
 	tree := NewWithIntComparator()
 	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
+		tree.Put(n, struct{}{})
 	}
 	b.StartTimer()
-	tree.benchmarkPutAndRemove(b, size)
+	benchmarkRemove(b, tree, size)
 }
 
-func BenchmarkAVLPutAndRemove1000(b *testing.B) {
+func BenchmarkAVLTreeRemove1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
 	tree := NewWithIntComparator()
 	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
+		tree.Put(n, struct{}{})
 	}
 	b.StartTimer()
-	tree.benchmarkPutAndRemove(b, size)
+	benchmarkRemove(b, tree, size)
 }
 
-func BenchmarkAVLPutAndRemove10000(b *testing.B) {
+func BenchmarkAVLTreeRemove10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
 	tree := NewWithIntComparator()
 	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
+		tree.Put(n, struct{}{})
 	}
 	b.StartTimer()
-	tree.benchmarkPutAndRemove(b, size)
+	benchmarkRemove(b, tree, size)
 }
 
-func BenchmarkAVLPutAndRemove100000(b *testing.B) {
+func BenchmarkAVLTreeRemove100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
 	tree := NewWithIntComparator()
 	for n := 0; n < size; n++ {
-		tree.Put(n, nil)
+		tree.Put(n, struct{}{})
 	}
 	b.StartTimer()
-	tree.benchmarkPutAndRemove(b, size)
-}
-
-func BenchmarkAVLPutAndRemoveRandom100(b *testing.B) {
-	b.StopTimer()
-	size := 100
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkPutAndRemoveRandom(b, size, size*3)
-}
-
-func BenchmarkAVLPutAndRemoveRandom1000(b *testing.B) {
-	b.StopTimer()
-	size := 1000
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkPutAndRemoveRandom(b, size, size*3)
-}
-
-func BenchmarkAVLPutAndRemoveRandom10000(b *testing.B) {
-	b.StopTimer()
-	size := 10000
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkPutAndRemoveRandom(b, size, size*3)
-}
-
-func BenchmarkAVLPutAndRemoveRandom100000(b *testing.B) {
-	b.StopTimer()
-	size := 100000
-	tree := newRandomIntTree(size, size*3)
-	b.StartTimer()
-	tree.benchmarkPutAndRemoveRandom(b, size, size*3)
+	benchmarkRemove(b, tree, size)
 }
