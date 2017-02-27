@@ -6,7 +6,7 @@ package treeset
 
 import (
 	"github.com/emirpasic/gods/containers"
-	rbt "github.com/spewspews/gods/trees/redblacktree"
+	rbt "github.com/emirpasic/gods/trees/redblacktree"
 )
 
 func assertEnumerableImplementation() {

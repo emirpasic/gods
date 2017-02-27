@@ -12,8 +12,8 @@ import (
 	"io/ioutil"
 	"log"
 
+	"github.com/emirpasic/gods/trees"
 	"github.com/emirpasic/gods/utils"
-	"github.com/spewspews/gods/trees"
 )
 
 func assertTreeImplementation() {

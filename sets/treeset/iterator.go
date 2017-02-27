@@ -6,7 +6,7 @@ package treeset
 
 import (
 	"github.com/emirpasic/gods/containers"
-	"github.com/spewspews/gods/trees"
+	"github.com/emirpasic/gods/trees"
 )
 
 func assertIteratorImplementation() {

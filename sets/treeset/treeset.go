@@ -14,9 +14,9 @@ import (
 	"strings"
 
 	"github.com/emirpasic/gods/sets"
+	"github.com/emirpasic/gods/trees"
+	rbt "github.com/emirpasic/gods/trees/redblacktree"
 	"github.com/emirpasic/gods/utils"
-	"github.com/spewspews/gods/trees"
-	rbt "github.com/spewspews/gods/trees/redblacktree"
 )
 
 func assertSetImplementation() {
