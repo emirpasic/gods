@@ -21,7 +21,7 @@ func (m *Map) Each(f func(key interface{}, value interface{})) {
 // Map invokes the given function once for each element and returns a container
 // containing the values returned by the given function as key/value pairs.
 func (m *Map) Map(f func(key1 interface{}, value1 interface{}) (interface{}, interface{})) *Map {
-	newMap := NewWith(m.keyComparator, m.valueComparator)
+	newMap := NewWithTrees(m.forwardMap.New(), m.inverseMap.New())
 	iterator := m.Iterator()
 	for iterator.Next() {
 		key2, value2 := f(iterator.Key(), iterator.Value())
@@ -32,7 +32,7 @@ func (m *Map) Map(f func(key1 interface{}, value1 interface{}) (interface{}, int
 
 // Select returns a new container containing all elements for which the given function returns a true value.
 func (m *Map) Select(f func(key interface{}, value interface{}) bool) *Map {
-	newMap := NewWith(m.keyComparator, m.valueComparator)
+	newMap := NewWithTrees(m.forwardMap.New(), m.inverseMap.New())
 	iterator := m.Iterator()
 	for iterator.Next() {
 		if f(iterator.Key(), iterator.Value()) {

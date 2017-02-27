@@ -4,10 +4,7 @@
 
 package treeset
 
-import (
-	"github.com/emirpasic/gods/containers"
-	rbt "github.com/spewspews/gods/trees/redblacktree"
-)
+import "github.com/emirpasic/gods/containers"
 
 func assertEnumerableImplementation() {
 	var _ containers.EnumerableWithIndex = (*Set)(nil)
@@ -34,7 +31,7 @@ func (set *Set) Map(f func(index int, value interface{}) interface{}) *Set {
 
 // Select returns a new container containing all elements for which the given function returns a true value.
 func (set *Set) Select(f func(index int, value interface{}) bool) *Set {
-	newSet := &Set{tree: rbt.NewWith(set.tree.Comparator())}
+	newSet := NewWithTree(set.tree.New())
 	iterator := set.Iterator()
 	for iterator.Next() {
 		if f(iterator.Index(), iterator.Value()) {
