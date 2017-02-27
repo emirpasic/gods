@@ -7,10 +7,30 @@ package treeset
 import (
 	"fmt"
 	"testing"
+
+	"github.com/spewspews/gods/trees/avltree"
 )
 
 func TestSetAdd(t *testing.T) {
 	set := NewWithIntComparator()
+	set.Add()
+	set.Add(1)
+	set.Add(2)
+	set.Add(2, 3)
+	set.Add()
+	if actualValue := set.Empty(); actualValue != false {
+		t.Errorf("Got %v expected %v", actualValue, false)
+	}
+	if actualValue := set.Size(); actualValue != 3 {
+		t.Errorf("Got %v expected %v", actualValue, 3)
+	}
+	if actualValue, expectedValue := fmt.Sprintf("%d%d%d", set.Values()...), "123"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+}
+
+func TestSetAVLAdd(t *testing.T) {
+	set := NewWithTree(avltree.NewWithIntComparator())
 	set.Add()
 	set.Add(1)
 	set.Add(2)

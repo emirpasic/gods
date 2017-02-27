@@ -9,10 +9,21 @@
 // Reference: https://en.wikipedia.org/wiki/Tree_%28data_structure%29
 package trees
 
-import "github.com/emirpasic/gods/containers"
+import (
+	"github.com/emirpasic/gods/containers"
+	"github.com/emirpasic/gods/utils"
+)
 
 // Tree interface that all trees implement
 type Tree interface {
+	Comparator() utils.Comparator
+	New() Tree
+	Iterator() containers.ReverseIteratorWithKey
+	Put(key interface{}, value interface{})
+	Remove(key interface{})
+	Get(key interface{}) (interface{}, bool)
+	Keys() []interface{}
+
 	containers.Container
 	// Empty() bool
 	// Size() int

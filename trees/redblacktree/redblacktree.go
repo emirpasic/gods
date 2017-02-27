@@ -13,8 +13,9 @@ package redblacktree
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/trees"
+
 	"github.com/emirpasic/gods/utils"
+	"github.com/spewspews/gods/trees"
 )
 
 func assertTreeImplementation() {
@@ -31,7 +32,7 @@ const (
 type Tree struct {
 	Root       *Node
 	size       int
-	Comparator utils.Comparator
+	comparator utils.Comparator
 }
 
 // Node is a single element within the tree
@@ -46,17 +47,27 @@ type Node struct {
 
 // NewWith instantiates a red-black tree with the custom comparator.
 func NewWith(comparator utils.Comparator) *Tree {
-	return &Tree{Comparator: comparator}
+	return &Tree{comparator: comparator}
 }
 
 // NewWithIntComparator instantiates a red-black tree with the IntComparator, i.e. keys are of type int.
 func NewWithIntComparator() *Tree {
-	return &Tree{Comparator: utils.IntComparator}
+	return &Tree{comparator: utils.IntComparator}
 }
 
 // NewWithStringComparator instantiates a red-black tree with the StringComparator, i.e. keys are of type string.
 func NewWithStringComparator() *Tree {
-	return &Tree{Comparator: utils.StringComparator}
+	return &Tree{comparator: utils.StringComparator}
+}
+
+// Comparator returns the comparator function for the tree.
+func (t *Tree) Comparator() utils.Comparator {
+	return t.comparator
+}
+
+// New returns a new empty tree with the same comparator.
+func (t *Tree) New() trees.Tree {
+	return &Tree{comparator: t.comparator}
 }
 
 // Put inserts node into the tree.
@@ -69,7 +80,7 @@ func (tree *Tree) Put(key interface{}, value interface{}) {
 		node := tree.Root
 		loop := true
 		for loop {
-			compare := tree.Comparator(key, node.Key)
+			compare := tree.comparator(key, node.Key)
 			switch {
 			case compare == 0:
 				node.Key = key
@@ -204,7 +215,7 @@ func (tree *Tree) Floor(key interface{}) (floor *Node, found bool) {
 	found = false
 	node := tree.Root
 	for node != nil {
-		compare := tree.Comparator(key, node.Key)
+		compare := tree.comparator(key, node.Key)
 		switch {
 		case compare == 0:
 			return node, true
@@ -233,7 +244,7 @@ func (tree *Tree) Ceiling(key interface{}) (ceiling *Node, found bool) {
 	found = false
 	node := tree.Root
 	for node != nil {
-		compare := tree.Comparator(key, node.Key)
+		compare := tree.comparator(key, node.Key)
 		switch {
 		case compare == 0:
 			return node, true
@@ -300,7 +311,7 @@ func output(node *Node, prefix string, isTail bool, str *string) {
 func (tree *Tree) lookup(key interface{}) *Node {
 	node := tree.Root
 	for node != nil {
-		compare := tree.Comparator(key, node.Key)
+		compare := tree.comparator(key, node.Key)
 		switch {
 		case compare == 0:
 			return node

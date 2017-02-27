@@ -6,7 +6,7 @@ package treeset
 
 import (
 	"github.com/emirpasic/gods/containers"
-	rbt "github.com/emirpasic/gods/trees/redblacktree"
+	rbt "github.com/spewspews/gods/trees/redblacktree"
 )
 
 func assertEnumerableImplementation() {
@@ -24,7 +24,7 @@ func (set *Set) Each(f func(index int, value interface{})) {
 // Map invokes the given function once for each element and returns a
 // container containing the values returned by the given function.
 func (set *Set) Map(f func(index int, value interface{}) interface{}) *Set {
-	newSet := &Set{tree: rbt.NewWith(set.tree.Comparator)}
+	newSet := &Set{tree: set.tree.New()}
 	iterator := set.Iterator()
 	for iterator.Next() {
 		newSet.Add(f(iterator.Index(), iterator.Value()))
@@ -34,7 +34,7 @@ func (set *Set) Map(f func(index int, value interface{}) interface{}) *Set {
 
 // Select returns a new container containing all elements for which the given function returns a true value.
 func (set *Set) Select(f func(index int, value interface{}) bool) *Set {
-	newSet := &Set{tree: rbt.NewWith(set.tree.Comparator)}
+	newSet := &Set{tree: rbt.NewWith(set.tree.Comparator())}
 	iterator := set.Iterator()
 	for iterator.Next() {
 		if f(iterator.Index(), iterator.Value()) {

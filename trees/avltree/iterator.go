@@ -24,8 +24,8 @@ const (
 )
 
 // Iterator returns a stateful iterator whose elements are key/value pairs.
-func (tree *Tree) Iterator() Iterator {
-	return Iterator{tree: tree, node: nil, position: begin}
+func (tree *Tree) Iterator() containers.ReverseIteratorWithKey {
+	return &Iterator{tree: tree, node: nil, position: begin}
 }
 
 // Next moves the iterator to the next element and returns true if there was a next element in the container.
