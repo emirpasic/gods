@@ -53,21 +53,6 @@ func IntComparator(a, b interface{}) int {
 	}
 }
 
-// TimeComparator provides a basic comparison on time.Time
-func TimeComparator(a, b interface{}) int {
-	aAsserted := a.(time.Time)
-	bAsserted := b.(time.Time)
-
-	switch {
-	case aAsserted.After(bAsserted) :
-		return 1
-	case aAsserted.Before(bAsserted):
-		return -1
-	default:
-		return 0
-	}
-}
-
 // Int8Comparator provides a basic comparison on int8
 func Int8Comparator(a, b interface{}) int {
 	aAsserted := a.(int8)
@@ -244,6 +229,21 @@ func RuneComparator(a, b interface{}) int {
 	case aAsserted > bAsserted:
 		return 1
 	case aAsserted < bAsserted:
+		return -1
+	default:
+		return 0
+	}
+}
+
+// TimeComparator provides a basic comparison on time.Time
+func TimeComparator(a, b interface{}) int {
+	aAsserted := a.(time.Time)
+	bAsserted := b.(time.Time)
+
+	switch {
+	case aAsserted.After(bAsserted):
+		return 1
+	case aAsserted.Before(bAsserted):
 		return -1
 	default:
 		return 0
