@@ -4,6 +4,8 @@
 
 package utils
 
+import "time"
+
 // Comparator will make type assertion (see IntComparator for example),
 // which will panic if a or b are not of the asserted type.
 //
@@ -227,6 +229,21 @@ func RuneComparator(a, b interface{}) int {
 	case aAsserted > bAsserted:
 		return 1
 	case aAsserted < bAsserted:
+		return -1
+	default:
+		return 0
+	}
+}
+
+// TimeComparator provides a basic comparison on time.Time
+func TimeComparator(a, b interface{}) int {
+	aAsserted := a.(time.Time)
+	bAsserted := b.(time.Time)
+
+	switch {
+	case aAsserted.After(bAsserted):
+		return 1
+	case aAsserted.Before(bAsserted):
 		return -1
 	default:
 		return 0

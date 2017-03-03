@@ -1253,7 +1253,7 @@ This takes a while, so test within sub-packages:
 
 Biggest contribution towards this library is to use it and give us feedback for further improvements and additions.
 
-For direct contributions, _pull request_ into master or ask to become a contributor.
+For direct contributions, _pull request_ into development branch or ask to become a contributor.
 
 Coding style:
 

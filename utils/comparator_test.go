@@ -6,6 +6,7 @@ package utils
 
 import (
 	"testing"
+	"time"
 )
 
 func TestIntComparator(t *testing.T) {
@@ -46,6 +47,26 @@ func TestStringComparator(t *testing.T) {
 
 	for _, test := range tests {
 		actual := StringComparator(test[0], test[1])
+		expected := test[2]
+		if actual != expected {
+			t.Errorf("Got %v expected %v", actual, expected)
+		}
+	}
+}
+
+func TestTimeComparator(t *testing.T) {
+
+	now := time.Now()
+
+	// i1,i2,expected
+	tests := [][]interface{}{
+		{now, now, 0},
+		{now.Add(24 * 7 * 2 * time.Hour), now, 1},
+		{now, now.Add(24 * 7 * 2 * time.Hour), -1},
+	}
+
+	for _, test := range tests {
+		actual := TimeComparator(test[0], test[1])
 		expected := test[2]
 		if actual != expected {
 			t.Errorf("Got %v expected %v", actual, expected)
