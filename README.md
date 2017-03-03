@@ -771,6 +771,8 @@ func Float64Comparator(a, b interface{}) int
 func ByteComparator(a, b interface{}) int
 
 func RuneComparator(a, b interface{}) int
+
+func TimeComparator(a, b interface{}) int
 ```
 
 Writing custom comparators is easy:
