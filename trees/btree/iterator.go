@@ -80,11 +80,11 @@ func (iterator *Iterator) Next() bool {
 		}
 	}
 
-	end:
+end:
 	iterator.End()
 	return false
 
-	between:
+between:
 	iterator.position = between
 	return true
 }
@@ -139,11 +139,11 @@ func (iterator *Iterator) Prev() bool {
 		}
 	}
 
-	begin:
+begin:
 	iterator.Begin()
 	return false
 
-	between:
+between:
 	iterator.position = between
 	return true
 }

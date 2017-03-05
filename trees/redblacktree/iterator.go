@@ -61,12 +61,12 @@ func (iterator *Iterator) Next() bool {
 		}
 	}
 
-	end:
+end:
 	iterator.node = nil
 	iterator.position = end
 	return false
 
-	between:
+between:
 	iterator.position = between
 	return true
 }
@@ -103,12 +103,12 @@ func (iterator *Iterator) Prev() bool {
 		}
 	}
 
-	begin:
+begin:
 	iterator.node = nil
 	iterator.position = begin
 	return false
 
-	between:
+between:
 	iterator.position = between
 	return true
 }
