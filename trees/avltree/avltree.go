@@ -5,6 +5,8 @@
 // Package avltree implements an AVL balanced binary tree.
 //
 // Structure is not thread safe.
+//
+// References: https://en.wikipedia.org/wiki/AVL_tree
 package avltree
 
 import (
@@ -144,80 +146,78 @@ func (t *Tree) Ceiling(key interface{}) (floor *Node, found bool) {
 // Put inserts node into the tree.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (t *Tree) Put(key interface{}, value interface{}) {
-	var put func(*Node, **Node) bool
-	put = func(p *Node, qp **Node) bool {
-		q := *qp
-		if q == nil {
-			t.size++
-			*qp = &Node{Key: key, Value: value, Parent: p}
-			return true
-		}
+	t.put(key, value, nil, &t.Root)
+}
 
-		c := t.Comparator(key, q.Key)
-		if c == 0 {
-			q.Key = key
-			q.Value = value
-			return false
-		}
+func (t *Tree) put(key interface{}, value interface{}, p *Node, qp **Node) bool {
+	q := *qp
+	if q == nil {
+		t.size++
+		*qp = &Node{Key: key, Value: value, Parent: p}
+		return true
+	}
 
-		if c < 0 {
-			c = -1
-		} else {
-			c = 1
-		}
-		a := (c + 1) / 2
-		var fix bool
-		fix = put(q, &q.Children[a])
-		if fix {
-			return putFix(int8(c), qp)
-		}
+	c := t.Comparator(key, q.Key)
+	if c == 0 {
+		q.Key = key
+		q.Value = value
 		return false
 	}
 
-	put(nil, &t.Root)
+	if c < 0 {
+		c = -1
+	} else {
+		c = 1
+	}
+	a := (c + 1) / 2
+	var fix bool
+	fix = t.put(key, value, q, &q.Children[a])
+	if fix {
+		return putFix(int8(c), qp)
+	}
+	return false
 }
 
 // Remove remove the node from the tree by key.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (t *Tree) Remove(key interface{}) {
-	var remove func(**Node) bool
-	remove = func(qp **Node) bool {
-		q := *qp
-		if q == nil {
-			return false
-		}
+	t.remove(key, &t.Root)
+}
 
-		c := t.Comparator(key, q.Key)
-		if c == 0 {
-			t.size--
-			if q.Children[1] == nil {
-				if q.Children[0] != nil {
-					q.Children[0].Parent = q.Parent
-				}
-				*qp = q.Children[0]
-				return true
-			}
-			fix := removeMin(&q.Children[1], &q.Key, &q.Value)
-			if fix {
-				return removeFix(-1, qp)
-			}
-			return false
-		}
+func (t *Tree) remove(key interface{}, qp **Node) bool {
+	q := *qp
+	if q == nil {
+		return false
+	}
 
-		if c < 0 {
-			c = -1
-		} else {
-			c = 1
+	c := t.Comparator(key, q.Key)
+	if c == 0 {
+		t.size--
+		if q.Children[1] == nil {
+			if q.Children[0] != nil {
+				q.Children[0].Parent = q.Parent
+			}
+			*qp = q.Children[0]
+			return true
 		}
-		a := (c + 1) / 2
-		fix := remove(&q.Children[a])
+		fix := removeMin(&q.Children[1], &q.Key, &q.Value)
 		if fix {
-			return removeFix(int8(-c), qp)
+			return removeFix(-1, qp)
 		}
 		return false
 	}
 
-	remove(&t.Root)
+	if c < 0 {
+		c = -1
+	} else {
+		c = 1
+	}
+	a := (c + 1) / 2
+	fix := t.remove(key, &q.Children[a])
+	if fix {
+		return removeFix(int8(-c), qp)
+	}
+	return false
 }
 
 func removeMin(qp **Node, minKey *interface{}, minVal *interface{}) bool {
