@@ -24,6 +24,7 @@ Implementation of various data structures and algorithms in Go.
     - [TreeBidiMap](#treebidimap)
   - [Trees](#trees)
     - [RedBlackTree](#redblacktree)
+    - [AVLTree](#avltree)
     - [BTree](#btree)
     - [BinaryHeap](#binaryheap)
 - [Functions](#functions)
@@ -70,6 +71,7 @@ Containers are either ordered or unordered. All ordered containers provide [stat
 | [HashBidiMap](#hashbidimap) | no | no | no | key* |
 | [TreeBidiMap](#treebidimap) | yes | yes* | yes | key* |
 | [RedBlackTree](#redblacktree) | yes | yes* | no | key |
+| [AVLTree](#avltree) | yes | yes* | no | key |
 | [BTree](#btree) | yes | yes* | no | key |
 | [BinaryHeap](#binaryheap) | yes | yes* | no | index |
 |  |  | <sub><sup>*reversible</sup></sub> |  | <sub><sup>*bidirectional</sup></sub> |
@@ -588,6 +590,65 @@ func main() {
 ```
 
 Extending the red-black tree's functionality  has been demonstrated in the following [example](https://github.com/emirpasic/gods/blob/master/examples/redblacktreeextended.go).
+
+#### AVLTree
+
+AVL [tree](#trees) is a self-balancing binary search tree. In an AVL tree, the heights of the two child subtrees of any node differ by at most one; if at any time they differ by more than one, rebalancing is done to restore this property. Lookup, insertion, and deletion all take O(log n) time in both the average and worst cases, where n is the number of nodes in the tree prior to the operation. Insertions and deletions may require the tree to be rebalanced by one or more tree rotations.
+
+AVL trees are often compared with red–black trees because both support the same set of operations and take O(log n) time for the basic operations. For lookup-intensive applications, AVL trees are faster than red–black trees because they are more strictly balanced. <sub><sup>[Wikipedia](https://en.wikipedia.org/wiki/AVL_tree)</sup></sub>
+
+Implements [Tree](#trees) and [ReverseIteratorWithKey](#reverseiteratorwithkey) interfaces.
+
+<p align="center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/AVL-tree-wBalance_K.svg/262px-AVL-tree-wBalance_K.svg.png" width="300px" height="180px" /><br/><sub>AVL tree with balance factors (green)</sub></p>
+
+```go
+package main
+
+import (
+	"fmt"
+	avl "github.com/emirpasic/gods/trees/avltree"
+)
+
+func main() {
+	tree := avl.NewWithIntComparator() // empty(keys are of type int)
+
+	tree.Put(1, "x") // 1->x
+	tree.Put(2, "b") // 1->x, 2->b (in order)
+	tree.Put(1, "a") // 1->a, 2->b (in order, replacement)
+	tree.Put(3, "c") // 1->a, 2->b, 3->c (in order)
+	tree.Put(4, "d") // 1->a, 2->b, 3->c, 4->d (in order)
+	tree.Put(5, "e") // 1->a, 2->b, 3->c, 4->d, 5->e (in order)
+	tree.Put(6, "f") // 1->a, 2->b, 3->c, 4->d, 5->e, 6->f (in order)
+
+	fmt.Println(tree)
+	//
+	//  AVLTree
+	//  │       ┌── 6
+	//  │   ┌── 5
+	//  └── 4
+	//      │   ┌── 3
+	//      └── 2
+	//          └── 1
+
+
+	_ = tree.Values() // []interface {}{"a", "b", "c", "d", "e", "f"} (in order)
+	_ = tree.Keys()   // []interface {}{1, 2, 3, 4, 5, 6} (in order)
+
+	tree.Remove(2) // 1->a, 3->c, 4->d, 5->e, 6->f (in order)
+	fmt.Println(tree)
+	//
+	//  AVLTree
+	//  │       ┌── 6
+	//  │   ┌── 5
+	//  └── 4
+	//      └── 3
+	//          └── 1
+
+	tree.Clear() // empty
+	tree.Empty() // true
+	tree.Size()  // 0
+}
+```
 
 #### BTree
 
@@ -1255,7 +1316,7 @@ This takes a while, so test within sub-packages:
 
 Biggest contribution towards this library is to use it and give us feedback for further improvements and additions.
 
-For direct contributions, _pull request_ into development branch or ask to become a contributor.
+For direct contributions, _pull request_ into master branch or ask to become a contributor.
 
 Coding style:
 
