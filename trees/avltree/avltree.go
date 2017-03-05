@@ -13,7 +13,7 @@ import (
 	"log"
 
 	"github.com/emirpasic/gods/utils"
-	"github.com/spewspews/gods/trees"
+	"github.com/emirpasic/gods/trees"
 )
 
 func assertTreeImplementation() {
