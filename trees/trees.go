@@ -13,15 +13,6 @@ import "github.com/emirpasic/gods/containers"
 
 // Tree interface that all trees implement
 type Tree interface {
-	New() Tree
-	Iterator() containers.ReverseIteratorWithKey
-	Put(key interface{}, value interface{})
-	Remove(key interface{})
-	Get(key interface{}) (interface{}, bool)
-	Keys() []interface{}
-	Min() (interface{}, interface{})
-	Max() (interface{}, interface{})
-
 	containers.Container
 	// Empty() bool
 	// Size() int

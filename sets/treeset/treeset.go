@@ -11,12 +11,10 @@ package treeset
 
 import (
 	"fmt"
-	"strings"
-
 	"github.com/emirpasic/gods/sets"
+	rbt "github.com/emirpasic/gods/trees/redblacktree"
 	"github.com/emirpasic/gods/utils"
-	"github.com/spewspews/gods/trees"
-	rbt "github.com/spewspews/gods/trees/redblacktree"
+	"strings"
 )
 
 func assertSetImplementation() {
@@ -25,7 +23,7 @@ func assertSetImplementation() {
 
 // Set holds elements in a red-black tree
 type Set struct {
-	tree trees.Tree
+	tree *rbt.Tree
 }
 
 var itemExists = struct{}{}
@@ -43,11 +41,6 @@ func NewWithIntComparator() *Set {
 // NewWithStringComparator instantiates a new empty set with the StringComparator, i.e. keys are of type string.
 func NewWithStringComparator() *Set {
 	return &Set{tree: rbt.NewWithStringComparator()}
-}
-
-// NewWithTree instantiates a new empty set with given tree
-func NewWithTree(tree trees.Tree) *Set {
-	return &Set{tree: tree}
 }
 
 // Add adds the items (one or more) to the set.

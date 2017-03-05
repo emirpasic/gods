@@ -14,8 +14,7 @@ package treemap
 import (
 	"fmt"
 	"github.com/emirpasic/gods/maps"
-	rbt "github.com/spewspews/gods/trees/redblacktree"
-	"github.com/spewspews/gods/trees"
+	rbt "github.com/emirpasic/gods/trees/redblacktree"
 	"github.com/emirpasic/gods/utils"
 	"strings"
 )
@@ -26,7 +25,7 @@ func assertMapImplementation() {
 
 // Map holds the elements in a red-black tree
 type Map struct {
-	tree trees.Tree
+	tree *rbt.Tree
 }
 
 // NewWith instantiates a tree map with the custom comparator.
@@ -42,11 +41,6 @@ func NewWithIntComparator() *Map {
 // NewWithStringComparator instantiates a tree map with the StringComparator, i.e. keys are of type string.
 func NewWithStringComparator() *Map {
 	return &Map{tree: rbt.NewWithStringComparator()}
-}
-
-// NewWithTree instantiates a new empty map with given tree
-func NewWithTree(tree trees.Tree) *Map {
-	return &Map{tree: tree}
 }
 
 // Put inserts key-value pair into the map.
@@ -96,13 +90,19 @@ func (m *Map) Clear() {
 // Min returns the minimum key and its value from the tree map.
 // Returns nil, nil if map is empty.
 func (m *Map) Min() (key interface{}, value interface{}) {
-	return m.tree.Min()
+	if node := m.tree.Left(); node != nil {
+		return node.Key, node.Value
+	}
+	return nil, nil
 }
 
 // Max returns the maximum key and its value from the tree map.
 // Returns nil, nil if map is empty.
 func (m *Map) Max() (key interface{}, value interface{}) {
-	return m.tree.Max()
+	if node := m.tree.Right(); node != nil {
+		return node.Key, node.Value
+	}
+	return nil, nil
 }
 
 // String returns a string representation of container

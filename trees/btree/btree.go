@@ -19,7 +19,7 @@ package btree
 import (
 	"bytes"
 	"fmt"
-	"github.com/spewspews/gods/trees"
+	"github.com/emirpasic/gods/trees"
 	"github.com/emirpasic/gods/utils"
 	"strings"
 )
@@ -31,7 +31,7 @@ func assertTreeImplementation() {
 // Tree holds elements of the B-tree
 type Tree struct {
 	Root       *Node            // Root node
-	comparator utils.Comparator // Key comparator
+	Comparator utils.Comparator // Key comparator
 	size       int              // Total number of keys in the tree
 	m          int              // order (maximum number of children)
 }
@@ -54,7 +54,7 @@ func NewWith(order int, comparator utils.Comparator) *Tree {
 	if order < 3 {
 		panic("Invalid order, should be at least 3")
 	}
-	return &Tree{m: order, comparator: comparator}
+	return &Tree{m: order, Comparator: comparator}
 }
 
 // NewWithIntComparator instantiates a B-tree with the order (maximum number of children) and the IntComparator, i.e. keys are of type int.
@@ -103,11 +103,6 @@ func (tree *Tree) Remove(key interface{}) {
 		tree.delete(node, index)
 		tree.size--
 	}
-}
-
-// New returns an empty tree with the same comparator
-func (tree *Tree) New() trees.Tree {
-	return &Tree{m: tree.m, comparator: tree.comparator}
 }
 
 // Empty returns true if tree does not contain any nodes
@@ -172,15 +167,6 @@ func (tree *Tree) LeftValue() interface{} {
 	return nil
 }
 
-// Min returns the minimum key value pair in the tree.
-func (tree *Tree) Min() (interface{}, interface{}) {
-	n := tree.Left()
-	if n == nil {
-		return nil, nil
-	}
-	return n.Entries[0].Key, n.Entries[0].Value
-}
-
 // Right returns the right-most (max) node or nil if tree is empty.
 func (tree *Tree) Right() *Node {
 	return tree.right(tree.Root)
@@ -200,16 +186,6 @@ func (tree *Tree) RightValue() interface{} {
 		return right.Entries[len(right.Entries)-1].Value
 	}
 	return nil
-}
-
-// Max returns the minimum key value pair in the tree.
-func (tree *Tree) Max() (interface{}, interface{}) {
-	n := tree.Right()
-	if n == nil {
-		return nil, nil
-	}
-	l := len(n.Entries)-1
-	return n.Entries[l].Key, n.Entries[l].Value
 }
 
 // String returns a string representation of container (for debugging purposes)
@@ -290,7 +266,7 @@ func (tree *Tree) search(node *Node, key interface{}) (index int, found bool) {
 	var mid int
 	for low <= high {
 		mid = (high + low) / 2
-		compare := tree.comparator(key, node.Entries[mid].Key)
+		compare := tree.Comparator(key, node.Entries[mid].Key)
 		switch {
 		case compare > 0:
 			low = mid + 1

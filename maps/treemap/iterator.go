@@ -4,7 +4,10 @@
 
 package treemap
 
-import "github.com/emirpasic/gods/containers"
+import (
+	"github.com/emirpasic/gods/containers"
+	rbt "github.com/emirpasic/gods/trees/redblacktree"
+)
 
 func assertIteratorImplementation() {
 	var _ containers.ReverseIteratorWithKey = (*Iterator)(nil)
@@ -12,7 +15,7 @@ func assertIteratorImplementation() {
 
 // Iterator holding the iterator's state
 type Iterator struct {
-	iterator containers.ReverseIteratorWithKey
+	iterator rbt.Iterator
 }
 
 // Iterator returns a stateful iterator whose elements are key/value pairs.
