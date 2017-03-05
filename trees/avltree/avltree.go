@@ -48,11 +48,6 @@ func NewWithStringComparator() *Tree {
 	return &Tree{Comparator: utils.StringComparator}
 }
 
-// New returns a new empty tree with the same comparator.
-func (t *Tree) New() trees.Tree {
-	return &Tree{Comparator: t.Comparator}
-}
-
 // Size returns the number of elements stored in the tree.
 func (t *Tree) Size() int {
 	return t.size
