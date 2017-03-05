@@ -19,18 +19,18 @@ func assertTreeImplementation() {
 
 // Tree holds elements of the AVL tree.
 type Tree struct {
-	Root       *Node
-	size       int
-	Comparator utils.Comparator
+	Root       *Node            // Root node
+	Comparator utils.Comparator // Key comparator
+	size       int              // Total number of keys in the tree
 }
 
 // Node is a single element within the tree
 type Node struct {
-	Key   interface{}
-	Value interface{}
-	c     [2]*Node
-	p     *Node
-	b     int8
+	Key      interface{}
+	Value    interface{}
+	Parent   *Node    // Parent node
+	Children [2]*Node // Children nodes
+	b        int8
 }
 
 // NewWith instantiates an AVL tree with the custom comparator.
@@ -80,9 +80,9 @@ func (t *Tree) Get(key interface{}) (value interface{}, found bool) {
 		case cmp == 0:
 			return n.Value, true
 		case cmp < 0:
-			n = n.c[0]
+			n = n.Children[0]
 		case cmp > 0:
-			n = n.c[1]
+			n = n.Children[1]
 		}
 	}
 	return nil, false
@@ -105,10 +105,10 @@ func (t *Tree) Floor(key interface{}) (floor *Node, found bool) {
 		case c == 0:
 			return n, true
 		case c < 0:
-			n = n.c[0]
+			n = n.Children[0]
 		case c > 0:
 			floor, found = n, true
-			n = n.c[1]
+			n = n.Children[1]
 		}
 	}
 	if found {
@@ -135,9 +135,9 @@ func (t *Tree) Ceiling(key interface{}) (floor *Node, found bool) {
 			return n, true
 		case c < 0:
 			floor, found = n, true
-			n = n.c[0]
+			n = n.Children[0]
 		case c > 0:
-			n = n.c[1]
+			n = n.Children[1]
 		}
 	}
 	if found {
@@ -154,7 +154,7 @@ func (t *Tree) Put(key interface{}, value interface{}) {
 		q := *qp
 		if q == nil {
 			t.size++
-			*qp = &Node{Key: key, Value: value, p: p}
+			*qp = &Node{Key: key, Value: value, Parent: p}
 			return true
 		}
 
@@ -172,7 +172,7 @@ func (t *Tree) Put(key interface{}, value interface{}) {
 		}
 		a := (c + 1) / 2
 		var fix bool
-		fix = put(q, &q.c[a])
+		fix = put(q, &q.Children[a])
 		if fix {
 			return putFix(int8(c), qp)
 		}
@@ -195,14 +195,14 @@ func (t *Tree) Remove(key interface{}) {
 		c := t.Comparator(key, q.Key)
 		if c == 0 {
 			t.size--
-			if q.c[1] == nil {
-				if q.c[0] != nil {
-					q.c[0].p = q.p
+			if q.Children[1] == nil {
+				if q.Children[0] != nil {
+					q.Children[0].Parent = q.Parent
 				}
-				*qp = q.c[0]
+				*qp = q.Children[0]
 				return true
 			}
-			fix := removeMin(&q.c[1], &q.Key, &q.Value)
+			fix := removeMin(&q.Children[1], &q.Key, &q.Value)
 			if fix {
 				return removeFix(-1, qp)
 			}
@@ -215,7 +215,7 @@ func (t *Tree) Remove(key interface{}) {
 			c = 1
 		}
 		a := (c + 1) / 2
-		fix := remove(&q.c[a])
+		fix := remove(&q.Children[a])
 		if fix {
 			return removeFix(int8(-c), qp)
 		}
@@ -227,16 +227,16 @@ func (t *Tree) Remove(key interface{}) {
 
 func removeMin(qp **Node, minKey *interface{}, minVal *interface{}) bool {
 	q := *qp
-	if q.c[0] == nil {
+	if q.Children[0] == nil {
 		*minKey = q.Key
 		*minVal = q.Value
-		if q.c[1] != nil {
-			q.c[1].p = q.p
+		if q.Children[1] != nil {
+			q.Children[1].Parent = q.Parent
 		}
-		*qp = q.c[1]
+		*qp = q.Children[1]
 		return true
 	}
-	fix := removeMin(&q.c[0], minKey, minVal)
+	fix := removeMin(&q.Children[0], minKey, minVal)
 	if fix {
 		return removeFix(1, qp)
 	}
@@ -255,7 +255,7 @@ func putFix(c int8, t **Node) bool {
 		return false
 	}
 
-	if s.c[(c+1)/2].b == c {
+	if s.Children[(c+1)/2].b == c {
 		s = singlerot(c, s)
 	} else {
 		s = doublerot(c, s)
@@ -277,14 +277,14 @@ func removeFix(c int8, t **Node) bool {
 	}
 
 	a := (c + 1) / 2
-	if s.c[a].b == 0 {
+	if s.Children[a].b == 0 {
 		s = rotate(c, s)
 		s.b = -c
 		*t = s
 		return false
 	}
 
-	if s.c[a].b == c {
+	if s.Children[a].b == c {
 		s = singlerot(c, s)
 	} else {
 		s = doublerot(c, s)
@@ -302,8 +302,8 @@ func singlerot(c int8, s *Node) *Node {
 
 func doublerot(c int8, s *Node) *Node {
 	a := (c + 1) / 2
-	r := s.c[a]
-	s.c[a] = rotate(-c, s.c[a])
+	r := s.Children[a]
+	s.Children[a] = rotate(-c, s.Children[a])
 	p := rotate(c, s)
 
 	switch {
@@ -324,14 +324,14 @@ func doublerot(c int8, s *Node) *Node {
 
 func rotate(c int8, s *Node) *Node {
 	a := (c + 1) / 2
-	r := s.c[a]
-	s.c[a] = r.c[a^1]
-	if s.c[a] != nil {
-		s.c[a].p = s
+	r := s.Children[a]
+	s.Children[a] = r.Children[a^1]
+	if s.Children[a] != nil {
+		s.Children[a].Parent = s
 	}
-	r.c[a^1] = s
-	r.p = s.p
-	s.p = r
+	r.Children[a^1] = s
+	r.Parent = s.Parent
+	s.Parent = r
 	return r
 }
 
@@ -393,7 +393,7 @@ func (t *Tree) bottom(d int) *Node {
 		return nil
 	}
 
-	for c := n.c[d]; c != nil; c = n.c[d] {
+	for c := n.Children[d]; c != nil; c = n.Children[d] {
 		n = c
 	}
 	return n
@@ -416,18 +416,18 @@ func (n *Node) walk1(a int) *Node {
 		return nil
 	}
 
-	if n.c[a] != nil {
-		n = n.c[a]
-		for n.c[a^1] != nil {
-			n = n.c[a^1]
+	if n.Children[a] != nil {
+		n = n.Children[a]
+		for n.Children[a^1] != nil {
+			n = n.Children[a^1]
 		}
 		return n
 	}
 
-	p := n.p
-	for p != nil && p.c[a] == n {
+	p := n.Parent
+	for p != nil && p.Children[a] == n {
 		n = p
-		p = p.p
+		p = p.Parent
 	}
 	return p
 }
@@ -446,14 +446,14 @@ func (n *Node) String() string {
 }
 
 func output(node *Node, prefix string, isTail bool, str *string) {
-	if node.c[0] != nil {
+	if node.Children[0] != nil {
 		newPrefix := prefix
 		if isTail {
 			newPrefix += "│   "
 		} else {
 			newPrefix += "    "
 		}
-		output(node.c[0], newPrefix, false, str)
+		output(node.Children[0], newPrefix, false, str)
 	}
 	*str += prefix
 	if isTail {
@@ -462,13 +462,13 @@ func output(node *Node, prefix string, isTail bool, str *string) {
 		*str += "┌── "
 	}
 	*str += node.String() + "\n"
-	if node.c[1] != nil {
+	if node.Children[1] != nil {
 		newPrefix := prefix
 		if isTail {
 			newPrefix += "    "
 		} else {
 			newPrefix += "│   "
 		}
-		output(node.c[1], newPrefix, true, str)
+		output(node.Children[1], newPrefix, true, str)
 	}
 }
