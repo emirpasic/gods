@@ -1,4 +1,3 @@
-// Copyright (c) 2017, Benjamin Scher Purcell. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -477,17 +476,25 @@ func TestAVLTreeIteratorBegin(t *testing.T) {
 	tree.Put(2, "b")
 	it := tree.Iterator()
 
+	if it.Key() != nil {
+		t.Errorf("Got %v expected %v", it.Key(), nil)
+	}
+
 	it.Begin()
 
-	i := 0
+	if it.Key() != nil {
+		t.Errorf("Got %v expected %v", it.Key(), nil)
+	}
+
 	for it.Next() {
-		i++
-	}
-	if i != 3 {
-		t.Errorf("Got %d expected %d\n", i, tree.Size())
 	}
 
 	it.Begin()
+
+	if it.Key() != nil {
+		t.Errorf("Got %v expected %v", it.Key(), nil)
+	}
+
 	it.Next()
 	if key, value := it.Key(), it.Value(); key != 1 || value != "a" {
 		t.Errorf("Got %v,%v expected %v,%v", key, value, 1, "a")
@@ -496,22 +503,25 @@ func TestAVLTreeIteratorBegin(t *testing.T) {
 
 func TestAVLTreeIteratorEnd(t *testing.T) {
 	tree := NewWithIntComparator()
+	it := tree.Iterator()
+
+	if it.Key() != nil {
+		t.Errorf("Got %v expected %v", it.Key(), nil)
+	}
+
+	it.End()
+	if it.Key() != nil {
+		t.Errorf("Got %v expected %v", it.Key(), nil)
+	}
+
 	tree.Put(3, "c")
 	tree.Put(1, "a")
 	tree.Put(2, "b")
-	it := tree.Iterator()
-
 	it.End()
-
-	i := 0
-	for it.Prev() {
-		i++
-	}
-	if i != 3 {
-		t.Errorf("Got %d expected %d\n", i, tree.Size())
+	if it.Key() != nil {
+		t.Errorf("Got %v expected %v", it.Key(), nil)
 	}
 
-	it.End()
 	it.Prev()
 	if key, value := it.Key(), it.Value(); key != 3 || value != "c" {
 		t.Errorf("Got %v,%v expected %v,%v", key, value, 3, "c")

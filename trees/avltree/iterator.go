@@ -32,17 +32,17 @@ func (tree *Tree) Iterator() containers.ReverseIteratorWithKey {
 // If Next() returns true, then next element's key and value can be retrieved by Key() and Value().
 // If Next() was called for the first time, then it will point the iterator to the first element if it exists.
 // Modifies the state of the iterator.
-func (iter *Iterator) Next() bool {
-	switch iter.position {
+func (iterator *Iterator) Next() bool {
+	switch iterator.position {
 	case begin:
-		iter.position = between
-		iter.node = iter.tree.Left()
+		iterator.position = between
+		iterator.node = iterator.tree.Left()
 	case between:
-		iter.node = iter.node.Next()
+		iterator.node = iterator.node.Next()
 	}
 
-	if iter.node == nil {
-		iter.position = end
+	if iterator.node == nil {
+		iterator.position = end
 		return false
 	}
 	return true
@@ -52,17 +52,17 @@ func (iter *Iterator) Next() bool {
 // If Prev() returns true, then next element's key and value can be retrieved by Key() and Value().
 // If Prev() was called for the first time, then it will point the iterator to the first element if it exists.
 // Modifies the state of the iterator.
-func (iter *Iterator) Prev() bool {
-	switch iter.position {
+func (iterator *Iterator) Prev() bool {
+	switch iterator.position {
 	case end:
-		iter.position = between
-		iter.node = iter.tree.Right()
+		iterator.position = between
+		iterator.node = iterator.tree.Right()
 	case between:
-		iter.node = iter.node.Prev()
+		iterator.node = iterator.node.Prev()
 	}
 
-	if iter.node == nil {
-		iter.position = begin
+	if iterator.node == nil {
+		iterator.position = begin
 		return false
 	}
 	return true
@@ -70,42 +70,48 @@ func (iter *Iterator) Prev() bool {
 
 // Value returns the current element's value.
 // Does not modify the state of the iterator.
-func (iter *Iterator) Value() interface{} {
-	return iter.node.Value
+func (iterator *Iterator) Value() interface{} {
+	if iterator.node == nil {
+		return nil
+	}
+	return iterator.node.Value
 }
 
 // Key returns the current element's key.
 // Does not modify the state of the iterator.
-func (iter *Iterator) Key() interface{} {
-	return iter.node.Key
+func (iterator *Iterator) Key() interface{} {
+	if iterator.node == nil {
+		return nil
+	}
+	return iterator.node.Key
 }
 
 // Begin resets the iterator to its initial state (one-before-first)
 // Call Next() to fetch the first element if any.
-func (iter *Iterator) Begin() {
-	iter.node = nil
-	iter.position = begin
+func (iterator *Iterator) Begin() {
+	iterator.node = nil
+	iterator.position = begin
 }
 
 // End moves the iterator past the last element (one-past-the-end).
 // Call Prev() to fetch the last element if any.
-func (iter *Iterator) End() {
-	iter.node = nil
-	iter.position = end
+func (iterator *Iterator) End() {
+	iterator.node = nil
+	iterator.position = end
 }
 
 // First moves the iterator to the first element and returns true if there was a first element in the container.
 // If First() returns true, then first element's key and value can be retrieved by Key() and Value().
 // Modifies the state of the iterator
-func (iter *Iterator) First() bool {
-	iter.Begin()
-	return iter.Next()
+func (iterator *Iterator) First() bool {
+	iterator.Begin()
+	return iterator.Next()
 }
 
 // Last moves the iterator to the last element and returns true if there was a last element in the container.
 // If Last() returns true, then last element's key and value can be retrieved by Key() and Value().
 // Modifies the state of the iterator.
-func (iter *Iterator) Last() bool {
-	iter.End()
-	return iter.Prev()
+func (iterator *Iterator) Last() bool {
+	iterator.End()
+	return iterator.Prev()
 }
