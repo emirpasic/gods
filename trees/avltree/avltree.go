@@ -362,26 +362,6 @@ func (t *Tree) Right() *Node {
 	return t.bottom(1)
 }
 
-// Min returns the minimum key value pair of the AVL tree
-// or nils if the tree is empty.
-func (t *Tree) Min() (interface{}, interface{}) {
-	n := t.bottom(0)
-	if n == nil {
-		return nil, nil
-	}
-	return n.Key, n.Value
-}
-
-// Max returns the minimum key value pair of the AVL tree
-// or nils if the tree is empty.
-func (t *Tree) Max() (interface{}, interface{}) {
-	n := t.bottom(1)
-	if n == nil {
-		return nil, nil
-	}
-	return n.Key, n.Value
-}
-
 func (t *Tree) bottom(d int) *Node {
 	n := t.Root
 	if n == nil {
