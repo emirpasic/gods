@@ -21,7 +21,7 @@ func assertTreeImplementation() {
 type Tree struct {
 	Root       *Node
 	size       int
-	comparator utils.Comparator
+	Comparator utils.Comparator
 }
 
 // Node is a single element within the tree
@@ -35,27 +35,22 @@ type Node struct {
 
 // NewWith instantiates an AVL tree with the custom comparator.
 func NewWith(comparator utils.Comparator) *Tree {
-	return &Tree{comparator: comparator}
+	return &Tree{Comparator: comparator}
 }
 
 // NewWithIntComparator instantiates an AVL tree with the IntComparator, i.e. keys are of type int.
 func NewWithIntComparator() *Tree {
-	return &Tree{comparator: utils.IntComparator}
+	return &Tree{Comparator: utils.IntComparator}
 }
 
 // NewWithStringComparator instantiates an AVL tree with the StringComparator, i.e. keys are of type string.
 func NewWithStringComparator() *Tree {
-	return &Tree{comparator: utils.StringComparator}
-}
-
-// Comparator returns the comparator function for the tree.
-func (t *Tree) Comparator() utils.Comparator {
-	return t.comparator
+	return &Tree{Comparator: utils.StringComparator}
 }
 
 // New returns a new empty tree with the same comparator.
 func (t *Tree) New() trees.Tree {
-	return &Tree{comparator: t.comparator}
+	return &Tree{Comparator: t.Comparator}
 }
 
 // Size returns the number of elements stored in the tree.
@@ -80,7 +75,7 @@ func (t *Tree) Clear() {
 func (t *Tree) Get(key interface{}) (value interface{}, found bool) {
 	n := t.Root
 	for n != nil {
-		cmp := t.comparator(key, n.Key)
+		cmp := t.Comparator(key, n.Key)
 		switch {
 		case cmp == 0:
 			return n.Value, true
@@ -105,7 +100,7 @@ func (t *Tree) Floor(key interface{}) (floor *Node, found bool) {
 	found = false
 	n := t.Root
 	for n != nil {
-		c := t.comparator(key, n.Key)
+		c := t.Comparator(key, n.Key)
 		switch {
 		case c == 0:
 			return n, true
@@ -134,7 +129,7 @@ func (t *Tree) Ceiling(key interface{}) (floor *Node, found bool) {
 	found = false
 	n := t.Root
 	for n != nil {
-		c := t.comparator(key, n.Key)
+		c := t.Comparator(key, n.Key)
 		switch {
 		case c == 0:
 			return n, true
@@ -163,7 +158,7 @@ func (t *Tree) Put(key interface{}, value interface{}) {
 			return true
 		}
 
-		c := t.comparator(key, q.Key)
+		c := t.Comparator(key, q.Key)
 		if c == 0 {
 			q.Key = key
 			q.Value = value
@@ -197,7 +192,7 @@ func (t *Tree) Remove(key interface{}) {
 			return false
 		}
 
-		c := t.comparator(key, q.Key)
+		c := t.Comparator(key, q.Key)
 		if c == 0 {
 			t.size--
 			if q.c[1] == nil {
