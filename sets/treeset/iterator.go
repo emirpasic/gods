@@ -6,7 +6,7 @@ package treeset
 
 import (
 	"github.com/emirpasic/gods/containers"
-	rbt "github.com/emirpasic/gods/trees/redblacktree"
+	"github.com/spewspews/gods/trees"
 )
 
 func assertIteratorImplementation() {
@@ -16,8 +16,8 @@ func assertIteratorImplementation() {
 // Iterator returns a stateful iterator whose values can be fetched by an index.
 type Iterator struct {
 	index    int
-	iterator rbt.Iterator
-	tree     *rbt.Tree
+	iterator containers.ReverseIteratorWithKey
+	tree     trees.Tree
 }
 
 // Iterator holding the iterator's state

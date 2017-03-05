@@ -7,6 +7,8 @@ package treemap
 import (
 	"fmt"
 	"testing"
+
+	"github.com/spewspews/gods/trees/avltree"
 )
 
 func TestMapPut(t *testing.T) {
@@ -51,6 +53,48 @@ func TestMapPut(t *testing.T) {
 	}
 }
 
+func TestMapAVLPut(t *testing.T) {
+	m := NewWithTree(avltree.NewWithIntComparator())
+	m.Put(5, "e")
+	m.Put(6, "f")
+	m.Put(7, "g")
+	m.Put(3, "c")
+	m.Put(4, "d")
+	m.Put(1, "x")
+	m.Put(2, "b")
+	m.Put(1, "a") //overwrite
+
+	if actualValue := m.Size(); actualValue != 7 {
+		t.Errorf("Got %v expected %v", actualValue, 7)
+	}
+	if actualValue, expectedValue := m.Keys(), []interface{}{1, 2, 3, 4, 5, 6, 7}; !sameElements(actualValue, expectedValue) {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if actualValue, expectedValue := m.Values(), []interface{}{"a", "b", "c", "d", "e", "f", "g"}; !sameElements(actualValue, expectedValue) {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+
+	// key,expectedValue,expectedFound
+	tests1 := [][]interface{}{
+		{1, "a", true},
+		{2, "b", true},
+		{3, "c", true},
+		{4, "d", true},
+		{5, "e", true},
+		{6, "f", true},
+		{7, "g", true},
+		{8, nil, false},
+	}
+
+	for _, test := range tests1 {
+		// retrievals
+		actualValue, actualFound := m.Get(test[0])
+		if actualValue != test[1] || actualFound != test[2] {
+			t.Errorf("Got %v expected %v", actualValue, test[1])
+		}
+	}
+
+}
 func TestMapRemove(t *testing.T) {
 	m := NewWithIntComparator()
 	m.Put(5, "e")

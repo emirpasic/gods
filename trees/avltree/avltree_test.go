@@ -1,15 +1,15 @@
-// Copyright (c) 2015, Emir Pasic. All rights reserved.
+// Copyright (c) 2017, Benjamin Scher Purcell. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package redblacktree
+package avltree
 
 import (
 	"fmt"
 	"testing"
 )
 
-func TestRedBlackTreePut(t *testing.T) {
+func TestAVLTreePut(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(5, "e")
 	tree.Put(6, "f")
@@ -50,7 +50,7 @@ func TestRedBlackTreePut(t *testing.T) {
 	}
 }
 
-func TestRedBlackTreeRemove(t *testing.T) {
+func TestAVLTreeRemove(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(5, "e")
 	tree.Put(6, "f")
@@ -117,7 +117,7 @@ func TestRedBlackTreeRemove(t *testing.T) {
 
 }
 
-func TestRedBlackTreeLeftAndRight(t *testing.T) {
+func TestAVLTreeLeftAndRight(t *testing.T) {
 	tree := NewWithIntComparator()
 
 	if actualValue := tree.Left(); actualValue != nil {
@@ -151,7 +151,7 @@ func TestRedBlackTreeLeftAndRight(t *testing.T) {
 	}
 }
 
-func TestRedBlackTreeCeilingAndFloor(t *testing.T) {
+func TestAVLTreeCeilingAndFloor(t *testing.T) {
 	tree := NewWithIntComparator()
 
 	if node, found := tree.Floor(0); node != nil || found {
@@ -184,7 +184,7 @@ func TestRedBlackTreeCeilingAndFloor(t *testing.T) {
 	}
 }
 
-func TestRedBlackTreeIteratorNextOnEmpty(t *testing.T) {
+func TestAVLTreeIteratorNextOnEmpty(t *testing.T) {
 	tree := NewWithIntComparator()
 	it := tree.Iterator()
 	for it.Next() {
@@ -192,7 +192,7 @@ func TestRedBlackTreeIteratorNextOnEmpty(t *testing.T) {
 	}
 }
 
-func TestRedBlackTreeIteratorPrevOnEmpty(t *testing.T) {
+func TestAVLTreeIteratorPrevOnEmpty(t *testing.T) {
 	tree := NewWithIntComparator()
 	it := tree.Iterator()
 	for it.Prev() {
@@ -200,7 +200,7 @@ func TestRedBlackTreeIteratorPrevOnEmpty(t *testing.T) {
 	}
 }
 
-func TestRedBlackTreeIterator1Next(t *testing.T) {
+func TestAVLTreeIterator1Next(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(5, "e")
 	tree.Put(6, "f")
@@ -238,7 +238,7 @@ func TestRedBlackTreeIterator1Next(t *testing.T) {
 	}
 }
 
-func TestRedBlackTreeIterator1Prev(t *testing.T) {
+func TestAVLTreeIterator1Prev(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(5, "e")
 	tree.Put(6, "f")
@@ -278,7 +278,7 @@ func TestRedBlackTreeIterator1Prev(t *testing.T) {
 	}
 }
 
-func TestRedBlackTreeIterator2Next(t *testing.T) {
+func TestAVLTreeIterator2Next(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(3, "c")
 	tree.Put(1, "a")
@@ -304,7 +304,7 @@ func TestRedBlackTreeIterator2Next(t *testing.T) {
 	}
 }
 
-func TestRedBlackTreeIterator2Prev(t *testing.T) {
+func TestAVLTreeIterator2Prev(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(3, "c")
 	tree.Put(1, "a")
@@ -332,7 +332,7 @@ func TestRedBlackTreeIterator2Prev(t *testing.T) {
 	}
 }
 
-func TestRedBlackTreeIterator3Next(t *testing.T) {
+func TestAVLTreeIterator3Next(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(1, "a")
 	it := tree.Iterator()
@@ -356,7 +356,7 @@ func TestRedBlackTreeIterator3Next(t *testing.T) {
 	}
 }
 
-func TestRedBlackTreeIterator3Prev(t *testing.T) {
+func TestAVLTreeIterator3Prev(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(1, "a")
 	it := tree.Iterator()
@@ -382,7 +382,7 @@ func TestRedBlackTreeIterator3Prev(t *testing.T) {
 	}
 }
 
-func TestRedBlackTreeIterator4Next(t *testing.T) {
+func TestAVLTreeIterator4Next(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(13, 5)
 	tree.Put(8, 3)
@@ -425,7 +425,7 @@ func TestRedBlackTreeIterator4Next(t *testing.T) {
 	}
 }
 
-func TestRedBlackTreeIterator4Prev(t *testing.T) {
+func TestAVLTreeIterator4Prev(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(13, 5)
 	tree.Put(8, 3)
@@ -470,7 +470,7 @@ func TestRedBlackTreeIterator4Prev(t *testing.T) {
 	}
 }
 
-func TestRedBlackTreeIteratorBegin(t *testing.T) {
+func TestAVLTreeIteratorBegin(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(3, "c")
 	tree.Put(1, "a")
@@ -494,7 +494,7 @@ func TestRedBlackTreeIteratorBegin(t *testing.T) {
 	}
 }
 
-func TestRedBlackTreeIteratorEnd(t *testing.T) {
+func TestAVLTreeIteratorEnd(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(3, "c")
 	tree.Put(1, "a")
@@ -518,7 +518,7 @@ func TestRedBlackTreeIteratorEnd(t *testing.T) {
 	}
 }
 
-func TestRedBlackTreeIteratorFirst(t *testing.T) {
+func TestAVLTreeIteratorFirst(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(3, "c")
 	tree.Put(1, "a")
@@ -532,7 +532,7 @@ func TestRedBlackTreeIteratorFirst(t *testing.T) {
 	}
 }
 
-func TestRedBlackTreeIteratorLast(t *testing.T) {
+func TestAVLTreeIteratorLast(t *testing.T) {
 	tree := NewWithIntComparator()
 	tree.Put(3, "c")
 	tree.Put(1, "a")
@@ -570,7 +570,7 @@ func benchmarkRemove(b *testing.B, tree *Tree, size int) {
 	}
 }
 
-func BenchmarkRedBlackTreeGet100(b *testing.B) {
+func BenchmarkAVLTreeGet100(b *testing.B) {
 	b.StopTimer()
 	size := 100
 	tree := NewWithIntComparator()
@@ -581,7 +581,7 @@ func BenchmarkRedBlackTreeGet100(b *testing.B) {
 	benchmarkGet(b, tree, size)
 }
 
-func BenchmarkRedBlackTreeGet1000(b *testing.B) {
+func BenchmarkAVLTreeGet1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
 	tree := NewWithIntComparator()
@@ -592,7 +592,7 @@ func BenchmarkRedBlackTreeGet1000(b *testing.B) {
 	benchmarkGet(b, tree, size)
 }
 
-func BenchmarkRedBlackTreeGet10000(b *testing.B) {
+func BenchmarkAVLTreeGet10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
 	tree := NewWithIntComparator()
@@ -603,7 +603,7 @@ func BenchmarkRedBlackTreeGet10000(b *testing.B) {
 	benchmarkGet(b, tree, size)
 }
 
-func BenchmarkRedBlackTreeGet100000(b *testing.B) {
+func BenchmarkAVLTreeGet100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
 	tree := NewWithIntComparator()
@@ -614,7 +614,7 @@ func BenchmarkRedBlackTreeGet100000(b *testing.B) {
 	benchmarkGet(b, tree, size)
 }
 
-func BenchmarkRedBlackTreePut100(b *testing.B) {
+func BenchmarkAVLTreePut100(b *testing.B) {
 	b.StopTimer()
 	size := 100
 	tree := NewWithIntComparator()
@@ -622,7 +622,7 @@ func BenchmarkRedBlackTreePut100(b *testing.B) {
 	benchmarkPut(b, tree, size)
 }
 
-func BenchmarkRedBlackTreePut1000(b *testing.B) {
+func BenchmarkAVLTreePut1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
 	tree := NewWithIntComparator()
@@ -633,7 +633,7 @@ func BenchmarkRedBlackTreePut1000(b *testing.B) {
 	benchmarkPut(b, tree, size)
 }
 
-func BenchmarkRedBlackTreePut10000(b *testing.B) {
+func BenchmarkAVLTreePut10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
 	tree := NewWithIntComparator()
@@ -644,7 +644,7 @@ func BenchmarkRedBlackTreePut10000(b *testing.B) {
 	benchmarkPut(b, tree, size)
 }
 
-func BenchmarkRedBlackTreePut100000(b *testing.B) {
+func BenchmarkAVLTreePut100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
 	tree := NewWithIntComparator()
@@ -655,7 +655,7 @@ func BenchmarkRedBlackTreePut100000(b *testing.B) {
 	benchmarkPut(b, tree, size)
 }
 
-func BenchmarkRedBlackTreeRemove100(b *testing.B) {
+func BenchmarkAVLTreeRemove100(b *testing.B) {
 	b.StopTimer()
 	size := 100
 	tree := NewWithIntComparator()
@@ -666,7 +666,7 @@ func BenchmarkRedBlackTreeRemove100(b *testing.B) {
 	benchmarkRemove(b, tree, size)
 }
 
-func BenchmarkRedBlackTreeRemove1000(b *testing.B) {
+func BenchmarkAVLTreeRemove1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
 	tree := NewWithIntComparator()
@@ -677,7 +677,7 @@ func BenchmarkRedBlackTreeRemove1000(b *testing.B) {
 	benchmarkRemove(b, tree, size)
 }
 
-func BenchmarkRedBlackTreeRemove10000(b *testing.B) {
+func BenchmarkAVLTreeRemove10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
 	tree := NewWithIntComparator()
@@ -688,7 +688,7 @@ func BenchmarkRedBlackTreeRemove10000(b *testing.B) {
 	benchmarkRemove(b, tree, size)
 }
 
-func BenchmarkRedBlackTreeRemove100000(b *testing.B) {
+func BenchmarkAVLTreeRemove100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
 	tree := NewWithIntComparator()

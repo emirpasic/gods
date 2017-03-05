@@ -13,14 +13,15 @@ package binaryheap
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/lists/arraylist"
-	"github.com/emirpasic/gods/trees"
-	"github.com/emirpasic/gods/utils"
 	"strings"
+
+	"github.com/emirpasic/gods/containers"
+	"github.com/emirpasic/gods/lists/arraylist"
+	"github.com/emirpasic/gods/utils"
 )
 
 func assertTreeImplementation() {
-	var _ trees.Tree = (*Heap)(nil)
+	var _ containers.Container = (*Heap)(nil)
 }
 
 // Heap holds elements in an array-list

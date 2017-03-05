@@ -13,8 +13,9 @@ package redblacktree
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/trees"
+
 	"github.com/emirpasic/gods/utils"
+	"github.com/spewspews/gods/trees"
 )
 
 func assertTreeImplementation() {
@@ -31,7 +32,7 @@ const (
 type Tree struct {
 	Root       *Node
 	size       int
-	Comparator utils.Comparator
+	comparator utils.Comparator
 }
 
 // Node is a single element within the tree
@@ -46,17 +47,27 @@ type Node struct {
 
 // NewWith instantiates a red-black tree with the custom comparator.
 func NewWith(comparator utils.Comparator) *Tree {
-	return &Tree{Comparator: comparator}
+	return &Tree{comparator: comparator}
 }
 
 // NewWithIntComparator instantiates a red-black tree with the IntComparator, i.e. keys are of type int.
 func NewWithIntComparator() *Tree {
-	return &Tree{Comparator: utils.IntComparator}
+	return &Tree{comparator: utils.IntComparator}
 }
 
 // NewWithStringComparator instantiates a red-black tree with the StringComparator, i.e. keys are of type string.
 func NewWithStringComparator() *Tree {
-	return &Tree{Comparator: utils.StringComparator}
+	return &Tree{comparator: utils.StringComparator}
+}
+
+// Comparator returns the comparator function for the tree.
+func (tree *Tree) Comparator() utils.Comparator {
+	return tree.comparator
+}
+
+// New returns a new empty tree with the same comparator.
+func (tree *Tree) New() trees.Tree {
+	return &Tree{comparator: tree.comparator}
 }
 
 // Put inserts node into the tree.
@@ -69,7 +80,7 @@ func (tree *Tree) Put(key interface{}, value interface{}) {
 		node := tree.Root
 		loop := true
 		for loop {
-			compare := tree.Comparator(key, node.Key)
+			compare := tree.comparator(key, node.Key)
 			switch {
 			case compare == 0:
 				node.Key = key
@@ -192,6 +203,26 @@ func (tree *Tree) Right() *Node {
 	return parent
 }
 
+// Min returns the minimum key value pair of the AVL tree
+// or nils if the tree is empty.
+func (tree *Tree) Min() (interface{}, interface{}) {
+	n := tree.Left()
+	if n == nil {
+		return nil, nil
+	}
+	return n.Key, n.Value
+}
+
+// Max returns the minimum key value pair of the AVL tree
+// or nils if the tree is empty.
+func (tree *Tree) Max() (interface{}, interface{}) {
+	n := tree.Right()
+	if n == nil {
+		return nil, nil
+	}
+	return n.Key, n.Value
+}
+
 // Floor Finds floor node of the input key, return the floor node or nil if no ceiling is found.
 // Second return parameter is true if floor was found, otherwise false.
 //
@@ -204,7 +235,7 @@ func (tree *Tree) Floor(key interface{}) (floor *Node, found bool) {
 	found = false
 	node := tree.Root
 	for node != nil {
-		compare := tree.Comparator(key, node.Key)
+		compare := tree.comparator(key, node.Key)
 		switch {
 		case compare == 0:
 			return node, true
@@ -233,7 +264,7 @@ func (tree *Tree) Ceiling(key interface{}) (ceiling *Node, found bool) {
 	found = false
 	node := tree.Root
 	for node != nil {
-		compare := tree.Comparator(key, node.Key)
+		compare := tree.comparator(key, node.Key)
 		switch {
 		case compare == 0:
 			return node, true
@@ -300,7 +331,7 @@ func output(node *Node, prefix string, isTail bool, str *string) {
 func (tree *Tree) lookup(key interface{}) *Node {
 	node := tree.Root
 	for node != nil {
-		compare := tree.Comparator(key, node.Key)
+		compare := tree.comparator(key, node.Key)
 		switch {
 		case compare == 0:
 			return node
