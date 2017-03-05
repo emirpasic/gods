@@ -9,9 +9,6 @@ package avltree
 
 import (
 	"fmt"
-	"io/ioutil"
-	"log"
-
 	"github.com/emirpasic/gods/trees"
 	"github.com/emirpasic/gods/utils"
 )
@@ -19,8 +16,6 @@ import (
 func assertTreeImplementation() {
 	var _ trees.Tree = new(Tree)
 }
-
-var dbgLog = log.New(ioutil.Discard, "avltree: ", log.LstdFlags)
 
 // Tree holds elements of the AVL tree.
 type Tree struct {
@@ -304,23 +299,17 @@ func removeFix(c int8, t **Node) bool {
 }
 
 func singlerot(c int8, s *Node) *Node {
-	dbgLog.Printf("singlerot: enter %p:%v %d\n", s, s, c)
 	s.b = 0
 	s = rotate(c, s)
 	s.b = 0
-	dbgLog.Printf("singlerot: exit %p:%v\n", s, s)
 	return s
 }
 
 func doublerot(c int8, s *Node) *Node {
-	dbgLog.Printf("doublerot: enter %p:%v %d\n", s, s, c)
 	a := (c + 1) / 2
 	r := s.c[a]
 	s.c[a] = rotate(-c, s.c[a])
 	p := rotate(c, s)
-	if r.p != p || s.p != p {
-		panic("doublerot: bad parents")
-	}
 
 	switch {
 	default:
@@ -335,12 +324,10 @@ func doublerot(c int8, s *Node) *Node {
 	}
 
 	p.b = 0
-	dbgLog.Printf("doublerot: exit %p:%v\n", s, s)
 	return p
 }
 
 func rotate(c int8, s *Node) *Node {
-	dbgLog.Printf("rotate: enter %p:%v %d\n", s, s, c)
 	a := (c + 1) / 2
 	r := s.c[a]
 	s.c[a] = r.c[a^1]
@@ -350,7 +337,6 @@ func rotate(c int8, s *Node) *Node {
 	r.c[a^1] = s
 	r.p = s.p
 	s.p = r
-	dbgLog.Printf("rotate: exit %p:%v\n", r, r)
 	return r
 }
 
