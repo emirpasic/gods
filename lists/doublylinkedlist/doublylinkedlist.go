@@ -259,18 +259,22 @@ func (list *List) Insert(index int, values ...interface{}) {
 			if i == 0 {
 				list.first = newElement
 			} else {
+				newElement.prev = beforeElement
 				beforeElement.next = newElement
 			}
 			beforeElement = newElement
 		}
+		oldNextElement.prev = beforeElement
 		beforeElement.next = oldNextElement
 	} else {
 		oldNextElement := beforeElement.next
 		for _, value := range values {
 			newElement := &element{value: value}
+			newElement.prev = beforeElement
 			beforeElement.next = newElement
 			beforeElement = newElement
 		}
+		oldNextElement.prev = beforeElement
 		beforeElement.next = oldNextElement
 	}
 }
