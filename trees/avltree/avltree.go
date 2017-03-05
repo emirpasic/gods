@@ -50,20 +50,10 @@ func NewWithStringComparator() *Tree {
 	return &Tree{Comparator: utils.StringComparator}
 }
 
-// Size returns the number of elements stored in the tree.
-func (t *Tree) Size() int {
-	return t.size
-}
-
-// Empty returns true if tree does not contain any nodes.
-func (t *Tree) Empty() bool {
-	return t.size == 0
-}
-
-// Clear removes all nodes from the tree.
-func (t *Tree) Clear() {
-	t.Root = nil
-	t.size = 0
+// Put inserts node into the tree.
+// Key should adhere to the comparator's type assertion, otherwise method panics.
+func (t *Tree) Put(key interface{}, value interface{}) {
+	t.put(key, value, nil, &t.Root)
 }
 
 // Get searches the node in the tree by key and returns its value or nil if key is not found in tree.
@@ -83,6 +73,54 @@ func (t *Tree) Get(key interface{}) (value interface{}, found bool) {
 		}
 	}
 	return nil, false
+}
+
+// Remove remove the node from the tree by key.
+// Key should adhere to the comparator's type assertion, otherwise method panics.
+func (t *Tree) Remove(key interface{}) {
+	t.remove(key, &t.Root)
+}
+
+// Empty returns true if tree does not contain any nodes.
+func (t *Tree) Empty() bool {
+	return t.size == 0
+}
+
+// Size returns the number of elements stored in the tree.
+func (t *Tree) Size() int {
+	return t.size
+}
+
+// Keys returns all keys in-order
+func (t *Tree) Keys() []interface{} {
+	keys := make([]interface{}, t.size)
+	it := t.Iterator()
+	for i := 0; it.Next(); i++ {
+		keys[i] = it.Key()
+	}
+	return keys
+}
+
+// Values returns all values in-order based on the key.
+func (t *Tree) Values() []interface{} {
+	values := make([]interface{}, t.size)
+	it := t.Iterator()
+	for i := 0; it.Next(); i++ {
+		values[i] = it.Value()
+	}
+	return values
+}
+
+// Left returns the minimum element of the AVL tree
+// or nil if the tree is empty.
+func (t *Tree) Left() *Node {
+	return t.bottom(0)
+}
+
+// Right returns the maximum element of the AVL tree
+// or nil if the tree is empty.
+func (t *Tree) Right() *Node {
+	return t.bottom(1)
 }
 
 // Floor Finds floor node of the input key, return the floor node or nil if no ceiling is found.
@@ -143,10 +181,23 @@ func (t *Tree) Ceiling(key interface{}) (floor *Node, found bool) {
 	return nil, false
 }
 
-// Put inserts node into the tree.
-// Key should adhere to the comparator's type assertion, otherwise method panics.
-func (t *Tree) Put(key interface{}, value interface{}) {
-	t.put(key, value, nil, &t.Root)
+// Clear removes all nodes from the tree.
+func (t *Tree) Clear() {
+	t.Root = nil
+	t.size = 0
+}
+
+// String returns a string representation of container
+func (t *Tree) String() string {
+	str := "AVLTree\n"
+	if !t.Empty() {
+		output(t.Root, "", true, &str)
+	}
+	return str
+}
+
+func (n *Node) String() string {
+	return fmt.Sprintf("%v", n.Key)
 }
 
 func (t *Tree) put(key interface{}, value interface{}, p *Node, qp **Node) bool {
@@ -176,12 +227,6 @@ func (t *Tree) put(key interface{}, value interface{}, p *Node, qp **Node) bool 
 		return putFix(int8(c), qp)
 	}
 	return false
-}
-
-// Remove remove the node from the tree by key.
-// Key should adhere to the comparator's type assertion, otherwise method panics.
-func (t *Tree) Remove(key interface{}) {
-	t.remove(key, &t.Root)
 }
 
 func (t *Tree) remove(key interface{}, qp **Node) bool {
@@ -330,38 +375,6 @@ func rotate(c int8, s *Node) *Node {
 	return r
 }
 
-// Keys returns all keys in-order
-func (t *Tree) Keys() []interface{} {
-	keys := make([]interface{}, t.size)
-	it := t.Iterator()
-	for i := 0; it.Next(); i++ {
-		keys[i] = it.Key()
-	}
-	return keys
-}
-
-// Values returns all values in-order based on the key.
-func (t *Tree) Values() []interface{} {
-	values := make([]interface{}, t.size)
-	it := t.Iterator()
-	for i := 0; it.Next(); i++ {
-		values[i] = it.Value()
-	}
-	return values
-}
-
-// Left returns the minimum element of the AVL tree
-// or nil if the tree is empty.
-func (t *Tree) Left() *Node {
-	return t.bottom(0)
-}
-
-// Right returns the maximum element of the AVL tree
-// or nil if the tree is empty.
-func (t *Tree) Right() *Node {
-	return t.bottom(1)
-}
-
 func (t *Tree) bottom(d int) *Node {
 	n := t.Root
 	if n == nil {
@@ -405,19 +418,6 @@ func (n *Node) walk1(a int) *Node {
 		p = p.Parent
 	}
 	return p
-}
-
-// String returns a string representation of container
-func (t *Tree) String() string {
-	str := "AVLTree\n"
-	if !t.Empty() {
-		output(t.Root, "", true, &str)
-	}
-	return str
-}
-
-func (n *Node) String() string {
-	return fmt.Sprintf("%v", n.Key)
 }
 
 func output(node *Node, prefix string, isTail bool, str *string) {
