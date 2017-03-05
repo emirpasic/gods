@@ -421,14 +421,14 @@ func (n *Node) walk1(a int) *Node {
 }
 
 func output(node *Node, prefix string, isTail bool, str *string) {
-	if node.Children[0] != nil {
+	if node.Children[1] != nil {
 		newPrefix := prefix
 		if isTail {
 			newPrefix += "│   "
 		} else {
 			newPrefix += "    "
 		}
-		output(node.Children[0], newPrefix, false, str)
+		output(node.Children[1], newPrefix, false, str)
 	}
 	*str += prefix
 	if isTail {
@@ -437,13 +437,13 @@ func output(node *Node, prefix string, isTail bool, str *string) {
 		*str += "┌── "
 	}
 	*str += node.String() + "\n"
-	if node.Children[1] != nil {
+	if node.Children[0] != nil {
 		newPrefix := prefix
 		if isTail {
 			newPrefix += "    "
 		} else {
 			newPrefix += "│   "
 		}
-		output(node.Children[1], newPrefix, true, str)
+		output(node.Children[0], newPrefix, true, str)
 	}
 }
