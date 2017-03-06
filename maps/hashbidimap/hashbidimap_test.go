@@ -150,6 +150,37 @@ func TestMapGetKey(t *testing.T) {
 	}
 }
 
+func TestMapSerialization(t *testing.T) {
+	m := New()
+	m.Put("a", 1.0)
+	m.Put("b", 2.0)
+	m.Put("c", 3.0)
+
+	var err error
+	assert := func() {
+		if actualValue, expectedValue := m.Keys(), []interface{}{"a", "b", "c"}; !sameElements(actualValue, expectedValue) {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+		if actualValue, expectedValue := m.Values(), []interface{}{1.0, 2.0, 3.0}; !sameElements(actualValue, expectedValue) {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+		if actualValue, expectedValue := m.Size(), 3; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+		if err != nil {
+			t.Errorf("Got error %v", err)
+		}
+	}
+
+	assert()
+
+	json, err := m.ToJSON()
+	assert()
+
+	err = m.FromJSON(json)
+	assert()
+}
+
 func sameElements(a []interface{}, b []interface{}) bool {
 	if len(a) != len(b) {
 		return false
