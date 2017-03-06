@@ -5,6 +5,7 @@
 package linkedliststack
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -145,6 +146,34 @@ func TestStackIteratorFirst(t *testing.T) {
 	if index, value := it.Index(), it.Value(); index != 0 || value != "c" {
 		t.Errorf("Got %v,%v expected %v,%v", index, value, 0, "c")
 	}
+}
+
+func TestStackSerialization(t *testing.T) {
+	stack := New()
+	stack.Push("a")
+	stack.Push("b")
+	stack.Push("c")
+
+	var err error
+	assert := func() {
+		if actualValue, expectedValue := fmt.Sprintf("%s%s%s", stack.Values()...), "cba"; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+		if actualValue, expectedValue := stack.Size(), 3; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+		if err != nil {
+			t.Errorf("Got error %v", err)
+		}
+	}
+
+	assert()
+
+	json, err := stack.ToJSON()
+	assert()
+
+	err = stack.FromJSON(json)
+	assert()
 }
 
 func benchmarkPush(b *testing.B, stack *Stack, size int) {
