@@ -345,6 +345,32 @@ func TestListIteratorFirst(t *testing.T) {
 	}
 }
 
+func TestListSerialization(t *testing.T) {
+	list := New()
+	list.Add("a", "b", "c")
+
+	var err error
+	assert := func() {
+		if actualValue, expectedValue := fmt.Sprintf("%s%s%s", list.Values()...), "abc"; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+		if actualValue, expectedValue := list.Size(), 3; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+		if err != nil {
+			t.Errorf("Got error %v", err)
+		}
+	}
+
+	assert()
+
+	json, err := list.ToJSON()
+	assert()
+
+	err = list.FromJSON(json)
+	assert()
+}
+
 func benchmarkGet(b *testing.B, list *List, size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
