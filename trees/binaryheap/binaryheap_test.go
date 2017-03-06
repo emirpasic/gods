@@ -259,6 +259,38 @@ func TestBinaryHeapIteratorLast(t *testing.T) {
 	}
 }
 
+func TestBinaryHeapSerialization(t *testing.T) {
+	heap := NewWithStringComparator()
+
+	heap.Push("c") // ["c"]
+	heap.Push("b") // ["b","c"]
+	heap.Push("a") // ["a","c","b"]("b" swapped with "a", hence last)
+
+	var err error
+	assert := func() {
+		if actualValue := heap.Values(); actualValue[0].(string) != "a" || actualValue[1].(string) != "c" || actualValue[2].(string) != "b" {
+			t.Errorf("Got %v expected %v", actualValue, "[1,3,2]")
+		}
+		if actualValue := heap.Size(); actualValue != 3 {
+			t.Errorf("Got %v expected %v", actualValue, 3)
+		}
+		if actualValue, ok := heap.Peek(); actualValue != "a" || !ok {
+			t.Errorf("Got %v expected %v", actualValue, "a")
+		}
+		if err != nil {
+			t.Errorf("Got error %v", err)
+		}
+	}
+
+	assert()
+
+	json, err := heap.ToJSON()
+	assert()
+
+	err = heap.FromJSON(json)
+	assert()
+}
+
 func benchmarkPush(b *testing.B, heap *Heap, size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {

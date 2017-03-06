@@ -473,6 +473,37 @@ func TestMapIteratorLast(t *testing.T) {
 	}
 }
 
+func TestMapSerialization(t *testing.T) {
+	m := NewWithStringComparators()
+	m.Put("a", "1")
+	m.Put("b", "2")
+	m.Put("c", "3")
+
+	var err error
+	assert := func() {
+		if actualValue := m.Keys(); actualValue[0].(string) != "a" || actualValue[1].(string) != "b" || actualValue[2].(string) != "c" {
+			t.Errorf("Got %v expected %v", actualValue, "[a,b,c]")
+		}
+		if actualValue := m.Values(); actualValue[0].(string) != "1" || actualValue[1].(string) != "2" || actualValue[2].(string) != "3" {
+			t.Errorf("Got %v expected %v", actualValue, "[1,2,3]")
+		}
+		if actualValue, expectedValue := m.Size(), 3; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+		if err != nil {
+			t.Errorf("Got error %v", err)
+		}
+	}
+
+	assert()
+
+	json, err := m.ToJSON()
+	assert()
+
+	err = m.FromJSON(json)
+	assert()
+}
+
 func benchmarkGet(b *testing.B, m *Map, size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {

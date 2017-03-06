@@ -9,6 +9,8 @@
 // Iterators provide stateful iterators.
 //
 // Enumerable provides Ruby inspired (each, select, map, find, any?, etc.) container functions.
+//
+// Serialization provides serializers (marshalers) and deserializers (unmarshalers).
 package containers
 
 import "github.com/emirpasic/gods/utils"

@@ -1074,6 +1074,37 @@ func assertValidTreeNode(t *testing.T, node *Node, expectedEntries int, expected
 	}
 }
 
+func TestBTreeSerialization(t *testing.T) {
+	tree := NewWithStringComparator(3)
+	tree.Put("c", "3")
+	tree.Put("b", "2")
+	tree.Put("a", "1")
+
+	var err error
+	assert := func() {
+		if actualValue, expectedValue := tree.Size(), 3; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+		if actualValue := tree.Keys(); actualValue[0].(string) != "a" || actualValue[1].(string) != "b" || actualValue[2].(string) != "c" {
+			t.Errorf("Got %v expected %v", actualValue, "[a,b,c]")
+		}
+		if actualValue := tree.Values(); actualValue[0].(string) != "1" || actualValue[1].(string) != "2" || actualValue[2].(string) != "3" {
+			t.Errorf("Got %v expected %v", actualValue, "[1,2,3]")
+		}
+		if err != nil {
+			t.Errorf("Got error %v", err)
+		}
+	}
+
+	assert()
+
+	json, err := tree.ToJSON()
+	assert()
+
+	err = tree.FromJSON(json)
+	assert()
+}
+
 func benchmarkGet(b *testing.B, tree *Tree, size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
