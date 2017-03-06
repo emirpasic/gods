@@ -1304,13 +1304,13 @@ import (
 
 func main() {
 	list := arraylist.New()
-	list.Add("a", "b", "c")
 
-	json, err := list.ToJSON()
+	json := []byte(`["a","b"]`)
+	err := list.FromJSON(json)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(string(json)) // ["a","b","c"]
+	fmt.Println(list) // ArrayList ["a","b"]
 }
 ```
 
