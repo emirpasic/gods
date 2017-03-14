@@ -14,7 +14,7 @@ package treemap
 import (
 	"fmt"
 	"github.com/emirpasic/gods/maps"
-	rbt "github.com/emirpasic/gods/trees/redblacktree"
+	avl "github.com/spewspews/gods/trees/avltree"
 	"github.com/emirpasic/gods/utils"
 	"strings"
 )
@@ -25,22 +25,22 @@ func assertMapImplementation() {
 
 // Map holds the elements in a red-black tree
 type Map struct {
-	tree *rbt.Tree
+	tree *avl.Tree
 }
 
 // NewWith instantiates a tree map with the custom comparator.
 func NewWith(comparator utils.Comparator) *Map {
-	return &Map{tree: rbt.NewWith(comparator)}
+	return &Map{tree: avl.NewWith(comparator)}
 }
 
 // NewWithIntComparator instantiates a tree map with the IntComparator, i.e. keys are of type int.
 func NewWithIntComparator() *Map {
-	return &Map{tree: rbt.NewWithIntComparator()}
+	return &Map{tree: avl.NewWithIntComparator()}
 }
 
 // NewWithStringComparator instantiates a tree map with the StringComparator, i.e. keys are of type string.
 func NewWithStringComparator() *Map {
-	return &Map{tree: rbt.NewWithStringComparator()}
+	return &Map{tree: avl.NewWithStringComparator()}
 }
 
 // Put inserts key-value pair into the map.

@@ -20,7 +20,7 @@ package treebidimap
 import (
 	"fmt"
 	"github.com/emirpasic/gods/maps"
-	"github.com/emirpasic/gods/trees/redblacktree"
+	"github.com/spewspews/gods/trees/avltree"
 	"github.com/emirpasic/gods/utils"
 	"strings"
 )
@@ -31,8 +31,8 @@ func assertMapImplementation() {
 
 // Map holds the elements in two red-black trees.
 type Map struct {
-	forwardMap      redblacktree.Tree
-	inverseMap      redblacktree.Tree
+	forwardMap      avltree.Tree
+	inverseMap      avltree.Tree
 	keyComparator   utils.Comparator
 	valueComparator utils.Comparator
 }
@@ -45,8 +45,8 @@ type data struct {
 // NewWith instantiates a bidirectional map.
 func NewWith(keyComparator utils.Comparator, valueComparator utils.Comparator) *Map {
 	return &Map{
-		forwardMap:      *redblacktree.NewWith(keyComparator),
-		inverseMap:      *redblacktree.NewWith(valueComparator),
+		forwardMap:      *avltree.NewWith(keyComparator),
+		inverseMap:      *avltree.NewWith(valueComparator),
 		keyComparator:   keyComparator,
 		valueComparator: valueComparator,
 	}

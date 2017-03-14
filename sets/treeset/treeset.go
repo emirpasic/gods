@@ -12,7 +12,7 @@ package treeset
 import (
 	"fmt"
 	"github.com/emirpasic/gods/sets"
-	rbt "github.com/emirpasic/gods/trees/redblacktree"
+	avl "github.com/spewspews/gods/trees/avltree"
 	"github.com/emirpasic/gods/utils"
 	"strings"
 )
@@ -23,24 +23,24 @@ func assertSetImplementation() {
 
 // Set holds elements in a red-black tree
 type Set struct {
-	tree *rbt.Tree
+	tree *avl.Tree
 }
 
 var itemExists = struct{}{}
 
 // NewWith instantiates a new empty set with the custom comparator.
 func NewWith(comparator utils.Comparator) *Set {
-	return &Set{tree: rbt.NewWith(comparator)}
+	return &Set{tree: avl.NewWith(comparator)}
 }
 
 // NewWithIntComparator instantiates a new empty set with the IntComparator, i.e. keys are of type int.
 func NewWithIntComparator() *Set {
-	return &Set{tree: rbt.NewWithIntComparator()}
+	return &Set{tree: avl.NewWithIntComparator()}
 }
 
 // NewWithStringComparator instantiates a new empty set with the StringComparator, i.e. keys are of type string.
 func NewWithStringComparator() *Set {
-	return &Set{tree: rbt.NewWithStringComparator()}
+	return &Set{tree: avl.NewWithStringComparator()}
 }
 
 // Add adds the items (one or more) to the set.

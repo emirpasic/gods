@@ -6,7 +6,7 @@ package treemap
 
 import (
 	"github.com/emirpasic/gods/containers"
-	rbt "github.com/emirpasic/gods/trees/redblacktree"
+	avl "github.com/spewspews/gods/trees/avltree"
 )
 
 func assertIteratorImplementation() {
@@ -15,7 +15,7 @@ func assertIteratorImplementation() {
 
 // Iterator holding the iterator's state
 type Iterator struct {
-	iterator rbt.Iterator
+	iterator avl.Iterator
 }
 
 // Iterator returns a stateful iterator whose elements are key/value pairs.
