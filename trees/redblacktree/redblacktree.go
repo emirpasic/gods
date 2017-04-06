@@ -62,9 +62,10 @@ func NewWithStringComparator() *Tree {
 // Put inserts node into the tree.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (tree *Tree) Put(key interface{}, value interface{}) {
-	insertedNode := &Node{Key: key, Value: value, color: red}
+	var insertedNode *Node
 	if tree.Root == nil {
-		tree.Root = insertedNode
+		tree.Root = &Node{Key: key, Value: value, color: red}
+		insertedNode = tree.Root
 	} else {
 		node := tree.Root
 		loop := true
@@ -77,14 +78,16 @@ func (tree *Tree) Put(key interface{}, value interface{}) {
 				return
 			case compare < 0:
 				if node.Left == nil {
-					node.Left = insertedNode
+					node.Left = &Node{Key: key, Value: value, color: red}
+					insertedNode = node.Left
 					loop = false
 				} else {
 					node = node.Left
 				}
 			case compare > 0:
 				if node.Right == nil {
-					node.Right = insertedNode
+					node.Right = &Node{Key: key, Value: value, color: red}
+					insertedNode = node.Right
 					loop = false
 				} else {
 					node = node.Right
