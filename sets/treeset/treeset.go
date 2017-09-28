@@ -11,10 +11,11 @@ package treeset
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/emirpasic/gods/sets"
 	rbt "github.com/emirpasic/gods/trees/redblacktree"
 	"github.com/emirpasic/gods/utils"
-	"strings"
 )
 
 func assertSetImplementation() {
@@ -91,11 +92,11 @@ func (set *Set) Values() []interface{} {
 
 // String returns a string representation of container
 func (set *Set) String() string {
-	str := "TreeSet\n"
+	str := "{"
 	items := []string{}
 	for _, v := range set.tree.Keys() {
-		items = append(items, fmt.Sprintf("%v", v))
+		items = append(items, fmt.Sprintf("%#v", v))
 	}
-	str += strings.Join(items, ", ")
+	str += strings.Join(items, ", ") + "}"
 	return str
 }

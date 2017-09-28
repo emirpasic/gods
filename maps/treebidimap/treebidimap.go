@@ -19,10 +19,11 @@ package treebidimap
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/emirpasic/gods/maps"
 	"github.com/emirpasic/gods/trees/redblacktree"
 	"github.com/emirpasic/gods/utils"
-	"strings"
 )
 
 func assertMapImplementation() {
@@ -129,10 +130,12 @@ func (m *Map) Clear() {
 
 // String returns a string representation of container
 func (m *Map) String() string {
-	str := "TreeBidiMap\nmap["
+	str := "{"
+	values := []string{}
 	it := m.Iterator()
 	for it.Next() {
-		str += fmt.Sprintf("%v:%v ", it.Key(), it.Value())
+		values = append(values, fmt.Sprintf("%#v: %#v", it.Key(), it.Value()))
 	}
-	return strings.TrimRight(str, " ") + "]"
+	str += strings.Join(values, ", ") + "}"
+	return str
 }

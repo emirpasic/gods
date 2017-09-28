@@ -13,6 +13,9 @@ package hashmap
 
 import (
 	"fmt"
+
+	"strings"
+
 	"github.com/emirpasic/gods/maps"
 )
 
@@ -86,7 +89,11 @@ func (m *Map) Clear() {
 
 // String returns a string representation of container
 func (m *Map) String() string {
-	str := "HashMap\n"
-	str += fmt.Sprintf("%v", m.m)
+	str := "{"
+	values := []string{}
+	for k, v := range m.m {
+		values = append(values, fmt.Sprintf("%#v: %#v", k, v))
+	}
+	str += strings.Join(values, ", ") + "}"
 	return str
 }

@@ -11,8 +11,9 @@ package hashset
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/sets"
 	"strings"
+
+	"github.com/emirpasic/gods/sets"
 )
 
 func assertSetImplementation() {
@@ -85,11 +86,11 @@ func (set *Set) Values() []interface{} {
 
 // String returns a string representation of container
 func (set *Set) String() string {
-	str := "HashSet\n"
+	str := "{"
 	items := []string{}
 	for k := range set.items {
-		items = append(items, fmt.Sprintf("%v", k))
+		items = append(items, fmt.Sprintf("%#v", k))
 	}
-	str += strings.Join(items, ", ")
+	str += strings.Join(items, ", ") + "}"
 	return str
 }
