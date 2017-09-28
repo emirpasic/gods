@@ -11,9 +11,10 @@ package singlylinkedlist
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/emirpasic/gods/lists"
 	"github.com/emirpasic/gods/utils"
-	"strings"
 )
 
 func assertListImplementation() {
@@ -35,6 +36,13 @@ type element struct {
 // New instantiates a new empty list
 func New() *List {
 	return &List{}
+}
+
+// Of instantiates a new list of the given values
+func Of(values ...interface{}) *List {
+	list := New()
+	list.Add(values)
+	return list
 }
 
 // Add appends a value (one or more) at the end of the list (same as Append())

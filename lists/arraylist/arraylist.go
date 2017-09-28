@@ -11,9 +11,10 @@ package arraylist
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/emirpasic/gods/lists"
 	"github.com/emirpasic/gods/utils"
-	"strings"
 )
 
 func assertListImplementation() {
@@ -34,6 +35,13 @@ const (
 // New instantiates a new empty list
 func New() *List {
 	return &List{}
+}
+
+// Of instantiates a new list of the given values
+func Of(values ...interface{}) *List {
+	list := New()
+	list.Add(values)
+	return list
 }
 
 // Add appends a value at the end of the list
