@@ -173,6 +173,18 @@ func (list *List) Values() []interface{} {
 	return values
 }
 
+//IndexOf returns index of provided element
+func (list *List) IndexOf(value interface{}) int {
+	if list.size == 0 {
+		return -1
+	}
+	for index, element := range list.Values() {
+		if element == value {
+			return index
+		}
+	}
+	return -1
+}
 // Empty returns true if list does not contain any elements.
 func (list *List) Empty() bool {
 	return list.size == 0
