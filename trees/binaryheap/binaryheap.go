@@ -13,10 +13,11 @@ package binaryheap
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/emirpasic/gods/lists/arraylist"
 	"github.com/emirpasic/gods/trees"
 	"github.com/emirpasic/gods/utils"
-	"strings"
 )
 
 func assertTreeImplementation() {
@@ -103,12 +104,12 @@ func (heap *Heap) Values() []interface{} {
 
 // String returns a string representation of container
 func (heap *Heap) String() string {
-	str := "BinaryHeap\n"
+	str := "<"
 	values := []string{}
 	for _, value := range heap.list.Values() {
-		values = append(values, fmt.Sprintf("%v", value))
+		values = append(values, fmt.Sprintf("%#v", value))
 	}
-	str += strings.Join(values, ", ")
+	str += strings.Join(values, " ") + ">"
 	return str
 }
 

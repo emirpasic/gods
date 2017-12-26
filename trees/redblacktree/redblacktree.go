@@ -13,6 +13,7 @@ package redblacktree
 
 import (
 	"fmt"
+
 	"github.com/emirpasic/gods/trees"
 	"github.com/emirpasic/gods/utils"
 )
@@ -261,7 +262,7 @@ func (tree *Tree) Clear() {
 
 // String returns a string representation of container
 func (tree *Tree) String() string {
-	str := "RedBlackTree\n"
+	str := ""
 	if !tree.Empty() {
 		output(tree.Root, "", true, &str)
 	}
@@ -269,7 +270,7 @@ func (tree *Tree) String() string {
 }
 
 func (node *Node) String() string {
-	return fmt.Sprintf("%v", node.Key)
+	return fmt.Sprintf("%#v", node.Key)
 }
 
 func output(node *Node, prefix string, isTail bool, str *string) {

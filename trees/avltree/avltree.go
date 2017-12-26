@@ -11,6 +11,7 @@ package avltree
 
 import (
 	"fmt"
+
 	"github.com/emirpasic/gods/trees"
 	"github.com/emirpasic/gods/utils"
 )
@@ -189,7 +190,7 @@ func (t *Tree) Clear() {
 
 // String returns a string representation of container
 func (t *Tree) String() string {
-	str := "AVLTree\n"
+	str := ""
 	if !t.Empty() {
 		output(t.Root, "", true, &str)
 	}
@@ -197,7 +198,7 @@ func (t *Tree) String() string {
 }
 
 func (n *Node) String() string {
-	return fmt.Sprintf("%v", n.Key)
+	return fmt.Sprintf("%#v", n.Key)
 }
 
 func (t *Tree) put(key interface{}, value interface{}, p *Node, qp **Node) bool {

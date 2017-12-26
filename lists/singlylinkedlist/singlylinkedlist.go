@@ -11,9 +11,10 @@ package singlylinkedlist
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/emirpasic/gods/lists"
 	"github.com/emirpasic/gods/utils"
-	"strings"
 )
 
 func assertListImplementation() {
@@ -261,12 +262,12 @@ func (list *List) Insert(index int, values ...interface{}) {
 
 // String returns a string representation of container
 func (list *List) String() string {
-	str := "SinglyLinkedList\n"
+	str := "["
 	values := []string{}
 	for element := list.first; element != nil; element = element.next {
 		values = append(values, fmt.Sprintf("%v", element.value))
 	}
-	str += strings.Join(values, ", ")
+	str += strings.Join(values, ", ") + "]"
 	return str
 }
 

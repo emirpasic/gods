@@ -11,9 +11,10 @@ package arraystack
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/emirpasic/gods/lists/arraylist"
 	"github.com/emirpasic/gods/stacks"
-	"strings"
 )
 
 func assertStackImplementation() {
@@ -76,12 +77,12 @@ func (stack *Stack) Values() []interface{} {
 
 // String returns a string representation of container
 func (stack *Stack) String() string {
-	str := "ArrayStack\n"
+	str := "["
 	values := []string{}
 	for _, value := range stack.list.Values() {
-		values = append(values, fmt.Sprintf("%v", value))
+		values = append(values, fmt.Sprintf("%#v", value))
 	}
-	str += strings.Join(values, ", ")
+	str += strings.Join(values, " ") + "]"
 	return str
 }
 
