@@ -96,45 +96,96 @@ func (tree *Tree) Get(key interface{}) (value interface{}, found bool) {
 	return nil, false
 }
 
-func (tree *Tree) GetClosest(key interface{}) (prev, after interface{}, found bool) {
+// GetClosest does the same as above but if the given key does not exists,
+// it tries to find the elements next to it.
+// If the given key exists, it returns twice the value and found is true.
+// If the given key is between tow other keys the previous value will be first and the next at the second place.
+// If the given key is less than the first key, it returns prev as nil and next as the first value.
+// If the given key is higher than the last key, it returns prev as the last value and next as nil.
+// If empty it returns nil, nil, false.
+func (tree *Tree) GetClosest(key interface{}) (prev, next interface{}, found bool) {
+	// The first part of the function is almost a clone of tree.searchRecursively
 	if tree.Empty() {
 		return nil, nil, false
 	}
+
+	iterator := tree.IteratorAt(key, true, false)
+	if iterator.entry == nil {
+		iterator = tree.IteratorAt(key, false, true)
+	}
+
+	if iterator.Key() == key {
+		return iterator.Value(), iterator.Value(), true
+	}
+
+	_, prev, _, next, found = tree.findClosestWithIterator(key, iterator)
+
+	return prev, next, found
+}
+
+// IteratorAt gets the iterator at the key if found or at the start of
+// the leaf which would hold the value if present..
+func (tree *Tree) IteratorAt(key interface{}, betterBefore, betterAfter bool) *Iterator {
 	node := tree.Root
 	var index int
+	var found bool
+
 	for {
+		// Found the value in the active node
 		index, found = tree.search(node, key)
 		if found {
-			return node.Entries[index], node.Entries[index], true
+			// Returns the interator at the right position
+			return &Iterator{
+				tree:     tree,
+				node:     node,
+				entry:    node.Entries[index],
+				position: between,
+			}
 		}
+
+		// The key is not in the node but this is a leaf node.
+		// This means that the key is not in the tree and the returned pointer will
+		// be at the first position of the closest keys.
 		if tree.isLeaf(node) {
-			// Build the iterator to get the value just before and after the requested key
+			// Build the iterator to get the value just before and after the requested
+			// key
 			iterator := &Iterator{
 				tree:     tree,
 				node:     node,
 				entry:    node.Entries[0],
 				position: between,
 			}
-			return tree.findClosestWithIterator(key, iterator)
+			prevKey, _, nextKey, _, _ := tree.findClosestWithIterator(key, iterator)
+			if prevKey != nil && betterBefore {
+				return tree.IteratorAt(prevKey, betterBefore, betterAfter)
+			} else if nextKey != nil && betterAfter {
+				return tree.IteratorAt(nextKey, betterBefore, betterAfter)
+			} else {
+				return iterator
+			}
 		}
+
+		// Update the active node with the right child.
 		node = node.Children[index]
 	}
 }
 
-func (tree *Tree) findClosestWithIterator(key interface{}, iterator *Iterator) (prev, next interface{}, found bool) {
+func (tree *Tree) findClosestWithIterator(key interface{}, iterator *Iterator) (prevKey, prevValue, nextKey, nextValue interface{}, found bool) {
 	// Reads given node to define the value right after the asked key.
 	for {
 		// If comparator returns a negative value, this means that
 		// the given key is after the looking key.
 		if tree.Comparator(key, iterator.Key()) < 0 {
-			next = iterator.Value()
+			nextKey = iterator.Key()
+			nextValue = iterator.Value()
 			break
 		}
 
 		// If last there is no after value but we find the value just before.
 		if !iterator.Next() {
 			iterator.Prev()
-			prev = iterator.Value()
+			prevKey = iterator.Key()
+			prevValue = iterator.Value()
 			return
 		}
 	}
@@ -143,7 +194,8 @@ func (tree *Tree) findClosestWithIterator(key interface{}, iterator *Iterator) (
 		return
 	}
 
-	prev = iterator.Value()
+	prevKey = iterator.Key()
+	prevValue = iterator.Value()
 
 	return
 }

@@ -1108,24 +1108,34 @@ func TestBTreeSerialization(t *testing.T) {
 func TestBTreeClosest(t *testing.T) {
 	tree := NewWithIntComparator(3)
 
+	// Check if empty
+	emptyPrev, emptyNext, emptyFound := tree.GetClosest(10)
+	if emptyPrev != nil || emptyNext != nil || emptyFound == true {
+		t.Errorf("an empty tree should returns only nil and false but got: %v %v %t", emptyPrev, emptyNext, emptyFound)
+	}
+
+	// Fillup the tree
 	for i := 10; i <= 100; i++ {
+		// Don't add value between 50 and 60
 		if 50 < i && i < 60 {
 			continue
 		}
 		tree.Put(i, fmt.Sprint(i))
 	}
 
+	// Build the test objects
 	tests := []struct {
 		asked       int
 		prev, after string
 		exist       bool
 	}{
-		{20, "20", "20", true},
-		{55, "50", "60", false},
-		{-10, "", "10", false},
-		{150, "100", "", false},
+		{20, "20", "20", true},  // It exists
+		{55, "50", "60", false}, // It not exists and is between
+		{-10, "", "10", false},  // It not exists and is before the first
+		{150, "100", "", false}, // It not exists and is after the last
 	}
 
+	// Run the tests
 	for _, test := range tests {
 		prev, after, found := tree.GetClosest(test.asked)
 		if found != test.exist {
@@ -1138,7 +1148,7 @@ func TestBTreeClosest(t *testing.T) {
 			t.Errorf("The previous is %v but should be nil for %d", prev, test.asked)
 			continue
 		}
-		if test.prev != "" && prev != test.prev {
+		if test.prev != "" && fmt.Sprint(prev) != fmt.Sprint(test.prev) {
 			t.Errorf("The previous is %s but should be %s for %d", prev, test.prev, test.asked)
 			continue
 		}
@@ -1146,7 +1156,7 @@ func TestBTreeClosest(t *testing.T) {
 			t.Errorf("The after is %v but should be nil for %d", after, test.asked)
 			continue
 		}
-		if test.after != "" && after != test.after {
+		if test.after != "" && fmt.Sprint(after) != fmt.Sprint(test.after) {
 			t.Errorf("The after is %s but should be %s for %d", after, test.after, test.asked)
 			continue
 		}
