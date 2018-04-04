@@ -19,9 +19,10 @@ package btree
 import (
 	"bytes"
 	"fmt"
+	"strings"
+
 	"github.com/emirpasic/gods/trees"
 	"github.com/emirpasic/gods/utils"
-	"strings"
 )
 
 func assertTreeImplementation() {
@@ -93,6 +94,58 @@ func (tree *Tree) Get(key interface{}) (value interface{}, found bool) {
 		return node.Entries[index].Value, true
 	}
 	return nil, false
+}
+
+func (tree *Tree) GetClosest(key interface{}) (prev, after interface{}, found bool) {
+	if tree.Empty() {
+		return nil, nil, false
+	}
+	node := tree.Root
+	var index int
+	for {
+		index, found = tree.search(node, key)
+		if found {
+			return node.Entries[index], node.Entries[index], true
+		}
+		if tree.isLeaf(node) {
+			// Build the iterator to get the value just before and after the requested key
+			iterator := &Iterator{
+				tree:     tree,
+				node:     node,
+				entry:    node.Entries[0],
+				position: between,
+			}
+			return tree.findClosestWithIterator(key, iterator)
+		}
+		node = node.Children[index]
+	}
+}
+
+func (tree *Tree) findClosestWithIterator(key interface{}, iterator *Iterator) (prev, next interface{}, found bool) {
+	// Reads given node to define the value right after the asked key.
+	for {
+		// If comparator returns a negative value, this means that
+		// the given key is after the looking key.
+		if tree.Comparator(key, iterator.Key()) < 0 {
+			next = iterator.Value()
+			break
+		}
+
+		// If last there is no after value but we find the value just before.
+		if !iterator.Next() {
+			iterator.Prev()
+			prev = iterator.Value()
+			return
+		}
+	}
+	// Gets the previous value. If not ok there is not previous value.
+	if !iterator.Prev() {
+		return
+	}
+
+	prev = iterator.Value()
+
+	return
 }
 
 // Remove remove the node from the tree by key.

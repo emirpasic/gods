@@ -1105,6 +1105,54 @@ func TestBTreeSerialization(t *testing.T) {
 	assert()
 }
 
+func TestBTreeClosest(t *testing.T) {
+	tree := NewWithIntComparator(3)
+
+	for i := 10; i <= 100; i++ {
+		if 50 < i && i < 60 {
+			continue
+		}
+		tree.Put(i, fmt.Sprint(i))
+	}
+
+	tests := []struct {
+		asked       int
+		prev, after string
+		exist       bool
+	}{
+		{20, "20", "20", true},
+		{55, "50", "60", false},
+		{-10, "", "10", false},
+		{150, "100", "", false},
+	}
+
+	for _, test := range tests {
+		prev, after, found := tree.GetClosest(test.asked)
+		if found != test.exist {
+			t.Errorf("The value %d exists but should not", test.asked)
+		} else if found {
+			continue
+		}
+
+		if test.prev == "" && prev != nil {
+			t.Errorf("The previous is %v but should be nil for %d", prev, test.asked)
+			continue
+		}
+		if test.prev != "" && prev != test.prev {
+			t.Errorf("The previous is %s but should be %s for %d", prev, test.prev, test.asked)
+			continue
+		}
+		if test.after == "" && after != nil {
+			t.Errorf("The after is %v but should be nil for %d", after, test.asked)
+			continue
+		}
+		if test.after != "" && after != test.after {
+			t.Errorf("The after is %s but should be %s for %d", after, test.after, test.asked)
+			continue
+		}
+	}
+}
+
 func benchmarkGet(b *testing.B, tree *Tree, size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
