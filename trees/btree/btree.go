@@ -19,9 +19,10 @@ package btree
 import (
 	"bytes"
 	"fmt"
+	"strings"
+
 	"github.com/emirpasic/gods/trees"
 	"github.com/emirpasic/gods/utils"
-	"strings"
 )
 
 func assertTreeImplementation() {
@@ -30,10 +31,11 @@ func assertTreeImplementation() {
 
 // Tree holds elements of the B-tree
 type Tree struct {
-	Root       *Node            // Root node
-	Comparator utils.Comparator // Key comparator
-	size       int              // Total number of keys in the tree
-	m          int              // order (maximum number of children)
+	Root           *Node                // Root node
+	Comparator     utils.Comparator     // Key comparator
+	ComparatorType utils.ComparatorType // Type comparator
+	size           int                  // Total number of keys in the tree
+	m              int                  // order (maximum number of children)
 }
 
 // Node is a single element within the tree
@@ -50,21 +52,21 @@ type Entry struct {
 }
 
 // NewWith instantiates a B-tree with the order (maximum number of children) and a custom key comparator.
-func NewWith(order int, comparator utils.Comparator) *Tree {
+func NewWith(order int, comparator utils.Comparator, comparatorType utils.ComparatorType) *Tree {
 	if order < 3 {
 		panic("Invalid order, should be at least 3")
 	}
-	return &Tree{m: order, Comparator: comparator}
+	return &Tree{m: order, Comparator: comparator, ComparatorType: comparatorType}
 }
 
 // NewWithIntComparator instantiates a B-tree with the order (maximum number of children) and the IntComparator, i.e. keys are of type int.
 func NewWithIntComparator(order int) *Tree {
-	return NewWith(order, utils.IntComparator)
+	return NewWith(order, utils.IntComparator, utils.IntComparatorType)
 }
 
 // NewWithStringComparator instantiates a B-tree with the order (maximum number of children) and the StringComparator, i.e. keys are of type string.
 func NewWithStringComparator(order int) *Tree {
-	return NewWith(order, utils.StringComparator)
+	return NewWith(order, utils.StringComparator, utils.StringComparatorType)
 }
 
 // Put inserts key-value pair node into the tree.

@@ -15,6 +15,29 @@ import "time"
 //    positive , if a > b
 type Comparator func(a, b interface{}) int
 
+// ComparatorType permits to know what is the type of the comparator
+type ComparatorType int
+
+// ComparatorType
+const (
+	StringComparatorType ComparatorType = iota
+	IntComparatorType
+	Int8ComparatorType
+	Int16ComparatorType
+	Int32ComparatorType
+	Int64ComparatorType
+	UIntComparatorType
+	UInt8ComparatorType
+	UInt16ComparatorType
+	UInt32ComparatorType
+	UInt64ComparatorType
+	Float32ComparatorType
+	Float64ComparatorType
+	ByteComparatorType
+	RuneComparatorType
+	TimeComparatorType
+)
+
 // StringComparator provides a fast comparison on strings
 func StringComparator(a, b interface{}) int {
 	s1 := a.(string)

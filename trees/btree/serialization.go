@@ -6,6 +6,7 @@ package btree
 
 import (
 	"encoding/json"
+
 	"github.com/emirpasic/gods/containers"
 	"github.com/emirpasic/gods/utils"
 )
@@ -32,7 +33,7 @@ func (tree *Tree) FromJSON(data []byte) error {
 	if err == nil {
 		tree.Clear()
 		for key, value := range elements {
-			tree.Put(key, value)
+			tree.Put(utils.FromString(key, tree.ComparatorType), value)
 		}
 	}
 	return err
