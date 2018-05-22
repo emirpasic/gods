@@ -1125,6 +1125,44 @@ func TestBTreeClosest(t *testing.T) {
 
 	// Build the test objects
 	tests := []struct {
+		asked int
+		exist bool
+	}{
+		{20, true},   // It exists
+		{55, false},  // It not exists and is between
+		{-10, false}, // It not exists and is before the first
+		{150, false}, // It not exists and is after the last
+	}
+
+	// Run the tests
+	for _, test := range tests {
+		iter, found := tree.IteratorAt(test.asked)
+		if found != test.exist {
+			t.Errorf("The value %d exists but should not", test.asked)
+		} else if found {
+			continue
+		}
+
+		// It panics if any error
+		iter.Key()
+		iter.Value()
+	}
+}
+
+func TestBTreeIteratorAt(t *testing.T) {
+	tree := NewWithIntComparator(3)
+
+	// Fillup the tree
+	for i := 10; i <= 100; i++ {
+		// Don't add value between 50 and 60
+		if 50 < i && i < 60 {
+			continue
+		}
+		tree.Put(i, fmt.Sprint(i))
+	}
+
+	// Build the test objects
+	tests := []struct {
 		asked       int
 		prev, after string
 		exist       bool
