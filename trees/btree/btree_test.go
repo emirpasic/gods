@@ -1113,6 +1113,10 @@ func TestBTreeClosest(t *testing.T) {
 	if emptyPrev != nil || emptyNext != nil || emptyFound == true {
 		t.Errorf("an empty tree should returns only nil and false but got: %v %v %t", emptyPrev, emptyNext, emptyFound)
 	}
+	emptyPrev, emptyNext, emptyFound = tree.GetClosestKeys(10)
+	if emptyPrev != nil || emptyNext != nil || emptyFound == true {
+		t.Errorf("an empty tree should returns only nil and false but got: %v %v %t", emptyPrev, emptyNext, emptyFound)
+	}
 
 	// Fillup the tree
 	for i := 10; i <= 100; i++ {
@@ -1161,6 +1165,11 @@ func TestBTreeIteratorAt(t *testing.T) {
 		tree.Put(i, fmt.Sprint(i))
 	}
 
+	funcs := []func(key interface{}) (prev, next interface{}, found bool){
+		tree.GetClosest,
+		tree.GetClosestKeys,
+	}
+
 	// Build the test objects
 	tests := []struct {
 		asked       int
@@ -1175,28 +1184,30 @@ func TestBTreeIteratorAt(t *testing.T) {
 
 	// Run the tests
 	for _, test := range tests {
-		prev, after, found := tree.GetClosest(test.asked)
-		if found != test.exist {
-			t.Errorf("The value %d exists but should not", test.asked)
-		} else if found {
-			continue
-		}
+		for _, function := range funcs {
+			prev, after, found := function(test.asked)
+			if found != test.exist {
+				t.Errorf("The value %d exists but should not", test.asked)
+			} else if found {
+				continue
+			}
 
-		if test.prev == "" && prev != nil {
-			t.Errorf("The previous is %v but should be nil for %d", prev, test.asked)
-			continue
-		}
-		if test.prev != "" && fmt.Sprint(prev) != fmt.Sprint(test.prev) {
-			t.Errorf("The previous is %s but should be %s for %d", prev, test.prev, test.asked)
-			continue
-		}
-		if test.after == "" && after != nil {
-			t.Errorf("The after is %v but should be nil for %d", after, test.asked)
-			continue
-		}
-		if test.after != "" && fmt.Sprint(after) != fmt.Sprint(test.after) {
-			t.Errorf("The after is %s but should be %s for %d", after, test.after, test.asked)
-			continue
+			if test.prev == "" && prev != nil {
+				t.Errorf("The previous is %v but should be nil for %d", prev, test.asked)
+				continue
+			}
+			if test.prev != "" && fmt.Sprint(prev) != fmt.Sprint(test.prev) {
+				t.Errorf("The previous is %s but should be %s for %d", prev, test.prev, test.asked)
+				continue
+			}
+			if test.after == "" && after != nil {
+				t.Errorf("The after is %v but should be nil for %d", after, test.asked)
+				continue
+			}
+			if test.after != "" && fmt.Sprint(after) != fmt.Sprint(test.after) {
+				t.Errorf("The after is %s but should be %s for %d", after, test.after, test.asked)
+				continue
+			}
 		}
 	}
 }

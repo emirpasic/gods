@@ -104,6 +104,15 @@ func (tree *Tree) Get(key interface{}) (value interface{}, found bool) {
 // If the given key is higher than the last key, it returns prev as the last value and next as nil.
 // If empty it returns nil, nil, false.
 func (tree *Tree) GetClosest(key interface{}) (prev, next interface{}, found bool) {
+	return tree.getClosest(key, false)
+}
+
+// GetClosestKeys does the same as above but returns the keys
+func (tree *Tree) GetClosestKeys(key interface{}) (prev, next interface{}, found bool) {
+	return tree.getClosest(key, true)
+}
+
+func (tree *Tree) getClosest(key interface{}, keyWanted bool) (prev, next interface{}, found bool) {
 	// The first part of the function is almost a clone of tree.searchRecursively
 	if tree.Empty() {
 		return nil, nil, false
@@ -111,12 +120,17 @@ func (tree *Tree) GetClosest(key interface{}) (prev, next interface{}, found boo
 
 	iterator, found := tree.IteratorAt(key)
 	if found {
+		if keyWanted {
+			return iterator.Key(), iterator.Key(), true
+		}
 		return iterator.Value(), iterator.Value(), true
 	}
 
-	_, prev, _, next, found = tree.findClosestWithIterator(key, iterator)
-
-	return prev, next, found
+	prevKey, prevValue, nextKey, nextValue, found := tree.findClosestWithIterator(key, iterator)
+	if keyWanted {
+		return prevKey, nextKey, found
+	}
+	return prevValue, nextValue, found
 }
 
 // IteratorAt gets the iterator at the key if found or just before the wanted
