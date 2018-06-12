@@ -157,14 +157,8 @@ func (list *List) Insert(index int, values ...interface{}) {
 	l := len(values)
 	list.growBy(l)
 	list.size += l
-	// Shift old to right
-	for i := list.size - 1; i >= index+l; i-- {
-		list.elements[i] = list.elements[i-l]
-	}
-	// Insert new
-	for i, value := range values {
-		list.elements[index+i] = value
-	}
+	copy(list.elements[index+l:], list.elements[index:list.size - l])
+	copy(list.elements[index:], values)
 }
 
 // String returns a string representation of container
