@@ -185,6 +185,7 @@ func (list *List) IndexOf(value interface{}) int {
 	}
 	return -1
 }
+
 // Empty returns true if list does not contain any elements.
 func (list *List) Empty() bool {
 	return list.size == 0
