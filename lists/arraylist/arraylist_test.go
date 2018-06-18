@@ -30,26 +30,26 @@ func TestListIndexOf(t *testing.T) {
 	list := New()
 
 	expectedIndex := -1
-	if index  := list.IndexOf("a"); index != expectedIndex{
-		t.Errorf("Got %v expected %v",index,expectedIndex)
+	if index := list.IndexOf("a"); index != expectedIndex {
+		t.Errorf("Got %v expected %v", index, expectedIndex)
 	}
 
 	list.Add("a")
 	list.Add("b", "c")
 
 	expectedIndex = 0
-	if index  := list.IndexOf("a"); index != expectedIndex{
-		t.Errorf("Got %v expected %v",index,expectedIndex)
+	if index := list.IndexOf("a"); index != expectedIndex {
+		t.Errorf("Got %v expected %v", index, expectedIndex)
 	}
 
 	expectedIndex = 1
-	if index  := list.IndexOf("b"); index != expectedIndex{
-		t.Errorf("Got %v expected %v",index,expectedIndex)
+	if index := list.IndexOf("b"); index != expectedIndex {
+		t.Errorf("Got %v expected %v", index, expectedIndex)
 	}
 
 	expectedIndex = 2
-	if index  := list.IndexOf("c"); index != expectedIndex{
-		t.Errorf("Got %v expected %v",index,expectedIndex)
+	if index := list.IndexOf("c"); index != expectedIndex {
+		t.Errorf("Got %v expected %v", index, expectedIndex)
 	}
 }
 
