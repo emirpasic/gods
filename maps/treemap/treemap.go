@@ -105,6 +105,28 @@ func (m *Map) Max() (key interface{}, value interface{}) {
 	return nil, nil
 }
 
+// Floor searches the floor element in the map by key.
+// Returns floor key, floor value, true if floor key is found.
+// Returns nil, nil, false if floor key is not found.
+func (m *Map) Floor(key interface{}) (retKey interface{}, retValue interface{}, found bool) {
+	ret, found := m.tree.Floor(key)
+	if !found {
+		return nil, nil, false
+	}
+	return ret.Key, ret.Value, true
+}
+
+// Ceiling searches the ceiling element in the map by key.
+// Returns ceiling key, ceiling value, true if a ceiling key is found.
+// Returns nil, nil, false if ceiling key is not found.
+func (m *Map) Ceiling(key interface{}) (retKey interface{}, retValue interface{}, found bool) {
+	ret, found := m.tree.Ceiling(key)
+	if !found {
+		return nil, nil, false
+	}
+	return ret.Key, ret.Value, true
+}
+
 // String returns a string representation of container
 func (m *Map) String() string {
 	str := "TreeMap\nmap["
