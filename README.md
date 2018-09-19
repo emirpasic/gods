@@ -592,7 +592,7 @@ func main() {
 }
 ```
 
-Extending the red-black tree's functionality  has been demonstrated in the following [example](https://github.com/emirpasic/gods/blob/master/examples/redblacktreeextended.go).
+Extending the red-black tree's functionality  has been demonstrated in the following [example](https://github.com/emirpasic/gods/blob/master/examples/redblacktreeextended/redblacktreeextended.go).
 
 #### AVLTree
 
