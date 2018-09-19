@@ -11,9 +11,10 @@ package singlylinkedlist
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/emirpasic/gods/lists"
 	"github.com/emirpasic/gods/utils"
-	"strings"
 )
 
 func assertListImplementation() {
@@ -258,6 +259,26 @@ func (list *List) Insert(index int, values ...interface{}) {
 		}
 		beforeElement.next = oldNextElement
 	}
+}
+
+// Sets value at specified index
+// Does not do anything if position is negative or bigger than list's size
+// Note: position equal to list's size is valid, i.e. append.
+func (list *List) Set(index int, value interface{}) {
+
+	if !list.withinRange(index) {
+		// Append
+		if index == list.size {
+			list.Add(value)
+		}
+		return
+	}
+
+	foundElement := list.first
+	for e := 0; e != index; {
+		e, foundElement = e+1, foundElement.next
+	}
+	foundElement.value = value
 }
 
 // String returns a string representation of container

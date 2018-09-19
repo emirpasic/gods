@@ -11,9 +11,10 @@ package arraylist
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/emirpasic/gods/lists"
 	"github.com/emirpasic/gods/utils"
-	"strings"
 )
 
 func assertListImplementation() {
@@ -160,6 +161,22 @@ func (list *List) Insert(index int, values ...interface{}) {
 	list.size += l
 	copy(list.elements[index+l:], list.elements[index:list.size-l])
 	copy(list.elements[index:], values)
+}
+
+// Set the value at specified index
+// Does not do anything if position is negative or bigger than list's size
+// Note: position equal to list's size is valid, i.e. append.
+func (list *List) Set(index int, value interface{}) {
+
+	if !list.withinRange(index) {
+		// Append
+		if index == list.size {
+			list.Add(value)
+		}
+		return
+	}
+
+	list.elements[index] = value
 }
 
 // String returns a string representation of container
