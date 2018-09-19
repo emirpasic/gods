@@ -158,7 +158,7 @@ func (list *List) Insert(index int, values ...interface{}) {
 	l := len(values)
 	list.growBy(l)
 	list.size += l
-	copy(list.elements[index+l:], list.elements[index:list.size - l])
+	copy(list.elements[index+l:], list.elements[index:list.size-l])
 	copy(list.elements[index:], values)
 }
 
