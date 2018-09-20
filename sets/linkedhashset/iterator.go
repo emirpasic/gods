@@ -2,27 +2,25 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package treeset
+package linkedhashset
 
 import (
 	"github.com/emirpasic/gods/containers"
-	rbt "github.com/emirpasic/gods/trees/redblacktree"
+	"github.com/emirpasic/gods/lists/doublylinkedlist"
 )
 
 func assertIteratorImplementation() {
 	var _ containers.ReverseIteratorWithIndex = (*Iterator)(nil)
 }
 
-// Iterator returns a stateful iterator whose values can be fetched by an index.
+// Iterator holding the iterator's state
 type Iterator struct {
-	index    int
-	iterator rbt.Iterator
-	tree     *rbt.Tree
+	iterator doublylinkedlist.Iterator
 }
 
-// Iterator holding the iterator's state
+// Iterator returns a stateful iterator whose values can be fetched by an index.
 func (set *Set) Iterator() Iterator {
-	return Iterator{index: -1, iterator: set.tree.Iterator(), tree: set.tree}
+	return Iterator{iterator: set.list.Iterator()}
 }
 
 // Next moves the iterator to the next element and returns true if there was a next element in the container.
@@ -30,9 +28,6 @@ func (set *Set) Iterator() Iterator {
 // If Next() was called for the first time, then it will point the iterator to the first element if it exists.
 // Modifies the state of the iterator.
 func (iterator *Iterator) Next() bool {
-	if iterator.index < iterator.tree.Size() {
-		iterator.index++
-	}
 	return iterator.iterator.Next()
 }
 
@@ -40,35 +35,30 @@ func (iterator *Iterator) Next() bool {
 // If Prev() returns true, then previous element's index and value can be retrieved by Index() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator) Prev() bool {
-	if iterator.index >= 0 {
-		iterator.index--
-	}
 	return iterator.iterator.Prev()
 }
 
 // Value returns the current element's value.
 // Does not modify the state of the iterator.
 func (iterator *Iterator) Value() interface{} {
-	return iterator.iterator.Key()
+	return iterator.iterator.Value()
 }
 
 // Index returns the current element's index.
 // Does not modify the state of the iterator.
 func (iterator *Iterator) Index() int {
-	return iterator.index
+	return iterator.iterator.Index()
 }
 
 // Begin resets the iterator to its initial state (one-before-first)
 // Call Next() to fetch the first element if any.
 func (iterator *Iterator) Begin() {
-	iterator.index = -1
 	iterator.iterator.Begin()
 }
 
 // End moves the iterator past the last element (one-past-the-end).
 // Call Prev() to fetch the last element if any.
 func (iterator *Iterator) End() {
-	iterator.index = iterator.tree.Size()
 	iterator.iterator.End()
 }
 
@@ -76,14 +66,12 @@ func (iterator *Iterator) End() {
 // If First() returns true, then first element's index and value can be retrieved by Index() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator) First() bool {
-	iterator.Begin()
-	return iterator.Next()
+	return iterator.iterator.First()
 }
 
 // Last moves the iterator to the last element and returns true if there was a last element in the container.
 // If Last() returns true, then last element's index and value can be retrieved by Index() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator) Last() bool {
-	iterator.End()
-	return iterator.Prev()
+	return iterator.iterator.Last()
 }

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package treeset
+package linkedhashset
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 )
 
 func TestSetAdd(t *testing.T) {
-	set := NewWithIntComparator()
+	set := New()
 	set.Add()
 	set.Add(1)
 	set.Add(2)
@@ -22,14 +22,13 @@ func TestSetAdd(t *testing.T) {
 	if actualValue := set.Size(); actualValue != 3 {
 		t.Errorf("Got %v expected %v", actualValue, 3)
 	}
-	if actualValue, expectedValue := fmt.Sprintf("%d%d%d", set.Values()...), "123"; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
 }
 
 func TestSetContains(t *testing.T) {
-	set := NewWithIntComparator()
+	set := New()
 	set.Add(3, 1, 2)
+	set.Add(2, 3)
+	set.Add()
 	if actualValue := set.Contains(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
@@ -45,7 +44,7 @@ func TestSetContains(t *testing.T) {
 }
 
 func TestSetRemove(t *testing.T) {
-	set := NewWithIntComparator()
+	set := New()
 	set.Add(3, 1, 2)
 	set.Remove()
 	if actualValue := set.Size(); actualValue != 3 {
@@ -65,20 +64,20 @@ func TestSetRemove(t *testing.T) {
 }
 
 func TestSetEach(t *testing.T) {
-	set := NewWithStringComparator()
+	set := New()
 	set.Add("c", "a", "b")
 	set.Each(func(index int, value interface{}) {
 		switch index {
 		case 0:
-			if actualValue, expectedValue := value, "a"; actualValue != expectedValue {
+			if actualValue, expectedValue := value, "c"; actualValue != expectedValue {
 				t.Errorf("Got %v expected %v", actualValue, expectedValue)
 			}
 		case 1:
-			if actualValue, expectedValue := value, "b"; actualValue != expectedValue {
+			if actualValue, expectedValue := value, "a"; actualValue != expectedValue {
 				t.Errorf("Got %v expected %v", actualValue, expectedValue)
 			}
 		case 2:
-			if actualValue, expectedValue := value, "c"; actualValue != expectedValue {
+			if actualValue, expectedValue := value, "b"; actualValue != expectedValue {
 				t.Errorf("Got %v expected %v", actualValue, expectedValue)
 			}
 		default:
@@ -88,15 +87,15 @@ func TestSetEach(t *testing.T) {
 }
 
 func TestSetMap(t *testing.T) {
-	set := NewWithStringComparator()
+	set := New()
 	set.Add("c", "a", "b")
 	mappedSet := set.Map(func(index int, value interface{}) interface{} {
 		return "mapped: " + value.(string)
 	})
-	if actualValue, expectedValue := mappedSet.Contains("mapped: a", "mapped: b", "mapped: c"), true; actualValue != expectedValue {
+	if actualValue, expectedValue := mappedSet.Contains("mapped: c", "mapped: b", "mapped: a"), true; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
-	if actualValue, expectedValue := mappedSet.Contains("mapped: a", "mapped: b", "mapped: x"), false; actualValue != expectedValue {
+	if actualValue, expectedValue := mappedSet.Contains("mapped: c", "mapped: b", "mapped: x"), false; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 	if mappedSet.Size() != 3 {
@@ -105,7 +104,7 @@ func TestSetMap(t *testing.T) {
 }
 
 func TestSetSelect(t *testing.T) {
-	set := NewWithStringComparator()
+	set := New()
 	set.Add("c", "a", "b")
 	selectedSet := set.Select(func(index int, value interface{}) bool {
 		return value.(string) >= "a" && value.(string) <= "b"
@@ -123,7 +122,7 @@ func TestSetSelect(t *testing.T) {
 }
 
 func TestSetAny(t *testing.T) {
-	set := NewWithStringComparator()
+	set := New()
 	set.Add("c", "a", "b")
 	any := set.Any(func(index int, value interface{}) bool {
 		return value.(string) == "c"
@@ -140,7 +139,7 @@ func TestSetAny(t *testing.T) {
 }
 
 func TestSetAll(t *testing.T) {
-	set := NewWithStringComparator()
+	set := New()
 	set.Add("c", "a", "b")
 	all := set.All(func(index int, value interface{}) bool {
 		return value.(string) >= "a" && value.(string) <= "c"
@@ -157,13 +156,13 @@ func TestSetAll(t *testing.T) {
 }
 
 func TestSetFind(t *testing.T) {
-	set := NewWithStringComparator()
+	set := New()
 	set.Add("c", "a", "b")
 	foundIndex, foundValue := set.Find(func(index int, value interface{}) bool {
 		return value.(string) == "c"
 	})
-	if foundValue != "c" || foundIndex != 2 {
-		t.Errorf("Got %v at %v expected %v at %v", foundValue, foundIndex, "c", 2)
+	if foundValue != "c" || foundIndex != 0 {
+		t.Errorf("Got %v at %v expected %v at %v", foundValue, foundIndex, "c", 0)
 	}
 	foundIndex, foundValue = set.Find(func(index int, value interface{}) bool {
 		return value.(string) == "x"
@@ -174,20 +173,12 @@ func TestSetFind(t *testing.T) {
 }
 
 func TestSetChaining(t *testing.T) {
-	set := NewWithStringComparator()
+	set := New()
 	set.Add("c", "a", "b")
 }
 
-func TestSetIteratorNextOnEmpty(t *testing.T) {
-	set := NewWithStringComparator()
-	it := set.Iterator()
-	for it.Next() {
-		t.Errorf("Shouldn't iterate on empty set")
-	}
-}
-
 func TestSetIteratorPrevOnEmpty(t *testing.T) {
-	set := NewWithStringComparator()
+	set := New()
 	it := set.Iterator()
 	for it.Prev() {
 		t.Errorf("Shouldn't iterate on empty set")
@@ -195,7 +186,7 @@ func TestSetIteratorPrevOnEmpty(t *testing.T) {
 }
 
 func TestSetIteratorNext(t *testing.T) {
-	set := NewWithStringComparator()
+	set := New()
 	set.Add("c", "a", "b")
 	it := set.Iterator()
 	count := 0
@@ -205,15 +196,15 @@ func TestSetIteratorNext(t *testing.T) {
 		value := it.Value()
 		switch index {
 		case 0:
-			if actualValue, expectedValue := value, "a"; actualValue != expectedValue {
+			if actualValue, expectedValue := value, "c"; actualValue != expectedValue {
 				t.Errorf("Got %v expected %v", actualValue, expectedValue)
 			}
 		case 1:
-			if actualValue, expectedValue := value, "b"; actualValue != expectedValue {
+			if actualValue, expectedValue := value, "a"; actualValue != expectedValue {
 				t.Errorf("Got %v expected %v", actualValue, expectedValue)
 			}
 		case 2:
-			if actualValue, expectedValue := value, "c"; actualValue != expectedValue {
+			if actualValue, expectedValue := value, "b"; actualValue != expectedValue {
 				t.Errorf("Got %v expected %v", actualValue, expectedValue)
 			}
 		default:
@@ -229,7 +220,7 @@ func TestSetIteratorNext(t *testing.T) {
 }
 
 func TestSetIteratorPrev(t *testing.T) {
-	set := NewWithStringComparator()
+	set := New()
 	set.Add("c", "a", "b")
 	it := set.Iterator()
 	for it.Prev() {
@@ -241,15 +232,15 @@ func TestSetIteratorPrev(t *testing.T) {
 		value := it.Value()
 		switch index {
 		case 0:
-			if actualValue, expectedValue := value, "a"; actualValue != expectedValue {
+			if actualValue, expectedValue := value, "c"; actualValue != expectedValue {
 				t.Errorf("Got %v expected %v", actualValue, expectedValue)
 			}
 		case 1:
-			if actualValue, expectedValue := value, "b"; actualValue != expectedValue {
+			if actualValue, expectedValue := value, "a"; actualValue != expectedValue {
 				t.Errorf("Got %v expected %v", actualValue, expectedValue)
 			}
 		case 2:
-			if actualValue, expectedValue := value, "c"; actualValue != expectedValue {
+			if actualValue, expectedValue := value, "b"; actualValue != expectedValue {
 				t.Errorf("Got %v expected %v", actualValue, expectedValue)
 			}
 		default:
@@ -265,7 +256,7 @@ func TestSetIteratorPrev(t *testing.T) {
 }
 
 func TestSetIteratorBegin(t *testing.T) {
-	set := NewWithStringComparator()
+	set := New()
 	it := set.Iterator()
 	it.Begin()
 	set.Add("a", "b", "c")
@@ -279,7 +270,7 @@ func TestSetIteratorBegin(t *testing.T) {
 }
 
 func TestSetIteratorEnd(t *testing.T) {
-	set := NewWithStringComparator()
+	set := New()
 	it := set.Iterator()
 
 	if index := it.Index(); index != -1 {
@@ -304,7 +295,7 @@ func TestSetIteratorEnd(t *testing.T) {
 }
 
 func TestSetIteratorFirst(t *testing.T) {
-	set := NewWithStringComparator()
+	set := New()
 	set.Add("a", "b", "c")
 	it := set.Iterator()
 	if actualValue, expectedValue := it.First(), true; actualValue != expectedValue {
@@ -316,19 +307,19 @@ func TestSetIteratorFirst(t *testing.T) {
 }
 
 func TestSetIteratorLast(t *testing.T) {
-	set := NewWithStringComparator()
+	set := New()
 	set.Add("a", "b", "c")
 	it := set.Iterator()
 	if actualValue, expectedValue := it.Last(), true; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 	if index, value := it.Index(), it.Value(); index != 2 || value != "c" {
-		t.Errorf("Got %v,%v expected %v,%v", index, value, 2, "c")
+		t.Errorf("Got %v,%v expected %v,%v", index, value, 3, "c")
 	}
 }
 
 func TestSetSerialization(t *testing.T) {
-	set := NewWithStringComparator()
+	set := New()
 	set.Add("a", "b", "c")
 
 	var err error
@@ -377,10 +368,10 @@ func benchmarkRemove(b *testing.B, set *Set, size int) {
 	}
 }
 
-func BenchmarkTreeSetContains100(b *testing.B) {
+func BenchmarkHashSetContains100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	set := NewWithIntComparator()
+	set := New()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -388,10 +379,10 @@ func BenchmarkTreeSetContains100(b *testing.B) {
 	benchmarkContains(b, set, size)
 }
 
-func BenchmarkTreeSetContains1000(b *testing.B) {
+func BenchmarkHashSetContains1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	set := NewWithIntComparator()
+	set := New()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -399,10 +390,10 @@ func BenchmarkTreeSetContains1000(b *testing.B) {
 	benchmarkContains(b, set, size)
 }
 
-func BenchmarkTreeSetContains10000(b *testing.B) {
+func BenchmarkHashSetContains10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	set := NewWithIntComparator()
+	set := New()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -410,10 +401,10 @@ func BenchmarkTreeSetContains10000(b *testing.B) {
 	benchmarkContains(b, set, size)
 }
 
-func BenchmarkTreeSetContains100000(b *testing.B) {
+func BenchmarkHashSetContains100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	set := NewWithIntComparator()
+	set := New()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -421,18 +412,18 @@ func BenchmarkTreeSetContains100000(b *testing.B) {
 	benchmarkContains(b, set, size)
 }
 
-func BenchmarkTreeSetAdd100(b *testing.B) {
+func BenchmarkHashSetAdd100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	set := NewWithIntComparator()
+	set := New()
 	b.StartTimer()
 	benchmarkAdd(b, set, size)
 }
 
-func BenchmarkTreeSetAdd1000(b *testing.B) {
+func BenchmarkHashSetAdd1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	set := NewWithIntComparator()
+	set := New()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -440,10 +431,10 @@ func BenchmarkTreeSetAdd1000(b *testing.B) {
 	benchmarkAdd(b, set, size)
 }
 
-func BenchmarkTreeSetAdd10000(b *testing.B) {
+func BenchmarkHashSetAdd10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	set := NewWithIntComparator()
+	set := New()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -451,10 +442,10 @@ func BenchmarkTreeSetAdd10000(b *testing.B) {
 	benchmarkAdd(b, set, size)
 }
 
-func BenchmarkTreeSetAdd100000(b *testing.B) {
+func BenchmarkHashSetAdd100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	set := NewWithIntComparator()
+	set := New()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -462,10 +453,10 @@ func BenchmarkTreeSetAdd100000(b *testing.B) {
 	benchmarkAdd(b, set, size)
 }
 
-func BenchmarkTreeSetRemove100(b *testing.B) {
+func BenchmarkHashSetRemove100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	set := NewWithIntComparator()
+	set := New()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -473,10 +464,10 @@ func BenchmarkTreeSetRemove100(b *testing.B) {
 	benchmarkRemove(b, set, size)
 }
 
-func BenchmarkTreeSetRemove1000(b *testing.B) {
+func BenchmarkHashSetRemove1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	set := NewWithIntComparator()
+	set := New()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -484,10 +475,10 @@ func BenchmarkTreeSetRemove1000(b *testing.B) {
 	benchmarkRemove(b, set, size)
 }
 
-func BenchmarkTreeSetRemove10000(b *testing.B) {
+func BenchmarkHashSetRemove10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	set := NewWithIntComparator()
+	set := New()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -495,10 +486,10 @@ func BenchmarkTreeSetRemove10000(b *testing.B) {
 	benchmarkRemove(b, set, size)
 }
 
-func BenchmarkTreeSetRemove100000(b *testing.B) {
+func BenchmarkHashSetRemove100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	set := NewWithIntComparator()
+	set := New()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
