@@ -261,7 +261,7 @@ func (list *List) Insert(index int, values ...interface{}) {
 	}
 }
 
-// Sets value at specified index
+// Set value at specified index
 // Does not do anything if position is negative or bigger than list's size
 // Note: position equal to list's size is valid, i.e. append.
 func (list *List) Set(index int, value interface{}) {

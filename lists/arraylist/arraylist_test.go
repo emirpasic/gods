@@ -189,7 +189,7 @@ func TestListSet(t *testing.T) {
 	if actualValue := list.Size(); actualValue != 3 {
 		t.Errorf("Got %v expected %v", actualValue, 3)
 	}
-	list.Set(4, "d") // ignore
+	list.Set(4, "d")  // ignore
 	list.Set(1, "bb") // update
 	if actualValue := list.Size(); actualValue != 3 {
 		t.Errorf("Got %v expected %v", actualValue, 3)
