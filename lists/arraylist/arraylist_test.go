@@ -178,6 +178,27 @@ func TestListInsert(t *testing.T) {
 	}
 }
 
+func TestListSet(t *testing.T) {
+	list := New()
+	list.Set(0, "a")
+	list.Set(1, "b")
+	if actualValue := list.Size(); actualValue != 2 {
+		t.Errorf("Got %v expected %v", actualValue, 2)
+	}
+	list.Set(2, "c") // append
+	if actualValue := list.Size(); actualValue != 3 {
+		t.Errorf("Got %v expected %v", actualValue, 3)
+	}
+	list.Set(4, "d") // ignore
+	list.Set(1, "bb") // update
+	if actualValue := list.Size(); actualValue != 3 {
+		t.Errorf("Got %v expected %v", actualValue, 3)
+	}
+	if actualValue, expectedValue := fmt.Sprintf("%s%s%s", list.Values()...), "abbc"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+}
+
 func TestListEach(t *testing.T) {
 	list := New()
 	list.Add("a", "b", "c")
