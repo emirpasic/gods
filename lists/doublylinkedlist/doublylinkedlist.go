@@ -100,7 +100,7 @@ func (list *List) Get(index int) (interface{}, bool) {
 	return element.value, true
 }
 
-// Remove removes one or more elements from the list with the supplied indices.
+// Remove removes the element at the given index from the list.
 func (list *List) Remove(index int) {
 
 	if !list.withinRange(index) {
