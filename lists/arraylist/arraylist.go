@@ -37,6 +37,13 @@ func New() *List {
 	return &List{}
 }
 
+// Of instantiates a new list of the given values
+func Of(values ...interface{}) *List {
+	list := New()
+	list.Add(values)
+	return list
+}
+
 // Add appends a value at the end of the list
 func (list *List) Add(values ...interface{}) {
 	list.growBy(len(values))

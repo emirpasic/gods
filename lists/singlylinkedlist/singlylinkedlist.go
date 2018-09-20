@@ -38,6 +38,13 @@ func New() *List {
 	return &List{}
 }
 
+// Of instantiates a new list of the given values
+func Of(values ...interface{}) *List {
+	list := New()
+	list.Add(values)
+	return list
+}
+
 // Add appends a value (one or more) at the end of the list (same as Append())
 func (list *List) Add(values ...interface{}) {
 	for _, value := range values {
