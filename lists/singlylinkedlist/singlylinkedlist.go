@@ -33,15 +33,12 @@ type element struct {
 	next  *element
 }
 
-// New instantiates a new empty list
-func New() *List {
-	return &List{}
-}
-
-// Of instantiates a new list of the given values
-func Of(values ...interface{}) *List {
-	list := New()
-	list.Add(values)
+// New instantiates a new list and adds the passed values, if any, to the list
+func New(values ...interface{}) *List {
+	list := &List{}
+	if len(values) > 0 {
+		list.Add(values...)
+	}
 	return list
 }
 
