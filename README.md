@@ -63,22 +63,22 @@ Containers are either ordered or unordered. All ordered containers provide [stat
 
 | **Data** | **Structure** | **Ordered** | **[Iterator](#iterator)** | **[Enumerable](#enumerable)** | **Referenced by** |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| **[Lists](#lists)** |
+| [Lists](#lists) |
 |   | [ArrayList](#arraylist) | yes | yes* | yes | index |
 |   | [SinglyLinkedList](#singlylinkedlist) | yes | yes | yes | index |
 |   | [DoublyLinkedList](#doublylinkedlist) | yes | yes* | yes | index |
-| **[Sets](#sets)** |
+| [Sets](#sets) |
 |   | [HashSet](#hashset) | no | no | no | index |
 |   | [TreeSet](#treeset) | yes | yes* | yes | index |
 |   | [LinkedHashSet](#linkedhashset) | yes | yes* | yes | index |
-| **[Stacks](#stacks)** |
+| [Stacks](#stacks) |
 |   | [LinkedListStack](#linkedliststack) | yes | yes | no | index |
 |   | [ArrayStack](#arraystack) | yes | yes* | no | index |
-| **[Maps](#maps)** |
+| [Maps](#maps) |
 |   | [HashMap](#hashmap) | no | no | no | key |
 |   | [TreeMap](#treemap) | yes | yes* | yes | key |
 |   | [HashBidiMap](#hashbidimap) | no | no | no | key* |
-| **[Trees](#trees)** |
+| [Trees](#trees) |
 |   | [TreeBidiMap](#treebidimap) | yes | yes* | yes | key* |
 |   | [RedBlackTree](#redblacktree) | yes | yes* | no | key |
 |   | [AVLTree](#avltree) | yes | yes* | no | key |
