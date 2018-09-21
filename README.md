@@ -14,6 +14,7 @@ Implementation of various data structures and algorithms in Go.
   - [Sets](#sets)
     - [HashSet](#hashset)
     - [TreeSet](#treeset)
+    - [LinkedHashSet](#linkedhashset)
   - [Stacks](#stacks)
     - [LinkedListStack](#linkedliststack)
     - [ArrayStack](#arraystack)
@@ -60,24 +61,30 @@ type Container interface {
 
 Containers are either ordered or unordered. All ordered containers provide [stateful iterators](#iterator) and some of them allow [enumerable functions](#enumerable).
 
-| Container | Ordered | [Iterator](#iterator) | [Enumerable](#enumerable) | Referenced by |
-| :--- | :---: | :---: | :---: | :---: |
-| [ArrayList](#arraylist) | yes | yes* | yes | index |
-| [SinglyLinkedList](#singlylinkedlist) | yes | yes | yes | index |
-| [DoublyLinkedList](#doublylinkedlist) | yes | yes* | yes | index |
-| [HashSet](#hashset) | no | no | no | index |
-| [TreeSet](#treeset) | yes | yes* | yes | index |
-| [LinkedListStack](#linkedliststack) | yes | yes | no | index |
-| [ArrayStack](#arraystack) | yes | yes* | no | index |
-| [HashMap](#hashmap) | no | no | no | key |
-| [TreeMap](#treemap) | yes | yes* | yes | key |
-| [HashBidiMap](#hashbidimap) | no | no | no | key* |
-| [TreeBidiMap](#treebidimap) | yes | yes* | yes | key* |
-| [RedBlackTree](#redblacktree) | yes | yes* | no | key |
-| [AVLTree](#avltree) | yes | yes* | no | key |
-| [BTree](#btree) | yes | yes* | no | key |
-| [BinaryHeap](#binaryheap) | yes | yes* | no | index |
-|  |  | <sub><sup>*reversible</sup></sub> |  | <sub><sup>*bidirectional</sup></sub> |
+| **Data** | **Structure** | **Ordered** | **[Iterator](#iterator)** | **[Enumerable](#enumerable)** | **Referenced by** |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| **[Lists](#lists)** |
+|   | [ArrayList](#arraylist) | yes | yes* | yes | index |
+|   | [SinglyLinkedList](#singlylinkedlist) | yes | yes | yes | index |
+|   | [DoublyLinkedList](#doublylinkedlist) | yes | yes* | yes | index |
+| **[Sets](#sets)** |
+|   | [HashSet](#hashset) | no | no | no | index |
+|   | [TreeSet](#treeset) | yes | yes* | yes | index |
+|   | [LinkedHashSet](#linkedhashset) | yes | yes* | yes | index |
+| **[Stacks](#stacks)** |
+|   | [LinkedListStack](#linkedliststack) | yes | yes | no | index |
+|   | [ArrayStack](#arraystack) | yes | yes* | no | index |
+| **[Maps](#maps)** |
+|   | [HashMap](#hashmap) | no | no | no | key |
+|   | [TreeMap](#treemap) | yes | yes* | yes | key |
+|   | [HashBidiMap](#hashbidimap) | no | no | no | key* |
+| **[Trees](#trees)** |
+|   | [TreeBidiMap](#treebidimap) | yes | yes* | yes | key* |
+|   | [RedBlackTree](#redblacktree) | yes | yes* | no | key |
+|   | [AVLTree](#avltree) | yes | yes* | no | key |
+|   | [BTree](#btree) | yes | yes* | no | key |
+|   | [BinaryHeap](#binaryheap) | yes | yes* | no | index |
+|   |  |  | <sub><sup>*reversible</sup></sub> |  | <sub><sup>*bidirectional</sup></sub> |
 
 ### Lists
 
@@ -286,6 +293,34 @@ func main() {
 	set.Clear()                           // empty
 	set.Empty()                           // true
 	set.Size()                            // 0
+}
+```
+
+#### LinkedHashSet
+
+A [set](#sets) that preserves insertion-order. Data structure is backed by a hash table to store values and [doubly-linked list](#doublylinkedlist) to store insertion ordering.
+
+Implements [Set](#sets), [IteratorWithIndex](#iteratorwithindex), [EnumerableWithIndex](#enumerablewithindex), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
+
+```go
+package main
+
+import "github.com/emirpasic/gods/sets/linkedhashset"
+
+func main() {
+	set := linkedhashset.New() // empty
+	set.Add(5)                 // 5
+	set.Add(4, 4, 3, 2, 1)     // 5, 4, 3, 2, 1 (in insertion-order, duplicates ignored)
+	set.Add(4)                 // 5, 4, 3, 2, 1 (duplicates ignored, insertion-order unchanged)
+	set.Remove(4)              // 5, 3, 2, 1 (in insertion-order)
+	set.Remove(2, 3)           // 5, 1 (in insertion-order)
+	set.Contains(1)            // true
+	set.Contains(1, 5)         // true
+	set.Contains(1, 6)         // false
+	_ = set.Values()           // []int{5, 1} (in insertion-order)
+	set.Clear()                // empty
+	set.Empty()                // true
+	set.Size()                 // 0
 }
 ```
 
