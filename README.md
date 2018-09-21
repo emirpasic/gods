@@ -21,6 +21,7 @@ Implementation of various data structures and algorithms in Go.
   - [Maps](#maps)
     - [HashMap](#hashmap)
     - [TreeMap](#treemap)
+    - [LinkedHashMap](#linkedhashmap)
     - [HashBidiMap](#hashbidimap)
     - [TreeBidiMap](#treebidimap)
   - [Trees](#trees)
@@ -63,23 +64,24 @@ Containers are either ordered or unordered. All ordered containers provide [stat
 
 | **Data** | **Structure** | **Ordered** | **[Iterator](#iterator)** | **[Enumerable](#enumerable)** | **Referenced by** |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| **[Lists](#lists)** |
+| [Lists](#lists) |
 |   | [ArrayList](#arraylist) | yes | yes* | yes | index |
 |   | [SinglyLinkedList](#singlylinkedlist) | yes | yes | yes | index |
 |   | [DoublyLinkedList](#doublylinkedlist) | yes | yes* | yes | index |
-| **[Sets](#sets)** |
+| [Sets](#sets) |
 |   | [HashSet](#hashset) | no | no | no | index |
 |   | [TreeSet](#treeset) | yes | yes* | yes | index |
 |   | [LinkedHashSet](#linkedhashset) | yes | yes* | yes | index |
-| **[Stacks](#stacks)** |
+| [Stacks](#stacks) |
 |   | [LinkedListStack](#linkedliststack) | yes | yes | no | index |
 |   | [ArrayStack](#arraystack) | yes | yes* | no | index |
-| **[Maps](#maps)** |
+| [Maps](#maps) |
 |   | [HashMap](#hashmap) | no | no | no | key |
 |   | [TreeMap](#treemap) | yes | yes* | yes | key |
+|   | [LinkedHashMap](#linkedhashmap) | yes | yes* | yes | key |
 |   | [HashBidiMap](#hashbidimap) | no | no | no | key* |
-| **[Trees](#trees)** |
 |   | [TreeBidiMap](#treebidimap) | yes | yes* | yes | key* |
+| [Trees](#trees) |
 |   | [RedBlackTree](#redblacktree) | yes | yes* | no | key |
 |   | [AVLTree](#avltree) | yes | yes* | no | key |
 |   | [BTree](#btree) | yes | yes* | no | key |
@@ -485,6 +487,34 @@ func main() {
 	m.Min() // Returns the minimum key and its value from map.
 	m.Max() // Returns the maximum key and its value from map.
 }
+```
+
+#### LinkedHashMap
+
+A [map](#maps) that preserves insertion-order. It is backed by a hash table to store values and [doubly-linked list](doublylinkedlist) to store ordering.
+
+Implements [Map](#maps), [IteratorWithKey](#iteratorwithkey), [EnumerableWithKey](#enumerablewithkey), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
+
+```go
+package main
+
+import "github.com/emirpasic/gods/maps/linkedhashmap"
+
+func main() {
+	m := linkedhashmap.New() // empty (keys are of type int)
+	m.Put(2, "b")            // 2->b
+	m.Put(1, "x")            // 2->b, 1->x (insertion-order)
+	m.Put(1, "a")            // 2->b, 1->a (insertion-order)
+	_, _ = m.Get(2)          // b, true
+	_, _ = m.Get(3)          // nil, false
+	_ = m.Values()           // []interface {}{"b", "a"} (insertion-order)
+	_ = m.Keys()             // []interface {}{2, 1} (insertion-order)
+	m.Remove(1)              // 2->b
+	m.Clear()                // empty
+	m.Empty()                // true
+	m.Size()                 // 0
+}
+
 ```
 
 #### HashBidiMap

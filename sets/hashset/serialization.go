@@ -14,12 +14,12 @@ func assertSerializationImplementation() {
 	var _ containers.JSONDeserializer = (*Set)(nil)
 }
 
-// ToJSON outputs the JSON representation of list's elements.
+// ToJSON outputs the JSON representation of the set.
 func (set *Set) ToJSON() ([]byte, error) {
 	return json.Marshal(set.Values())
 }
 
-// FromJSON populates list's elements from the input JSON representation.
+// FromJSON populates the set from the input JSON representation.
 func (set *Set) FromJSON(data []byte) error {
 	elements := []interface{}{}
 	err := json.Unmarshal(data, &elements)

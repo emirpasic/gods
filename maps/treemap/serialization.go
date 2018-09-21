@@ -11,12 +11,12 @@ func assertSerializationImplementation() {
 	var _ containers.JSONDeserializer = (*Map)(nil)
 }
 
-// ToJSON outputs the JSON representation of list's elements.
+// ToJSON outputs the JSON representation of the map.
 func (m *Map) ToJSON() ([]byte, error) {
 	return m.tree.ToJSON()
 }
 
-// FromJSON populates list's elements from the input JSON representation.
+// FromJSON populates the map from the input JSON representation.
 func (m *Map) FromJSON(data []byte) error {
 	return m.tree.FromJSON(data)
 }
