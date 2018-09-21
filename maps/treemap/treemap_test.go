@@ -440,7 +440,6 @@ func TestMapIteratorLast(t *testing.T) {
 	}
 }
 
-//noinspection GoBoolExpressions
 func TestMapSerialization(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		original := NewWithStringComparator()
@@ -450,42 +449,43 @@ func TestMapSerialization(t *testing.T) {
 		original.Put("b", "2")
 		original.Put("a", "1")
 
-		assert := func(m *Map, txt string) {
-			if actualValue := m.Keys(); false ||
-				actualValue[0].(string) != "a" ||
-				actualValue[1].(string) != "b" ||
-				actualValue[2].(string) != "c" ||
-				actualValue[3].(string) != "d" ||
-				actualValue[4].(string) != "e" {
-				t.Errorf("[%s] Got %v expected %v", txt, actualValue, "[a,b,c,d,e]")
-			}
-			if actualValue := m.Values(); false ||
-				actualValue[0].(string) != "1" ||
-				actualValue[1].(string) != "2" ||
-				actualValue[2].(string) != "3" ||
-				actualValue[3].(string) != "4" ||
-				actualValue[4].(string) != "5" {
-				t.Errorf("[%s] Got %v expected %v", txt, actualValue, "[1,2,3,4,5]")
-			}
-			if actualValue, expectedValue := m.Size(), 5; actualValue != expectedValue {
-				t.Errorf("[%s] Got %v expected %v", txt, actualValue, expectedValue)
-			}
-		}
-
-		assert(original, "A")
+		assertSerialization(original, "A", t)
 
 		serialized, err := original.ToJSON()
 		if err != nil {
 			t.Errorf("Got error %v", err)
 		}
-		assert(original, "B")
+		assertSerialization(original, "B", t)
 
 		deserialized := NewWithStringComparator()
 		err = deserialized.FromJSON(serialized)
 		if err != nil {
 			t.Errorf("Got error %v", err)
 		}
-		assert(deserialized, "C")
+		assertSerialization(deserialized, "C", t)
+	}
+}
+
+//noinspection GoBoolExpressions
+func assertSerialization(m *Map, txt string, t *testing.T) {
+	if actualValue := m.Keys(); false ||
+		actualValue[0].(string) != "a" ||
+		actualValue[1].(string) != "b" ||
+		actualValue[2].(string) != "c" ||
+		actualValue[3].(string) != "d" ||
+		actualValue[4].(string) != "e" {
+		t.Errorf("[%s] Got %v expected %v", txt, actualValue, "[a,b,c,d,e]")
+	}
+	if actualValue := m.Values(); false ||
+		actualValue[0].(string) != "1" ||
+		actualValue[1].(string) != "2" ||
+		actualValue[2].(string) != "3" ||
+		actualValue[3].(string) != "4" ||
+		actualValue[4].(string) != "5" {
+		t.Errorf("[%s] Got %v expected %v", txt, actualValue, "[1,2,3,4,5]")
+	}
+	if actualValue, expectedValue := m.Size(), 5; actualValue != expectedValue {
+		t.Errorf("[%s] Got %v expected %v", txt, actualValue, expectedValue)
 	}
 }
 
