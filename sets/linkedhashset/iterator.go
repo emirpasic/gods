@@ -20,7 +20,7 @@ type Iterator struct {
 
 // Iterator returns a stateful iterator whose values can be fetched by an index.
 func (set *Set) Iterator() Iterator {
-	return Iterator{iterator: set.list.Iterator()}
+	return Iterator{iterator: set.ordering.Iterator()}
 }
 
 // Next moves the iterator to the next element and returns true if there was a next element in the container.
