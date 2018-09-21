@@ -26,9 +26,13 @@ type Set struct {
 
 var itemExists = struct{}{}
 
-// New instantiates a new empty set
-func New() *Set {
-	return &Set{items: make(map[interface{}]struct{})}
+// New instantiates a new empty set and adds the passed values, if any, to the set
+func New(values ...interface{}) *Set {
+	set := &Set{items: make(map[interface{}]struct{})}
+	if len(values) > 0 {
+		set.Add(values...)
+	}
+	return set
 }
 
 // Add adds the items (one or more) to the set.

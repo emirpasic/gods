@@ -8,6 +8,23 @@ import (
 	"testing"
 )
 
+func TestSetNew(t *testing.T) {
+	set := New(2, 1)
+
+	if actualValue := set.Size(); actualValue != 2 {
+		t.Errorf("Got %v expected %v", actualValue, 2)
+	}
+	if actualValue := set.Contains(1); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+	if actualValue := set.Contains(2); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+	if actualValue := set.Contains(3); actualValue != false {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+}
+
 func TestSetAdd(t *testing.T) {
 	set := New()
 	set.Add()
