@@ -105,26 +105,38 @@ func (m *Map) Max() (key interface{}, value interface{}) {
 	return nil, nil
 }
 
-// Floor searches the floor element in the map by key.
-// Returns floor key, floor value, true if floor key is found.
-// Returns nil, nil, false if floor key is not found.
-func (m *Map) Floor(key interface{}) (retKey interface{}, retValue interface{}, found bool) {
-	ret, found := m.tree.Floor(key)
-	if !found {
-		return nil, nil, false
+// Floor finds the floor key-value pair for the input key.
+// In case that no floor is found, then both returned values will be nil.
+// It's generally enough to check the first value (key) for nil, which determines if floor was found.
+//
+// Floor key is defined as the largest key that is smaller than or equal to the given key.
+// A floor key may not be found, either because the map is empty, or because
+// all keys in the map are larger than the given key.
+//
+// Key should adhere to the comparator's type assertion, otherwise method panics.
+func (m *Map) Floor(key interface{}) (foundKey interface{}, foundValue interface{}) {
+	node, found := m.tree.Floor(key)
+	if found {
+		return node.Key, node.Value
 	}
-	return ret.Key, ret.Value, true
+	return nil, nil
 }
 
-// Ceiling searches the ceiling element in the map by key.
-// Returns ceiling key, ceiling value, true if a ceiling key is found.
-// Returns nil, nil, false if ceiling key is not found.
-func (m *Map) Ceiling(key interface{}) (retKey interface{}, retValue interface{}, found bool) {
-	ret, found := m.tree.Ceiling(key)
-	if !found {
-		return nil, nil, false
+// Ceiling finds the ceiling key-value pair for the input key.
+// In case that no ceiling is found, then both returned values will be nil.
+// It's generally enough to check the first value (key) for nil, which determines if ceiling was found.
+//
+// Ceiling key is defined as the smallest key that is larger than or equal to the given key.
+// A ceiling key may not be found, either because the map is empty, or because
+// all keys in the map are smaller than the given key.
+//
+// Key should adhere to the comparator's type assertion, otherwise method panics.
+func (m *Map) Ceiling(key interface{}) (foundKey interface{}, foundValue interface{}) {
+	node, found := m.tree.Ceiling(key)
+	if found {
+		return node.Key, node.Value
 	}
-	return ret.Key, ret.Value, true
+	return nil, nil
 }
 
 // String returns a string representation of container

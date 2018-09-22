@@ -118,6 +118,62 @@ func TestMapRemove(t *testing.T) {
 	}
 }
 
+func TestMapFloor(t *testing.T) {
+	m := NewWithIntComparator()
+	m.Put(7, "g")
+	m.Put(3, "c")
+	m.Put(1, "a")
+
+	// key,expectedKey,expectedValue,expectedFound
+	tests1 := [][]interface{}{
+		{-1, nil, nil, false},
+		{0, nil, nil, false},
+		{1, 1, "a", true},
+		{2, 1, "a", true},
+		{3, 3, "c", true},
+		{4, 3, "c", true},
+		{7, 7, "g", true},
+		{8, 7, "g", true},
+	}
+
+	for _, test := range tests1 {
+		// retrievals
+		actualKey, actualValue := m.Floor(test[0])
+		actualFound := actualKey != nil && actualValue != nil
+		if actualKey != test[1] || actualValue != test[2] || actualFound != test[3] {
+			t.Errorf("Got %v, %v, %v, expected %v, %v, %v", actualKey, actualValue, actualFound, test[1], test[2], test[3])
+		}
+	}
+}
+
+func TestMapCeiling(t *testing.T) {
+	m := NewWithIntComparator()
+	m.Put(7, "g")
+	m.Put(3, "c")
+	m.Put(1, "a")
+
+	// key,expectedKey,expectedValue,expectedFound
+	tests1 := [][]interface{}{
+		{-1, 1, "a", true},
+		{0, 1, "a", true},
+		{1, 1, "a", true},
+		{2, 3, "c", true},
+		{3, 3, "c", true},
+		{4, 7, "g", true},
+		{7, 7, "g", true},
+		{8, nil, nil, false},
+	}
+
+	for _, test := range tests1 {
+		// retrievals
+		actualKey, actualValue := m.Ceiling(test[0])
+		actualFound := actualKey != nil && actualValue != nil
+		if actualKey != test[1] || actualValue != test[2] || actualFound != test[3] {
+			t.Errorf("Got %v, %v, %v, expected %v, %v, %v", actualKey, actualValue, actualFound, test[1], test[2], test[3])
+		}
+	}
+}
+
 func sameElements(a []interface{}, b []interface{}) bool {
 	if len(a) != len(b) {
 		return false
@@ -286,60 +342,6 @@ func TestMapChaining(t *testing.T) {
 	}
 	if actualValue, found := chainedMap.Get("cc"); actualValue != 9 || !found {
 		t.Errorf("Got %v expected %v", actualValue, 9)
-	}
-}
-
-func TestMapFloor(t *testing.T) {
-	m := NewWithIntComparator()
-	m.Put(7, "g")
-	m.Put(3, "c")
-	m.Put(1, "a")
-
-	// key,expectedKey,expectedValue,expectedFound
-	tests1 := [][]interface{}{
-		{-1, nil, nil, false},
-		{0, nil, nil, false},
-		{1, 1, "a", true},
-		{2, 1, "a", true},
-		{3, 3, "c", true},
-		{4, 3, "c", true},
-		{7, 7, "g", true},
-		{8, 7, "g", true},
-	}
-
-	for _, test := range tests1 {
-		// retrievals
-		actualKey, actualValue, actualFound := m.Floor(test[0])
-		if actualKey != test[1] || actualValue != test[2] || actualFound != test[3] {
-			t.Errorf("Got %v, %v, %v, expected %v, %v, %v", actualKey, actualValue, actualFound, test[1], test[2], test[3])
-		}
-	}
-}
-
-func TestMapCeiling(t *testing.T) {
-	m := NewWithIntComparator()
-	m.Put(7, "g")
-	m.Put(3, "c")
-	m.Put(1, "a")
-
-	// key,expectedKey,expectedValue,expectedFound
-	tests1 := [][]interface{}{
-		{-1, 1, "a", true},
-		{0, 1, "a", true},
-		{1, 1, "a", true},
-		{2, 3, "c", true},
-		{3, 3, "c", true},
-		{4, 7, "g", true},
-		{7, 7, "g", true},
-		{8, nil, nil, false},
-	}
-
-	for _, test := range tests1 {
-		// retrievals
-		actualKey, actualValue, actualFound := m.Ceiling(test[0])
-		if actualKey != test[1] || actualValue != test[2] || actualFound != test[3] {
-			t.Errorf("Got %v, %v, %v, expected %v, %v, %v", actualKey, actualValue, actualFound, test[1], test[2], test[3])
-		}
 	}
 }
 
