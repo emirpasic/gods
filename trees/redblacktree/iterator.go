@@ -113,6 +113,17 @@ between:
 	return true
 }
 
+// Remove deletes the current item from the tree, and returns true if there is a next element in the container.
+// If Remove() returns true, then next element's key and value can be retrieved by Key() and Value().
+// Modifies the state of the iterator.
+// Remove may invalidate other iterators.
+func (iterator *Iterator) Remove() bool {
+	node := iterator.node
+	retval := iterator.Next()
+	iterator.tree.removeNode(node)
+	return retval
+}
+
 // Value returns the current element's value.
 // Does not modify the state of the iterator.
 func (iterator *Iterator) Value() interface{} {

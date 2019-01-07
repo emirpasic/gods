@@ -116,11 +116,15 @@ func (tree *Tree) Get(key interface{}) (value interface{}, found bool) {
 // Remove remove the node from the tree by key.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (tree *Tree) Remove(key interface{}) {
-	var child *Node
 	node := tree.lookup(key)
+	tree.removeNode(node)
+}
+
+func (tree *Tree) removeNode(node *Node) {
 	if node == nil {
 		return
 	}
+	var child *Node
 	if node.Left != nil && node.Right != nil {
 		pred := node.Left.maximumNode()
 		node.Key = pred.Key
