@@ -69,7 +69,7 @@ func (list *List) Remove(index int) {
 	}
 
 	list.elements[index] = nil                                    // cleanup reference
-	copy(list.elements[index:], list.elements[index+1:list.size]) // shift to the left by one (slow operation, need ways to optimize this)
+	copy(list.elements[:index], list.elements[index+1:list.size]) // shift to the left by one (slow operation, need ways to optimize this)
 	list.size--
 
 	list.shrink()
