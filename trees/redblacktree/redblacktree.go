@@ -64,6 +64,8 @@ func NewWithStringComparator() *Tree {
 func (tree *Tree) Put(key interface{}, value interface{}) {
 	var insertedNode *Node
 	if tree.Root == nil {
+		// Assert key is of comparator's type for initial tree
+		tree.Comparator(key, key)
 		tree.Root = &Node{Key: key, Value: value, color: red}
 		insertedNode = tree.Root
 	} else {
@@ -195,12 +197,12 @@ func (tree *Tree) Right() *Node {
 	return parent
 }
 
-// Floor Finds floor node of the input key, return the floor node or nil if no ceiling is found.
+// Floor Finds floor node of the input key, return the floor node or nil if no floor is found.
 // Second return parameter is true if floor was found, otherwise false.
 //
 // Floor node is defined as the largest node that is smaller than or equal to the given node.
 // A floor node may not be found, either because the tree is empty, or because
-// all nodes in the tree is larger than the given node.
+// all nodes in the tree are larger than the given node.
 //
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (tree *Tree) Floor(key interface{}) (floor *Node, found bool) {
@@ -229,7 +231,7 @@ func (tree *Tree) Floor(key interface{}) (floor *Node, found bool) {
 //
 // Ceiling node is defined as the smallest node that is larger than or equal to the given node.
 // A ceiling node may not be found, either because the tree is empty, or because
-// all nodes in the tree is smaller than the given node.
+// all nodes in the tree are smaller than the given node.
 //
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (tree *Tree) Ceiling(key interface{}) (ceiling *Node, found bool) {

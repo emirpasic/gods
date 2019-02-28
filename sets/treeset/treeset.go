@@ -29,18 +29,30 @@ type Set struct {
 var itemExists = struct{}{}
 
 // NewWith instantiates a new empty set with the custom comparator.
-func NewWith(comparator utils.Comparator) *Set {
-	return &Set{tree: rbt.NewWith(comparator)}
+func NewWith(comparator utils.Comparator, values ...interface{}) *Set {
+	set := &Set{tree: rbt.NewWith(comparator)}
+	if len(values) > 0 {
+		set.Add(values...)
+	}
+	return set
 }
 
 // NewWithIntComparator instantiates a new empty set with the IntComparator, i.e. keys are of type int.
-func NewWithIntComparator() *Set {
-	return &Set{tree: rbt.NewWithIntComparator()}
+func NewWithIntComparator(values ...interface{}) *Set {
+	set := &Set{tree: rbt.NewWithIntComparator()}
+	if len(values) > 0 {
+		set.Add(values...)
+	}
+	return set
 }
 
 // NewWithStringComparator instantiates a new empty set with the StringComparator, i.e. keys are of type string.
-func NewWithStringComparator() *Set {
-	return &Set{tree: rbt.NewWithStringComparator()}
+func NewWithStringComparator(values ...interface{}) *Set {
+	set := &Set{tree: rbt.NewWithStringComparator()}
+	if len(values) > 0 {
+		set.Add(values...)
+	}
+	return set
 }
 
 // Add adds the items (one or more) to the set.

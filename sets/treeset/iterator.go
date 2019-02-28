@@ -85,5 +85,5 @@ func (iterator *Iterator) First() bool {
 // Modifies the state of the iterator.
 func (iterator *Iterator) Last() bool {
 	iterator.End()
-	return iterator.iterator.Last()
+	return iterator.Prev()
 }

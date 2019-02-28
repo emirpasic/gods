@@ -15,7 +15,7 @@ func assertSerializationImplementation() {
 	var _ containers.JSONDeserializer = (*Map)(nil)
 }
 
-// ToJSON outputs the JSON representation of list's elements.
+// ToJSON outputs the JSON representation of the map.
 func (m *Map) ToJSON() ([]byte, error) {
 	elements := make(map[string]interface{})
 	for key, value := range m.m {
@@ -24,7 +24,7 @@ func (m *Map) ToJSON() ([]byte, error) {
 	return json.Marshal(&elements)
 }
 
-// FromJSON populates list's elements from the input JSON representation.
+// FromJSON populates the map from the input JSON representation.
 func (m *Map) FromJSON(data []byte) error {
 	elements := make(map[string]interface{})
 	err := json.Unmarshal(data, &elements)

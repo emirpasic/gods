@@ -474,34 +474,52 @@ func TestMapIteratorLast(t *testing.T) {
 }
 
 func TestMapSerialization(t *testing.T) {
-	m := NewWithStringComparators()
-	m.Put("a", "1")
-	m.Put("b", "2")
-	m.Put("c", "3")
+	for i := 0; i < 10; i++ {
+		original := NewWith(utils.StringComparator, utils.StringComparator)
+		original.Put("d", "4")
+		original.Put("e", "5")
+		original.Put("c", "3")
+		original.Put("b", "2")
+		original.Put("a", "1")
 
-	var err error
-	assert := func() {
-		if actualValue := m.Keys(); actualValue[0].(string) != "a" || actualValue[1].(string) != "b" || actualValue[2].(string) != "c" {
-			t.Errorf("Got %v expected %v", actualValue, "[a,b,c]")
-		}
-		if actualValue := m.Values(); actualValue[0].(string) != "1" || actualValue[1].(string) != "2" || actualValue[2].(string) != "3" {
-			t.Errorf("Got %v expected %v", actualValue, "[1,2,3]")
-		}
-		if actualValue, expectedValue := m.Size(), 3; actualValue != expectedValue {
-			t.Errorf("Got %v expected %v", actualValue, expectedValue)
-		}
+		assertSerialization(original, "A", t)
+
+		serialized, err := original.ToJSON()
 		if err != nil {
 			t.Errorf("Got error %v", err)
 		}
+		assertSerialization(original, "B", t)
+
+		deserialized := NewWith(utils.StringComparator, utils.StringComparator)
+		err = deserialized.FromJSON(serialized)
+		if err != nil {
+			t.Errorf("Got error %v", err)
+		}
+		assertSerialization(deserialized, "C", t)
 	}
+}
 
-	assert()
-
-	json, err := m.ToJSON()
-	assert()
-
-	err = m.FromJSON(json)
-	assert()
+//noinspection GoBoolExpressions
+func assertSerialization(m *Map, txt string, t *testing.T) {
+	if actualValue := m.Keys(); false ||
+		actualValue[0].(string) != "a" ||
+		actualValue[1].(string) != "b" ||
+		actualValue[2].(string) != "c" ||
+		actualValue[3].(string) != "d" ||
+		actualValue[4].(string) != "e" {
+		t.Errorf("[%s] Got %v expected %v", txt, actualValue, "[a,b,c,d,e]")
+	}
+	if actualValue := m.Values(); false ||
+		actualValue[0].(string) != "1" ||
+		actualValue[1].(string) != "2" ||
+		actualValue[2].(string) != "3" ||
+		actualValue[3].(string) != "4" ||
+		actualValue[4].(string) != "5" {
+		t.Errorf("[%s] Got %v expected %v", txt, actualValue, "[1,2,3,4,5]")
+	}
+	if actualValue, expectedValue := m.Size(), 5; actualValue != expectedValue {
+		t.Errorf("[%s] Got %v expected %v", txt, actualValue, expectedValue)
+	}
 }
 
 func benchmarkGet(b *testing.B, m *Map, size int) {

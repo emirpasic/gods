@@ -6,9 +6,36 @@ package doublylinkedlist
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/utils"
 	"testing"
+
+	"github.com/emirpasic/gods/utils"
 )
+
+func TestListNew(t *testing.T) {
+	list1 := New()
+
+	if actualValue := list1.Empty(); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+
+	list2 := New(1, "b")
+
+	if actualValue := list2.Size(); actualValue != 2 {
+		t.Errorf("Got %v expected %v", actualValue, 2)
+	}
+
+	if actualValue, ok := list2.Get(0); actualValue != 1 || !ok {
+		t.Errorf("Got %v expected %v", actualValue, 1)
+	}
+
+	if actualValue, ok := list2.Get(1); actualValue != "b" || !ok {
+		t.Errorf("Got %v expected %v", actualValue, "b")
+	}
+
+	if actualValue, ok := list2.Get(2); actualValue != nil || ok {
+		t.Errorf("Got %v expected %v", actualValue, nil)
+	}
+}
 
 func TestListAdd(t *testing.T) {
 	list := New()
@@ -133,6 +160,33 @@ func TestListValues(t *testing.T) {
 	}
 }
 
+func TestListIndexOf(t *testing.T) {
+	list := New()
+
+	expectedIndex := -1
+	if index := list.IndexOf("a"); index != expectedIndex {
+		t.Errorf("Got %v expected %v", index, expectedIndex)
+	}
+
+	list.Add("a")
+	list.Add("b", "c")
+
+	expectedIndex = 0
+	if index := list.IndexOf("a"); index != expectedIndex {
+		t.Errorf("Got %v expected %v", index, expectedIndex)
+	}
+
+	expectedIndex = 1
+	if index := list.IndexOf("b"); index != expectedIndex {
+		t.Errorf("Got %v expected %v", index, expectedIndex)
+	}
+
+	expectedIndex = 2
+	if index := list.IndexOf("c"); index != expectedIndex {
+		t.Errorf("Got %v expected %v", index, expectedIndex)
+	}
+}
+
 func TestListInsert(t *testing.T) {
 	list := New()
 	list.Insert(0, "b", "c")
@@ -146,6 +200,32 @@ func TestListInsert(t *testing.T) {
 		t.Errorf("Got %v expected %v", actualValue, 4)
 	}
 	if actualValue, expectedValue := fmt.Sprintf("%s%s%s%s", list.Values()...), "abcd"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+}
+
+func TestListSet(t *testing.T) {
+	list := New()
+	list.Set(0, "a")
+	list.Set(1, "b")
+	if actualValue := list.Size(); actualValue != 2 {
+		t.Errorf("Got %v expected %v", actualValue, 2)
+	}
+	list.Set(2, "c") // append
+	if actualValue := list.Size(); actualValue != 3 {
+		t.Errorf("Got %v expected %v", actualValue, 3)
+	}
+	list.Set(4, "d")  // ignore
+	list.Set(1, "bb") // update
+	if actualValue := list.Size(); actualValue != 3 {
+		t.Errorf("Got %v expected %v", actualValue, 3)
+	}
+	if actualValue, expectedValue := fmt.Sprintf("%s%s%s", list.Values()...), "abbc"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	list.Set(2, "cc") // last to first traversal
+	list.Set(0, "aa") // first to last traversal
+	if actualValue, expectedValue := fmt.Sprintf("%s%s%s", list.Values()...), "aabbcc"; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 }

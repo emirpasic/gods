@@ -14,12 +14,14 @@ Implementation of various data structures and algorithms in Go.
   - [Sets](#sets)
     - [HashSet](#hashset)
     - [TreeSet](#treeset)
+    - [LinkedHashSet](#linkedhashset)
   - [Stacks](#stacks)
     - [LinkedListStack](#linkedliststack)
     - [ArrayStack](#arraystack)
   - [Maps](#maps)
     - [HashMap](#hashmap)
     - [TreeMap](#treemap)
+    - [LinkedHashMap](#linkedhashmap)
     - [HashBidiMap](#hashbidimap)
     - [TreeBidiMap](#treebidimap)
   - [Trees](#trees)
@@ -60,24 +62,31 @@ type Container interface {
 
 Containers are either ordered or unordered. All ordered containers provide [stateful iterators](#iterator) and some of them allow [enumerable functions](#enumerable).
 
-| Container | Ordered | [Iterator](#iterator) | [Enumerable](#enumerable) | Referenced by |
-| :--- | :---: | :---: | :---: | :---: |
-| [ArrayList](#arraylist) | yes | yes* | yes | index |
-| [SinglyLinkedList](#singlylinkedlist) | yes | yes | yes | index |
-| [DoublyLinkedList](#doublylinkedlist) | yes | yes* | yes | index |
-| [HashSet](#hashset) | no | no | no | index |
-| [TreeSet](#treeset) | yes | yes* | yes | index |
-| [LinkedListStack](#linkedliststack) | yes | yes | no | index |
-| [ArrayStack](#arraystack) | yes | yes* | no | index |
-| [HashMap](#hashmap) | no | no | no | key |
-| [TreeMap](#treemap) | yes | yes* | yes | key |
-| [HashBidiMap](#hashbidimap) | no | no | no | key* |
-| [TreeBidiMap](#treebidimap) | yes | yes* | yes | key* |
-| [RedBlackTree](#redblacktree) | yes | yes* | no | key |
-| [AVLTree](#avltree) | yes | yes* | no | key |
-| [BTree](#btree) | yes | yes* | no | key |
-| [BinaryHeap](#binaryheap) | yes | yes* | no | index |
-|  |  | <sub><sup>*reversible</sup></sub> |  | <sub><sup>*bidirectional</sup></sub> |
+| **Data** | **Structure** | **Ordered** | **[Iterator](#iterator)** | **[Enumerable](#enumerable)** | **Referenced by** |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| [Lists](#lists) |
+|   | [ArrayList](#arraylist) | yes | yes* | yes | index |
+|   | [SinglyLinkedList](#singlylinkedlist) | yes | yes | yes | index |
+|   | [DoublyLinkedList](#doublylinkedlist) | yes | yes* | yes | index |
+| [Sets](#sets) |
+|   | [HashSet](#hashset) | no | no | no | index |
+|   | [TreeSet](#treeset) | yes | yes* | yes | index |
+|   | [LinkedHashSet](#linkedhashset) | yes | yes* | yes | index |
+| [Stacks](#stacks) |
+|   | [LinkedListStack](#linkedliststack) | yes | yes | no | index |
+|   | [ArrayStack](#arraystack) | yes | yes* | no | index |
+| [Maps](#maps) |
+|   | [HashMap](#hashmap) | no | no | no | key |
+|   | [TreeMap](#treemap) | yes | yes* | yes | key |
+|   | [LinkedHashMap](#linkedhashmap) | yes | yes* | yes | key |
+|   | [HashBidiMap](#hashbidimap) | no | no | no | key* |
+|   | [TreeBidiMap](#treebidimap) | yes | yes* | yes | key* |
+| [Trees](#trees) |
+|   | [RedBlackTree](#redblacktree) | yes | yes* | no | key |
+|   | [AVLTree](#avltree) | yes | yes* | no | key |
+|   | [BTree](#btree) | yes | yes* | no | key |
+|   | [BinaryHeap](#binaryheap) | yes | yes* | no | index |
+|   |  |  | <sub><sup>*reversible</sup></sub> |  | <sub><sup>*bidirectional</sup></sub> |
 
 ### Lists
 
@@ -87,13 +96,14 @@ Implements [Container](#containers) interface.
 
 ```go
 type List interface {
-    Get(index int) (interface{}, bool)
+	Get(index int) (interface{}, bool)
 	Remove(index int)
 	Add(values ...interface{})
 	Contains(values ...interface{}) bool
 	Sort(comparator utils.Comparator)
-    Swap(index1, index2 int)
-   	Insert(index int, values ...interface{})
+	Swap(index1, index2 int)
+	Insert(index int, values ...interface{})
+	Set(index int, value interface{})
 
 	containers.Container
 	// Empty() bool
@@ -114,7 +124,7 @@ package main
 
 import (
 	"github.com/emirpasic/gods/lists/arraylist"
-    "github.com/emirpasic/gods/utils"
+	"github.com/emirpasic/gods/utils"
 )
 
 func main() {
@@ -135,8 +145,8 @@ func main() {
 	_ = list.Size()                       // 0
 	list.Add("a")                         // ["a"]
 	list.Clear()                          // []
-    list.Insert(0, "b")                   // ["b"]
-    list.Insert(0, "a")                   // ["a","b"]
+	list.Insert(0, "b")                   // ["b"]
+	list.Insert(0, "a")                   // ["a","b"]
 }
 ```
 
@@ -172,8 +182,8 @@ func main() {
 	_ = list.Size()                       // 0
 	list.Add("a")                         // ["a"]
 	list.Clear()                          // []
-    list.Insert(0, "b")                   // ["b"]
-    list.Insert(0, "a")                   // ["a","b"]
+	list.Insert(0, "b")                   // ["b"]
+	list.Insert(0, "a")                   // ["a","b"]
 }
 ```
 
@@ -209,8 +219,8 @@ func main() {
 	_ = list.Size()                       // 0
 	list.Add("a")                         // ["a"]
 	list.Clear()                          // []
-    list.Insert(0, "b")                   // ["b"]
-    list.Insert(0, "a")                   // ["a","b"]
+	list.Insert(0, "b")                   // ["b"]
+	list.Insert(0, "a")                   // ["a","b"]
 }
 ```
 
@@ -222,7 +232,7 @@ Implements [Container](#containers) interface.
 
 ```go
 type Set interface {
-    Add(elements ...interface{})
+	Add(elements ...interface{})
 	Remove(elements ...interface{})
 	Contains(elements ...interface{}) bool
 
@@ -285,6 +295,34 @@ func main() {
 	set.Clear()                           // empty
 	set.Empty()                           // true
 	set.Size()                            // 0
+}
+```
+
+#### LinkedHashSet
+
+A [set](#sets) that preserves insertion-order. Data structure is backed by a hash table to store values and [doubly-linked list](#doublylinkedlist) to store insertion ordering.
+
+Implements [Set](#sets), [IteratorWithIndex](#iteratorwithindex), [EnumerableWithIndex](#enumerablewithindex), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
+
+```go
+package main
+
+import "github.com/emirpasic/gods/sets/linkedhashset"
+
+func main() {
+	set := linkedhashset.New() // empty
+	set.Add(5)                 // 5
+	set.Add(4, 4, 3, 2, 1)     // 5, 4, 3, 2, 1 (in insertion-order, duplicates ignored)
+	set.Add(4)                 // 5, 4, 3, 2, 1 (duplicates ignored, insertion-order unchanged)
+	set.Remove(4)              // 5, 3, 2, 1 (in insertion-order)
+	set.Remove(2, 3)           // 5, 1 (in insertion-order)
+	set.Contains(1)            // true
+	set.Contains(1, 5)         // true
+	set.Contains(1, 6)         // false
+	_ = set.Values()           // []int{5, 1} (in insertion-order)
+	set.Clear()                // empty
+	set.Empty()                // true
+	set.Size()                 // 0
 }
 ```
 
@@ -370,7 +408,7 @@ Implements [Container](#containers) interface.
 
 ```go
 type Map interface {
-    Put(key interface{}, value interface{})
+	Put(key interface{}, value interface{})
 	Get(key interface{}) (value interface{}, found bool)
 	Remove(key interface{})
 	Keys() []interface{}
@@ -445,10 +483,38 @@ func main() {
 	m.Empty()                           // true
 	m.Size()                            // 0
 
-    // Other:
-    m.Min() // Returns the minimum key and its value from map.
-    m.Max() // Returns the maximum key and its value from map.
+	// Other:
+	m.Min() // Returns the minimum key and its value from map.
+	m.Max() // Returns the maximum key and its value from map.
 }
+```
+
+#### LinkedHashMap
+
+A [map](#maps) that preserves insertion-order. It is backed by a hash table to store values and [doubly-linked list](doublylinkedlist) to store ordering.
+
+Implements [Map](#maps), [IteratorWithKey](#iteratorwithkey), [EnumerableWithKey](#enumerablewithkey), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
+
+```go
+package main
+
+import "github.com/emirpasic/gods/maps/linkedhashmap"
+
+func main() {
+	m := linkedhashmap.New() // empty (keys are of type int)
+	m.Put(2, "b")            // 2->b
+	m.Put(1, "x")            // 2->b, 1->x (insertion-order)
+	m.Put(1, "a")            // 2->b, 1->a (insertion-order)
+	_, _ = m.Get(2)          // b, true
+	_, _ = m.Get(3)          // nil, false
+	_ = m.Values()           // []interface {}{"b", "a"} (insertion-order)
+	_ = m.Keys()             // []interface {}{2, 1} (insertion-order)
+	m.Remove(1)              // 2->b
+	m.Clear()                // empty
+	m.Empty()                // true
+	m.Size()                 // 0
+}
+
 ```
 
 #### HashBidiMap
@@ -584,15 +650,15 @@ func main() {
 	tree.Empty() // true
 	tree.Size()  // 0
 
-    // Other:
-    tree.Left() // gets the left-most (min) node
-    tree.Right() // get the right-most (max) node
-    tree.Floor(1) // get the floor node
-    tree.Ceiling(1) // get the ceiling node
+	// Other:
+	tree.Left() // gets the left-most (min) node
+	tree.Right() // get the right-most (max) node
+	tree.Floor(1) // get the floor node
+	tree.Ceiling(1) // get the ceiling node
 }
 ```
 
-Extending the red-black tree's functionality  has been demonstrated in the following [example](https://github.com/emirpasic/gods/blob/master/examples/redblacktreeextended.go).
+Extending the red-black tree's functionality  has been demonstrated in the following [example](https://github.com/emirpasic/gods/blob/master/examples/redblacktreeextended/redblacktreeextended.go).
 
 #### AVLTree
 
@@ -898,7 +964,7 @@ Typical usage:
 it := list.Iterator()
 for it.Next() {
 	index, value := it.Index(), it.Value()
-    ...
+	...
 }
 ```
 
@@ -925,7 +991,7 @@ Typical usage:
 it := tree.Iterator()
 for it.Next() {
 	key, value := it.Key(), it.Value()
-    ...
+	...
 }
 ```
 
@@ -952,7 +1018,7 @@ Typical usage of iteration in reverse:
 it := list.Iterator()
 for it.End(); it.Prev(); {
 	index, value := it.Index(), it.Value()
-    ...
+	...
 }
 ```
 
@@ -973,7 +1039,7 @@ Typical usage of iteration in reverse:
 it := tree.Iterator()
 for it.End(); it.Prev(); {
 	key, value := it.Key(), it.Value()
-    ...
+	...
 }
 ```
 
@@ -1278,18 +1344,18 @@ package main
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/lists/arraylist"
+	"github.com/emirpasic/gods/maps/hashmap"
 )
 
 func main() {
-	list := arraylist.New()
+	hm := hashmap.New()
 
-	json := []byte(`["a","b"]`)
-	err := list.FromJSON(json)
+	json := []byte(`{"a":"1","b":"2"}`)
+	err := hm.FromJSON(json)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(list) // ArrayList ["a","b"]
+	fmt.Println(hm) // HashMap map[b:2 a:1]
 }
 ```
 
@@ -1354,13 +1420,13 @@ package main
 
 import (
 	"github.com/emirpasic/gods/lists/arraylist"
-    "github.com/emirpasic/gods/utils"
+	"github.com/emirpasic/gods/utils"
 )
 
 func main() {
 	list := arraylist.New()
-    list.Add(2, 1, 3)
-    values := GetSortedValues(container, utils.StringComparator) // [1, 2, 3]
+	list.Add(2, 1, 3)
+	values := GetSortedValues(container, utils.StringComparator) // [1, 2, 3]
 }
 ```
 

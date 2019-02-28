@@ -9,6 +9,20 @@ import (
 	"testing"
 )
 
+func TestSetNew(t *testing.T) {
+	set := NewWithIntComparator(2, 1)
+	if actualValue := set.Size(); actualValue != 2 {
+		t.Errorf("Got %v expected %v", actualValue, 2)
+	}
+	values := set.Values()
+	if actualValue := values[0]; actualValue != 1 {
+		t.Errorf("Got %v expected %v", actualValue, 1)
+	}
+	if actualValue := values[1]; actualValue != 2 {
+		t.Errorf("Got %v expected %v", actualValue, 2)
+	}
+}
+
 func TestSetAdd(t *testing.T) {
 	set := NewWithIntComparator()
 	set.Add()
@@ -265,10 +279,10 @@ func TestSetIteratorPrev(t *testing.T) {
 }
 
 func TestSetIteratorBegin(t *testing.T) {
-	m := NewWithStringComparator()
-	it := m.Iterator()
+	set := NewWithStringComparator()
+	it := set.Iterator()
 	it.Begin()
-	m.Add("a", "b", "c")
+	set.Add("a", "b", "c")
 	for it.Next() {
 	}
 	it.Begin()
@@ -322,8 +336,8 @@ func TestSetIteratorLast(t *testing.T) {
 	if actualValue, expectedValue := it.Last(), true; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
-	if index, value := it.Index(), it.Value(); index != 3 || value != "c" {
-		t.Errorf("Got %v,%v expected %v,%v", index, value, 3, "c")
+	if index, value := it.Index(), it.Value(); index != 2 || value != "c" {
+		t.Errorf("Got %v,%v expected %v,%v", index, value, 2, "c")
 	}
 }
 
