@@ -23,10 +23,10 @@ func TestMapPut(t *testing.T) {
 	if actualValue := m.Size(); actualValue != 7 {
 		t.Errorf("Got %v expected %v", actualValue, 7)
 	}
-	if actualValue, expectedValue := m.Keys(), []interface{}{5, 6, 7, 3, 4, 1, 2}; !sameElements(actualValue, expectedValue) {
+	if actualValue, expectedValue := m.Keys(), []interface{}{5, 6, 7, 3, 4, 2, 1}; !sameElements(actualValue, expectedValue) {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
-	if actualValue, expectedValue := m.Values(), []interface{}{"e", "f", "g", "c", "d", "a", "b"}; !sameElements(actualValue, expectedValue) {
+	if actualValue, expectedValue := m.Values(), []interface{}{"e", "f", "g", "c", "d", "b", "a"}; !sameElements(actualValue, expectedValue) {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
@@ -68,11 +68,11 @@ func TestMapRemove(t *testing.T) {
 	m.Remove(8)
 	m.Remove(5)
 
-	if actualValue, expectedValue := m.Keys(), []interface{}{3, 4, 1, 2}; !sameElements(actualValue, expectedValue) {
+	if actualValue, expectedValue := m.Keys(), []interface{}{3, 4, 2, 1}; !sameElements(actualValue, expectedValue) {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 
-	if actualValue, expectedValue := m.Values(), []interface{}{"c", "d", "a", "b"}; !sameElements(actualValue, expectedValue) {
+	if actualValue, expectedValue := m.Values(), []interface{}{"c", "d", "b", "a"}; !sameElements(actualValue, expectedValue) {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 	if actualValue := m.Size(); actualValue != 4 {

@@ -39,9 +39,11 @@ func New() *Map {
 // Put inserts key-value pair into the map.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (m *Map) Put(key interface{}, value interface{}) {
-	if _, contains := m.table[key]; !contains {
-		m.ordering.Append(key)
+	if _, contains := m.table[key]; contains {
+		index := m.ordering.IndexOf(key)
+		m.ordering.Remove(index)
 	}
+	m.ordering.Append(key)
 	m.table[key] = value
 }
 
