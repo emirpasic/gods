@@ -19,6 +19,11 @@ func (set *Set) ToJSON() ([]byte, error) {
 	return json.Marshal(set.Values())
 }
 
+// ToJSON outputs the JSON representation of the set.
+func (set *Set)MarshalJSON() ([]byte, error) {
+  return json.Marshal(set.Values())
+}
+
 // FromJSON populates the set from the input JSON representation.
 func (set *Set) FromJSON(data []byte) error {
 	elements := []interface{}{}
