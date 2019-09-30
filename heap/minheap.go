@@ -5,36 +5,36 @@ import "errors"
 // Heap is a specialized tree-based data structure which is essentially an almost complete tree that satisfies the heap
 // property: in a max heap, for any given node C, if P is a parent node of C, then the key (the value) of P is
 // greater than or equal to the key of C
-type MaxHeap struct {
-	size int
-	heap []interface{}
-	less func(h []interface{}, i int, j int) bool
+type MinHeap struct {
+	size    int
+	heap    []interface{}
+	greater func(h []interface{}, i int, j int) bool
 }
 
-// Creates Max Heap with a given less function
-func NewMaxHeap(less func(h []interface{}, i int, j int) bool) *MaxHeap {
-	return &MaxHeap{
-		heap: make([]interface{}, 2),
-		less: less,
+// Creates Max Heap with a given greater function
+func NewMinHeap(greater func(h []interface{}, i int, j int) bool) *MinHeap {
+	return &MinHeap{
+		heap:    make([]interface{}, 2),
+		greater: greater,
 	}
 }
 
 // Max Heap for strings
-func NewStringMaxHeap() *MaxHeap {
-	return NewMaxHeap(func(h []interface{}, i int, j int) bool {
-		return h[i].(string) < h[j].(string)
+func NewStringMinHeap() *MinHeap {
+	return NewMinHeap(func(h []interface{}, i int, j int) bool {
+		return h[i].(string) > h[j].(string)
 	})
 }
 
 // Max Heap for ints
-func NewIntMaxHeap() *MaxHeap {
-	return NewMaxHeap(func(h []interface{}, i int, j int) bool {
-		return h[i].(int) < h[j].(int)
+func NewIntMinHeap() *MinHeap {
+	return NewMinHeap(func(h []interface{}, i int, j int) bool {
+		return h[i].(int) > h[j].(int)
 	})
 }
 
 // Adds new element to heap with logarithmic amortized time
-func (h *MaxHeap) Add(value interface{}) {
+func (h *MinHeap) Add(value interface{}) {
 	if h.size >= cap(h.heap)-1 {
 		h.resize(h.size*2 + 1)
 	}
@@ -46,14 +46,15 @@ func (h *MaxHeap) Add(value interface{}) {
 }
 
 // Polls element from heap with logarithmic amortized time
-func (h *MaxHeap) Poll() (interface{}, error) {
+func (h *MinHeap) Poll() (interface{}, error) {
 	if h.size == 0 {
 		return nil, errors.New("heap is empty")
 	}
+
+	h.heap[1], h.heap[h.size] = h.heap[h.size], h.heap[1]
+	min := h.heap[h.size]
 	h.size--
 
-	max := h.heap[1]
-	h.heap[1] = h.heap[h.size+1]
 	h.heap[h.size+1] = nil
 	h.sink(1)
 
@@ -61,11 +62,11 @@ func (h *MaxHeap) Poll() (interface{}, error) {
 		h.resize(h.size + 2)
 	}
 
-	return max, nil
+	return min, nil
 }
 
 // Returns max element without modifying heap
-func (h *MaxHeap) Peek() (interface{}, error) {
+func (h *MinHeap) Peek() (interface{}, error) {
 	if h.size == 0 {
 		return nil, errors.New("heap is empty")
 	}
@@ -74,18 +75,18 @@ func (h *MaxHeap) Peek() (interface{}, error) {
 }
 
 // Returns size of this heap
-func (h *MaxHeap) Size() int {
+func (h *MinHeap) Size() int {
 	return h.size
 }
 
 //  Returns true if this heap
 //  is empty.
-func (h *MaxHeap) Empty() bool {
+func (h *MinHeap) Empty() bool {
 	return h.size == 0
 }
 
 // Resizes heap`s internal array
-func (h *MaxHeap) resize(cap int) {
+func (h *MinHeap) resize(cap int) {
 	t := make([]interface{}, cap)
 	for i := 1; i <= h.size; i++ {
 		t[i] = h.heap[i]
@@ -94,23 +95,23 @@ func (h *MaxHeap) resize(cap int) {
 	h.heap = t
 }
 
-func (h *MaxHeap) swim(k int) {
+func (h *MinHeap) swim(k int) {
 	for k > 1 {
-		if h.less(h.heap, k/2, k) {
+		if h.greater(h.heap, k/2, k) {
 			h.heap[k], h.heap[k/2] = h.heap[k/2], h.heap[k]
 		}
 		k = k / 2
 	}
 }
 
-func (h *MaxHeap) sink(k int) {
+func (h *MinHeap) sink(k int) {
 	for k*2 < h.size {
 		j := k * 2
-		if h.less(h.heap, j, j+1) {
+		if h.greater(h.heap, j, j+1) {
 			j = j + 1
 		}
 
-		if h.less(h.heap, k, j) {
+		if h.greater(h.heap, k, j) {
 			h.heap[k], h.heap[j] = h.heap[j], h.heap[k]
 		}
 
