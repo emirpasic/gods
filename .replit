@@ -1,0 +1,2 @@
+language = "go"
+run = "go run examples/arraylist/arraylist.go"
