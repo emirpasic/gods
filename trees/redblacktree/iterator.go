@@ -51,13 +51,11 @@ func (iterator *Iterator) Next() bool {
 		}
 		goto between
 	}
-	if iterator.node.Parent != nil {
+	for iterator.node.Parent != nil {
 		node := iterator.node
-		for iterator.node.Parent != nil {
-			iterator.node = iterator.node.Parent
-			if iterator.tree.Comparator(node.Key, iterator.node.Key) <= 0 {
-				goto between
-			}
+		iterator.node = iterator.node.Parent
+		if node == iterator.node.Left {
+			goto between
 		}
 	}
 
@@ -93,13 +91,11 @@ func (iterator *Iterator) Prev() bool {
 		}
 		goto between
 	}
-	if iterator.node.Parent != nil {
+	for iterator.node.Parent != nil {
 		node := iterator.node
-		for iterator.node.Parent != nil {
-			iterator.node = iterator.node.Parent
-			if iterator.tree.Comparator(node.Key, iterator.node.Key) >= 0 {
-				goto between
-			}
+		iterator.node = iterator.node.Parent
+		if node == iterator.node.Right {
+			goto between
 		}
 	}
 
