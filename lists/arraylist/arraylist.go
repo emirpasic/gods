@@ -210,7 +210,7 @@ func (list *List) growBy(n int) {
 	// When capacity is reached, grow by a factor of growthFactor and add number of elements
 	currentCapacity := cap(list.elements)
 	if list.size+n >= currentCapacity {
-		newCapacity := int(growthFactor * float32(currentCapacity+n))
+		newCapacity := int(growthFactor * float32(currentCapacity)+float32(n))
 		list.resize(newCapacity)
 	}
 }
