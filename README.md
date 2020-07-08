@@ -1297,7 +1297,7 @@ Typical usage for key-value structures:
 package main
 
 import (
-    "encoding/json"
+	"encoding/json"
 	"fmt"
 	"github.com/emirpasic/gods/maps/hashmap"
 )
@@ -1320,7 +1320,7 @@ Typical usage for value-only structures:
 package main
 
 import (
-    "encoding/json"
+	"encoding/json"
 	"fmt"
 	"github.com/emirpasic/gods/lists/arraylist"
 )
@@ -1346,7 +1346,7 @@ Typical usage for key-value structures:
 package main
 
 import (
-    "encoding/json"
+	"encoding/json"
 	"fmt"
 	"github.com/emirpasic/gods/maps/hashmap"
 )
@@ -1368,7 +1368,7 @@ Typical usage for value-only structures:
 package main
 
 import (
-    "encoding/json"
+	"encoding/json"
 	"fmt"
 	"github.com/emirpasic/gods/lists/arraylist"
 )
