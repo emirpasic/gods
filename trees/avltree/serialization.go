@@ -25,11 +25,6 @@ func (tree *Tree) ToJSON() ([]byte, error) {
 	return json.Marshal(&elements)
 }
 
-// Implements json.Marshaler inerface
-func (tree *Tree) MarshalJSON() ([]byte, error) {
-	return tree.ToJSON()
-}
-
 // FromJSON populates the tree from the input JSON representation.
 func (tree *Tree) FromJSON(data []byte) error {
 	elements := make(map[string]interface{})
@@ -41,6 +36,11 @@ func (tree *Tree) FromJSON(data []byte) error {
 		}
 	}
 	return err
+}
+
+// Implements json.Marshaler inerface
+func (tree *Tree) MarshalJSON() ([]byte, error) {
+	return tree.ToJSON()
 }
 
 // Implements json.Unmarshaler inerface

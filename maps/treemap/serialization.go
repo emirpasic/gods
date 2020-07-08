@@ -20,3 +20,13 @@ func (m *Map) ToJSON() ([]byte, error) {
 func (m *Map) FromJSON(data []byte) error {
 	return m.tree.FromJSON(data)
 }
+
+// Implements json.Marshaler inerface
+func (m *Map) MarshalJSON() ([]byte, error) {
+	return m.ToJSON()
+}
+
+// Implements json.Unmarshaler inerface
+func (m *Map) UnmarshalJSON(data []byte) error {
+	return m.FromJSON(data)
+}

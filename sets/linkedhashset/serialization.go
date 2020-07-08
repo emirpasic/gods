@@ -29,3 +29,13 @@ func (set *Set) FromJSON(data []byte) error {
 	}
 	return err
 }
+
+// Implements json.Marshaler inerface
+func (set *Set) MarshalJSON() ([]byte, error) {
+	return set.ToJSON()
+}
+
+// Implements json.Unmarshaler inerface
+func (set *Set) UnmarshalJSON(data []byte) error {
+	return set.FromJSON(data)
+}

@@ -1312,6 +1312,12 @@ func main() {
 		fmt.Println(err)
 	}
 	fmt.Println(string(json)) // {"a":"1","b":"2","c":"3"}
+
+	json, err = json.Marshall(m)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(string(json)) // {"a":"1","b":"2","c":"3"}
 ```
 
 Typical usage for value-only structures:
@@ -1328,6 +1334,12 @@ func main() {
 	list.Add("a", "b", "c")
 
 	json, err := list.ToJSON()
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(string(json)) // ["a","b","c"]
+
+	json, err = json.Marshall(list)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -1357,6 +1369,12 @@ func main() {
 		fmt.Println(err)
 	}
 	fmt.Println(hm) // HashMap map[b:2 a:1]
+
+	err := json.Unmarshal(json, hm)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(hm) // HashMap map[b:2 a:1]
 }
 ```
 
@@ -1374,6 +1392,12 @@ func main() {
 
 	json := []byte(`["a","b"]`)
 	err := list.FromJSON(json)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(list) // ArrayList ["a","b"]
+
+	err := json.Unmarshal(json, list)
 	if err != nil {
 		fmt.Println(err)
 	}

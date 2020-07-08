@@ -20,3 +20,13 @@ func (heap *Heap) ToJSON() ([]byte, error) {
 func (heap *Heap) FromJSON(data []byte) error {
 	return heap.list.FromJSON(data)
 }
+
+// Implements json.Marshaler inerface
+func (tree *Tree) MarshalJSON() ([]byte, error) {
+	return tree.ToJSON()
+}
+
+// Implements json.Unmarshaler inerface
+func (tree *Tree) UnmarshalJSON(data []byte) error {
+	return tree.FromJSON(data)
+}
