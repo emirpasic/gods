@@ -1,6 +1,7 @@
 package serialization
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/emirpasic/gods/lists/arraylist"
 	"github.com/emirpasic/gods/maps/hashmap"
@@ -12,15 +13,15 @@ func ListSerializationExample() {
 	list.Add("a", "b", "c")
 
 	// Serialization (marshalling)
-	json, err := list.ToJSON()
+	jsonBytes, err := json.Marshal(list)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(string(json)) // ["a","b","c"]
+	fmt.Println(string(jsonBytes)) // ["a","b","c"]
 
 	// Deserialization (unmarshalling)
-	json = []byte(`["a","b"]`)
-	err = list.FromJSON(json)
+	jsonBytes = []byte(`["a","b"]`)
+	err = json.Unmarshal(jsonBytes, list)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -35,15 +36,15 @@ func MapSerializationExample() {
 	m.Put("c", "3")
 
 	// Serialization (marshalling)
-	json, err := m.ToJSON()
+	jsonBytes, err := json.Marshal(m)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(string(json)) // {"a":"1","b":"2","c":"3"}
+	fmt.Println(string(jsonBytes)) // {"a":"1","b":"2","c":"3"}
 
 	// Deserialization (unmarshalling)
-	json = []byte(`{"a":"1","b":"2"}`)
-	err = m.FromJSON(json)
+	jsonBytes = []byte(`{"a":"1","b":"2"}`)
+	err = json.Unmarshal(jsonBytes, m)
 	if err != nil {
 		fmt.Println(err)
 	}

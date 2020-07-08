@@ -5,6 +5,7 @@
 package treebidimap
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/emirpasic/gods/utils"
 	"testing"
@@ -484,14 +485,14 @@ func TestMapSerialization(t *testing.T) {
 
 		assertSerialization(original, "A", t)
 
-		serialized, err := original.ToJSON()
+		serialized, err := json.Marshal(original)
 		if err != nil {
 			t.Errorf("Got error %v", err)
 		}
 		assertSerialization(original, "B", t)
 
 		deserialized := NewWith(utils.StringComparator, utils.StringComparator)
-		err = deserialized.FromJSON(serialized)
+		err = json.Unmarshal(serialized, deserialized)
 		if err != nil {
 			t.Errorf("Got error %v", err)
 		}

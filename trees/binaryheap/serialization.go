@@ -21,12 +21,12 @@ func (heap *Heap) FromJSON(data []byte) error {
 	return heap.list.FromJSON(data)
 }
 
-// Implements json.Marshaler inerface
-func (tree *Tree) MarshalJSON() ([]byte, error) {
-	return tree.ToJSON()
+// MarshalJSON Implements json.Marshaler inerface
+func (heap *Heap) MarshalJSON() ([]byte, error) {
+	return heap.ToJSON()
 }
 
-// Implements json.Unmarshaler inerface
-func (tree *Tree) UnmarshalJSON(data []byte) error {
-	return tree.FromJSON(data)
+// UnmarshalJSON Implements json.Unmarshaler inerface
+func (heap *Heap) UnmarshalJSON(data []byte) error {
+	return heap.FromJSON(data)
 }

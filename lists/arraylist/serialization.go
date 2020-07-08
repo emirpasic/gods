@@ -28,12 +28,12 @@ func (list *List) FromJSON(data []byte) error {
 	return err
 }
 
-// Implements json.Marshaler inerface
+// MarshalJSON Implements json.Marshaler inerface
 func (list *List) MarshalJSON() ([]byte, error) {
 	return list.ToJSON()
 }
 
-// Implements json.Unmarshaler inerface
+// UnmarshalJSON Implements json.Unmarshaler inerface
 func (list *List) UnmarshalJSON(data []byte) error {
 	return list.FromJSON(data)
 }

@@ -5,6 +5,7 @@
 package linkedhashset
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
 )
@@ -351,10 +352,10 @@ func TestSetSerialization(t *testing.T) {
 
 	assert()
 
-	json, err := set.ToJSON()
+	jsonBytes, err := json.Marshal(set)
 	assert()
 
-	err = set.FromJSON(json)
+	err = json.Unmarshal(jsonBytes, set)
 	assert()
 }
 

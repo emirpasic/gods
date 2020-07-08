@@ -38,12 +38,12 @@ func (tree *Tree) FromJSON(data []byte) error {
 	return err
 }
 
-// Implements json.Marshaler inerface
+// MarshalJSON Implements json.Marshaler inerface
 func (tree *Tree) MarshalJSON() ([]byte, error) {
 	return tree.ToJSON()
 }
 
-// Implements json.Unmarshaler inerface
+// UnmarshalJSON Implements json.Unmarshaler inerface
 func (tree *Tree) UnmarshalJSON(data []byte) error {
 	return tree.FromJSON(data)
 }

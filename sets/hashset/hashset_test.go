@@ -5,6 +5,7 @@
 package hashset
 
 import (
+	"encoding/json"
 	"testing"
 )
 
@@ -98,10 +99,10 @@ func TestSetSerialization(t *testing.T) {
 
 	assert()
 
-	json, err := set.ToJSON()
+	jsonBytes, err := json.Marshal(set)
 	assert()
 
-	err = set.FromJSON(json)
+	err = json.Unmarshal(jsonBytes, set)
 	assert()
 }
 

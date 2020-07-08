@@ -5,6 +5,7 @@
 package btree
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
 )
@@ -1098,10 +1099,10 @@ func TestBTreeSerialization(t *testing.T) {
 
 	assert()
 
-	json, err := tree.ToJSON()
+	jsonBytes, err := json.Marshal(tree)
 	assert()
 
-	err = tree.FromJSON(json)
+	err = json.Unmarshal(jsonBytes, tree)
 	assert()
 }
 

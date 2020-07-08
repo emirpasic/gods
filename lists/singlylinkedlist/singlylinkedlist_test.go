@@ -5,6 +5,7 @@
 package singlylinkedlist
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
 
@@ -439,10 +440,10 @@ func TestListSerialization(t *testing.T) {
 
 	assert()
 
-	json, err := list.ToJSON()
+	jsonBytes, err := json.Marshal(list)
 	assert()
 
-	err = list.FromJSON(json)
+	err = json.Unmarshal(jsonBytes, list)
 	assert()
 }
 

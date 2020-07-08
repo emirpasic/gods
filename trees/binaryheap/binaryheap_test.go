@@ -5,6 +5,7 @@
 package binaryheap
 
 import (
+	"encoding/json"
 	"math/rand"
 	"testing"
 )
@@ -284,10 +285,10 @@ func TestBinaryHeapSerialization(t *testing.T) {
 
 	assert()
 
-	json, err := heap.ToJSON()
+	jsonBytes, err := json.Marshal(heap)
 	assert()
 
-	err = heap.FromJSON(json)
+	err = json.Unmarshal(jsonBytes, heap)
 	assert()
 }
 

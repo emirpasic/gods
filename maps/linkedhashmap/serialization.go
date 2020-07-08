@@ -102,12 +102,12 @@ func (m *Map) FromJSON(data []byte) error {
 	return nil
 }
 
-// Implements json.Marshaler inerface
+// MarshalJSON Implements json.Marshaler inerface
 func (m *Map) MarshalJSON() ([]byte, error) {
 	return m.ToJSON()
 }
 
-// Implements json.Unmarshaler inerface
+// UnmarshalJSON Implements json.Unmarshaler inerface
 func (m *Map) UnmarshalJSON(data []byte) error {
 	return m.FromJSON(data)
 }
