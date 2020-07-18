@@ -125,7 +125,7 @@ func TestListSwap(t *testing.T) {
 	list.Add("b", "c")
 	list.Swap(0, 1)
 	if actualValue, ok := list.Get(0); actualValue != "b" || !ok {
-		t.Errorf("Got %v expected %v", actualValue, "c")
+		t.Errorf("Got %v expected %v", actualValue, "b")
 	}
 }
 

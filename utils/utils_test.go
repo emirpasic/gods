@@ -74,7 +74,7 @@ func TestToStringFloats(t *testing.T) {
 	if actualValue, expectedValue := ToString(value), "1.123456"; !strings.HasPrefix(actualValue, expectedValue) {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
-	value = float32(1.123456)
+	value = float64(1.123456)
 	if actualValue, expectedValue := ToString(value), "1.123456"; !strings.HasPrefix(actualValue, expectedValue) {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
