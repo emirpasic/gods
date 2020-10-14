@@ -18,7 +18,7 @@ go:
   - 1.14.x
   - tip
 jobs:
- exclude:
+ exclude: # Excluded for power support as the lower versions are not supported
   - arch: ppc64le
     go: 1.2.x
   - arch: ppc64le
