@@ -56,15 +56,15 @@ func (set *Set) Add(items ...interface{}) {
 }
 
 // Remove removes the items (one or more) from the set.
-// Slow operation, worst-case O(n^2).
 func (set *Set) Remove(items ...interface{}) {
 	for _, item := range items {
-		if _, contains := set.table[item]; contains {
-			delete(set.table, item)
-			index := set.ordering.IndexOf(item)
-			set.ordering.Remove(index)
-		}
+		delete(set.table, item)
 	}
+	// Only keep non-deleted items
+	set.ordering.Filter(func(item interface{}) bool {
+		_, contains := set.table[item]
+		return contains
+	})
 }
 
 // Contains check if items (one or more) are present in the set.
