@@ -111,3 +111,14 @@ func (set *Set) String() string {
 	str += strings.Join(items, ", ")
 	return str
 }
+
+// Intersection returns the intersection between two sets
+func (set *Set) Intersection(another *Set) *Set {
+	result := NewWith(set.tree.Comparator)
+	for _, item := range another.Values() {
+		if set.Contains(item) {
+			result.Add(item)
+		}
+	}
+	return result
+}
