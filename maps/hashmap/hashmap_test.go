@@ -5,6 +5,7 @@
 package hashmap
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
 )
@@ -142,10 +143,10 @@ func TestMapSerialization(t *testing.T) {
 
 	assert()
 
-	json, err := m.ToJSON()
+	jsonBytes, err := json.Marshal(m)
 	assert()
 
-	err = m.FromJSON(json)
+	err = json.Unmarshal(jsonBytes, m)
 	assert()
 }
 

@@ -20,3 +20,13 @@ func (stack *Stack) ToJSON() ([]byte, error) {
 func (stack *Stack) FromJSON(data []byte) error {
 	return stack.list.FromJSON(data)
 }
+
+// MarshalJSON Implements json.Marshaler inerface
+func (stack *Stack) MarshalJSON() ([]byte, error) {
+	return stack.ToJSON()
+}
+
+// UnmarshalJSON Implements json.Unmarshaler inerface
+func (stack *Stack) UnmarshalJSON(data []byte) error {
+	return stack.FromJSON(data)
+}

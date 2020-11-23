@@ -1297,6 +1297,7 @@ Typical usage for key-value structures:
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/emirpasic/gods/maps/hashmap"
 )
@@ -1307,11 +1308,11 @@ func main() {
 	m.Put("b", "2")
 	m.Put("c", "3")
 
-	json, err := m.ToJSON()
+	jsonBytes, err := json.Marshall(m)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(string(json)) // {"a":"1","b":"2","c":"3"}
+	fmt.Println(string(jsonBytes)) // {"a":"1","b":"2","c":"3"}
 ```
 
 Typical usage for value-only structures:
@@ -1319,6 +1320,7 @@ Typical usage for value-only structures:
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/emirpasic/gods/lists/arraylist"
 )
@@ -1327,11 +1329,11 @@ func main() {
 	list := arraylist.New()
 	list.Add("a", "b", "c")
 
-	json, err := list.ToJSON()
+	jsonBytes, err := json.Marshall(list)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(string(json)) // ["a","b","c"]
+	fmt.Println(string(jsonBytes)) // ["a","b","c"]
 }
 ```
 
@@ -1344,6 +1346,7 @@ Typical usage for key-value structures:
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/emirpasic/gods/maps/hashmap"
 )
@@ -1351,8 +1354,8 @@ import (
 func main() {
 	hm := hashmap.New()
 
-	json := []byte(`{"a":"1","b":"2"}`)
-	err := hm.FromJSON(json)
+	jsonBytes := []byte(`{"a":"1","b":"2"}`)
+	err := json.Unmarshal(jsonBytes, hm)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -1365,6 +1368,7 @@ Typical usage for value-only structures:
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/emirpasic/gods/lists/arraylist"
 )
@@ -1372,8 +1376,8 @@ import (
 func main() {
 	list := arraylist.New()
 
-	json := []byte(`["a","b"]`)
-	err := list.FromJSON(json)
+	jsonBytes := []byte(`["a","b"]`)
+	err := json.Unmarshal(jsonBytes, list)
 	if err != nil {
 		fmt.Println(err)
 	}

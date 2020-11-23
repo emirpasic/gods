@@ -5,6 +5,7 @@
 package linkedliststack
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
 )
@@ -169,10 +170,10 @@ func TestStackSerialization(t *testing.T) {
 
 	assert()
 
-	json, err := stack.ToJSON()
+	jsonBytes, err := json.Marshal(stack)
 	assert()
 
-	err = stack.FromJSON(json)
+	err = json.Unmarshal(jsonBytes, stack)
 	assert()
 }
 
