@@ -70,18 +70,21 @@ func NewWithStringComparator(order int) *Tree {
 // Put inserts key-value pair node into the tree.
 // If key already exists, then its value is updated with the new value.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
-func (tree *Tree) Put(key interface{}, value interface{}) {
+// Returns true if a new node was inserted, false otherwise
+func (tree *Tree) Put(key interface{}, value interface{}) bool {
 	entry := &Entry{Key: key, Value: value}
 
 	if tree.Root == nil {
 		tree.Root = &Node{Entries: []*Entry{entry}, Children: []*Node{}}
 		tree.size++
-		return
+		return true
 	}
 
 	if tree.insert(tree.Root, entry) {
 		tree.size++
+		return true
 	}
+	return false
 }
 
 // Get searches the node in the tree by key and returns its value or nil if key is not found in tree.
