@@ -54,7 +54,7 @@ func (heap *Heap) Push(values ...interface{}) {
 		for _, value := range values {
 			heap.list.Add(value)
 		}
-		size := heap.list.Size()/2 + 1
+		size := heap.list.Size()/2 - 1
 		for i := size; i >= 0; i-- {
 			heap.bubbleDownIndex(i)
 		}
