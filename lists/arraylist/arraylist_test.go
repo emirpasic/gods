@@ -6,8 +6,9 @@ package arraylist
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/utils"
 	"testing"
+
+	"github.com/emirpasic/gods/utils"
 )
 
 func TestListNew(t *testing.T) {
@@ -89,6 +90,25 @@ func TestListRemove(t *testing.T) {
 	list.Remove(1)
 	list.Remove(0)
 	list.Remove(0) // no effect
+	if actualValue := list.Empty(); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+	if actualValue := list.Size(); actualValue != 0 {
+		t.Errorf("Got %v expected %v", actualValue, 0)
+	}
+}
+
+func TestListRemoveValue(t *testing.T) {
+	list := New()
+	list.Add("a")
+	list.Add("b", "c")
+	list.RemoveValue("c")
+	if actualValue, ok := list.Get(2); actualValue != nil || ok {
+		t.Errorf("Got %v expected %v", actualValue, nil)
+	}
+	list.RemoveValue("a")
+	list.RemoveValue("b")
+	list.RemoveValue("c")
 	if actualValue := list.Empty(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
