@@ -75,6 +75,11 @@ func (list *List) Remove(index int) {
 	list.shrink()
 }
 
+// RemoveValue remove first element with value of value
+func (list *List) RemoveValue(value interface{}) {
+	list.Remove(list.IndexOf(value))
+}
+
 // Contains checks if elements (one or more) are present in the set.
 // All elements have to be present in the set for the method to return true.
 // Performance time complexity of n^2.
