@@ -11,6 +11,9 @@ Implementation of various data structures and algorithms in Go.
     - [ArrayList](#arraylist)
     - [SinglyLinkedList](#singlylinkedlist)
     - [DoublyLinkedList](#doublylinkedlist)
+  - [Queues](#queues)
+    - [LinkedListQueue](#linkedlistqueue)
+    - [ArrayQueue](#arrayqueue)
   - [Sets](#sets)
     - [HashSet](#hashset)
     - [TreeSet](#treeset)
@@ -68,6 +71,9 @@ Containers are either ordered or unordered. All ordered containers provide [stat
 |   | [ArrayList](#arraylist) | yes | yes* | yes | index |
 |   | [SinglyLinkedList](#singlylinkedlist) | yes | yes | yes | index |
 |   | [DoublyLinkedList](#doublylinkedlist) | yes | yes* | yes | index |
+| [Queues](#queues) |
+|   | [LinkedListQueues](#linkedlistqueues) | yes | yes | no | index |
+|   | [ArrayQueues](#arrayqueues) | yes | yes* | no | index |
 | [Sets](#sets) |
 |   | [HashSet](#hashset) | no | no | no | index |
 |   | [TreeSet](#treeset) | yes | yes* | yes | index |
@@ -397,6 +403,80 @@ func main() {
 	stack.Clear()             // empty
 	stack.Empty()             // true
 	stack.Size()              // 0
+}
+```
+
+### Queues
+
+A queue that represents a first-in-first-out (FIFO) data structure. The usual enqueue and dequeue operations are provided, as well as a method to peek at the first item in the queue.
+
+Implements [Container](#containers) interface.
+
+```go
+type Queue interface {
+	Enqueue(value interface{})
+	Dequeue() (value interface{}, ok bool)
+	Peek() (value interface{}, ok bool)
+
+	containers.Container
+	// Empty() bool
+	// Size() int
+	// Clear()
+	// Values() []interface{}
+}
+```
+
+#### LinkedListQueue
+
+A [queue](#queues) based on a [linked list](#singlylinkedlist).
+
+Implements [Queue](#queues), [IteratorWithIndex](#iteratorwithindex), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
+
+```go
+package main
+
+import ll1 "github.com/emirpasic/gods/stacks/linkedlistqueue"
+
+func main() {
+	queue := llq.New()  	// empty
+	queue.Enqueue(1)    	// 1
+	queue.Enqueue(2)       	// 1, 2
+	queue.Values()      	// 1, 2
+	_, _ = queue.Peek() 	// 1, true
+	_, _ = queue.Dequeue()  // 1, true
+	_, _ = queue.Dequeue()  // 2, true
+	_, _ = queue.Dequeue()  // nil, false
+	queue.Enqueue(1)       	// 1
+	queue.Clear()      		// empty
+	queue.Empty()      		// true
+	queue.Size()       		// 0
+}
+```
+
+#### ArrayStack
+
+A [queue](#queues) based on a [array list](#arraylist).
+
+Implements [Queue](#queues), [IteratorWithIndex](#iteratorwithindex), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
+
+```go
+package main
+
+import ll1 "github.com/emirpasic/gods/stacks/linkedlistqueue"
+
+func main() {
+	queue := llq.New()  	// empty
+	queue.Enqueue(1)    	// 1
+	queue.Enqueue(2)       	// 1, 2
+	queue.Values()      	// 1, 2
+	_, _ = queue.Peek() 	// 1, true
+	_, _ = queue.Dequeue()  // 1, true
+	_, _ = queue.Dequeue()  // 2, true
+	_, _ = queue.Dequeue()  // nil, false
+	queue.Enqueue(1)       	// 1
+	queue.Clear()      		// empty
+	queue.Empty()      		// true
+	queue.Size()       		// 0
 }
 ```
 
