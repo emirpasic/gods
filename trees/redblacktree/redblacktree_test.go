@@ -588,6 +588,39 @@ func TestRedBlackTreeSerialization(t *testing.T) {
 	assert()
 }
 
+func TestRedBlackTreeSubTreeSize(t *testing.T) {
+	tree := NewWithIntComparator()
+	tree.Put(13, 5)
+	tree.Put(8, 3)
+	tree.Put(17, 7)
+	tree.Put(1, 1)
+	tree.Put(11, 4)
+	tree.Put(15, 6)
+	tree.Put(25, 9)
+	tree.Put(6, 2)
+	tree.Put(22, 8)
+	tree.Put(27, 10)
+	// │           ┌── 27
+	// │       ┌── 25
+	// │       │   └── 22
+	// │   ┌── 17
+	// │   │   └── 15
+	// └── 13
+	//     │   ┌── 11
+	//     └── 8
+	//         │   ┌── 6
+	//         └── 1
+	if actualValue, expectedValue := tree.SubTreeSize(13), 10; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if actualValue, expectedValue := tree.SubTreeSize(8), 4; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if actualValue, expectedValue := tree.SubTreeSize(17), 5; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+}
+
 func benchmarkGet(b *testing.B, tree *Tree, size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {

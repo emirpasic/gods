@@ -13,6 +13,7 @@ package redblacktree
 
 import (
 	"fmt"
+
 	"github.com/emirpasic/gods/trees"
 	"github.com/emirpasic/gods/utils"
 )
@@ -524,4 +525,22 @@ func nodeColor(node *Node) color {
 		return black
 	}
 	return node.color
+}
+
+// NodeSubTreeSize returns size of sub tree rooted on node n
+func (node *Node) NodeSubTreeSize() int {
+	c := 1
+	if node.Left != nil {
+		c += node.Left.NodeSubTreeSize()
+	}
+	if node.Right != nil {
+		c += node.Right.NodeSubTreeSize()
+	}
+	return c
+}
+
+// SubTreeSize returns size of sub tree rooted on node with this key
+func (tree *Tree) SubTreeSize(key interface{}) int {
+	n := tree.lookup(key)
+	return n.NodeSubTreeSize()
 }

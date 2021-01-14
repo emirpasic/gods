@@ -1074,6 +1074,38 @@ func assertValidTreeNode(t *testing.T, node *Node, expectedEntries int, expected
 	}
 }
 
+func TestBTreeSubTreeSize(t *testing.T) {
+	tree := NewWithIntComparator(3)
+	tree.Put(1, "a")
+	tree.Put(2, "b")
+	tree.Put(3, "c")
+	tree.Put(4, "d")
+	tree.Put(5, "e")
+	tree.Put(6, "f")
+	tree.Put(7, "g")
+	if actualValue, expectedValue := tree.SubTreeSize(4), 7; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if actualValue, expectedValue := tree.SubTreeSize(2), 3; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if actualValue, expectedValue := tree.SubTreeSize(1), 1; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if actualValue, expectedValue := tree.SubTreeSize(3), 1; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if actualValue, expectedValue := tree.SubTreeSize(6), 3; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if actualValue, expectedValue := tree.SubTreeSize(5), 1; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if actualValue, expectedValue := tree.SubTreeSize(7), 1; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+}
+
 func TestBTreeSerialization(t *testing.T) {
 	tree := NewWithStringComparator(3)
 	tree.Put("c", "3")
