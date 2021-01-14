@@ -446,6 +446,19 @@ func TestListSerialization(t *testing.T) {
 	assert()
 }
 
+func TestListClone(t *testing.T) {
+	list1 := New()
+	list1.Add(1, 5, 3, 8, 3)
+	cloned := list1.Clone()
+	for i := 0; i < 5; i++ {
+		actualValue, _ := cloned.Get(i)
+		expectedValue, _ := list1.Get(i)
+		if actualValue != expectedValue {
+			t.Errorf("Got %v expected %v in index %v", actualValue, expectedValue, i)
+		}
+	}
+}
+
 func benchmarkGet(b *testing.B, list *List, size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
