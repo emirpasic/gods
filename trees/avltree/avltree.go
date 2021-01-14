@@ -11,6 +11,7 @@ package avltree
 
 import (
 	"fmt"
+
 	"github.com/emirpasic/gods/trees"
 	"github.com/emirpasic/gods/utils"
 )
@@ -66,6 +67,25 @@ func (t *Tree) Get(key interface{}) (value interface{}, found bool) {
 		switch {
 		case cmp == 0:
 			return n.Value, true
+		case cmp < 0:
+			n = n.Children[0]
+		case cmp > 0:
+			n = n.Children[1]
+		}
+	}
+	return nil, false
+}
+
+// GetNode searches the node in the tree by key and returns its node or nil if key is not found in tree.
+// Second return parameter is true if key was found, otherwise false.
+// Key should adhere to the comparator's type assertion, otherwise method panics.
+func (t *Tree) GetNode(key interface{}) (node *Node, found bool) {
+	n := t.Root
+	for n != nil {
+		cmp := t.Comparator(key, n.Key)
+		switch {
+		case cmp == 0:
+			return n, true
 		case cmp < 0:
 			n = n.Children[0]
 		case cmp > 0:
@@ -446,4 +466,22 @@ func output(node *Node, prefix string, isTail bool, str *string) {
 		}
 		output(node.Children[0], newPrefix, true, str)
 	}
+}
+
+// NodeSubTreeSize returns size of sub tree rooted on node n
+func (n *Node) NodeSubTreeSize() int {
+	c := 1
+	if n.Children[0] != nil {
+		c += n.Children[0].NodeSubTreeSize()
+	}
+	if n.Children[1] != nil {
+		c += n.Children[1].NodeSubTreeSize()
+	}
+	return c
+}
+
+// SubTreeSize returns size of sub tree rooted on node n
+func (t *Tree) SubTreeSize(key interface{}) int {
+	n, _ := t.GetNode(key)
+	return n.NodeSubTreeSize()
 }
