@@ -343,3 +343,14 @@ func (list *List) String() string {
 func (list *List) withinRange(index int) bool {
 	return index >= 0 && index < list.size
 }
+
+// Clone make a duplicate of all data in a new doublylinkedlist
+func (list *List) Clone() *List {
+	cloned := New()
+	node := list.first
+	for i := 0; i < list.Size(); i++ {
+		cloned.Add(node.value)
+		node = node.next
+	}
+	return cloned
+}
