@@ -19,9 +19,10 @@ package btree
 import (
 	"bytes"
 	"fmt"
+	"strings"
+
 	"github.com/emirpasic/gods/trees"
 	"github.com/emirpasic/gods/utils"
-	"strings"
 )
 
 func assertTreeImplementation() {
@@ -574,4 +575,22 @@ func (tree *Tree) deleteChild(node *Node, index int) {
 	copy(node.Children[index:], node.Children[index+1:])
 	node.Children[len(node.Children)-1] = nil
 	node.Children = node.Children[:len(node.Children)-1]
+}
+
+// NodeSubTreeSize returns size of sub tree rooted on node n
+func (node *Node) NodeSubTreeSize() int {
+	if node == nil {
+		return 0
+	}
+	c := 1
+	for _, child := range node.Children {
+		c += child.NodeSubTreeSize()
+	}
+	return c
+}
+
+// SubTreeSize returns size of sub tree rooted on node with this key
+func (tree *Tree) SubTreeSize(key interface{}) int {
+	n, _, _ := tree.searchRecursively(tree.Root, key)
+	return n.NodeSubTreeSize()
 }
