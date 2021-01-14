@@ -226,3 +226,12 @@ func (list *List) shrink() {
 		list.resize(list.size)
 	}
 }
+
+// Clone make a duplicate of all data in a new arraylist
+func (list *List) Clone() *List {
+	cloned := New()
+	cloned.elements = make([]interface{}, cap(list.elements), cap(list.elements))
+	copy(cloned.elements, list.elements[:list.size])
+	cloned.size = list.size
+	return cloned
+}
