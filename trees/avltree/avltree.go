@@ -480,7 +480,7 @@ func (n *Node) NodeSubTreeSize() int {
 	return c
 }
 
-// SubTreeSize returns size of sub tree rooted on node n
+// SubTreeSize returns size of sub tree rooted on node with this key
 func (t *Tree) SubTreeSize(key interface{}) int {
 	n, _ := t.GetNode(key)
 	return n.NodeSubTreeSize()
