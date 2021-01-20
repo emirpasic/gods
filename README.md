@@ -453,7 +453,7 @@ func main() {
 }
 ```
 
-#### ArrayStack
+#### ArrayQueue
 
 A [queue](#queues) based on a [array list](#arraylist).
 
