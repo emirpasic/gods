@@ -11,6 +11,7 @@ package arraylist
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
 
 	"github.com/emirpasic/gods/lists"
@@ -225,4 +226,20 @@ func (list *List) shrink() {
 	if list.size <= int(float32(currentCapacity)*shrinkFactor) {
 		list.resize(list.size)
 	}
+}
+
+// Extend the arraylist by another array
+func (list *List) extend(T interface{}) {
+	size := reflect.TypeOf(T).Size()
+	list.growBy(int(size))
+	s := reflect.ValueOf(T)
+	ret := make([]interface{}, s.Len())
+	for i := 0; i < s.Len(); i++ {
+		ret[i] = s.Index(i).Interface()
+	}
+
+	for _, a := range ret {
+		list.Add(a)
+	}
+
 }
