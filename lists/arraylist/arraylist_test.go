@@ -6,8 +6,9 @@ package arraylist
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/utils"
 	"testing"
+
+	"github.com/emirpasic/gods/utils"
 )
 
 func TestListNew(t *testing.T) {
@@ -524,6 +525,23 @@ func TestListSerialization(t *testing.T) {
 
 	err = list.FromJSON(json)
 	assert()
+}
+
+func TestListExtend(t *testing.T) {
+	list := New()
+	list.Add("a", "b")
+	ns := []string{"c", "d", "e"}
+	list.extend(ns)
+
+	if actualValue := list.Empty(); actualValue != false {
+		t.Errorf("Got %v expected %v", actualValue, false)
+	}
+	if actualValue := list.Size(); actualValue != 5 {
+		t.Errorf("Got %v expected %v", actualValue, 5)
+	}
+	if actualValue, ok := list.Get(4); actualValue != "e" || !ok {
+		t.Errorf("Got %v expected %v", actualValue, "e")
+	}
 }
 
 func benchmarkGet(b *testing.B, list *List, size int) {
