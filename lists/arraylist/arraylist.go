@@ -226,3 +226,9 @@ func (list *List) shrink() {
 		list.resize(list.size)
 	}
 }
+
+func (list *List) Extend(myList []int)  {
+	for _, value := range myList {
+		list.Add(value)
+	}
+}
