@@ -226,3 +226,15 @@ func (list *List) shrink() {
 		list.resize(list.size)
 	}
 }
+
+
+// Remove a value from list not index
+func (list *List) removeValue(value interface{}) {
+	index := list.IndexOf(value)
+	if index == -1 {
+		panic("NOT IN LIST")
+	}
+	list.Remove(index)
+}
+
+
