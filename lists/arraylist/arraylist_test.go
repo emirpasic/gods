@@ -51,6 +51,60 @@ func TestListAdd(t *testing.T) {
 	}
 }
 
+func TestListReverse(t *testing.T) {
+	list := New()
+	list.Add("a", "b", "c")
+	list.Reverse()
+	if actualValue, ok := list.Get(0); actualValue != "c" || !ok {
+		t.Errorf("Got %v expected %v", actualValue, "c")
+	}
+	if actualValue, ok := list.Get(1); actualValue != "b" || !ok {
+		t.Errorf("Got %v expected %v", actualValue, "b")
+	}
+	if actualValue, ok := list.Get(2); actualValue != "a" || !ok {
+		t.Errorf("Got %v expected %v", actualValue, "a")
+	}
+}
+
+func TestListCount(t *testing.T){
+	list := New()
+	list.Add("a", "b", "c", "b", "b", "a", "d", "e", "f", "e")
+	if actualValue := list.Count("a"); actualValue != 2 {
+		t.Errorf("Got %v expected %v", actualValue, 2)
+	}
+	if actualValue := list.Count("b"); actualValue != 3 {
+		t.Errorf("Got %v expected %v", actualValue, 3)
+	}
+	if actualValue := list.Count("c"); actualValue != 1 {
+		t.Errorf("Got %v expected %v", actualValue, 1)
+	}
+	if actualValue := list.Count("z"); actualValue != 0 {
+		t.Errorf("Got %v expected %v", actualValue, 0)
+	}
+}
+
+func TestListReplace(t *testing.T){
+	list := New()
+	list.Add("a", "b", "c", "c", "a")
+	list.Replace("a", "z")
+	if actualValue, ok := list.Get(0); actualValue != "z" || !ok {
+		t.Errorf("Got %v expected %v", actualValue, "z")
+	}
+	if actualValue, ok := list.Get(1); actualValue != "b" || !ok {
+		t.Errorf("Got %v expected %v", actualValue, "b")
+	}
+	if actualValue, ok := list.Get(2); actualValue != "c" || !ok {
+		t.Errorf("Got %v expected %v", actualValue, "c")
+	}
+	if actualValue, ok := list.Get(3); actualValue != "c" || ok {
+		t.Errorf("Got %v expected %v", actualValue, "c")
+	}
+	list.Remove(0)
+	if actualValue, ok := list.Get(0); actualValue != "z" || !ok {
+		t.Errorf("Got %v expected %v", actualValue, "z")
+	}
+}
+
 func TestListIndexOf(t *testing.T) {
 	list := New()
 
