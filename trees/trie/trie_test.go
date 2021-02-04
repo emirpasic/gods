@@ -16,7 +16,7 @@ func TestTrieInsertAndContains(t *testing.T) {
 	tree.Insert("foo")
 	tree.Insert("voodoo")
 	tree.Insert("foo") //overwrite
-	
+
 	if actualValue := tree.Contains("zoo"); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
