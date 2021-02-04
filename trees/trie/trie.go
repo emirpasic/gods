@@ -11,7 +11,8 @@ type trieNode struct {
 }
 
 type trie struct {
-	root *trieNode
+	root       *trieNode
+	nodesCount int
 }
 
 // New returns a pointer pointing to a new trie
@@ -29,6 +30,7 @@ func (t *trie) Insert(word string) {
 		index := word[i] - 'a'
 		if current.children[index] == nil {
 			current.children[index] = &trieNode{}
+			t.nodesCount++
 		}
 		current = current.children[index]
 	}
@@ -48,4 +50,14 @@ func (t *trie) Contains(word string) bool {
 	}
 
 	return current.isWordEnd
+}
+
+// NodesCount returns number of nodes in the tree.
+func (t *trie) NodesCount() int {
+	return t.nodesCount
+}
+
+// Empty returns true if tree does not contain any nodes except for root
+func (t *trie) Empty() bool {
+	return t.nodesCount == 0
 }
