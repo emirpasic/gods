@@ -16,7 +16,7 @@ func TestTrieInsertAndContains(t *testing.T) {
 	tree.Insert("foo")
 	tree.Insert("voodoo")
 	tree.Insert("foo") //overwrite
-	
+
 	if actualValue := tree.Contains("zoo"); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
@@ -34,5 +34,22 @@ func TestTrieInsertAndContains(t *testing.T) {
 	}
 	if actualValue := tree.Contains("voodoo"); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+}
+
+func TestTrieNodesCountAndEmpty(t *testing.T) {
+	tree := New()
+
+	if actualValue := tree.Empty(); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+	if actualValue := tree.NodesCount(); actualValue != 0 {
+		t.Errorf("Got %v expected %v", actualValue, 0)
+	}
+
+	tree.Insert("zoo")
+
+	if actualValue := tree.NodesCount(); actualValue != 3 {
+		t.Errorf("Got %v expected %v", actualValue, 3)
 	}
 }
