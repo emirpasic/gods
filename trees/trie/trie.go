@@ -5,38 +5,38 @@ const (
 	AlphabetSize = 26
 )
 
-type trieNode struct {
-	children  [AlphabetSize]*trieNode
+type TrieNode struct {
+	children  [AlphabetSize]*TrieNode
 	isWordEnd bool
 }
 
-type trie struct {
-	root *trieNode
+type Trie struct {
+	root *TrieNode
 }
 
-// New returns a pointer pointing to a new trie
-func New() *trie {
-	return &trie{
-		root: &trieNode{},
+// New returns a pointer pointing to a new Trie
+func New() *Trie {
+	return &Trie{
+		root: &TrieNode{},
 	}
 }
 
-// Insert inserts a word into the trie
-func (t *trie) Insert(word string) {
+// Insert inserts a word into the Trie
+func (t *Trie) Insert(word string) {
 	wordLength := len(word)
 	current := t.root
 	for i := 0; i < wordLength; i++ {
 		index := word[i] - 'a'
 		if current.children[index] == nil {
-			current.children[index] = &trieNode{}
+			current.children[index] = &TrieNode{}
 		}
 		current = current.children[index]
 	}
 	current.isWordEnd = true
 }
 
-// Contains checks whether the trie has the given word or not
-func (t *trie) Contains(word string) bool {
+// Contains checks whether the Trie has the given word or not
+func (t *Trie) Contains(word string) bool {
 	wordLength := len(word)
 	current := t.root
 	for i := 0; i < wordLength; i++ {
@@ -48,4 +48,15 @@ func (t *trie) Contains(word string) bool {
 	}
 
 	return current.isWordEnd
+}
+
+func (trie *TrieNode, value string, values []string) findWords(){
+	for i := 0; i< 26 ; i++ {
+		if trie.isWordEnd {
+			values.append(value+string(i+'a'))
+		}
+		if trie.children[i] != nil {
+			findWords(trie.children[i], value+string(i+'a'), values)
+		}
+	}
 }
