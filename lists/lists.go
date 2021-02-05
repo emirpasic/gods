@@ -19,6 +19,9 @@ type List interface {
 	Get(index int) (interface{}, bool)
 	Remove(index int)
 	Add(values ...interface{})
+	Count(value interface{})
+	Reverse()
+	Replace(value interface{}, by interface{})
 	Contains(values ...interface{}) bool
 	Sort(comparator utils.Comparator)
 	Swap(index1, index2 int)

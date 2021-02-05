@@ -460,7 +460,7 @@ func main() {
 
 #### TreeMap
 
-A [map](#maps) based on [red-black tree](#redblacktree). Keys are ordered  ordered with respect to the [comparator](#comparator).
+A [map](#maps) based on [red-black tree](#redblacktree). Keys are ordered with respect to the [comparator](#comparator).
 
 Implements [Map](#maps), [IteratorWithKey](#iteratorwithkey), [EnumerableWithKey](#enumerablewithkey), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
 
@@ -770,14 +770,15 @@ func main() {
 	_ = tree.Values() // []interface {}{"a", "b", "c", "d", "e", "f", "g"} (in order)
 	_ = tree.Keys()   // []interface {}{1, 2, 3, 4, 5, 6, 7} (in order)
 
-	tree.Remove(2) // 1->a, 3->c, 4->d, 5->e, 6->f (in order)
+	tree.Remove(2) // 1->a, 3->c, 4->d, 5->e, 6->f, 7->g (in order)
 	fmt.Println(tree)
 	// BTree
 	//     1
 	//     3
 	// 4
 	//     5
-	//     6
+	// 6
+	//     7
 
 	tree.Clear() // empty
 	tree.Empty() // true
