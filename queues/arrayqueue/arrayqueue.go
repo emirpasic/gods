@@ -26,7 +26,7 @@ func (queue *Queue) Push(value interface{}) {
 // Second return parameter is true, unless the queue was empty and there was nothing to pop.
 func (queue *Queue) Pop() (value interface{}, ok bool) {
 	value, ok = queue.list.Get(0)
-	queue.list.Remove(0)
+	queue.list.RemoveFirstElem()
 	return
 }
 

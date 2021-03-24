@@ -75,6 +75,18 @@ func (list *List) Remove(index int) {
 	list.shrink()
 }
 
+func (list *List) RemoveFirstElem() {
+
+	if !list.withinRange(0) {
+		return
+	}
+
+	list.elements = list.elements[1:]
+	list.size--
+
+	list.shrink()
+}
+
 // Contains checks if elements (one or more) are present in the set.
 // All elements have to be present in the set for the method to return true.
 // Performance time complexity of n^2.
