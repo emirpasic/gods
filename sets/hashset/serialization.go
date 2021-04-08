@@ -12,6 +12,8 @@ import (
 func assertSerializationImplementation() {
 	var _ containers.JSONSerializer = (*Set)(nil)
 	var _ containers.JSONDeserializer = (*Set)(nil)
+	var _ json.Marshaler = (*Set)(nil)
+	var _ json.Unmarshaler = (*Set)(nil)
 }
 
 // ToJSON outputs the JSON representation of the set.
@@ -28,4 +30,14 @@ func (set *Set) FromJSON(data []byte) error {
 		set.Add(elements...)
 	}
 	return err
+}
+
+// @implements json.Unmarshaler
+func (set *Set) UnmarshalJSON(bytes []byte) error {
+	return set.FromJSON(bytes)
+}
+
+// @implements json.Marshaler
+func (set *Set) MarshalJSON() ([]byte, error) {
+	return set.ToJSON()
 }
