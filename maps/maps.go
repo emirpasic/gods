@@ -15,7 +15,7 @@
 // Reference: https://en.wikipedia.org/wiki/Associative_array
 package maps
 
-import "github.com/emirpasic/gods/containers"
+import "github.com/habohai/gods/containers"
 
 // Map interface that all maps implement
 type Map interface {

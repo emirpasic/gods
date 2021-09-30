@@ -6,8 +6,9 @@ package arraylist
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/utils"
 	"testing"
+
+	"github.com/habohai/gods/utils"
 )
 
 func TestListNew(t *testing.T) {

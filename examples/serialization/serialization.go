@@ -2,8 +2,9 @@ package serialization
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/lists/arraylist"
-	"github.com/emirpasic/gods/maps/hashmap"
+
+	"github.com/habohai/gods/lists/arraylist"
+	"github.com/habohai/gods/maps/hashmap"
 )
 
 // ListSerializationExample demonstrates how to serialize and deserialize lists to and from JSON

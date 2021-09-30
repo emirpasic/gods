@@ -5,8 +5,8 @@
 package treemap
 
 import (
-	"github.com/emirpasic/gods/containers"
-	rbt "github.com/emirpasic/gods/trees/redblacktree"
+	"github.com/habohai/gods/containers"
+	rbt "github.com/habohai/gods/trees/redblacktree"
 )
 
 func assertEnumerableImplementation() {

@@ -6,8 +6,9 @@ package treebidimap
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/utils"
 	"testing"
+
+	"github.com/habohai/gods/utils"
 )
 
 func TestMapPut(t *testing.T) {

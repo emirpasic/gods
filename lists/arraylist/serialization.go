@@ -6,7 +6,8 @@ package arraylist
 
 import (
 	"encoding/json"
-	"github.com/emirpasic/gods/containers"
+
+	"github.com/habohai/gods/containers"
 )
 
 func assertSerializationImplementation() {

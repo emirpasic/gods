@@ -4,7 +4,7 @@
 
 package main
 
-import "github.com/emirpasic/gods/utils"
+import "github.com/habohai/gods/utils"
 
 // SortExample to demonstrate basic usage of basic sort
 func main() {

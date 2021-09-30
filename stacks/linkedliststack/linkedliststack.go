@@ -11,9 +11,10 @@ package linkedliststack
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/lists/singlylinkedlist"
-	"github.com/emirpasic/gods/stacks"
 	"strings"
+
+	"github.com/habohai/gods/lists/singlylinkedlist"
+	"github.com/habohai/gods/stacks"
 )
 
 func assertStackImplementation() {
