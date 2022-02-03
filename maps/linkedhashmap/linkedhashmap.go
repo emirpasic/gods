@@ -13,9 +13,10 @@ package linkedhashmap
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/emirpasic/gods/lists/doublylinkedlist"
 	"github.com/emirpasic/gods/maps"
-	"strings"
 )
 
 func assertMapImplementation() {
@@ -57,11 +58,9 @@ func (m *Map) Get(key interface{}) (value interface{}, found bool) {
 // Remove removes the element from the map by key.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (m *Map) Remove(key interface{}) {
-	if _, contains := m.table[key]; contains {
-		delete(m.table, key)
-		index := m.ordering.IndexOf(key)
-		m.ordering.Remove(index)
-	}
+	delete(m.table, key)
+	index := m.ordering.IndexOf(key)
+	m.ordering.Remove(index)
 }
 
 // Empty returns true if map does not contain any elements
