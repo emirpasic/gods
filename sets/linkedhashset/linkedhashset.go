@@ -14,8 +14,9 @@
 package linkedhashset
 
 import (
+	"container/list"
 	"fmt"
-	"github.com/emirpasic/gods/lists/doublylinkedlist"
+
 	"github.com/emirpasic/gods/sets"
 	"strings"
 )
@@ -26,8 +27,8 @@ func assertSetImplementation() {
 
 // Set holds elements in go's native map
 type Set struct {
-	table    map[interface{}]struct{}
-	ordering *doublylinkedlist.List
+	table    map[interface{}]*list.Element
+	ordering list.List
 }
 
 var itemExists = struct{}{}
@@ -35,8 +36,7 @@ var itemExists = struct{}{}
 // New instantiates a new empty set and adds the passed values, if any, to the set
 func New(values ...interface{}) *Set {
 	set := &Set{
-		table:    make(map[interface{}]struct{}),
-		ordering: doublylinkedlist.New(),
+		table: make(map[interface{}]*list.Element),
 	}
 	if len(values) > 0 {
 		set.Add(values...)
@@ -49,20 +49,18 @@ func New(values ...interface{}) *Set {
 func (set *Set) Add(items ...interface{}) {
 	for _, item := range items {
 		if _, contains := set.table[item]; !contains {
-			set.table[item] = itemExists
-			set.ordering.Append(item)
+			el := set.ordering.PushBack(item)
+			set.table[item] = el
 		}
 	}
 }
 
 // Remove removes the items (one or more) from the set.
-// Slow operation, worst-case O(n^2).
 func (set *Set) Remove(items ...interface{}) {
 	for _, item := range items {
-		if _, contains := set.table[item]; contains {
+		if el, contains := set.table[item]; contains {
 			delete(set.table, item)
-			index := set.ordering.IndexOf(item)
-			set.ordering.Remove(index)
+			set.ordering.Remove(el)
 		}
 	}
 }
@@ -86,13 +84,13 @@ func (set *Set) Empty() bool {
 
 // Size returns number of elements within the set.
 func (set *Set) Size() int {
-	return set.ordering.Size()
+	return len(set.table)
 }
 
 // Clear clears all values in the set.
 func (set *Set) Clear() {
-	set.table = make(map[interface{}]struct{})
-	set.ordering.Clear()
+	set.table = make(map[interface{}]*list.Element)
+	set.ordering = list.List{}
 }
 
 // Values returns all items in the set.
