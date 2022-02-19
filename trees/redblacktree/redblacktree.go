@@ -6,7 +6,7 @@
 //
 // Used by TreeSet and TreeMap.
 //
-// Structure is not thread safe.
+// Structure is thread safe.
 //
 // References: http://en.wikipedia.org/wiki/Red%E2%80%93black_tree
 package redblacktree
@@ -15,6 +15,7 @@ import (
 	"fmt"
 	"github.com/emirpasic/gods/trees"
 	"github.com/emirpasic/gods/utils"
+	"sync"
 )
 
 func assertTreeImplementation() {
@@ -32,6 +33,7 @@ type Tree struct {
 	Root       *Node
 	size       int
 	Comparator utils.Comparator
+	rwMutex    sync.RWMutex
 }
 
 // Node is a single element within the tree
@@ -62,6 +64,8 @@ func NewWithStringComparator() *Tree {
 // Put inserts node into the tree.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (tree *Tree) Put(key interface{}, value interface{}) {
+	defer tree.wLock().Unlock()
+
 	var insertedNode *Node
 	if tree.Root == nil {
 		// Assert key is of comparator's type for initial tree
@@ -106,6 +110,8 @@ func (tree *Tree) Put(key interface{}, value interface{}) {
 // Second return parameter is true if key was found, otherwise false.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (tree *Tree) Get(key interface{}) (value interface{}, found bool) {
+	defer tree.rLock().RUnlock()
+
 	node := tree.lookup(key)
 	if node != nil {
 		return node.Value, true
@@ -116,6 +122,8 @@ func (tree *Tree) Get(key interface{}) (value interface{}, found bool) {
 // Remove remove the node from the tree by key.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (tree *Tree) Remove(key interface{}) {
+	defer tree.wLock().Unlock()
+
 	var child *Node
 	node := tree.lookup(key)
 	if node == nil {
@@ -147,16 +155,19 @@ func (tree *Tree) Remove(key interface{}) {
 
 // Empty returns true if tree does not contain any nodes
 func (tree *Tree) Empty() bool {
+	defer tree.wLock().Unlock()
 	return tree.size == 0
 }
 
 // Size returns number of nodes in the tree.
 func (tree *Tree) Size() int {
+	defer tree.rLock().RUnlock()
 	return tree.size
 }
 
 // Keys returns all keys in-order
 func (tree *Tree) Keys() []interface{} {
+	defer tree.rLock().RUnlock()
 	keys := make([]interface{}, tree.size)
 	it := tree.Iterator()
 	for i := 0; it.Next(); i++ {
@@ -167,6 +178,7 @@ func (tree *Tree) Keys() []interface{} {
 
 // Values returns all values in-order based on the key.
 func (tree *Tree) Values() []interface{} {
+	defer tree.rLock().RUnlock()
 	values := make([]interface{}, tree.size)
 	it := tree.Iterator()
 	for i := 0; it.Next(); i++ {
@@ -177,6 +189,7 @@ func (tree *Tree) Values() []interface{} {
 
 // Left returns the left-most (min) node or nil if tree is empty.
 func (tree *Tree) Left() *Node {
+	defer tree.rLock().RUnlock()
 	var parent *Node
 	current := tree.Root
 	for current != nil {
@@ -188,6 +201,7 @@ func (tree *Tree) Left() *Node {
 
 // Right returns the right-most (max) node or nil if tree is empty.
 func (tree *Tree) Right() *Node {
+	defer tree.rLock().RUnlock()
 	var parent *Node
 	current := tree.Root
 	for current != nil {
@@ -206,6 +220,7 @@ func (tree *Tree) Right() *Node {
 //
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (tree *Tree) Floor(key interface{}) (floor *Node, found bool) {
+	defer tree.rLock().RUnlock()
 	found = false
 	node := tree.Root
 	for node != nil {
@@ -235,6 +250,7 @@ func (tree *Tree) Floor(key interface{}) (floor *Node, found bool) {
 //
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (tree *Tree) Ceiling(key interface{}) (ceiling *Node, found bool) {
+	defer tree.rLock().RUnlock()
 	found = false
 	node := tree.Root
 	for node != nil {
@@ -257,12 +273,14 @@ func (tree *Tree) Ceiling(key interface{}) (ceiling *Node, found bool) {
 
 // Clear removes all nodes from the tree.
 func (tree *Tree) Clear() {
+	defer tree.wLock().Unlock()
 	tree.Root = nil
 	tree.size = 0
 }
 
 // String returns a string representation of container
 func (tree *Tree) String() string {
+	defer tree.rLock().RUnlock()
 	str := "RedBlackTree\n"
 	if !tree.Empty() {
 		output(tree.Root, "", true, &str)
@@ -524,4 +542,16 @@ func nodeColor(node *Node) color {
 		return black
 	}
 	return node.color
+}
+
+// read-lock the tree and return the mutex
+func (tree *Tree) rLock() *sync.RWMutex {
+	tree.rwMutex.RLock()
+	return &tree.rwMutex
+}
+
+// write-lock the tree and return the mutex
+func (tree *Tree) wLock() *sync.RWMutex {
+	tree.rwMutex.Lock()
+	return &tree.rwMutex
 }

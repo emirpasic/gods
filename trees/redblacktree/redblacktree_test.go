@@ -6,6 +6,7 @@ package redblacktree
 
 import (
 	"fmt"
+	"sync"
 	"testing"
 )
 
@@ -48,6 +49,69 @@ func TestRedBlackTreePut(t *testing.T) {
 			t.Errorf("Got %v expected %v", actualValue, test[1])
 		}
 	}
+}
+
+func TestRedBlackTreeConcurrentPut(t *testing.T) {
+	tree := NewWithIntComparator()
+
+	// definitions
+	wg := sync.WaitGroup{}
+	lock := sync.RWMutex{}
+	putter := func(start, end int) {
+		lock.RLock()
+		for i := start; i < end; i++ {
+			tree.Put(i, fmt.Sprint(i, "-value"))
+		}
+		lock.RUnlock()
+		wg.Done()
+	}
+
+	// prepare 100 goroutines to put 100,000 items in tree
+	lock.Lock()
+	wg.Add(100)
+	const (
+		step  = 100
+		count = 1000
+		total = count * step
+	)
+	for i := 1; i <= count; i++ {
+		go putter(i*step, i*step+step)
+	}
+
+	// release all routines and wait to finish
+	lock.Unlock()
+	wg.Wait()
+
+	// check tree size
+	if actualValue := tree.Size(); actualValue != total {
+		t.Errorf("Got %v as tree size, expected %v", actualValue, total)
+	}
+
+	// check keys and values
+	keys := tree.Keys()
+	values := tree.Values()
+	for i := 1 * step; i < total; i++ {
+		// key
+		actualKey := keys[i-step]
+		expectedKey := i
+		if actualKey != expectedKey {
+			t.Errorf("Got %v expected %v", actualKey, expectedKey)
+		}
+
+		// value
+		actualValue := values[i-step]
+		expectedValue := fmt.Sprint(i, "-value")
+		if actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+
+		// retrievals
+		actualValue, _ = tree.Get(i)
+		if actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, actualValue)
+		}
+	}
+
 }
 
 func TestRedBlackTreeRemove(t *testing.T) {
