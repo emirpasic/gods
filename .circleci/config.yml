@@ -18,7 +18,7 @@ jobs:
       - run:
           name: Create directories
           command: |
-            mkdir -p PROJECT_PATH
+            mkdir -p $PROJECT_PATH
             mkdir -p $TEST_RESULTS
       - checkout
       - run:
