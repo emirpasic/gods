@@ -10,9 +10,10 @@ jobs:
       - image: cimg/go:<<parameters.version>>
     environment:
       TEST_RESULTS: /tmp/test-results
+      PROJECT_NAME: gods
       GOPATH: ${HOME}/go
-      REPO_PATH: ${GOPATH}/src/github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
-    working_directory: ${REPO_PATH}
+      PROJECT_PATH: ${GOPATH}/src/github.com/${CIRCLE_PROJECT_USERNAME}/${PROJECT_NAME}
+    working_directory: ${PROJECT_PATH}
     steps:
       - checkout
       - run:
@@ -50,7 +51,7 @@ jobs:
           name: Calculate cyclomatic complexity (gocyclo)
           command: |
             go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
-            gocyclo -avg -over 15 ../${CIRCLE_PROJECT_REPONAME}
+            gocyclo -avg -over 15 ../${PROJECT_NAME}
       - run:
           name: Check for unchecked errors (errcheck)
           command: |
