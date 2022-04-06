@@ -10,10 +10,7 @@ jobs:
       - image: cimg/go:<<parameters.version>>
     environment:
       TEST_RESULTS: /tmp/test-results
-      GOPATH: /home/circleci/go
-      GO111MODULE: "on"
-      PATH: $PATH:/home/circleci/go/bin
-    working_directory: /home/circleci/go/src/github.com/emirpasic/gods
+    working_directory: ~/gods
     steps:
       - run:
           name: Print Go version (go version)
@@ -24,7 +21,7 @@ jobs:
           name: Run tests
           command: |
             mkdir -p $TEST_RESULTS
-            go get gotest.tools/gotestsum
+            go install gotest.tools/gotestsum@latest
             go test -v ./... | go tool test2json > $TEST_RESULTS/test2json-output.json
             gotestsum --junitfile $TEST_RESULTS/gotestsum-report.xml
       - run:
@@ -37,7 +34,7 @@ jobs:
       - run:
           name: Lint (golint)
           command: |
-            go get golang.org/x/lint/golint
+            go install golang.org/x/lint/golint@latest
             golint -set_exit_status ./...
       - run:
           name: Enforce formatted code (go fmt)
@@ -50,12 +47,12 @@ jobs:
       - run:
           name: Calculate cyclomatic complexity (gocyclo)
           command: |
-            go get github.com/fzipp/gocyclo/cmd/gocyclo
+            go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
             gocyclo -avg -over 15 ../gods
       - run:
           name: Check for unchecked errors (errcheck)
           command: |
-            go get github.com/kisielk/errcheck
+            go install github.com/kisielk/errcheck@latest
             errcheck ./...
       - store_artifacts:
           path: /tmp/test-results
@@ -69,4 +66,4 @@ workflows:
       - test:
           matrix:
             parameters:
-              version: ["1.18", "1.17", "1.12"]
+              version: ["1.18", "1.17", "1.10", "1.12"]
