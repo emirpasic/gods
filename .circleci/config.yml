@@ -10,7 +10,7 @@ jobs:
     docker:
       - image: cimg/go:<<parameters.version>>
     environment:
-      TEST_RESULTS: /tmp/test-results
+      TEST_RESULTS: /tmp/test-reports
     steps:
       - checkout
       - run:
