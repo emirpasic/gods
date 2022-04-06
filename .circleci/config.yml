@@ -49,7 +49,7 @@ jobs:
       - run:
           name: Calculate cyclomatic complexity (gocyclo)
           command: |
-            go install github.com/fzipp/gocyclo/cmd/gocyclo@latest || go get github.com/fzipp/gocyclo
+            go install github.com/fzipp/gocyclo/cmd/gocyclo@latest || go get github.com/fzipp/gocyclo/cmd/gocyclo
             gocyclo -avg -over 15 ../gods
       - run:
           name: Check for unchecked errors (errcheck)
