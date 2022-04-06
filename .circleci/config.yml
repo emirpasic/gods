@@ -18,14 +18,17 @@ jobs:
           command: |
             go version
       - run:
-          name: Run tests and calculate coverage
+          name: Run tests
           command: |
-            mkdir -p $TEST_RESULTS
-            go test -coverprofile=c.out ./...
-            go tool cover -html=c.out -o coverage.html
-            mv coverage.html $TEST_RESULTS
             go test -v ./... | go tool test2json > $TEST_RESULTS/test2json-output.json
             gotestsum --junitfile $TEST_RESULTS/gotestsum-report.xml
+      - run:
+          name: Calculate test coverage
+          command: |
+            mkdir -p $TEST_RESULTS
+            go test -coverprofile=c.out ./... > /dev/null
+            go tool cover -html=c.out -o coverage.html
+            mv coverage.html $TEST_RESULTS
       - run:
           name: Lint (golint)
           command: |
