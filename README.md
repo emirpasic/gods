@@ -1,4 +1,4 @@
-[![GoDoc](https://godoc.org/github.com/emirpasic/gods?status.svg)](https://godoc.org/github.com/emirpasic/gods) [![Build Status](https://circleci.com/gh/emirpasic/gods/tree/master.svg?style=shield)](https://circleci.com/gh/emirpasic/gods?branch=master) [![Go Report Card](https://goreportcard.com/badge/github.com/emirpasic/gods)](https://goreportcard.com/report/github.com/emirpasic/gods) [![PyPI](https://img.shields.io/pypi/l/Django.svg?maxAge=2592000)](https://github.com/emirpasic/gods/blob/master/LICENSE)
+[![GoDoc](https://godoc.org/github.com/emirpasic/gods?status.svg)](https://godoc.org/github.com/emirpasic/gods) [![Build Status](https://circleci.com/gh/emirpasic/gods/tree/master.svg?style=shield)](https://circleci.com/gh/emirpasic/gods?branch=master) [![Go Report Card](https://goreportcard.com/badge/github.com/emirpasic/gods)](https://goreportcard.com/report/github.com/emirpasic/gods) [![PyPI](https://img.shields.io/badge/License-BSD_2--Clause-green.svg)](https://github.com/emirpasic/gods/blob/master/LICENSE)
 
 # GoDS (Go Data Structures)
 
