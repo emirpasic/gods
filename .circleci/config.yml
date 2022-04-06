@@ -9,6 +9,8 @@ jobs:
     working_directory: ~/gods
     docker:
       - image: cimg/go:<<parameters.version>>
+    environment:
+      TEST_RESULTS: /tmp/test-results
     steps:
       - checkout
       - run:
@@ -16,10 +18,14 @@ jobs:
           command: |
             go version
       - run:
-          name: Run tests (gotestsum)
-          command: |
-            mkdir -p /tmp/test-reports
-            gotestsum --junitfile /tmp/test-reports/unit-tests.xml
+          name: Run tests and calculate coverage
+            command: |
+              mkdir -p $TEST_RESULTS
+              go test -coverprofile=c.out
+              go tool cover -html=c.out -o coverage.html
+              mv coverage.html $TEST_RESULTS
+              go test -v ./... | go tool test2json > $TEST_RESULTS/test2json-output.json
+              gotestsum --junitfile $TEST_RESULTS/gotestsum-report.xml
       - run:
           name: Lint (golint)
           command: |
