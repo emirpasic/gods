@@ -2,6 +2,10 @@ version: 2.1
 
 jobs:
   test:
+    parameters:
+      version:
+        type: string
+        default: "latest"
     working_directory: /go/src/github.com/emirpasic/gods
     docker:
       - image: circleci/golang:<<parameters.version>>
