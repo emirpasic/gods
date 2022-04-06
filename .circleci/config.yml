@@ -23,7 +23,7 @@ jobs:
           name: Run tests
           command: |
             mkdir -p $TEST_RESULTS
-            go install gotest.tools/gotestsum@latest || gotest.tools/gotestsum
+            go install gotest.tools/gotestsum@latest || go get gotest.tools/gotestsum
             go test -v ./... | go tool test2json > $TEST_RESULTS/test2json-output.json
             gotestsum --junitfile $TEST_RESULTS/gotestsum-report.xml
       - run:
@@ -36,7 +36,7 @@ jobs:
       - run:
           name: Lint (golint)
           command: |
-            go install golang.org/x/lint/golint@latest
+            go install golang.org/x/lint/golint@latest || go get golang.org/x/lint/golint
             golint -set_exit_status ./...
       - run:
           name: Enforce formatted code (go fmt)
@@ -49,12 +49,12 @@ jobs:
       - run:
           name: Calculate cyclomatic complexity (gocyclo)
           command: |
-            go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
+            go install github.com/fzipp/gocyclo/cmd/gocyclo@latest || go get github.com/fzipp/gocyclo
             gocyclo -avg -over 15 ../gods
       - run:
           name: Check for unchecked errors (errcheck)
           command: |
-            go install github.com/kisielk/errcheck@latest
+            go install github.com/kisielk/errcheck@latest || go get github.com/kisielk/errcheck
             errcheck ./...
       - store_artifacts:
           path: /tmp/test-results
