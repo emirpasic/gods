@@ -22,7 +22,8 @@ jobs:
           name: Run tests
           command: |
             mkdir -p $TEST_RESULTS
-            go install gotest.tools/gotestsum@latest || go get gotest.tools/gotestsum
+#            go install gotest.tools/gotestsum@latest || go get gotest.tools/gotestsum
+            go get gotest.tools/gotestsum
             go test -v ./... | go tool test2json > $TEST_RESULTS/test2json-output.json
             gotestsum --junitfile $TEST_RESULTS/gotestsum-report.xml
       - run:
