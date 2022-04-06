@@ -11,7 +11,6 @@ jobs:
     environment:
       TEST_RESULTS: /tmp/test-results
       GOPATH: /home/circleci/go
-      GO111MODULE: "on"
     working_directory: /home/circleci/go/src/github.com/emirpasic/gods
     steps:
       - run:
