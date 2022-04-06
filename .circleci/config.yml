@@ -23,7 +23,7 @@ jobs:
       - run:
           name: Lint (golint)
           command: |
-            go install github.com/golang/lint/golint@latest
+            go install golang.org/x/lint/golint@latest
             golint -set_exit_status ./...
       - run:
           name: Enforce formatted code (go fmt)
