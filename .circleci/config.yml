@@ -10,7 +10,7 @@ jobs:
     docker:
       - image: cimg/go:<<parameters.version>>
     environment:
-      TEST_RESULTS: /tmp/test-reports
+      TEST_RESULTS: /tmp/test-results
     steps:
       - checkout
       - run:
@@ -53,8 +53,11 @@ jobs:
           command: |
             go install github.com/kisielk/errcheck@latest
             errcheck ./...
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: raw-test-output
       - store_test_results:
-          path: /tmp/test-reports
+          path: /tmp/test-results
 
 workflows:
   test:
