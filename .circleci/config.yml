@@ -11,8 +11,7 @@ jobs:
     environment:
       TEST_RESULTS: /tmp/test-results
       GOPATH: $HOME/go
-      PROJECT_PATH: ${GOPATH}/src/github.com/emirpasic/gods
-    working_directory: ~/src/github.com/emirpasic/gods
+    working_directory: ~/go/src/github.com/emirpasic/gods
     steps:
       - checkout
       - run:
