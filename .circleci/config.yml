@@ -12,13 +12,14 @@ jobs:
       TEST_RESULTS: /tmp/test-results
       GOPATH: ${HOME}/go
       REPO_PATH: ${GOPATH}/src/github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
-    working_directory: $CIRCLE_PROJECT_REPONAME
+    working_directory: ${REPO_PATH}
     steps:
       - checkout
       - run:
           name: Print Go version (go version)
           command: |
             go version
+            pwd
       - run:
           name: Run tests
           command: |
