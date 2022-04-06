@@ -24,15 +24,15 @@ jobs:
           name: Lint (golint)
           command: |
             go install github.com/golang/lint/golint@latest
-            golint -set_exit_status <<parameters.paths>>
+            golint -set_exit_status ./...
       - run:
           name: Enforce formatted code (go fmt)
           command: |
-            ! go fmt <<parameters.paths>> 2>&1 | read
+            ! go fmt ./... 2>&1 | read
       - run:
           name: Examine and report suspicious constructs (go vet)
           command: |
-            go vet -v <<parameters.paths>>
+            go vet -v ./...
       - run:
           name: Calculate cyclomatic complexity (gocyclo)
           command: |
@@ -42,7 +42,7 @@ jobs:
           name: Check for unchecked errors (errcheck)
           command: |
             go install github.com/kisielk/errcheck@latest
-            errcheck <<parameters.paths>>
+            errcheck ./...
       - store_test_results:
           path: /tmp/test-reports
 
