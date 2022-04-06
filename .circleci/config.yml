@@ -5,15 +5,14 @@ jobs:
     parameters:
       version:
         type: string
-        default: "latest"
+        default: latest
     docker:
       - image: cimg/go:<<parameters.version>>
     environment:
       TEST_RESULTS: /tmp/test-results
-      GOROOT: ""
-      GOPATH: "${HOME}/${CIRCLE_PROJECT_REPONAME}"
-      REPO_PATH: "${GOPATH}/src/github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}"
-    working_directory: ${CIRCLE_PROJECT_REPONAME}
+      GOPATH: ${HOME}/go
+      REPO_PATH: ${GOPATH}/src/github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
+    working_directory: $CIRCLE_PROJECT_REPONAME
     steps:
       - checkout
       - run:
