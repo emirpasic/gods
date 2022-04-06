@@ -11,6 +11,7 @@ jobs:
     environment:
       TEST_RESULTS: /tmp/test-results
       GOPATH: /home/circleci/go
+      GO111MODULE: on
     working_directory: /home/circleci/go/src/github.com/emirpasic/gods
     steps:
       - run:
@@ -35,7 +36,7 @@ jobs:
       - run:
           name: Lint (golint)
           command: |
-            go install golang.org/x/lint/golint@latest || go get -u golang.org/x/lint/golint
+            go install golang.org/x/lint/golint@latest
             golint -set_exit_status ./...
       - run:
           name: Enforce formatted code (go fmt)
@@ -67,4 +68,4 @@ workflows:
       - test:
           matrix:
             parameters:
-              version: ["1.18", "1.17", "1.10"]
+              version: ["1.18", "1.17", "1.10", "1.11"]
