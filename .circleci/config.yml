@@ -20,6 +20,16 @@ jobs:
           command: |
             mkdir -p /tmp/test-reports
             gotestsum --junitfile /tmp/test-reports/unit-tests.xml
+      - run:
+          name: Lint
+          command: |
+            go get github.com/golang/lint/golint
+            golint -set_exit_status <<parameters.paths>>
+      - run:
+          name: Calculate cyclomatic complexity
+          command: |
+            go get github.com/fzipp/gocyclo
+            gocyclo -avg -over 15 .
       - store_test_results:
           path: /tmp/test-reports
 
