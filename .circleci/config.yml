@@ -8,7 +8,7 @@ jobs:
         default: "latest"
     working_directory: ~/gods
     docker:
-      - image: circleci/golang:<<parameters.version>>
+      - image: cimg/go:<<parameters.version>>
     steps:
       - checkout
       - run:
