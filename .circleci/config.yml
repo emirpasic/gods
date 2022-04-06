@@ -15,6 +15,11 @@ jobs:
       PROJECT_PATH: ${GOPATH}/src/github.com/${CIRCLE_PROJECT_USERNAME}/${PROJECT_NAME}
     working_directory: ${PROJECT_PATH}
     steps:
+      - run:
+          name: Create directories
+          command: |
+            mkdir -p PROJECT_PATH
+            mkdir -p $TEST_RESULTS
       - checkout
       - run:
           name: Print Go version (go version)
@@ -24,13 +29,11 @@ jobs:
       - run:
           name: Run tests
           command: |
-            mkdir -p $TEST_RESULTS
             go test -v ./... | go tool test2json > $TEST_RESULTS/test2json-output.json
             gotestsum --junitfile $TEST_RESULTS/gotestsum-report.xml
       - run:
           name: Calculate test coverage
           command: |
-            mkdir -p $TEST_RESULTS
             go test -coverprofile=c.out ./... > /dev/null
             go tool cover -html=c.out -o coverage.html
             mv coverage.html $TEST_RESULTS
