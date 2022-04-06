@@ -10,16 +10,10 @@ jobs:
       - image: cimg/go:<<parameters.version>>
     environment:
       TEST_RESULTS: /tmp/test-results
-      PROJECT_NAME: gods
       GOPATH: ${HOME}/go
-      PROJECT_PATH: ${GOPATH}/src/github.com/${CIRCLE_PROJECT_USERNAME}/${PROJECT_NAME}
-    working_directory: ${PROJECT_PATH}
+      PROJECT_PATH: ${GOPATH}/src/github.com/emirpasic/gods
+    working_directory: ~/src/github.com/emirpasic/gods
     steps:
-      - run:
-          name: Create directories
-          command: |
-            mkdir -p $PROJECT_PATH
-            mkdir -p $TEST_RESULTS
       - checkout
       - run:
           name: Print Go version (go version)
@@ -29,6 +23,7 @@ jobs:
       - run:
           name: Run tests
           command: |
+            mkdir -p $TEST_RESULTS
             go test -v ./... | go tool test2json > $TEST_RESULTS/test2json-output.json
             gotestsum --junitfile $TEST_RESULTS/gotestsum-report.xml
       - run:
@@ -54,7 +49,7 @@ jobs:
           name: Calculate cyclomatic complexity (gocyclo)
           command: |
             go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
-            gocyclo -avg -over 15 ../${PROJECT_NAME}
+            gocyclo -avg -over 15 ../gods
       - run:
           name: Check for unchecked errors (errcheck)
           command: |
