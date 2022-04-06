@@ -36,7 +36,7 @@ jobs:
       - run:
           name: Lint (golint)
           command: |
-            go install golang.org/x/lint/golint@latest || go get golang.org/x/lint/golint
+            go get golang.org/x/lint/golint
             golint -set_exit_status ./...
       - run:
           name: Enforce formatted code (go fmt)
@@ -49,12 +49,12 @@ jobs:
       - run:
           name: Calculate cyclomatic complexity (gocyclo)
           command: |
-            go install github.com/fzipp/gocyclo/cmd/gocyclo@latest || go get github.com/fzipp/gocyclo/cmd/gocyclo
+            go get github.com/fzipp/gocyclo/cmd/gocyclo
             gocyclo -avg -over 15 ../gods
       - run:
           name: Check for unchecked errors (errcheck)
           command: |
-            go install github.com/kisielk/errcheck@latest || go get github.com/kisielk/errcheck
+            go get github.com/kisielk/errcheck
             errcheck ./...
       - store_artifacts:
           path: /tmp/test-results
