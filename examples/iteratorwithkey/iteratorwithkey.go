@@ -7,14 +7,15 @@ package main
 import (
 	"fmt"
 	"github.com/emirpasic/gods/maps/treemap"
+	"strings"
 )
 
 // IteratorWithKeyExample to demonstrate basic usage of IteratorWithKey
 func main() {
 	m := treemap.NewWithIntComparator()
-	m.Put(1, "a")
-	m.Put(2, "b")
-	m.Put(3, "a")
+	m.Put(0, "a")
+	m.Put(1, "b")
+	m.Put(2, "c")
 	it := m.Iterator()
 
 	fmt.Print("\nForward iteration\n")
@@ -47,7 +48,34 @@ func main() {
 	}
 
 	if it.Last() {
-		fmt.Print("\nLast key: ", it.Key())     // Last key: 3
+		fmt.Print("\nLast key: ", it.Key())     // Last key: 2
 		fmt.Print("\nLast value: ", it.Value()) // Last value: c
 	}
+
+	// Seek key-value pair whose value starts with "b"
+	seek := func(key interface{}, value interface{}) bool {
+		return strings.HasSuffix(value.(string), "b")
+	}
+
+	it.Begin()
+	for found := it.NextTo(seek); found; found = it.Next() {
+		fmt.Print("\nNextTo key: ", it.Key())
+		fmt.Print("\nNextTo value: ", it.Value())
+	} /*
+		NextTo key: 1
+		NextTo value: "b"
+		NextTo key: 2
+		NextTo value: "c"
+	*/
+
+	it.End()
+	for found := it.PrevTo(seek); found; found = it.Prev() {
+		fmt.Print("\nNextTo key: ", it.Key())
+		fmt.Print("\nNextTo value: ", it.Value())
+	} /*
+		NextTo key: 1
+		NextTo value: "b"
+		NextTo key: 0
+		NextTo value: "a"
+	*/
 }
