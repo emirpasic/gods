@@ -6,6 +6,7 @@ package singlylinkedlist
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/emirpasic/gods/utils"
@@ -417,6 +418,55 @@ func TestListIteratorFirst(t *testing.T) {
 	}
 	if index, value := it.Index(), it.Value(); index != 0 || value != "a" {
 		t.Errorf("Got %v,%v expected %v,%v", index, value, 0, "a")
+	}
+}
+
+func TestListIteratorNextTo(t *testing.T) {
+	// Sample seek function, i.e. string starting with "b"
+	seek := func(index int, value interface{}) bool {
+		return strings.HasSuffix(value.(string), "b")
+	}
+
+	// NextTo (empty)
+	{
+		list := New()
+		it := list.Iterator()
+		for it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty list")
+		}
+	}
+
+	// NextTo (not found)
+	{
+		list := New()
+		list.Add("xx", "yy")
+		it := list.Iterator()
+		for it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty list")
+		}
+	}
+
+	// NextTo (found)
+	{
+		list := New()
+		list.Add("aa", "bb", "cc")
+		it := list.Iterator()
+		it.Begin()
+		if !it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty list")
+		}
+		if index, value := it.Index(), it.Value(); index != 1 || value.(string) != "bb" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 1, "bb")
+		}
+		if !it.Next() {
+			t.Errorf("Should go to first element")
+		}
+		if index, value := it.Index(), it.Value(); index != 2 || value.(string) != "cc" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 2, "cc")
+		}
+		if it.Next() {
+			t.Errorf("Should not go past last element")
+		}
 	}
 }
 

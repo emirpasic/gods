@@ -6,6 +6,7 @@ package binaryheap
 
 import (
 	"math/rand"
+	"strings"
 	"testing"
 )
 
@@ -198,7 +199,7 @@ func TestBinaryHeapIteratorBegin(t *testing.T) {
 	}
 }
 
-func TestListIteratorEnd(t *testing.T) {
+func TestBinaryHeapIteratorEnd(t *testing.T) {
 	heap := NewWithIntComparator()
 	it := heap.Iterator()
 
@@ -225,7 +226,7 @@ func TestListIteratorEnd(t *testing.T) {
 	}
 }
 
-func TestStackIteratorFirst(t *testing.T) {
+func TestBinaryHeapIteratorFirst(t *testing.T) {
 	heap := NewWithIntComparator()
 	it := heap.Iterator()
 	if actualValue, expectedValue := it.First(), false; actualValue != expectedValue {
@@ -256,6 +257,112 @@ func TestBinaryHeapIteratorLast(t *testing.T) {
 	}
 	if index, value := it.Index(), it.Value(); index != 2 || value != 2 {
 		t.Errorf("Got %v,%v expected %v,%v", index, value, 2, 2)
+	}
+}
+
+func TestBinaryHeapIteratorNextTo(t *testing.T) {
+	// Sample seek function, i.e. string starting with "b"
+	seek := func(index int, value interface{}) bool {
+		return strings.HasSuffix(value.(string), "b")
+	}
+
+	// NextTo (empty)
+	{
+		tree := NewWithStringComparator()
+		it := tree.Iterator()
+		for it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty list")
+		}
+	}
+
+	// NextTo (not found)
+	{
+		tree := NewWithStringComparator()
+		tree.Push("xx")
+		tree.Push("yy")
+		it := tree.Iterator()
+		for it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty list")
+		}
+	}
+
+	// NextTo (found)
+	{
+		tree := NewWithStringComparator()
+		tree.Push("aa")
+		tree.Push("bb")
+		tree.Push("cc")
+		it := tree.Iterator()
+		it.Begin()
+		if !it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty list")
+		}
+		if index, value := it.Index(), it.Value(); index != 1 || value.(string) != "bb" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 1, "bb")
+		}
+		if !it.Next() {
+			t.Errorf("Should go to first element")
+		}
+		if index, value := it.Index(), it.Value(); index != 2 || value.(string) != "cc" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 2, "cc")
+		}
+		if it.Next() {
+			t.Errorf("Should not go past last element")
+		}
+	}
+}
+
+func TestBinaryHeapIteratorPrevTo(t *testing.T) {
+	// Sample seek function, i.e. string starting with "b"
+	seek := func(index int, value interface{}) bool {
+		return strings.HasSuffix(value.(string), "b")
+	}
+
+	// PrevTo (empty)
+	{
+		tree := NewWithStringComparator()
+		it := tree.Iterator()
+		it.End()
+		for it.PrevTo(seek) {
+			t.Errorf("Shouldn't iterate on empty list")
+		}
+	}
+
+	// PrevTo (not found)
+	{
+		tree := NewWithStringComparator()
+		tree.Push("xx")
+		tree.Push("yy")
+		it := tree.Iterator()
+		it.End()
+		for it.PrevTo(seek) {
+			t.Errorf("Shouldn't iterate on empty list")
+		}
+	}
+
+	// PrevTo (found)
+	{
+		tree := NewWithStringComparator()
+		tree.Push("aa")
+		tree.Push("bb")
+		tree.Push("cc")
+		it := tree.Iterator()
+		it.End()
+		if !it.PrevTo(seek) {
+			t.Errorf("Shouldn't iterate on empty list")
+		}
+		if index, value := it.Index(), it.Value(); index != 1 || value.(string) != "bb" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 1, "bb")
+		}
+		if !it.Prev() {
+			t.Errorf("Should go to first element")
+		}
+		if index, value := it.Index(), it.Value(); index != 0 || value.(string) != "aa" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 0, "aa")
+		}
+		if it.Prev() {
+			t.Errorf("Should not go before first element")
+		}
 	}
 }
 

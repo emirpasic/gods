@@ -1,4 +1,4 @@
-[![GoDoc](https://godoc.org/github.com/emirpasic/gods?status.svg)](https://godoc.org/github.com/emirpasic/gods) [![Build Status](https://circleci.com/gh/emirpasic/gods/tree/master.svg?style=shield)](https://circleci.com/gh/emirpasic/gods?branch=master) [![Go Report Card](https://goreportcard.com/badge/github.com/emirpasic/gods)](https://goreportcard.com/report/github.com/emirpasic/gods) [![PyPI](https://img.shields.io/pypi/l/Django.svg?maxAge=2592000)](https://github.com/emirpasic/gods/blob/master/LICENSE)
+[![GoDoc](https://godoc.org/github.com/emirpasic/gods?status.svg)](https://godoc.org/github.com/emirpasic/gods) [![Build Status](https://circleci.com/gh/emirpasic/gods/tree/master.svg?style=shield)](https://circleci.com/gh/emirpasic/gods?branch=master) [![Go Report Card](https://goreportcard.com/badge/github.com/emirpasic/gods)](https://goreportcard.com/report/github.com/emirpasic/gods) [![PyPI](https://img.shields.io/badge/License-BSD_2--Clause-green.svg)](https://github.com/emirpasic/gods/blob/master/LICENSE)
 
 # GoDS (Go Data Structures)
 
@@ -983,6 +983,22 @@ for it.Begin(); it.Next(); {
 }
 ```
 
+Seeking to a specific element:
+
+```go
+// Seek function, i.e. find element starting with "b"
+seek := func(index int, value interface{}) bool {
+    return strings.HasSuffix(value.(string), "b")
+}
+
+// Seek to the condition and continue traversal from that point (forward).
+// assumes it.Begin() was called.
+for found := it.NextTo(seek); found; found = it.Next() {
+    index, value := it.Index(), it.Value()
+    ...
+}
+```
+
 #### IteratorWithKey
 
 An [iterator](#iterator) whose elements are referenced by a key.
@@ -1010,6 +1026,22 @@ for it.Begin(); it.Next(); {
 }
 ```
 
+Seeking to a specific element from the current iterator position:
+
+```go
+// Seek function, i.e. find element starting with "b"
+seek := func(key interface{}, value interface{}) bool {
+    return strings.HasSuffix(value.(string), "b")
+}
+
+// Seek to the condition and continue traversal from that point (forward).
+// assumes it.Begin() was called.
+for found := it.NextTo(seek); found; found = it.Next() {
+    key, value := it.Key(), it.Value()
+    ...
+}
+```
+
 #### ReverseIteratorWithIndex
 
 An [iterator](#iterator) whose elements are referenced by an index. Provides all functions as [IteratorWithIndex](#iteratorwithindex), but can also be used for reverse iteration.
@@ -1031,6 +1063,22 @@ if it.Last() {
 }
 ```
 
+Seeking to a specific element:
+
+```go
+// Seek function, i.e. find element starting with "b"
+seek := func(index int, value interface{}) bool {
+    return strings.HasSuffix(value.(string), "b")
+}
+
+// Seek to the condition and continue traversal from that point (in reverse).
+// assumes it.End() was called.
+for found := it.PrevTo(seek); found; found = it.Prev() {
+    index, value := it.Index(), it.Value()
+	...
+}
+```
+
 #### ReverseIteratorWithKey
 
 An [iterator](#iterator) whose elements are referenced by a key. Provides all functions as [IteratorWithKey](#iteratorwithkey), but can also be used for reverse iteration.
@@ -1048,6 +1096,20 @@ Other usages:
 ```go
 if it.Last() {
 	lastKey, lastValue := it.Key(), it.Value()
+	...
+}
+```
+
+```go
+// Seek function, i.e. find element starting with "b"
+seek := func(key interface{}, value interface{}) bool {
+    return strings.HasSuffix(value.(string), "b")
+}
+
+// Seek to the condition and continue traversal from that point (in reverse).
+// assumes it.End() was called.
+for found := it.PrevTo(seek); found; found = it.Prev() {
+    key, value := it.Key(), it.Value()
 	...
 }
 ```
@@ -1489,13 +1551,19 @@ Coding style:
 
 ```shell
 # Install tooling and set path:
-go get github.com/golang/lint/golint
-go get github.com/fzipp/gocyclo
-go get github.com/kisielk/errcheck
+go install gotest.tools/gotestsum@latest
+go install golang.org/x/lint/golint@latest
+go install github.com/kisielk/errcheck@latest
 export PATH=$PATH:$GOPATH/bin
 
 # Fix errors and warnings:
-go fmt ./... && gofmt -s -w . && go vet ./... && go get ./... && go test ./... && golint ./... && gocyclo -avg -over 15 . && errcheck ./...
+go fmt ./... &&
+go test -v ./... && 
+golint -set_exit_status ./... && 
+! go fmt ./... 2>&1 | read &&
+go vet -v ./... &&
+gocyclo -avg -over 15 ../gods &&
+errcheck ./...
 ```
 
 ### License

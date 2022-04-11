@@ -6,6 +6,7 @@ package redblacktree
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 )
 
@@ -554,6 +555,112 @@ func TestRedBlackTreeIteratorLast(t *testing.T) {
 	}
 	if key, value := it.Key(), it.Value(); key != 3 || value != "c" {
 		t.Errorf("Got %v,%v expected %v,%v", key, value, 3, "c")
+	}
+}
+
+func TestRedBlackTreeIteratorNextTo(t *testing.T) {
+	// Sample seek function, i.e. string starting with "b"
+	seek := func(index interface{}, value interface{}) bool {
+		return strings.HasSuffix(value.(string), "b")
+	}
+
+	// NextTo (empty)
+	{
+		tree := NewWithIntComparator()
+		it := tree.Iterator()
+		for it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty tree")
+		}
+	}
+
+	// NextTo (not found)
+	{
+		tree := NewWithIntComparator()
+		tree.Put(0, "xx")
+		tree.Put(1, "yy")
+		it := tree.Iterator()
+		for it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty tree")
+		}
+	}
+
+	// NextTo (found)
+	{
+		tree := NewWithIntComparator()
+		tree.Put(2, "cc")
+		tree.Put(0, "aa")
+		tree.Put(1, "bb")
+		it := tree.Iterator()
+		it.Begin()
+		if !it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty tree")
+		}
+		if index, value := it.Key(), it.Value(); index != 1 || value.(string) != "bb" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 1, "bb")
+		}
+		if !it.Next() {
+			t.Errorf("Should go to first element")
+		}
+		if index, value := it.Key(), it.Value(); index != 2 || value.(string) != "cc" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 2, "cc")
+		}
+		if it.Next() {
+			t.Errorf("Should not go past last element")
+		}
+	}
+}
+
+func TestRedBlackTreeIteratorPrevTo(t *testing.T) {
+	// Sample seek function, i.e. string starting with "b"
+	seek := func(index interface{}, value interface{}) bool {
+		return strings.HasSuffix(value.(string), "b")
+	}
+
+	// PrevTo (empty)
+	{
+		tree := NewWithIntComparator()
+		it := tree.Iterator()
+		it.End()
+		for it.PrevTo(seek) {
+			t.Errorf("Shouldn't iterate on empty tree")
+		}
+	}
+
+	// PrevTo (not found)
+	{
+		tree := NewWithIntComparator()
+		tree.Put(0, "xx")
+		tree.Put(1, "yy")
+		it := tree.Iterator()
+		it.End()
+		for it.PrevTo(seek) {
+			t.Errorf("Shouldn't iterate on empty tree")
+		}
+	}
+
+	// PrevTo (found)
+	{
+		tree := NewWithIntComparator()
+		tree.Put(2, "cc")
+		tree.Put(0, "aa")
+		tree.Put(1, "bb")
+		it := tree.Iterator()
+		it.End()
+		if !it.PrevTo(seek) {
+			t.Errorf("Shouldn't iterate on empty tree")
+		}
+		if index, value := it.Key(), it.Value(); index != 1 || value.(string) != "bb" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 1, "bb")
+		}
+		if !it.Prev() {
+			t.Errorf("Should go to first element")
+		}
+		if index, value := it.Key(), it.Value(); index != 0 || value.(string) != "aa" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 0, "aa")
+		}
+		if it.Prev() {
+			t.Errorf("Should not go before first element")
+		}
 	}
 }
 
