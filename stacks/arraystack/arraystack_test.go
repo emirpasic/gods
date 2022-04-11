@@ -6,6 +6,7 @@ package arraystack
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 )
 
@@ -229,6 +230,112 @@ func TestStackIteratorLast(t *testing.T) {
 	}
 	if index, value := it.Index(), it.Value(); index != 2 || value != "a" {
 		t.Errorf("Got %v,%v expected %v,%v", index, value, 2, "a")
+	}
+}
+
+func TestStackIteratorNextTo(t *testing.T) {
+	// Sample seek function, i.e. string starting with "b"
+	seek := func(index int, value interface{}) bool {
+		return strings.HasSuffix(value.(string), "b")
+	}
+
+	// NextTo (empty)
+	{
+		stack := New()
+		it := stack.Iterator()
+		for it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty stack")
+		}
+	}
+
+	// NextTo (not found)
+	{
+		stack := New()
+		stack.Push("xx")
+		stack.Push("yy")
+		it := stack.Iterator()
+		for it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty stack")
+		}
+	}
+
+	// NextTo (found)
+	{
+		stack := New()
+		stack.Push("aa")
+		stack.Push("bb")
+		stack.Push("cc")
+		it := stack.Iterator()
+		it.Begin()
+		if !it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty stack")
+		}
+		if index, value := it.Index(), it.Value(); index != 1 || value.(string) != "bb" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 1, "bb")
+		}
+		if !it.Next() {
+			t.Errorf("Should go to first element")
+		}
+		if index, value := it.Index(), it.Value(); index != 2 || value.(string) != "aa" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 2, "aa")
+		}
+		if it.Next() {
+			t.Errorf("Should not go past last element")
+		}
+	}
+}
+
+func TestStackIteratorPrevTo(t *testing.T) {
+	// Sample seek function, i.e. string starting with "b"
+	seek := func(index int, value interface{}) bool {
+		return strings.HasSuffix(value.(string), "b")
+	}
+
+	// PrevTo (empty)
+	{
+		stack := New()
+		it := stack.Iterator()
+		it.End()
+		for it.PrevTo(seek) {
+			t.Errorf("Shouldn't iterate on empty stack")
+		}
+	}
+
+	// PrevTo (not found)
+	{
+		stack := New()
+		stack.Push("xx")
+		stack.Push("yy")
+		it := stack.Iterator()
+		it.End()
+		for it.PrevTo(seek) {
+			t.Errorf("Shouldn't iterate on empty stack")
+		}
+	}
+
+	// PrevTo (found)
+	{
+		stack := New()
+		stack.Push("aa")
+		stack.Push("bb")
+		stack.Push("cc")
+		it := stack.Iterator()
+		it.End()
+		if !it.PrevTo(seek) {
+			t.Errorf("Shouldn't iterate on empty stack")
+		}
+		if index, value := it.Index(), it.Value(); index != 1 || value.(string) != "bb" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 1, "bb")
+		}
+		if !it.Prev() {
+			t.Errorf("Should go to first element")
+		}
+		if index, value := it.Index(), it.Value(); index != 0 || value.(string) != "cc" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 0, "cc")
+		}
+		if it.Prev() {
+			t.Errorf("Should not go before first element")
+		}
 	}
 }
 
