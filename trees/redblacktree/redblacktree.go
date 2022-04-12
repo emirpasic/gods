@@ -113,6 +113,12 @@ func (tree *Tree) Get(key interface{}) (value interface{}, found bool) {
 	return nil, false
 }
 
+// GetNode searches the node in the tree by key and returns its node or nil if key is not found in tree.
+// Key should adhere to the comparator's type assertion, otherwise method panics.
+func (tree *Tree) GetNode(key interface{}) *Node {
+	return tree.lookup(key)
+}
+
 // Remove remove the node from the tree by key.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (tree *Tree) Remove(key interface{}) {
@@ -153,6 +159,22 @@ func (tree *Tree) Empty() bool {
 // Size returns number of nodes in the tree.
 func (tree *Tree) Size() int {
 	return tree.size
+}
+
+// Size returns the number of elements stored in the subtree.
+// Computed dynamically on each call, i.e. the subtree is traversed to count the number of the nodes.
+func (node *Node) Size() int {
+	if node == nil {
+		return 0
+	}
+	size := 1
+	if node.Left != nil {
+		size += node.Left.Size()
+	}
+	if node.Right != nil {
+		size += node.Right.Size()
+	}
+	return size
 }
 
 // Keys returns all keys in-order

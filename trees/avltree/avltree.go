@@ -60,19 +60,29 @@ func (t *Tree) Put(key interface{}, value interface{}) {
 // Second return parameter is true if key was found, otherwise false.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (t *Tree) Get(key interface{}) (value interface{}, found bool) {
+	n := t.GetNode(key)
+	if n != nil {
+		return n.Value, true
+	}
+	return nil, false
+}
+
+// GetNode searches the node in the tree by key and returns its node or nil if key is not found in tree.
+// Key should adhere to the comparator's type assertion, otherwise method panics.
+func (t *Tree) GetNode(key interface{}) *Node {
 	n := t.Root
 	for n != nil {
 		cmp := t.Comparator(key, n.Key)
 		switch {
 		case cmp == 0:
-			return n.Value, true
+			return n
 		case cmp < 0:
 			n = n.Children[0]
 		case cmp > 0:
 			n = n.Children[1]
 		}
 	}
-	return nil, false
+	return n
 }
 
 // Remove remove the node from the tree by key.
@@ -89,6 +99,22 @@ func (t *Tree) Empty() bool {
 // Size returns the number of elements stored in the tree.
 func (t *Tree) Size() int {
 	return t.size
+}
+
+// Size returns the number of elements stored in the subtree.
+// Computed dynamically on each call, i.e. the subtree is traversed to count the number of the nodes.
+func (n *Node) Size() int {
+	if n == nil {
+		return 0
+	}
+	size := 1
+	if n.Children[0] != nil {
+		size += n.Children[0].Size()
+	}
+	if n.Children[1] != nil {
+		size += n.Children[1].Size()
+	}
+	return size
 }
 
 // Keys returns all keys in-order

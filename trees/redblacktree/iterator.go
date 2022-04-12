@@ -130,6 +130,12 @@ func (iterator *Iterator) Key() interface{} {
 	return iterator.node.Key
 }
 
+// Node returns the current element's node.
+// Does not modify the state of the iterator.
+func (iterator *Iterator) Node() *Node {
+	return iterator.node
+}
+
 // Begin resets the iterator to its initial state (one-before-first)
 // Call Next() to fetch the first element if any.
 func (iterator *Iterator) Begin() {
