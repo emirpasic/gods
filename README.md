@@ -57,6 +57,7 @@ type Container interface {
 	Size() int
 	Clear()
 	Values() []interface{}
+    String() string
 }
 ```
 
@@ -110,6 +111,7 @@ type List interface {
 	// Size() int
 	// Clear()
 	// Values() []interface{}
+    // String() string
 }
 ```
 
@@ -241,6 +243,7 @@ type Set interface {
 	// Size() int
 	// Clear()
 	// Values() []interface{}
+	// String() string
 }
 ```
 
@@ -343,6 +346,7 @@ type Stack interface {
 	// Size() int
 	// Clear()
 	// Values() []interface{}
+	// String() string
 }
 ```
 
@@ -418,6 +422,7 @@ type Map interface {
 	// Size() int
 	// Clear()
 	// Values() []interface{}
+	// String() string
 }
 ```
 
@@ -591,6 +596,7 @@ type Tree interface {
 	// Size() int
 	// Clear()
 	// Values() []interface{}
+	// String() string
 }
 ```
 
@@ -1348,7 +1354,7 @@ func main() {
 
 ### Serialization
 
-All data structures can be serialized (marshalled) and deserialized (unmarshalled). Currently only JSON support is available.
+All data structures can be serialized (marshalled) and deserialized (unmarshalled). Currently, only JSON support is available.
 
 #### JSONSerializer
 
@@ -1481,7 +1487,7 @@ Container specific operations:
 
 ```go
 // Returns sorted container''s elements with respect to the passed comparator.
-// Does not effect the ordering of elements within the container.
+// Does not affect the ordering of elements within the container.
 func GetSortedValues(container Container, comparator utils.Comparator) []interface{}
 ```
 
