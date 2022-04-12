@@ -37,3 +37,13 @@ func (m *Map) FromJSON(data []byte) error {
 	}
 	return err
 }
+
+// UnmarshalJSON @implements json.Unmarshaler
+func (m *Map) UnmarshalJSON(bytes []byte) error {
+	return m.FromJSON(bytes)
+}
+
+// MarshalJSON @implements json.Marshaler
+func (m *Map) MarshalJSON() ([]byte, error) {
+	return m.ToJSON()
+}

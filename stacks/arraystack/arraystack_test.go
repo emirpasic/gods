@@ -5,6 +5,7 @@
 package arraystack
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"testing"
@@ -360,11 +361,16 @@ func TestStackSerialization(t *testing.T) {
 
 	assert()
 
-	json, err := stack.ToJSON()
+	bytes, err := stack.ToJSON()
 	assert()
 
-	err = stack.FromJSON(json)
+	err = stack.FromJSON(bytes)
 	assert()
+
+	bytes, err = json.Marshal([]interface{}{"a", "b", "c", stack})
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
 }
 
 func benchmarkPush(b *testing.B, stack *Stack, size int) {

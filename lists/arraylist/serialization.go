@@ -27,3 +27,13 @@ func (list *List) FromJSON(data []byte) error {
 	}
 	return err
 }
+
+// UnmarshalJSON @implements json.Unmarshaler
+func (list *List) UnmarshalJSON(bytes []byte) error {
+	return list.FromJSON(bytes)
+}
+
+// MarshalJSON @implements json.Marshaler
+func (list *List) MarshalJSON() ([]byte, error) {
+	return list.ToJSON()
+}
