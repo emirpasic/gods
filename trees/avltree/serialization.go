@@ -37,3 +37,13 @@ func (tree *Tree) FromJSON(data []byte) error {
 	}
 	return err
 }
+
+// UnmarshalJSON @implements json.Unmarshaler
+func (tree *Tree) UnmarshalJSON(bytes []byte) error {
+	return tree.FromJSON(bytes)
+}
+
+// MarshalJSON @implements json.Marshaler
+func (tree *Tree) MarshalJSON() ([]byte, error) {
+	return tree.ToJSON()
+}

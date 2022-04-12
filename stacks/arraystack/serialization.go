@@ -4,7 +4,9 @@
 
 package arraystack
 
-import "github.com/emirpasic/gods/containers"
+import (
+	"github.com/emirpasic/gods/containers"
+)
 
 func assertSerializationImplementation() {
 	var _ containers.JSONSerializer = (*Stack)(nil)
@@ -19,4 +21,14 @@ func (stack *Stack) ToJSON() ([]byte, error) {
 // FromJSON populates the stack from the input JSON representation.
 func (stack *Stack) FromJSON(data []byte) error {
 	return stack.list.FromJSON(data)
+}
+
+// UnmarshalJSON @implements json.Unmarshaler
+func (stack *Stack) UnmarshalJSON(bytes []byte) error {
+	return stack.FromJSON(bytes)
+}
+
+// MarshalJSON @implements json.Marshaler
+func (stack *Stack) MarshalJSON() ([]byte, error) {
+	return stack.ToJSON()
 }

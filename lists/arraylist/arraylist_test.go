@@ -5,6 +5,7 @@
 package arraylist
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/emirpasic/gods/utils"
 	"strings"
@@ -620,11 +621,16 @@ func TestListSerialization(t *testing.T) {
 
 	assert()
 
-	json, err := list.ToJSON()
+	bytes, err := list.ToJSON()
 	assert()
 
-	err = list.FromJSON(json)
+	err = list.FromJSON(bytes)
 	assert()
+
+	bytes, err = json.Marshal([]interface{}{"a", "b", "c", list})
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
 }
 
 func benchmarkGet(b *testing.B, list *List, size int) {

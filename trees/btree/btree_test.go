@@ -5,6 +5,7 @@
 package btree
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"testing"
@@ -1251,11 +1252,16 @@ func TestBTreeSerialization(t *testing.T) {
 
 	assert()
 
-	json, err := tree.ToJSON()
+	bytes, err := tree.ToJSON()
 	assert()
 
-	err = tree.FromJSON(json)
+	err = tree.FromJSON(bytes)
 	assert()
+
+	bytes, err = json.Marshal([]interface{}{"a", "b", "c", tree})
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
 }
 
 func benchmarkGet(b *testing.B, tree *Tree, size int) {

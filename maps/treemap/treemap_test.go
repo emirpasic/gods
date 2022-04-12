@@ -5,6 +5,7 @@
 package treemap
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"testing"
@@ -626,6 +627,16 @@ func TestMapSerialization(t *testing.T) {
 			t.Errorf("Got error %v", err)
 		}
 		assertSerialization(deserialized, "C", t)
+	}
+
+	m := NewWithStringComparator()
+	m.Put("a", 1.0)
+	m.Put("b", 2.0)
+	m.Put("c", 3.0)
+
+	_, err := json.Marshal([]interface{}{"a", "b", "c", m})
+	if err != nil {
+		t.Errorf("Got error %v", err)
 	}
 }
 
