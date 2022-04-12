@@ -1402,10 +1402,12 @@ func main() {
 Populates the container with elements from the input JSON representation.
 
 Typical usage for key-value structures:
+
 ```go
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/emirpasic/gods/maps/hashmap"
 )
@@ -1413,8 +1415,8 @@ import (
 func main() {
 	hm := hashmap.New()
 
-	json := []byte(`{"a":"1","b":"2"}`)
-	err := hm.FromJSON(json)
+	bytes := []byte(`{"a":"1","b":"2"}`)
+	err := json.Unmarshal(bytes, &hm) // Same as "hm.FromJSON(bytes)"
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -1423,10 +1425,12 @@ func main() {
 ```
 
 Typical usage for value-only structures:
+
 ```go
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/emirpasic/gods/lists/arraylist"
 )
@@ -1434,8 +1438,8 @@ import (
 func main() {
 	list := arraylist.New()
 
-	json := []byte(`["a","b"]`)
-	err := list.FromJSON(json)
+	bytes := []byte(`["a","b"]`)
+	err := json.Unmarshal(bytes, &list) // Same as "list.FromJSON(bytes)"
 	if err != nil {
 		fmt.Println(err)
 	}
