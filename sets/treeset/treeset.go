@@ -14,6 +14,7 @@ import (
 	"github.com/emirpasic/gods/sets"
 	rbt "github.com/emirpasic/gods/trees/redblacktree"
 	"github.com/emirpasic/gods/utils"
+	"reflect"
 	"strings"
 )
 
@@ -110,4 +111,80 @@ func (set *Set) String() string {
 	}
 	str += strings.Join(items, ", ")
 	return str
+}
+
+// Intersection returns the intersection between two sets.
+// The new set consists of all elements that are both in "set" and "another".
+// The two sets should have the same comparators, otherwise the result is empty set.
+// Ref: https://en.wikipedia.org/wiki/Intersection_(set_theory)
+func (set *Set) Intersection(another *Set) *Set {
+	result := NewWith(set.tree.Comparator)
+
+	setComparator := reflect.ValueOf(set.tree.Comparator)
+	anotherComparator := reflect.ValueOf(another.tree.Comparator)
+	if setComparator.Pointer() != anotherComparator.Pointer() {
+		return result
+	}
+
+	// Iterate over smaller set (optimization)
+	if set.Size() <= another.Size() {
+		for it := set.Iterator(); it.Next(); {
+			if another.Contains(it.Value()) {
+				result.Add(it.Value())
+			}
+		}
+	} else {
+		for it := another.Iterator(); it.Next(); {
+			if set.Contains(it.Value()) {
+				result.Add(it.Value())
+			}
+		}
+	}
+
+	return result
+}
+
+// Union returns the union of two sets.
+// The new set consists of all elements that are in "set" or "another" (possibly both).
+// The two sets should have the same comparators, otherwise the result is empty set.
+// Ref: https://en.wikipedia.org/wiki/Union_(set_theory)
+func (set *Set) Union(another *Set) *Set {
+	result := NewWith(set.tree.Comparator)
+
+	setComparator := reflect.ValueOf(set.tree.Comparator)
+	anotherComparator := reflect.ValueOf(another.tree.Comparator)
+	if setComparator.Pointer() != anotherComparator.Pointer() {
+		return result
+	}
+
+	for it := set.Iterator(); it.Next(); {
+		result.Add(it.Value())
+	}
+	for it := another.Iterator(); it.Next(); {
+		result.Add(it.Value())
+	}
+
+	return result
+}
+
+// Difference returns the difference between two sets.
+// The two sets should have the same comparators, otherwise the result is empty set.
+// The new set consists of all elements that are in "set" but not in "another".
+// Ref: https://proofwiki.org/wiki/Definition:Set_Difference
+func (set *Set) Difference(another *Set) *Set {
+	result := NewWith(set.tree.Comparator)
+
+	setComparator := reflect.ValueOf(set.tree.Comparator)
+	anotherComparator := reflect.ValueOf(another.tree.Comparator)
+	if setComparator.Pointer() != anotherComparator.Pointer() {
+		return result
+	}
+
+	for it := set.Iterator(); it.Next(); {
+		if !another.Contains(it.Value()) {
+			result.Add(it.Value())
+		}
+	}
+
+	return result
 }

@@ -474,6 +474,105 @@ func TestSetSerialization(t *testing.T) {
 	}
 }
 
+func TestSetIntersection(t *testing.T) {
+	{
+		set := NewWithStringComparator()
+		another := NewWithIntComparator()
+		set.Add("a", "b", "c", "d")
+		another.Add(1, 2, 3, 4)
+		difference := set.Difference(another)
+		if actualValue, expectedValue := difference.Size(), 0; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+	}
+
+	set := NewWithStringComparator()
+	another := NewWithStringComparator()
+
+	intersection := set.Intersection(another)
+	if actualValue, expectedValue := intersection.Size(), 0; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+
+	set.Add("a", "b", "c", "d")
+	another.Add("c", "d", "e", "f")
+
+	intersection = set.Intersection(another)
+
+	if actualValue, expectedValue := intersection.Size(), 2; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if actualValue := intersection.Contains("c", "d"); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+}
+
+func TestSetUnion(t *testing.T) {
+	{
+		set := NewWithStringComparator()
+		another := NewWithIntComparator()
+		set.Add("a", "b", "c", "d")
+		another.Add(1, 2, 3, 4)
+		difference := set.Difference(another)
+		if actualValue, expectedValue := difference.Size(), 0; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+	}
+
+	set := NewWithStringComparator()
+	another := NewWithStringComparator()
+
+	union := set.Union(another)
+	if actualValue, expectedValue := union.Size(), 0; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+
+	set.Add("a", "b", "c", "d")
+	another.Add("c", "d", "e", "f")
+
+	union = set.Union(another)
+
+	if actualValue, expectedValue := union.Size(), 6; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if actualValue := union.Contains("a", "b", "c", "d", "e", "f"); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+}
+
+func TestSetDifference(t *testing.T) {
+	{
+		set := NewWithStringComparator()
+		another := NewWithIntComparator()
+		set.Add("a", "b", "c", "d")
+		another.Add(1, 2, 3, 4)
+		difference := set.Difference(another)
+		if actualValue, expectedValue := difference.Size(), 0; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+	}
+
+	set := NewWithStringComparator()
+	another := NewWithStringComparator()
+
+	difference := set.Difference(another)
+	if actualValue, expectedValue := difference.Size(), 0; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+
+	set.Add("a", "b", "c", "d")
+	another.Add("c", "d", "e", "f")
+
+	difference = set.Difference(another)
+
+	if actualValue, expectedValue := difference.Size(), 2; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if actualValue := difference.Contains("a", "b"); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+}
+
 func benchmarkContains(b *testing.B, set *Set, size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {

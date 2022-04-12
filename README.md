@@ -57,6 +57,7 @@ type Container interface {
 	Size() int
 	Clear()
 	Values() []interface{}
+    String() string
 }
 ```
 
@@ -110,6 +111,7 @@ type List interface {
 	// Size() int
 	// Clear()
 	// Values() []interface{}
+    // String() string
 }
 ```
 
@@ -228,6 +230,8 @@ func main() {
 
 A set is a data structure that can store elements and has no repeated values. It is a computer implementation of the mathematical concept of a finite set. Unlike most other collection types, rather than retrieving a specific element from a set, one typically tests an element for membership in a set. This structure is often used to ensure that no duplicates are present in a container.
 
+Set additionally allow set operations such as [intersection](https://en.wikipedia.org/wiki/Intersection_(set_theory)), [union](https://en.wikipedia.org/wiki/Union_(set_theory)), [difference](https://proofwiki.org/wiki/Definition:Set_Difference), etc.
+
 Implements [Container](#containers) interface.
 
 ```go
@@ -235,12 +239,16 @@ type Set interface {
 	Add(elements ...interface{})
 	Remove(elements ...interface{})
 	Contains(elements ...interface{}) bool
-
+    // Intersection(another *Set) *Set
+    // Union(another *Set) *Set
+    // Difference(another *Set) *Set
+	
 	containers.Container
 	// Empty() bool
 	// Size() int
 	// Clear()
 	// Values() []interface{}
+	// String() string
 }
 ```
 
@@ -343,6 +351,7 @@ type Stack interface {
 	// Size() int
 	// Clear()
 	// Values() []interface{}
+	// String() string
 }
 ```
 
@@ -418,6 +427,7 @@ type Map interface {
 	// Size() int
 	// Clear()
 	// Values() []interface{}
+	// String() string
 }
 ```
 
@@ -591,6 +601,7 @@ type Tree interface {
 	// Size() int
 	// Clear()
 	// Values() []interface{}
+	// String() string
 }
 ```
 
@@ -1348,7 +1359,7 @@ func main() {
 
 ### Serialization
 
-All data structures can be serialized (marshalled) and deserialized (unmarshalled). Currently only JSON support is available.
+All data structures can be serialized (marshalled) and deserialized (unmarshalled). Currently, only JSON support is available.
 
 #### JSONSerializer
 
@@ -1481,7 +1492,7 @@ Container specific operations:
 
 ```go
 // Returns sorted container''s elements with respect to the passed comparator.
-// Does not effect the ordering of elements within the container.
+// Does not affect the ordering of elements within the container.
 func GetSortedValues(container Container, comparator utils.Comparator) []interface{}
 ```
 
