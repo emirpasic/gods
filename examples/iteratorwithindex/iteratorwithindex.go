@@ -7,6 +7,7 @@ package main
 import (
 	"fmt"
 	"github.com/emirpasic/gods/sets/treeset"
+	"strings"
 )
 
 // IteratorWithIndexExample to demonstrate basic usage of IteratorWithIndex
@@ -48,4 +49,32 @@ func main() {
 		fmt.Print("\nLast index: ", it.Index()) // Last index: 3
 		fmt.Print("\nLast value: ", it.Value()) // Last value: c
 	}
+
+	// Seek element starting with "b"
+	seek := func(index int, value interface{}) bool {
+		return strings.HasSuffix(value.(string), "b")
+	}
+
+	it.Begin()
+	for found := it.NextTo(seek); found; found = it.Next() {
+		fmt.Print("\nNextTo index: ", it.Index())
+		fmt.Print("\nNextTo value: ", it.Value())
+	} /*
+		NextTo index: 1
+		NextTo value: "b"
+		NextTo index: 2
+		NextTo value: "c"
+	*/
+
+	it.End()
+	for found := it.PrevTo(seek); found; found = it.Prev() {
+		fmt.Print("\nNextTo index: ", it.Index())
+		fmt.Print("\nNextTo value: ", it.Value())
+	} /*
+		NextTo index: 1
+		NextTo value: "b"
+		NextTo index: 0
+		NextTo value: "a"
+	*/
+
 }

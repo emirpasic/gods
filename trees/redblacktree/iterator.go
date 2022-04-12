@@ -56,13 +56,11 @@ func (iterator *Iterator) Next() bool {
 		}
 		goto between
 	}
-	if iterator.node.Parent != nil {
+	for iterator.node.Parent != nil {
 		node := iterator.node
-		for iterator.node.Parent != nil {
-			iterator.node = iterator.node.Parent
-			if iterator.tree.Comparator(node.Key, iterator.node.Key) <= 0 {
-				goto between
-			}
+		iterator.node = iterator.node.Parent
+		if node == iterator.node.Left {
+			goto between
 		}
 	}
 
@@ -98,13 +96,11 @@ func (iterator *Iterator) Prev() bool {
 		}
 		goto between
 	}
-	if iterator.node.Parent != nil {
+	for iterator.node.Parent != nil {
 		node := iterator.node
-		for iterator.node.Parent != nil {
-			iterator.node = iterator.node.Parent
-			if iterator.tree.Comparator(node.Key, iterator.node.Key) >= 0 {
-				goto between
-			}
+		iterator.node = iterator.node.Parent
+		if node == iterator.node.Right {
+			goto between
 		}
 	}
 
@@ -128,6 +124,12 @@ func (iterator *Iterator) Value() interface{} {
 // Does not modify the state of the iterator.
 func (iterator *Iterator) Key() interface{} {
 	return iterator.node.Key
+}
+
+// Node returns the current element's node.
+// Does not modify the state of the iterator.
+func (iterator *Iterator) Node() *Node {
+	return iterator.node
 }
 
 // Begin resets the iterator to its initial state (one-before-first)
@@ -158,4 +160,32 @@ func (iterator *Iterator) First() bool {
 func (iterator *Iterator) Last() bool {
 	iterator.End()
 	return iterator.Prev()
+}
+
+// NextTo moves the iterator to the next element from current position that satisfies the condition given by the
+// passed function, and returns true if there was a next element in the container.
+// If NextTo() returns true, then next element's key and value can be retrieved by Key() and Value().
+// Modifies the state of the iterator.
+func (iterator *Iterator) NextTo(f func(key interface{}, value interface{}) bool) bool {
+	for iterator.Next() {
+		key, value := iterator.Key(), iterator.Value()
+		if f(key, value) {
+			return true
+		}
+	}
+	return false
+}
+
+// PrevTo moves the iterator to the previous element from current position that satisfies the condition given by the
+// passed function, and returns true if there was a next element in the container.
+// If PrevTo() returns true, then next element's key and value can be retrieved by Key() and Value().
+// Modifies the state of the iterator.
+func (iterator *Iterator) PrevTo(f func(key interface{}, value interface{}) bool) bool {
+	for iterator.Prev() {
+		key, value := iterator.Key(), iterator.Value()
+		if f(key, value) {
+			return true
+		}
+	}
+	return false
 }

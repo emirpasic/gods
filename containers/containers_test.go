@@ -7,7 +7,9 @@
 package containers
 
 import (
+	"fmt"
 	"github.com/emirpasic/gods/utils"
+	"strings"
 	"testing"
 )
 
@@ -30,6 +32,16 @@ func (container ContainerTest) Clear() {
 
 func (container ContainerTest) Values() []interface{} {
 	return container.values
+}
+
+func (container ContainerTest) String() string {
+	str := "ContainerTest\n"
+	var values []string
+	for _, value := range container.values {
+		values = append(values, fmt.Sprintf("%v", value))
+	}
+	str += strings.Join(values, ", ")
+	return str
 }
 
 func TestGetSortedValuesInts(t *testing.T) {

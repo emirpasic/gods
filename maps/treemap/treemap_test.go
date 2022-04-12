@@ -5,7 +5,9 @@
 package treemap
 
 import (
+	"encoding/json"
 	"fmt"
+	"strings"
 	"testing"
 )
 
@@ -455,7 +457,7 @@ func TestMapIteratorBegin(t *testing.T) {
 	}
 }
 
-func TestMapTreeIteratorEnd(t *testing.T) {
+func TestMapIteratorEnd(t *testing.T) {
 	m := NewWithIntComparator()
 	it := m.Iterator()
 	m.Put(3, "c")
@@ -496,6 +498,112 @@ func TestMapIteratorLast(t *testing.T) {
 	}
 }
 
+func TestMapIteratorNextTo(t *testing.T) {
+	// Sample seek function, i.e. string starting with "b"
+	seek := func(index interface{}, value interface{}) bool {
+		return strings.HasSuffix(value.(string), "b")
+	}
+
+	// NextTo (empty)
+	{
+		m := NewWithIntComparator()
+		it := m.Iterator()
+		for it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty map")
+		}
+	}
+
+	// NextTo (not found)
+	{
+		m := NewWithIntComparator()
+		m.Put(0, "xx")
+		m.Put(1, "yy")
+		it := m.Iterator()
+		for it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty map")
+		}
+	}
+
+	// NextTo (found)
+	{
+		m := NewWithIntComparator()
+		m.Put(0, "aa")
+		m.Put(1, "bb")
+		m.Put(2, "cc")
+		it := m.Iterator()
+		it.Begin()
+		if !it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty map")
+		}
+		if index, value := it.Key(), it.Value(); index != 1 || value.(string) != "bb" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 1, "bb")
+		}
+		if !it.Next() {
+			t.Errorf("Should go to first element")
+		}
+		if index, value := it.Key(), it.Value(); index != 2 || value.(string) != "cc" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 2, "cc")
+		}
+		if it.Next() {
+			t.Errorf("Should not go past last element")
+		}
+	}
+}
+
+func TestMapIteratorPrevTo(t *testing.T) {
+	// Sample seek function, i.e. string starting with "b"
+	seek := func(index interface{}, value interface{}) bool {
+		return strings.HasSuffix(value.(string), "b")
+	}
+
+	// PrevTo (empty)
+	{
+		m := NewWithIntComparator()
+		it := m.Iterator()
+		it.End()
+		for it.PrevTo(seek) {
+			t.Errorf("Shouldn't iterate on empty map")
+		}
+	}
+
+	// PrevTo (not found)
+	{
+		m := NewWithIntComparator()
+		m.Put(0, "xx")
+		m.Put(1, "yy")
+		it := m.Iterator()
+		it.End()
+		for it.PrevTo(seek) {
+			t.Errorf("Shouldn't iterate on empty map")
+		}
+	}
+
+	// PrevTo (found)
+	{
+		m := NewWithIntComparator()
+		m.Put(0, "aa")
+		m.Put(1, "bb")
+		m.Put(2, "cc")
+		it := m.Iterator()
+		it.End()
+		if !it.PrevTo(seek) {
+			t.Errorf("Shouldn't iterate on empty map")
+		}
+		if index, value := it.Key(), it.Value(); index != 1 || value.(string) != "bb" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 1, "bb")
+		}
+		if !it.Prev() {
+			t.Errorf("Should go to first element")
+		}
+		if index, value := it.Key(), it.Value(); index != 0 || value.(string) != "aa" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 0, "aa")
+		}
+		if it.Prev() {
+			t.Errorf("Should not go before first element")
+		}
+	}
+}
+
 func TestMapSerialization(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		original := NewWithStringComparator()
@@ -519,6 +627,16 @@ func TestMapSerialization(t *testing.T) {
 			t.Errorf("Got error %v", err)
 		}
 		assertSerialization(deserialized, "C", t)
+	}
+
+	m := NewWithStringComparator()
+	m.Put("a", 1.0)
+	m.Put("b", 2.0)
+	m.Put("c", 3.0)
+
+	_, err := json.Marshal([]interface{}{"a", "b", "c", m})
+	if err != nil {
+		t.Errorf("Got error %v", err)
 	}
 }
 

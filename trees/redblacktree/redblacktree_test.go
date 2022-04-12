@@ -5,9 +5,57 @@
 package redblacktree
 
 import (
+	"encoding/json"
 	"fmt"
+	"strings"
 	"testing"
 )
+
+func TestRedBlackTreeGet(t *testing.T) {
+	tree := NewWithIntComparator()
+
+	if actualValue := tree.Size(); actualValue != 0 {
+		t.Errorf("Got %v expected %v", actualValue, 0)
+	}
+
+	if actualValue := tree.GetNode(2).Size(); actualValue != 0 {
+		t.Errorf("Got %v expected %v", actualValue, 0)
+	}
+
+	tree.Put(1, "x") // 1->x
+	tree.Put(2, "b") // 1->x, 2->b (in order)
+	tree.Put(1, "a") // 1->a, 2->b (in order, replacement)
+	tree.Put(3, "c") // 1->a, 2->b, 3->c (in order)
+	tree.Put(4, "d") // 1->a, 2->b, 3->c, 4->d (in order)
+	tree.Put(5, "e") // 1->a, 2->b, 3->c, 4->d, 5->e (in order)
+	tree.Put(6, "f") // 1->a, 2->b, 3->c, 4->d, 5->e, 6->f (in order)
+
+	fmt.Println(tree)
+	//
+	//  RedBlackTree
+	//  │           ┌── 6
+	//  │       ┌── 5
+	//  │   ┌── 4
+	//  │   │   └── 3
+	//  └── 2
+	//       └── 1
+
+	if actualValue := tree.Size(); actualValue != 6 {
+		t.Errorf("Got %v expected %v", actualValue, 6)
+	}
+
+	if actualValue := tree.GetNode(4).Size(); actualValue != 4 {
+		t.Errorf("Got %v expected %v", actualValue, 4)
+	}
+
+	if actualValue := tree.GetNode(2).Size(); actualValue != 6 {
+		t.Errorf("Got %v expected %v", actualValue, 6)
+	}
+
+	if actualValue := tree.GetNode(8).Size(); actualValue != 0 {
+		t.Errorf("Got %v expected %v", actualValue, 0)
+	}
+}
 
 func TestRedBlackTreePut(t *testing.T) {
 	tree := NewWithIntComparator()
@@ -557,6 +605,112 @@ func TestRedBlackTreeIteratorLast(t *testing.T) {
 	}
 }
 
+func TestRedBlackTreeIteratorNextTo(t *testing.T) {
+	// Sample seek function, i.e. string starting with "b"
+	seek := func(index interface{}, value interface{}) bool {
+		return strings.HasSuffix(value.(string), "b")
+	}
+
+	// NextTo (empty)
+	{
+		tree := NewWithIntComparator()
+		it := tree.Iterator()
+		for it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty tree")
+		}
+	}
+
+	// NextTo (not found)
+	{
+		tree := NewWithIntComparator()
+		tree.Put(0, "xx")
+		tree.Put(1, "yy")
+		it := tree.Iterator()
+		for it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty tree")
+		}
+	}
+
+	// NextTo (found)
+	{
+		tree := NewWithIntComparator()
+		tree.Put(2, "cc")
+		tree.Put(0, "aa")
+		tree.Put(1, "bb")
+		it := tree.Iterator()
+		it.Begin()
+		if !it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty tree")
+		}
+		if index, value := it.Key(), it.Value(); index != 1 || value.(string) != "bb" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 1, "bb")
+		}
+		if !it.Next() {
+			t.Errorf("Should go to first element")
+		}
+		if index, value := it.Key(), it.Value(); index != 2 || value.(string) != "cc" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 2, "cc")
+		}
+		if it.Next() {
+			t.Errorf("Should not go past last element")
+		}
+	}
+}
+
+func TestRedBlackTreeIteratorPrevTo(t *testing.T) {
+	// Sample seek function, i.e. string starting with "b"
+	seek := func(index interface{}, value interface{}) bool {
+		return strings.HasSuffix(value.(string), "b")
+	}
+
+	// PrevTo (empty)
+	{
+		tree := NewWithIntComparator()
+		it := tree.Iterator()
+		it.End()
+		for it.PrevTo(seek) {
+			t.Errorf("Shouldn't iterate on empty tree")
+		}
+	}
+
+	// PrevTo (not found)
+	{
+		tree := NewWithIntComparator()
+		tree.Put(0, "xx")
+		tree.Put(1, "yy")
+		it := tree.Iterator()
+		it.End()
+		for it.PrevTo(seek) {
+			t.Errorf("Shouldn't iterate on empty tree")
+		}
+	}
+
+	// PrevTo (found)
+	{
+		tree := NewWithIntComparator()
+		tree.Put(2, "cc")
+		tree.Put(0, "aa")
+		tree.Put(1, "bb")
+		it := tree.Iterator()
+		it.End()
+		if !it.PrevTo(seek) {
+			t.Errorf("Shouldn't iterate on empty tree")
+		}
+		if index, value := it.Key(), it.Value(); index != 1 || value.(string) != "bb" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 1, "bb")
+		}
+		if !it.Prev() {
+			t.Errorf("Should go to first element")
+		}
+		if index, value := it.Key(), it.Value(); index != 0 || value.(string) != "aa" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 0, "aa")
+		}
+		if it.Prev() {
+			t.Errorf("Should not go before first element")
+		}
+	}
+}
+
 func TestRedBlackTreeSerialization(t *testing.T) {
 	tree := NewWithStringComparator()
 	tree.Put("c", "3")
@@ -581,11 +735,16 @@ func TestRedBlackTreeSerialization(t *testing.T) {
 
 	assert()
 
-	json, err := tree.ToJSON()
+	bytes, err := tree.ToJSON()
 	assert()
 
-	err = tree.FromJSON(json)
+	err = tree.FromJSON(bytes)
 	assert()
+
+	bytes, err = json.Marshal([]interface{}{"a", "b", "c", tree})
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
 }
 
 func benchmarkGet(b *testing.B, tree *Tree, size int) {

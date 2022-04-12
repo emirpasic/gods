@@ -1,0 +1,70 @@
+version: 2.1
+
+jobs:
+  test:
+    parameters:
+      version:
+        type: string
+        default: latest
+    docker:
+      - image: cimg/go:<<parameters.version>>
+    environment:
+      TEST_RESULTS: /tmp/test-results
+    working_directory: ~/gods
+    steps:
+      - run:
+          name: Print Go version (go version)
+          command: |
+            go version
+      - checkout
+      - run:
+          name: Run tests
+          command: |
+            mkdir -p $TEST_RESULTS
+            go install gotest.tools/gotestsum@latest
+            go test -v ./... | go tool test2json > $TEST_RESULTS/test2json-output.json
+            gotestsum --junitfile $TEST_RESULTS/gotestsum-report.xml
+      - run:
+          name: Calculate test coverage
+          command: |
+            mkdir -p $TEST_RESULTS
+            go test -coverprofile=c.out ./... > /dev/null
+            go tool cover -html=c.out -o coverage.html
+            mv coverage.html $TEST_RESULTS
+      - run:
+          name: Lint (golint)
+          command: |
+            go install golang.org/x/lint/golint@latest
+            golint -set_exit_status ./...
+      - run:
+          name: Enforce formatted code (go fmt)
+          command: |
+            ! go fmt ./... 2>&1 | read
+      - run:
+          name: Examine and report suspicious constructs (go vet)
+          command: |
+            go vet -v ./...
+      - run:
+          name: Calculate cyclomatic complexity (gocyclo)
+          command: |
+            go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
+            gocyclo -avg -over 15 ../gods
+      - run:
+          name: Check for unchecked errors (errcheck)
+          command: |
+            go install github.com/kisielk/errcheck@latest
+            errcheck ./...
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: raw-test-output
+      - store_test_results:
+          path: /tmp/test-results
+
+workflows:
+  test:
+    jobs:
+      - test:
+          matrix:
+            parameters:
+              # To test with and without generics (versions prior to 1.18)
+              version: ["1.18", "1.17"]

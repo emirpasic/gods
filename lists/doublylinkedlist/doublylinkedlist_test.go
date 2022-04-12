@@ -5,7 +5,9 @@
 package doublylinkedlist
 
 import (
+	"encoding/json"
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/emirpasic/gods/utils"
@@ -506,6 +508,106 @@ func TestListIteratorLast(t *testing.T) {
 	}
 }
 
+func TestListIteratorNextTo(t *testing.T) {
+	// Sample seek function, i.e. string starting with "b"
+	seek := func(index int, value interface{}) bool {
+		return strings.HasSuffix(value.(string), "b")
+	}
+
+	// NextTo (empty)
+	{
+		list := New()
+		it := list.Iterator()
+		for it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty list")
+		}
+	}
+
+	// NextTo (not found)
+	{
+		list := New()
+		list.Add("xx", "yy")
+		it := list.Iterator()
+		for it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty list")
+		}
+	}
+
+	// NextTo (found)
+	{
+		list := New()
+		list.Add("aa", "bb", "cc")
+		it := list.Iterator()
+		it.Begin()
+		if !it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty list")
+		}
+		if index, value := it.Index(), it.Value(); index != 1 || value.(string) != "bb" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 1, "bb")
+		}
+		if !it.Next() {
+			t.Errorf("Should go to first element")
+		}
+		if index, value := it.Index(), it.Value(); index != 2 || value.(string) != "cc" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 2, "cc")
+		}
+		if it.Next() {
+			t.Errorf("Should not go past last element")
+		}
+	}
+}
+
+func TestListIteratorPrevTo(t *testing.T) {
+	// Sample seek function, i.e. string starting with "b"
+	seek := func(index int, value interface{}) bool {
+		return strings.HasSuffix(value.(string), "b")
+	}
+
+	// PrevTo (empty)
+	{
+		list := New()
+		it := list.Iterator()
+		it.End()
+		for it.PrevTo(seek) {
+			t.Errorf("Shouldn't iterate on empty list")
+		}
+	}
+
+	// PrevTo (not found)
+	{
+		list := New()
+		list.Add("xx", "yy")
+		it := list.Iterator()
+		it.End()
+		for it.PrevTo(seek) {
+			t.Errorf("Shouldn't iterate on empty list")
+		}
+	}
+
+	// PrevTo (found)
+	{
+		list := New()
+		list.Add("aa", "bb", "cc")
+		it := list.Iterator()
+		it.End()
+		if !it.PrevTo(seek) {
+			t.Errorf("Shouldn't iterate on empty list")
+		}
+		if index, value := it.Index(), it.Value(); index != 1 || value.(string) != "bb" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 1, "bb")
+		}
+		if !it.Prev() {
+			t.Errorf("Should go to first element")
+		}
+		if index, value := it.Index(), it.Value(); index != 0 || value.(string) != "aa" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 0, "aa")
+		}
+		if it.Prev() {
+			t.Errorf("Should not go before first element")
+		}
+	}
+}
+
 func TestListSerialization(t *testing.T) {
 	list := New()
 	list.Add("a", "b", "c")
@@ -525,11 +627,16 @@ func TestListSerialization(t *testing.T) {
 
 	assert()
 
-	json, err := list.ToJSON()
+	bytes, err := list.ToJSON()
 	assert()
 
-	err = list.FromJSON(json)
+	err = list.FromJSON(bytes)
 	assert()
+
+	bytes, err = json.Marshal([]interface{}{"a", "b", "c", list})
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
 }
 
 func benchmarkGet(b *testing.B, list *List, size int) {

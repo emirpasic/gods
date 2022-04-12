@@ -5,6 +5,7 @@
 package hashbidimap
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
 )
@@ -174,11 +175,16 @@ func TestMapSerialization(t *testing.T) {
 
 	assert()
 
-	json, err := m.ToJSON()
+	bytes, err := m.ToJSON()
 	assert()
 
-	err = m.FromJSON(json)
+	err = m.FromJSON(bytes)
 	assert()
+
+	bytes, err = json.Marshal([]interface{}{"a", "b", "c", m})
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
 }
 
 func sameElements(a []interface{}, b []interface{}) bool {

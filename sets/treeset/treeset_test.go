@@ -5,7 +5,9 @@
 package treeset
 
 import (
+	"encoding/json"
 	"fmt"
+	"strings"
 	"testing"
 )
 
@@ -341,6 +343,106 @@ func TestSetIteratorLast(t *testing.T) {
 	}
 }
 
+func TestSetIteratorNextTo(t *testing.T) {
+	// Sample seek function, i.e. string starting with "b"
+	seek := func(index int, value interface{}) bool {
+		return strings.HasSuffix(value.(string), "b")
+	}
+
+	// NextTo (empty)
+	{
+		set := NewWithStringComparator()
+		it := set.Iterator()
+		for it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty set")
+		}
+	}
+
+	// NextTo (not found)
+	{
+		set := NewWithStringComparator()
+		set.Add("xx", "yy")
+		it := set.Iterator()
+		for it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty set")
+		}
+	}
+
+	// NextTo (found)
+	{
+		set := NewWithStringComparator()
+		set.Add("aa", "bb", "cc")
+		it := set.Iterator()
+		it.Begin()
+		if !it.NextTo(seek) {
+			t.Errorf("Shouldn't iterate on empty set")
+		}
+		if index, value := it.Index(), it.Value(); index != 1 || value.(string) != "bb" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 1, "bb")
+		}
+		if !it.Next() {
+			t.Errorf("Should go to first element")
+		}
+		if index, value := it.Index(), it.Value(); index != 2 || value.(string) != "cc" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 2, "cc")
+		}
+		if it.Next() {
+			t.Errorf("Should not go past last element")
+		}
+	}
+}
+
+func TestSetIteratorPrevTo(t *testing.T) {
+	// Sample seek function, i.e. string starting with "b"
+	seek := func(index int, value interface{}) bool {
+		return strings.HasSuffix(value.(string), "b")
+	}
+
+	// PrevTo (empty)
+	{
+		set := NewWithStringComparator()
+		it := set.Iterator()
+		it.End()
+		for it.PrevTo(seek) {
+			t.Errorf("Shouldn't iterate on empty set")
+		}
+	}
+
+	// PrevTo (not found)
+	{
+		set := NewWithStringComparator()
+		set.Add("xx", "yy")
+		it := set.Iterator()
+		it.End()
+		for it.PrevTo(seek) {
+			t.Errorf("Shouldn't iterate on empty set")
+		}
+	}
+
+	// PrevTo (found)
+	{
+		set := NewWithStringComparator()
+		set.Add("aa", "bb", "cc")
+		it := set.Iterator()
+		it.End()
+		if !it.PrevTo(seek) {
+			t.Errorf("Shouldn't iterate on empty set")
+		}
+		if index, value := it.Index(), it.Value(); index != 1 || value.(string) != "bb" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 1, "bb")
+		}
+		if !it.Prev() {
+			t.Errorf("Should go to first element")
+		}
+		if index, value := it.Index(), it.Value(); index != 0 || value.(string) != "aa" {
+			t.Errorf("Got %v,%v expected %v,%v", index, value, 0, "aa")
+		}
+		if it.Prev() {
+			t.Errorf("Should not go before first element")
+		}
+	}
+}
+
 func TestSetSerialization(t *testing.T) {
 	set := NewWithStringComparator()
 	set.Add("a", "b", "c")
@@ -360,11 +462,16 @@ func TestSetSerialization(t *testing.T) {
 
 	assert()
 
-	json, err := set.ToJSON()
+	bytes, err := set.ToJSON()
 	assert()
 
-	err = set.FromJSON(json)
+	err = set.FromJSON(bytes)
 	assert()
+
+	bytes, err = json.Marshal([]interface{}{"a", "b", "c", set})
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
 }
 
 func benchmarkContains(b *testing.B, set *Set, size int) {
