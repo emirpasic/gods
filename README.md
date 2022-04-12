@@ -1355,10 +1355,12 @@ All data structures can be serialized (marshalled) and deserialized (unmarshalle
 Outputs the container into its JSON representation.
 
 Typical usage for key-value structures:
+
 ```go
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/emirpasic/gods/maps/hashmap"
 )
@@ -1369,18 +1371,21 @@ func main() {
 	m.Put("b", "2")
 	m.Put("c", "3")
 
-	json, err := m.ToJSON()
+	bytes, err := json.Marshal(m) // Same as "m.ToJSON(m)"
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(string(json)) // {"a":"1","b":"2","c":"3"}
+	fmt.Println(string(bytes)) // {"a":"1","b":"2","c":"3"}
+}
 ```
 
 Typical usage for value-only structures:
+
 ```go
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/emirpasic/gods/lists/arraylist"
 )
@@ -1389,11 +1394,11 @@ func main() {
 	list := arraylist.New()
 	list.Add("a", "b", "c")
 
-	json, err := list.ToJSON()
+	bytes, err := json.Marshal(list) // Same as "list.ToJSON(list)"
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(string(json)) // ["a","b","c"]
+	fmt.Println(string(bytes)) // ["a","b","c"]
 }
 ```
 
