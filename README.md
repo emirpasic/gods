@@ -230,6 +230,8 @@ func main() {
 
 A set is a data structure that can store elements and has no repeated values. It is a computer implementation of the mathematical concept of a finite set. Unlike most other collection types, rather than retrieving a specific element from a set, one typically tests an element for membership in a set. This structure is often used to ensure that no duplicates are present in a container.
 
+Set additionally allow set operations such as [intersection](https://en.wikipedia.org/wiki/Intersection_(set_theory)), [union](https://en.wikipedia.org/wiki/Union_(set_theory)), [difference](https://proofwiki.org/wiki/Definition:Set_Difference), etc.
+
 Implements [Container](#containers) interface.
 
 ```go
@@ -237,7 +239,10 @@ type Set interface {
 	Add(elements ...interface{})
 	Remove(elements ...interface{})
 	Contains(elements ...interface{}) bool
-
+    // Intersection(another *Set) *Set
+    // Union(another *Set) *Set
+    // Difference(another *Set) *Set
+	
 	containers.Container
 	// Empty() bool
 	// Size() int
