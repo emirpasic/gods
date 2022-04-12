@@ -465,6 +465,18 @@ func TestSetSerialization(t *testing.T) {
 	}
 }
 
+func TestSetIntersection(t *testing.T) {
+	set := New("a", "b", "c", "d")
+	anotherSet := New("c", "d", "f", "g")
+	intersection := set.Intersection(anotherSet)
+	if actualValue, expectedValue := intersection.Size(), 2; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	if actualValue := set.Contains("c", "d"); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+}
+
 func benchmarkContains(b *testing.B, set *Set, size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
