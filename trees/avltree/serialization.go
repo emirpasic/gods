@@ -13,8 +13,6 @@ import (
 func assertSerializationImplementation() {
 	var _ containers.JSONSerializer = (*Tree)(nil)
 	var _ containers.JSONDeserializer = (*Tree)(nil)
-	var _ json.Marshaler = (*Tree)(nil)
-	var _ json.Unmarshaler = (*Tree)(nil)
 }
 
 // ToJSON outputs the JSON representation of the tree.
@@ -40,12 +38,12 @@ func (tree *Tree) FromJSON(data []byte) error {
 	return err
 }
 
-// @implements json.Unmarshaler
+// UnmarshalJSON @implements json.Unmarshaler
 func (tree *Tree) UnmarshalJSON(bytes []byte) error {
 	return tree.FromJSON(bytes)
 }
 
-// @implements json.Marshaler
+// MarshalJSON @implements json.Marshaler
 func (tree *Tree) MarshalJSON() ([]byte, error) {
 	return tree.ToJSON()
 }

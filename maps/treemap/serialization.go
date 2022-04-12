@@ -5,16 +5,12 @@
 package treemap
 
 import (
-	"encoding/json"
-
 	"github.com/emirpasic/gods/containers"
 )
 
 func assertSerializationImplementation() {
 	var _ containers.JSONSerializer = (*Map)(nil)
 	var _ containers.JSONDeserializer = (*Map)(nil)
-	var _ json.Marshaler = (*Map)(nil)
-	var _ json.Unmarshaler = (*Map)(nil)
 }
 
 // ToJSON outputs the JSON representation of the map.
@@ -27,12 +23,12 @@ func (m *Map) FromJSON(data []byte) error {
 	return m.tree.FromJSON(data)
 }
 
-// @implements json.Unmarshaler
+// UnmarshalJSON @implements json.Unmarshaler
 func (m *Map) UnmarshalJSON(bytes []byte) error {
 	return m.FromJSON(bytes)
 }
 
-// @implements json.Marshaler
+// MarshalJSON @implements json.Marshaler
 func (m *Map) MarshalJSON() ([]byte, error) {
 	return m.ToJSON()
 }

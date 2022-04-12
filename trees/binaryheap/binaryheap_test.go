@@ -5,6 +5,7 @@
 package binaryheap
 
 import (
+	"encoding/json"
 	"math/rand"
 	"strings"
 	"testing"
@@ -391,11 +392,16 @@ func TestBinaryHeapSerialization(t *testing.T) {
 
 	assert()
 
-	json, err := heap.ToJSON()
+	bytes, err := heap.ToJSON()
 	assert()
 
-	err = heap.FromJSON(json)
+	err = heap.FromJSON(bytes)
 	assert()
+
+	bytes, err = json.Marshal([]interface{}{"a", "b", "c", heap})
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
 }
 
 func benchmarkPush(b *testing.B, heap *Heap, size int) {

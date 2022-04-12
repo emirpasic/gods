@@ -5,6 +5,7 @@
 package treeset
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"testing"
@@ -461,11 +462,16 @@ func TestSetSerialization(t *testing.T) {
 
 	assert()
 
-	json, err := set.ToJSON()
+	bytes, err := set.ToJSON()
 	assert()
 
-	err = set.FromJSON(json)
+	err = set.FromJSON(bytes)
 	assert()
+
+	bytes, err = json.Marshal([]interface{}{"a", "b", "c", set})
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
 }
 
 func benchmarkContains(b *testing.B, set *Set, size int) {

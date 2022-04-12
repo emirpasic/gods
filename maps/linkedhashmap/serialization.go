@@ -14,8 +14,6 @@ import (
 func assertSerializationImplementation() {
 	var _ containers.JSONSerializer = (*Map)(nil)
 	var _ containers.JSONDeserializer = (*Map)(nil)
-	var _ json.Marshaler = (*Map)(nil)
-	var _ json.Unmarshaler = (*Map)(nil)
 }
 
 // ToJSON outputs the JSON representation of map.
@@ -104,12 +102,12 @@ func (m *Map) FromJSON(data []byte) error {
 	return nil
 }
 
-// @implements json.Unmarshaler
+// UnmarshalJSON @implements json.Unmarshaler
 func (m *Map) UnmarshalJSON(bytes []byte) error {
 	return m.FromJSON(bytes)
 }
 
-// @implements json.Marshaler
+// MarshalJSON @implements json.Marshaler
 func (m *Map) MarshalJSON() ([]byte, error) {
 	return m.ToJSON()
 }
