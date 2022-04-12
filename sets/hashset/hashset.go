@@ -106,13 +106,13 @@ func (set *Set) Intersection(another *Set) *Set {
 
 	// Iterate over smaller set (optimization)
 	if set.Size() <= another.Size() {
-		for item, _ := range set.items {
+		for item := range set.items {
 			if _, contains := another.items[item]; contains {
 				result.Add(item)
 			}
 		}
 	} else {
-		for item, _ := range another.items {
+		for item := range another.items {
 			if _, contains := set.items[item]; contains {
 				result.Add(item)
 			}
@@ -128,10 +128,10 @@ func (set *Set) Intersection(another *Set) *Set {
 func (set *Set) Union(another *Set) *Set {
 	result := New()
 
-	for item, _ := range set.items {
+	for item := range set.items {
 		result.Add(item)
 	}
-	for item, _ := range another.items {
+	for item := range another.items {
 		result.Add(item)
 	}
 
@@ -144,7 +144,7 @@ func (set *Set) Union(another *Set) *Set {
 func (set *Set) Difference(another *Set) *Set {
 	result := New()
 
-	for item, _ := range set.items {
+	for item := range set.items {
 		if _, contains := another.items[item]; !contains {
 			result.Add(item)
 		}
