@@ -10,10 +10,9 @@ import (
 	"github.com/emirpasic/gods/utils"
 )
 
-func assertSerializationImplementation() {
-	var _ containers.JSONSerializer = (*Tree)(nil)
-	var _ containers.JSONDeserializer = (*Tree)(nil)
-}
+// Assert Serialization implementation
+var _ containers.JSONSerializer = (*Tree)(nil)
+var _ containers.JSONDeserializer = (*Tree)(nil)
 
 // ToJSON outputs the JSON representation of the tree.
 func (tree *Tree) ToJSON() ([]byte, error) {

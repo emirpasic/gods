@@ -18,9 +18,8 @@ import (
 	"strings"
 )
 
-func assertSetImplementation() {
-	var _ sets.Set = (*Set)(nil)
-}
+// Assert Set implementation
+var _ sets.Set = (*Set)(nil)
 
 // Set holds elements in a red-black tree
 type Set struct {

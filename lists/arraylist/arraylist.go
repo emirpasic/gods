@@ -17,9 +17,8 @@ import (
 	"github.com/emirpasic/gods/utils"
 )
 
-func assertListImplementation() {
-	var _ lists.List = (*List)(nil)
-}
+// Assert List implementation
+var _ lists.List = (*List)(nil)
 
 // List holds the elements in a slice
 type List struct {

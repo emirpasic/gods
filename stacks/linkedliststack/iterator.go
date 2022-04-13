@@ -6,9 +6,8 @@ package linkedliststack
 
 import "github.com/emirpasic/gods/containers"
 
-func assertIteratorImplementation() {
-	var _ containers.IteratorWithIndex = (*Iterator)(nil)
-}
+// Assert Iterator implementation
+var _ containers.IteratorWithIndex = (*Iterator)(nil)
 
 // Iterator returns a stateful iterator whose values can be fetched by an index.
 type Iterator struct {

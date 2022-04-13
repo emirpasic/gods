@@ -20,9 +20,8 @@ import (
 	"strings"
 )
 
-func assertSetImplementation() {
-	var _ sets.Set = (*Set)(nil)
-}
+// Assert Set implementation
+var _ sets.Set = (*Set)(nil)
 
 // Set holds elements in go's native map
 type Set struct {

@@ -9,9 +9,8 @@ import (
 	rbt "github.com/emirpasic/gods/trees/redblacktree"
 )
 
-func assertIteratorImplementation() {
-	var _ containers.ReverseIteratorWithKey = (*Iterator)(nil)
-}
+// Assert Iterator implementation
+var _ containers.ReverseIteratorWithKey = (*Iterator)(nil)
 
 // Iterator holding the iterator's state
 type Iterator struct {

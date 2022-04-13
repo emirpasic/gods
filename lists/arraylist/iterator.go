@@ -6,9 +6,8 @@ package arraylist
 
 import "github.com/emirpasic/gods/containers"
 
-func assertIteratorImplementation() {
-	var _ containers.ReverseIteratorWithIndex = (*Iterator)(nil)
-}
+// Assert Iterator implementation
+var _ containers.ReverseIteratorWithIndex = (*Iterator)(nil)
 
 // Iterator holding the iterator's state
 type Iterator struct {

@@ -9,9 +9,8 @@ import (
 	rbt "github.com/emirpasic/gods/trees/redblacktree"
 )
 
-func assertEnumerableImplementation() {
-	var _ containers.EnumerableWithIndex = (*Set)(nil)
-}
+// Assert Enumerable implementation
+var _ containers.EnumerableWithIndex = (*Set)(nil)
 
 // Each calls the given function once for each element, passing that element's index and value.
 func (set *Set) Each(f func(index int, value interface{})) {

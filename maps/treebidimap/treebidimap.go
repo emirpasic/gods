@@ -25,9 +25,8 @@ import (
 	"strings"
 )
 
-func assertMapImplementation() {
-	var _ maps.BidiMap = (*Map)(nil)
-}
+// Assert Map implementation
+var _ maps.BidiMap = (*Map)(nil)
 
 // Map holds the elements in two red-black trees.
 type Map struct {

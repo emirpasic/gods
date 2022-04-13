@@ -15,9 +15,8 @@ import (
 	"github.com/emirpasic/gods/utils"
 )
 
-func assertTreeImplementation() {
-	var _ trees.Tree = new(Tree)
-}
+// Assert Tree implementation
+var _ trees.Tree = new(Tree)
 
 // Tree holds elements of the AVL tree.
 type Tree struct {

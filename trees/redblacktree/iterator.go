@@ -6,9 +6,8 @@ package redblacktree
 
 import "github.com/emirpasic/gods/containers"
 
-func assertIteratorImplementation() {
-	var _ containers.ReverseIteratorWithKey = (*Iterator)(nil)
-}
+// Assert Iterator implementation
+var _ containers.ReverseIteratorWithKey = (*Iterator)(nil)
 
 // Iterator holding the iterator's state
 type Iterator struct {
