@@ -29,7 +29,7 @@ jobs:
           command: |
             mkdir -p $TEST_RESULTS
             go test -coverprofile=coverage.out ./... > /dev/null
-            go test -race -coverprofile=coverage.txt -covermode=atomic
+            go test -race -coverprofile=coverage.txt -covermode=atomic ./... > /dev/null
             go tool cover -html=coverage.out -o coverage.html
             mv coverage.html $TEST_RESULTS
       - run:
