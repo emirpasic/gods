@@ -98,8 +98,8 @@ Containers are either ordered or unordered. All ordered containers provide [stat
 |   | [BTree](#btree) | yes | yes* | no | key |
 |   | [BinaryHeap](#binaryheap) | yes | yes* | no | index |
 | [Queues](#queues) |
-|   | [LinkedListQueues](#linkedlistqueues) | yes | yes | no | index |
-|   | [ArrayQueues](#arrayqueues) | yes | yes* | no | index |
+|   | [LinkedListQueue](#linkedlistqueue) | yes | yes | no | index |
+|   | [ArrayQueue](#arrayqueue) | yes | yes* | no | index |
 |   |  |  | <sub><sup>*reversible</sup></sub> |  | <sub><sup>*bidirectional</sup></sub> |
 
 ### Lists
