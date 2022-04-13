@@ -4,6 +4,7 @@
 [![codecov](https://codecov.io/gh/emirpasic/gods/branch/master/graph/badge.svg)](https://codecov.io/gh/emirpasic/gods)
 [![Sourcegraph](https://sourcegraph.com/github.com/emirpasic/gods/-/badge.svg)](https://sourcegraph.com/github.com/emirpasic/gods?badge)
 [![Release](https://img.shields.io/github/release/emirpasic/gods.svg?style=flat-square)](https://github.com/emirpasic/gods/releases)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gods&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=gods)
 [![PyPI](https://img.shields.io/badge/License-BSD_2--Clause-green.svg)](https://github.com/emirpasic/gods/blob/master/LICENSE)
 
 # GoDS (Go Data Structures)

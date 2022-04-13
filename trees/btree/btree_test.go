@@ -749,15 +749,8 @@ func TestBTreeIterator1Next(t *testing.T) {
 	for it.Next() {
 		count++
 		key := it.Key()
-		switch key {
-		case count:
-			if actualValue, expectedValue := key, count; actualValue != expectedValue {
-				t.Errorf("Got %v expected %v", actualValue, expectedValue)
-			}
-		default:
-			if actualValue, expectedValue := key, count; actualValue != expectedValue {
-				t.Errorf("Got %v expected %v", actualValue, expectedValue)
-			}
+		if actualValue, expectedValue := key, count; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
 		}
 	}
 	if actualValue, expectedValue := count, tree.Size(); actualValue != expectedValue {
@@ -781,15 +774,8 @@ func TestBTreeIterator1Prev(t *testing.T) {
 	countDown := tree.size
 	for it.Prev() {
 		key := it.Key()
-		switch key {
-		case countDown:
-			if actualValue, expectedValue := key, countDown; actualValue != expectedValue {
-				t.Errorf("Got %v expected %v", actualValue, expectedValue)
-			}
-		default:
-			if actualValue, expectedValue := key, countDown; actualValue != expectedValue {
-				t.Errorf("Got %v expected %v", actualValue, expectedValue)
-			}
+		if actualValue, expectedValue := key, countDown; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
 		}
 		countDown--
 	}
@@ -808,15 +794,8 @@ func TestBTreeIterator2Next(t *testing.T) {
 	for it.Next() {
 		count++
 		key := it.Key()
-		switch key {
-		case count:
-			if actualValue, expectedValue := key, count; actualValue != expectedValue {
-				t.Errorf("Got %v expected %v", actualValue, expectedValue)
-			}
-		default:
-			if actualValue, expectedValue := key, count; actualValue != expectedValue {
-				t.Errorf("Got %v expected %v", actualValue, expectedValue)
-			}
+		if actualValue, expectedValue := key, count; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
 		}
 	}
 	if actualValue, expectedValue := count, tree.Size(); actualValue != expectedValue {
@@ -835,15 +814,8 @@ func TestBTreeIterator2Prev(t *testing.T) {
 	countDown := tree.size
 	for it.Prev() {
 		key := it.Key()
-		switch key {
-		case countDown:
-			if actualValue, expectedValue := key, countDown; actualValue != expectedValue {
-				t.Errorf("Got %v expected %v", actualValue, expectedValue)
-			}
-		default:
-			if actualValue, expectedValue := key, countDown; actualValue != expectedValue {
-				t.Errorf("Got %v expected %v", actualValue, expectedValue)
-			}
+		if actualValue, expectedValue := key, countDown; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
 		}
 		countDown--
 	}
@@ -860,15 +832,8 @@ func TestBTreeIterator3Next(t *testing.T) {
 	for it.Next() {
 		count++
 		key := it.Key()
-		switch key {
-		case count:
-			if actualValue, expectedValue := key, count; actualValue != expectedValue {
-				t.Errorf("Got %v expected %v", actualValue, expectedValue)
-			}
-		default:
-			if actualValue, expectedValue := key, count; actualValue != expectedValue {
-				t.Errorf("Got %v expected %v", actualValue, expectedValue)
-			}
+		if actualValue, expectedValue := key, count; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
 		}
 	}
 	if actualValue, expectedValue := count, tree.Size(); actualValue != expectedValue {
@@ -885,15 +850,8 @@ func TestBTreeIterator3Prev(t *testing.T) {
 	countDown := tree.size
 	for it.Prev() {
 		key := it.Key()
-		switch key {
-		case countDown:
-			if actualValue, expectedValue := key, countDown; actualValue != expectedValue {
-				t.Errorf("Got %v expected %v", actualValue, expectedValue)
-			}
-		default:
-			if actualValue, expectedValue := key, countDown; actualValue != expectedValue {
-				t.Errorf("Got %v expected %v", actualValue, expectedValue)
-			}
+		if actualValue, expectedValue := key, countDown; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
 		}
 		countDown--
 	}
@@ -919,15 +877,8 @@ func TestBTreeIterator4Next(t *testing.T) {
 	for it.Next() {
 		count++
 		value := it.Value()
-		switch value {
-		case count:
-			if actualValue, expectedValue := value, count; actualValue != expectedValue {
-				t.Errorf("Got %v expected %v", actualValue, expectedValue)
-			}
-		default:
-			if actualValue, expectedValue := value, count; actualValue != expectedValue {
-				t.Errorf("Got %v expected %v", actualValue, expectedValue)
-			}
+		if actualValue, expectedValue := value, count; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
 		}
 	}
 	if actualValue, expectedValue := count, tree.Size(); actualValue != expectedValue {
@@ -953,15 +904,8 @@ func TestBTreeIterator4Prev(t *testing.T) {
 	}
 	for it.Prev() {
 		value := it.Value()
-		switch value {
-		case count:
-			if actualValue, expectedValue := value, count; actualValue != expectedValue {
-				t.Errorf("Got %v expected %v", actualValue, expectedValue)
-			}
-		default:
-			if actualValue, expectedValue := value, count; actualValue != expectedValue {
-				t.Errorf("Got %v expected %v", actualValue, expectedValue)
-			}
+		if actualValue, expectedValue := value, count; actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
 		}
 		count--
 	}
