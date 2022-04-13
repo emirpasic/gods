@@ -1001,7 +1001,7 @@ func TestBTreeIteratorLast(t *testing.T) {
 	}
 }
 
-func TestBTree_search(t *testing.T) {
+func TestBTreeSearch(t *testing.T) {
 	{
 		tree := NewWithIntComparator(3)
 		tree.Root = &Node{Entries: []*Entry{}, Children: make([]*Node, 0)}
