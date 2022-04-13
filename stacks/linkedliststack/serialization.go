@@ -8,10 +8,9 @@ import (
 	"github.com/emirpasic/gods/containers"
 )
 
-func assertSerializationImplementation() {
-	var _ containers.JSONSerializer = (*Stack)(nil)
-	var _ containers.JSONDeserializer = (*Stack)(nil)
-}
+// Assert Serialization implementation
+var _ containers.JSONSerializer = (*Stack)(nil)
+var _ containers.JSONDeserializer = (*Stack)(nil)
 
 // ToJSON outputs the JSON representation of the stack.
 func (stack *Stack) ToJSON() ([]byte, error) {

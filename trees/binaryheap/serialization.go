@@ -8,10 +8,9 @@ import (
 	"github.com/emirpasic/gods/containers"
 )
 
-func assertSerializationImplementation() {
-	var _ containers.JSONSerializer = (*Heap)(nil)
-	var _ containers.JSONDeserializer = (*Heap)(nil)
-}
+// Assert Serialization implementation
+var _ containers.JSONSerializer = (*Heap)(nil)
+var _ containers.JSONDeserializer = (*Heap)(nil)
 
 // ToJSON outputs the JSON representation of the heap.
 func (heap *Heap) ToJSON() ([]byte, error) {

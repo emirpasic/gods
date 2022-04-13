@@ -9,9 +9,8 @@ import (
 	rbt "github.com/emirpasic/gods/trees/redblacktree"
 )
 
-func assertEnumerableImplementation() {
-	var _ containers.EnumerableWithKey = (*Map)(nil)
-}
+// Assert Enumerable implementation
+var _ containers.EnumerableWithKey = (*Map)(nil)
 
 // Each calls the given function once for each element, passing that element's key and value.
 func (m *Map) Each(f func(key interface{}, value interface{})) {

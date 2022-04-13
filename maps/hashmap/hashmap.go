@@ -16,9 +16,8 @@ import (
 	"github.com/emirpasic/gods/maps"
 )
 
-func assertMapImplementation() {
-	var _ maps.Map = (*Map)(nil)
-}
+// Assert Map implementation
+var _ maps.Map = (*Map)(nil)
 
 // Map holds the elements in go's native map
 type Map struct {

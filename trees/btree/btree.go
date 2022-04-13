@@ -24,9 +24,8 @@ import (
 	"strings"
 )
 
-func assertTreeImplementation() {
-	var _ trees.Tree = (*Tree)(nil)
-}
+// Assert Tree implementation
+var _ trees.Tree = (*Tree)(nil)
 
 // Tree holds elements of the B-tree
 type Tree struct {

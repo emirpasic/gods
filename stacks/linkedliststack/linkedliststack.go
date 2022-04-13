@@ -16,9 +16,8 @@ import (
 	"strings"
 )
 
-func assertStackImplementation() {
-	var _ stacks.Stack = (*Stack)(nil)
-}
+// Assert Stack implementation
+var _ stacks.Stack = (*Stack)(nil)
 
 // Stack holds elements in a singly-linked-list
 type Stack struct {

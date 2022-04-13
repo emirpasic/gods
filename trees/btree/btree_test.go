@@ -1262,6 +1262,19 @@ func TestBTreeSerialization(t *testing.T) {
 	if err != nil {
 		t.Errorf("Got error %v", err)
 	}
+
+	err = json.Unmarshal([]byte(`{"a":1,"b":2}`), &tree)
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
+}
+
+func TestBTreeString(t *testing.T) {
+	c := NewWithStringComparator(3)
+	c.Put("a", 1)
+	if !strings.HasPrefix(c.String(), "BTree") {
+		t.Errorf("String should start with container name")
+	}
 }
 
 func benchmarkGet(b *testing.B, tree *Tree, size int) {

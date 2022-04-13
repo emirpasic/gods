@@ -17,9 +17,8 @@ import (
 	"github.com/emirpasic/gods/utils"
 )
 
-func assertTreeImplementation() {
-	var _ trees.Tree = (*Tree)(nil)
-}
+// Assert Tree implementation
+var _ trees.Tree = (*Tree)(nil)
 
 type color bool
 

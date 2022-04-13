@@ -18,9 +18,8 @@ import (
 	"strings"
 )
 
-func assertMapImplementation() {
-	var _ maps.Map = (*Map)(nil)
-}
+// Assert Map implementation
+var _ maps.Map = (*Map)(nil)
 
 // Map holds the elements in a regular hash table, and uses doubly-linked list to store key ordering.
 type Map struct {

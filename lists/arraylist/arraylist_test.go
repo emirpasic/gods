@@ -631,6 +631,19 @@ func TestListSerialization(t *testing.T) {
 	if err != nil {
 		t.Errorf("Got error %v", err)
 	}
+
+	err = json.Unmarshal([]byte(`[1,2,3]`), &list)
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
+}
+
+func TestListString(t *testing.T) {
+	c := New()
+	c.Add(1)
+	if !strings.HasPrefix(c.String(), "ArrayList") {
+		t.Errorf("String should start with container name")
+	}
 }
 
 func benchmarkGet(b *testing.B, list *List, size int) {

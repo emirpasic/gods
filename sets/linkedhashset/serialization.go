@@ -9,10 +9,9 @@ import (
 	"github.com/emirpasic/gods/containers"
 )
 
-func assertSerializationImplementation() {
-	var _ containers.JSONSerializer = (*Set)(nil)
-	var _ containers.JSONDeserializer = (*Set)(nil)
-}
+// Assert Serialization implementation
+var _ containers.JSONSerializer = (*Set)(nil)
+var _ containers.JSONDeserializer = (*Set)(nil)
 
 // ToJSON outputs the JSON representation of the set.
 func (set *Set) ToJSON() ([]byte, error) {

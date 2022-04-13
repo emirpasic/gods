@@ -233,6 +233,19 @@ func TestStackSerialization(t *testing.T) {
 	if err != nil {
 		t.Errorf("Got error %v", err)
 	}
+
+	err = json.Unmarshal([]byte(`[1,2,3]`), &stack)
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
+}
+
+func TestStackString(t *testing.T) {
+	c := New()
+	c.Push(1)
+	if !strings.HasPrefix(c.String(), "LinkedListStack") {
+		t.Errorf("String should start with container name")
+	}
 }
 
 func benchmarkPush(b *testing.B, stack *Stack, size int) {

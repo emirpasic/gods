@@ -19,9 +19,8 @@ import (
 	"strings"
 )
 
-func assertTreeImplementation() {
-	var _ trees.Tree = (*Heap)(nil)
-}
+// Assert Tree implementation
+var _ trees.Tree = (*Heap)(nil)
 
 // Heap holds elements in an array-list
 type Heap struct {

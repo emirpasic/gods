@@ -8,10 +8,9 @@ import (
 	"github.com/emirpasic/gods/containers"
 )
 
-func assertSerializationImplementation() {
-	var _ containers.JSONSerializer = (*Map)(nil)
-	var _ containers.JSONDeserializer = (*Map)(nil)
-}
+// Assert Serialization implementation
+var _ containers.JSONSerializer = (*Map)(nil)
+var _ containers.JSONDeserializer = (*Map)(nil)
 
 // ToJSON outputs the JSON representation of the map.
 func (m *Map) ToJSON() ([]byte, error) {

@@ -6,6 +6,7 @@ package hashset
 
 import (
 	"encoding/json"
+	"strings"
 	"testing"
 )
 
@@ -108,6 +109,19 @@ func TestSetSerialization(t *testing.T) {
 	bytes, err = json.Marshal([]interface{}{"a", "b", "c", set})
 	if err != nil {
 		t.Errorf("Got error %v", err)
+	}
+
+	err = json.Unmarshal([]byte(`[1,2,3]`), &set)
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
+}
+
+func TestSetString(t *testing.T) {
+	c := New()
+	c.Add(1)
+	if !strings.HasPrefix(c.String(), "HashSet") {
+		t.Errorf("String should start with container name")
 	}
 }
 

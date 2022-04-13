@@ -402,6 +402,19 @@ func TestBinaryHeapSerialization(t *testing.T) {
 	if err != nil {
 		t.Errorf("Got error %v", err)
 	}
+
+	err = json.Unmarshal([]byte(`[1,2,3]`), &heap)
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
+}
+
+func TestBTreeString(t *testing.T) {
+	c := NewWithIntComparator()
+	c.Push(1)
+	if !strings.HasPrefix(c.String(), "BinaryHeap") {
+		t.Errorf("String should start with container name")
+	}
 }
 
 func benchmarkPush(b *testing.B, heap *Heap, size int) {

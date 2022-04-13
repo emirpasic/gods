@@ -7,12 +7,13 @@ package treemap
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/emirpasic/gods/utils"
 	"strings"
 	"testing"
 )
 
 func TestMapPut(t *testing.T) {
-	m := NewWithIntComparator()
+	m := NewWith(utils.IntComparator)
 	m.Put(5, "e")
 	m.Put(6, "f")
 	m.Put(7, "g")
@@ -50,6 +51,73 @@ func TestMapPut(t *testing.T) {
 		if actualValue != test[1] || actualFound != test[2] {
 			t.Errorf("Got %v expected %v", actualValue, test[1])
 		}
+	}
+}
+
+func TestMapMin(t *testing.T) {
+	m := NewWithIntComparator()
+
+	if k, v := m.Min(); k != nil || v != nil {
+		t.Errorf("Got %v->%v expected %v->%v", k, v, nil, nil)
+	}
+
+	m.Put(5, "e")
+	m.Put(6, "f")
+	m.Put(7, "g")
+	m.Put(3, "c")
+	m.Put(4, "d")
+	m.Put(1, "x")
+	m.Put(2, "b")
+	m.Put(1, "a") //overwrite
+
+	actualKey, actualValue := m.Min()
+	expectedKey, expectedValue := 1, "a"
+	if actualKey != expectedKey {
+		t.Errorf("Got %v expected %v", actualKey, expectedKey)
+	}
+	if actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+}
+
+func TestMapMax(t *testing.T) {
+	m := NewWithIntComparator()
+
+	if k, v := m.Max(); k != nil || v != nil {
+		t.Errorf("Got %v->%v expected %v->%v", k, v, nil, nil)
+	}
+
+	m.Put(5, "e")
+	m.Put(6, "f")
+	m.Put(7, "g")
+	m.Put(3, "c")
+	m.Put(4, "d")
+	m.Put(1, "x")
+	m.Put(2, "b")
+	m.Put(1, "a") //overwrite
+
+	actualKey, actualValue := m.Max()
+	expectedKey, expectedValue := 7, "g"
+	if actualKey != expectedKey {
+		t.Errorf("Got %v expected %v", actualKey, expectedKey)
+	}
+	if actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+}
+
+func TestMapClear(t *testing.T) {
+	m := NewWithIntComparator()
+	m.Put(5, "e")
+	m.Put(6, "f")
+	m.Put(7, "g")
+	m.Put(3, "c")
+	if actualValue, expectedValue := m.Size(), 4; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	m.Clear()
+	if actualValue, expectedValue := m.Size(), 0; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 }
 
@@ -637,6 +705,19 @@ func TestMapSerialization(t *testing.T) {
 	_, err := json.Marshal([]interface{}{"a", "b", "c", m})
 	if err != nil {
 		t.Errorf("Got error %v", err)
+	}
+
+	err = json.Unmarshal([]byte(`{"a":1,"b":2}`), &m)
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
+}
+
+func TestMapString(t *testing.T) {
+	c := NewWithStringComparator()
+	c.Put("a", 1)
+	if !strings.HasPrefix(c.String(), "TreeMap") {
+		t.Errorf("String should start with container name")
 	}
 }
 

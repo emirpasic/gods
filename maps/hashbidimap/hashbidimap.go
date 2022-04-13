@@ -21,9 +21,8 @@ import (
 	"github.com/emirpasic/gods/maps/hashmap"
 )
 
-func assertMapImplementation() {
-	var _ maps.BidiMap = (*Map)(nil)
-}
+// Assert Map implementation
+var _ maps.BidiMap = (*Map)(nil)
 
 // Map holds the elements in two hashmaps.
 type Map struct {

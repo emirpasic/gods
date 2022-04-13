@@ -116,6 +116,12 @@ func TestStackIteratorNext(t *testing.T) {
 	if actualValue, expectedValue := count, 3; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
+
+	stack.Clear()
+	it = stack.Iterator()
+	for it.Next() {
+		t.Errorf("Shouldn't iterate on empty stack")
+	}
 }
 
 func TestStackIteratorPrev(t *testing.T) {
@@ -370,6 +376,19 @@ func TestStackSerialization(t *testing.T) {
 	bytes, err = json.Marshal([]interface{}{"a", "b", "c", stack})
 	if err != nil {
 		t.Errorf("Got error %v", err)
+	}
+
+	err = json.Unmarshal([]byte(`[1,2,3]`), &stack)
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
+}
+
+func TestStackString(t *testing.T) {
+	c := New()
+	c.Push(1)
+	if !strings.HasPrefix(c.String(), "ArrayStack") {
+		t.Errorf("String should start with container name")
 	}
 }
 
