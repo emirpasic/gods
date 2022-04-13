@@ -36,6 +36,9 @@ Implementation of various data structures and algorithms in Go.
     - [AVLTree](#avltree)
     - [BTree](#btree)
     - [BinaryHeap](#binaryheap)
+  - [Queues](#queues)
+    - [LinkedListQueue](#linkedlistqueue)
+    - [ArrayQueue](#arrayqueue)
 - [Functions](#functions)
     - [Comparator](#comparator)
     - [Iterator](#iterator)
@@ -94,6 +97,9 @@ Containers are either ordered or unordered. All ordered containers provide [stat
 |   | [AVLTree](#avltree) | yes | yes* | no | key |
 |   | [BTree](#btree) | yes | yes* | no | key |
 |   | [BinaryHeap](#binaryheap) | yes | yes* | no | index |
+| [Queues](#queues) |
+|   | [LinkedListQueues](#linkedlistqueues) | yes | yes | no | index |
+|   | [ArrayQueues](#arrayqueues) | yes | yes* | no | index |
 |   |  |  | <sub><sup>*reversible</sup></sub> |  | <sub><sup>*bidirectional</sup></sub> |
 
 ### Lists
@@ -126,7 +132,7 @@ type List interface {
 
 A [list](#lists) backed by a dynamic array that grows and shrinks implicitly.
 
-Implements [List](#lists), [IteratorWithIndex](#iteratorwithindex), [EnumerableWithIndex](#enumerablewithindex), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
+Implements [List](#lists), [ReverseIteratorWithIndex](#reverseiteratorwithindex), [EnumerableWithIndex](#enumerablewithindex), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
 
 ```go
 package main
@@ -200,7 +206,7 @@ func main() {
 
 A [list](#lists) where each element points to the next and previous elements in the list.
 
-Implements [List](#lists), [IteratorWithIndex](#iteratorwithindex), [EnumerableWithIndex](#enumerablewithindex), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
+Implements [List](#lists), [ReverseIteratorWithIndex](#reverseiteratorwithindex), [EnumerableWithIndex](#enumerablewithindex), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
 
 ```go
 package main
@@ -290,7 +296,7 @@ func main() {
 
 A [set](#sets) backed by a [red-black tree](#redblacktree) to keep the elements ordered with respect to the [comparator](#comparator).
 
-Implements [Set](#sets), [IteratorWithIndex](#iteratorwithindex), [EnumerableWithIndex](#enumerablewithindex), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
+Implements [Set](#sets), [ReverseIteratorWithIndex](#reverseiteratorwithindex), [EnumerableWithIndex](#enumerablewithindex), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
 
 ```go
 package main
@@ -317,7 +323,7 @@ func main() {
 
 A [set](#sets) that preserves insertion-order. Data structure is backed by a hash table to store values and [doubly-linked list](#doublylinkedlist) to store insertion ordering.
 
-Implements [Set](#sets), [IteratorWithIndex](#iteratorwithindex), [EnumerableWithIndex](#enumerablewithindex), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
+Implements [Set](#sets), [ReverseIteratorWithIndex](#reverseiteratorwithindex), [EnumerableWithIndex](#enumerablewithindex), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
 
 ```go
 package main
@@ -479,7 +485,7 @@ func main() {
 
 A [map](#maps) based on [red-black tree](#redblacktree). Keys are ordered with respect to the [comparator](#comparator).
 
-Implements [Map](#maps), [IteratorWithKey](#iteratorwithkey), [EnumerableWithKey](#enumerablewithkey), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
+Implements [Map](#maps), [ReverseIteratorWithIndex](#reverseiteratorwithindex), [EnumerableWithKey](#enumerablewithkey), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
 
 ```go
 package main
@@ -510,7 +516,7 @@ func main() {
 
 A [map](#maps) that preserves insertion-order. It is backed by a hash table to store values and [doubly-linked list](doublylinkedlist) to store ordering.
 
-Implements [Map](#maps), [IteratorWithKey](#iteratorwithkey), [EnumerableWithKey](#enumerablewithkey), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
+Implements [Map](#maps), [ReverseIteratorWithIndex](#reverseiteratorwithindex), [EnumerableWithKey](#enumerablewithkey), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
 
 ```go
 package main
@@ -567,7 +573,7 @@ func main() {
 
 A [map](#maps) based on red-black tree. This map guarantees that the map will be in both ascending key and value order.  Other than key and value ordering, the goal with this structure is to avoid duplication of elements (unlike in [HashBidiMap](#hashbidimap)), which can be significant if contained elements are large.
 
-Implements [BidiMap](#maps), [IteratorWithKey](#iteratorwithkey), [EnumerableWithKey](#enumerablewithkey), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
+Implements [BidiMap](#maps), [ReverseIteratorWithIndex](#reverseiteratorwithindex), [EnumerableWithKey](#enumerablewithkey), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
 
 ```go
 package main
@@ -861,6 +867,85 @@ func main() {
 	heap = binaryheap.NewWith(inverseIntComparator) // empty (min-heap)
 	heap.Push(2, 3, 1)                              // 3, 2, 1 (bulk optimized)
 	heap.Values()                                   // 3, 2, 1
+}
+```
+
+### Queues
+
+A queue that represents a first-in-first-out (FIFO) data structure. The usual enqueue and dequeue operations are provided, as well as a method to peek at the first item in the queue.
+
+<p align="center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Data_Queue.svg/300px-Data_Queue.svg.png" width="200px" height="120px" /></p>
+
+Implements [Container](#containers) interface.
+
+```go
+type Queue interface {
+	Enqueue(value interface{})
+	Dequeue() (value interface{}, ok bool)
+	Peek() (value interface{}, ok bool)
+
+	containers.Container
+	// Empty() bool
+	// Size() int
+	// Clear()
+	// Values() []interface{}
+	// String() string
+}
+```
+
+#### LinkedListQueue
+
+A [queue](#queues) based on a [linked list](#singlylinkedlist).
+
+Implements [Queue](#queues), [IteratorWithIndex](#iteratorwithindex), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
+
+```go
+package main
+
+import llq "github.com/emirpasic/gods/queues/linkedlistqueue"
+
+// LinkedListQueueExample to demonstrate basic usage of LinkedListQueue
+func main() {
+    queue := llq.New()     // empty
+    queue.Enqueue(1)       // 1
+    queue.Enqueue(2)       // 1, 2
+    _ = queue.Values()     // 1, 2 (FIFO order)
+    _, _ = queue.Peek()    // 1,true
+    _, _ = queue.Dequeue() // 1, true
+    _, _ = queue.Dequeue() // 2, true
+    _, _ = queue.Dequeue() // nil, false (nothing to deque)
+    queue.Enqueue(1)       // 1
+    queue.Clear()          // empty
+    queue.Empty()          // true
+    _ = queue.Size()       // 0
+}
+```
+
+#### ArrayQueue
+
+A [queue](#queues) based on a [array list](#arraylist).
+
+Implements [Queue](#queues), [ReverseIteratorWithIndex](#iteratorwithindex), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
+
+```go
+package main
+
+import aq "github.com/emirpasic/gods/queues/arrayqueue"
+
+// ArrayQueueExample to demonstrate basic usage of ArrayQueue
+func main() {
+    queue := aq.New()      // empty
+    queue.Enqueue(1)       // 1
+    queue.Enqueue(2)       // 1, 2
+    _ = queue.Values()     // 1, 2 (FIFO order)
+    _, _ = queue.Peek()    // 1,true
+    _, _ = queue.Dequeue() // 1, true
+    _, _ = queue.Dequeue() // 2, true
+    _, _ = queue.Dequeue() // nil, false (nothing to deque)
+    queue.Enqueue(1)       // 1
+    queue.Clear()          // empty
+    queue.Empty()          // true
+    _ = queue.Size()       // 0
 }
 ```
 
