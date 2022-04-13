@@ -7,6 +7,7 @@ package hashbidimap
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 	"testing"
 )
 
@@ -184,6 +185,19 @@ func TestMapSerialization(t *testing.T) {
 	bytes, err = json.Marshal([]interface{}{"a", "b", "c", m})
 	if err != nil {
 		t.Errorf("Got error %v", err)
+	}
+
+	err = json.Unmarshal([]byte(`{"a":1,"b":2}`), &m)
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
+}
+
+func TestMapString(t *testing.T) {
+	c := New()
+	c.Put("a", 1)
+	if !strings.HasPrefix(c.String(), "HashBidiMap") {
+		t.Errorf("String should start with container name")
 	}
 }
 

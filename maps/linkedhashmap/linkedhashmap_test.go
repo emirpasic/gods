@@ -582,6 +582,19 @@ func TestMapSerialization(t *testing.T) {
 	if err != nil {
 		t.Errorf("Got error %v", err)
 	}
+
+	err = json.Unmarshal([]byte(`{"a":1,"b":2}`), &m)
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
+}
+
+func TestMapString(t *testing.T) {
+	c := New()
+	c.Put("a", 1)
+	if !strings.HasPrefix(c.String(), "LinkedHashMap") {
+		t.Errorf("String should start with container name")
+	}
 }
 
 //noinspection GoBoolExpressions

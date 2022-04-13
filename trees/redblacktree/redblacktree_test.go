@@ -7,6 +7,7 @@ package redblacktree
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/emirpasic/gods/utils"
 	"strings"
 	"testing"
 )
@@ -200,7 +201,7 @@ func TestRedBlackTreeLeftAndRight(t *testing.T) {
 }
 
 func TestRedBlackTreeCeilingAndFloor(t *testing.T) {
-	tree := NewWithIntComparator()
+	tree := NewWith(utils.IntComparator)
 
 	if node, found := tree.Floor(0); node != nil || found {
 		t.Errorf("Got %v expected %v", node, "<nil>")
@@ -744,6 +745,19 @@ func TestRedBlackTreeSerialization(t *testing.T) {
 	bytes, err = json.Marshal([]interface{}{"a", "b", "c", tree})
 	if err != nil {
 		t.Errorf("Got error %v", err)
+	}
+
+	err = json.Unmarshal([]byte(`{"a":1,"b":2}`), &tree)
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
+}
+
+func TestRedBlackTreeString(t *testing.T) {
+	c := NewWithStringComparator()
+	c.Put("a", 1)
+	if !strings.HasPrefix(c.String(), "RedBlackTree") {
+		t.Errorf("String should start with container name")
 	}
 }
 

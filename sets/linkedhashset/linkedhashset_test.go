@@ -463,6 +463,19 @@ func TestSetSerialization(t *testing.T) {
 	if err != nil {
 		t.Errorf("Got error %v", err)
 	}
+
+	err = json.Unmarshal([]byte(`[1,2,3]`), &set)
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
+}
+
+func TestSetString(t *testing.T) {
+	c := New()
+	c.Add(1)
+	if !strings.HasPrefix(c.String(), "LinkedHashSet") {
+		t.Errorf("String should start with container name")
+	}
 }
 
 func TestSetIntersection(t *testing.T) {

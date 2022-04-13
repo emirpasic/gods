@@ -6,6 +6,7 @@ package avltree
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/emirpasic/gods/utils"
 	"strings"
 	"testing"
 )
@@ -263,6 +264,7 @@ func TestAVLTreeIterator1Next(t *testing.T) {
 	//         └── 2
 	//             └── 1
 	it := tree.Iterator()
+
 	count := 0
 	for it.Next() {
 		count++
@@ -709,7 +711,8 @@ func TestAVLTreeIteratorPrevTo(t *testing.T) {
 }
 
 func TestAVLTreeSerialization(t *testing.T) {
-	tree := NewWithStringComparator()
+	tree := NewWith(utils.StringComparator)
+	tree = NewWithStringComparator()
 	tree.Put("c", "3")
 	tree.Put("b", "2")
 	tree.Put("a", "1")
@@ -741,6 +744,27 @@ func TestAVLTreeSerialization(t *testing.T) {
 	bytes, err = json.Marshal([]interface{}{"a", "b", "c", tree})
 	if err != nil {
 		t.Errorf("Got error %v", err)
+	}
+
+	err = json.Unmarshal([]byte(`{"a":1,"b":2}`), &tree)
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
+}
+
+func TestAVLTreeString(t *testing.T) {
+	c := NewWithIntComparator()
+	c.Put(1, 1)
+	c.Put(2, 1)
+	c.Put(3, 1)
+	c.Put(4, 1)
+	c.Put(5, 1)
+	c.Put(6, 1)
+	c.Put(7, 1)
+	c.Put(8, 1)
+
+	if !strings.HasPrefix(c.String(), "AVLTree") {
+		t.Errorf("String should start with container name")
 	}
 }
 

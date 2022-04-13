@@ -54,6 +54,28 @@ func TestListAdd(t *testing.T) {
 	}
 }
 
+func TestListAppendAndPrepend(t *testing.T) {
+	list := New()
+	list.Add("b")
+	list.Prepend("a")
+	list.Append("c")
+	if actualValue := list.Empty(); actualValue != false {
+		t.Errorf("Got %v expected %v", actualValue, false)
+	}
+	if actualValue := list.Size(); actualValue != 3 {
+		t.Errorf("Got %v expected %v", actualValue, 3)
+	}
+	if actualValue, ok := list.Get(0); actualValue != "a" || !ok {
+		t.Errorf("Got %v expected %v", actualValue, "c")
+	}
+	if actualValue, ok := list.Get(1); actualValue != "b" || !ok {
+		t.Errorf("Got %v expected %v", actualValue, "c")
+	}
+	if actualValue, ok := list.Get(2); actualValue != "c" || !ok {
+		t.Errorf("Got %v expected %v", actualValue, "c")
+	}
+}
+
 func TestListRemove(t *testing.T) {
 	list := New()
 	list.Add("a")
@@ -499,6 +521,19 @@ func TestListSerialization(t *testing.T) {
 	bytes, err = json.Marshal([]interface{}{"a", "b", "c", list})
 	if err != nil {
 		t.Errorf("Got error %v", err)
+	}
+
+	err = json.Unmarshal([]byte(`[1,2,3]`), &list)
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
+}
+
+func TestListString(t *testing.T) {
+	c := New()
+	c.Add(1)
+	if !strings.HasPrefix(c.String(), "SinglyLinkedList") {
+		t.Errorf("String should start with container name")
 	}
 }
 
