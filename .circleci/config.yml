@@ -1,7 +1,5 @@
 version: 2.1
 
-orbs:
-  codecov: codecov/codecov@3.2.2
 jobs:
   test:
     parameters:
@@ -31,9 +29,13 @@ jobs:
           command: |
             mkdir -p $TEST_RESULTS
             go test -coverprofile=coverage.out ./... > /dev/null
+            go test -race -coverprofile=coverage.txt -covermode=atomic
             go tool cover -html=coverage.out -o coverage.html
             mv coverage.html $TEST_RESULTS
-      - codecov/upload
+      - run:
+          name: Upload test coverage
+          command: |
+            bash <(curl -s https://codecov.io/bash)
       - run:
           name: Lint (golint)
           command: |
@@ -70,4 +72,4 @@ workflows:
           matrix:
             parameters:
               # To test with and without generics (versions prior to 1.18)
-              version: ["1.18", "1.17"]
+              version: [ "1.18", "1.17" ]
