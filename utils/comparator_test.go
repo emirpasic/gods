@@ -110,3 +110,198 @@ func TestCustomComparator(t *testing.T) {
 		}
 	}
 }
+
+func TestInt8ComparatorComparator(t *testing.T) {
+	tests := [][]interface{}{
+		{int8(1), int8(1), 0},
+		{int8(0), int8(1), -1},
+		{int8(1), int8(0), 1},
+	}
+	for _, test := range tests {
+		actual := Int8Comparator(test[0], test[1])
+		expected := test[2]
+		if actual != expected {
+			t.Errorf("Got %v expected %v", actual, expected)
+		}
+	}
+}
+
+func TestInt16Comparator(t *testing.T) {
+	tests := [][]interface{}{
+		{int16(1), int16(1), 0},
+		{int16(0), int16(1), -1},
+		{int16(1), int16(0), 1},
+	}
+	for _, test := range tests {
+		actual := Int16Comparator(test[0], test[1])
+		expected := test[2]
+		if actual != expected {
+			t.Errorf("Got %v expected %v", actual, expected)
+		}
+	}
+}
+
+func TestInt32Comparator(t *testing.T) {
+	tests := [][]interface{}{
+		{int32(1), int32(1), 0},
+		{int32(0), int32(1), -1},
+		{int32(1), int32(0), 1},
+	}
+	for _, test := range tests {
+		actual := Int32Comparator(test[0], test[1])
+		expected := test[2]
+		if actual != expected {
+			t.Errorf("Got %v expected %v", actual, expected)
+		}
+	}
+}
+
+func TestInt64Comparator(t *testing.T) {
+	tests := [][]interface{}{
+		{int64(1), int64(1), 0},
+		{int64(0), int64(1), -1},
+		{int64(1), int64(0), 1},
+	}
+	for _, test := range tests {
+		actual := Int64Comparator(test[0], test[1])
+		expected := test[2]
+		if actual != expected {
+			t.Errorf("Got %v expected %v", actual, expected)
+		}
+	}
+}
+
+func TestUIntComparator(t *testing.T) {
+	tests := [][]interface{}{
+		{uint(1), uint(1), 0},
+		{uint(0), uint(1), -1},
+		{uint(1), uint(0), 1},
+	}
+	for _, test := range tests {
+		actual := UIntComparator(test[0], test[1])
+		expected := test[2]
+		if actual != expected {
+			t.Errorf("Got %v expected %v", actual, expected)
+		}
+	}
+}
+
+func TestUInt8Comparator(t *testing.T) {
+	tests := [][]interface{}{
+		{uint8(1), uint8(1), 0},
+		{uint8(0), uint8(1), -1},
+		{uint8(1), uint8(0), 1},
+	}
+	for _, test := range tests {
+		actual := UInt8Comparator(test[0], test[1])
+		expected := test[2]
+		if actual != expected {
+			t.Errorf("Got %v expected %v", actual, expected)
+		}
+	}
+}
+
+func TestUInt16Comparator(t *testing.T) {
+	tests := [][]interface{}{
+		{uint16(1), uint16(1), 0},
+		{uint16(0), uint16(1), -1},
+		{uint16(1), uint16(0), 1},
+	}
+	for _, test := range tests {
+		actual := UInt16Comparator(test[0], test[1])
+		expected := test[2]
+		if actual != expected {
+			t.Errorf("Got %v expected %v", actual, expected)
+		}
+	}
+}
+
+func TestUInt32Comparator(t *testing.T) {
+	tests := [][]interface{}{
+		{uint32(1), uint32(1), 0},
+		{uint32(0), uint32(1), -1},
+		{uint32(1), uint32(0), 1},
+	}
+	for _, test := range tests {
+		actual := UInt32Comparator(test[0], test[1])
+		expected := test[2]
+		if actual != expected {
+			t.Errorf("Got %v expected %v", actual, expected)
+		}
+	}
+}
+
+func TestUInt64Comparator(t *testing.T) {
+	tests := [][]interface{}{
+		{uint64(1), uint64(1), 0},
+		{uint64(0), uint64(1), -1},
+		{uint64(1), uint64(0), 1},
+	}
+	for _, test := range tests {
+		actual := UInt64Comparator(test[0], test[1])
+		expected := test[2]
+		if actual != expected {
+			t.Errorf("Got %v expected %v", actual, expected)
+		}
+	}
+}
+
+func TestFloat32Comparator(t *testing.T) {
+	tests := [][]interface{}{
+		{float32(1.1), float32(1.1), 0},
+		{float32(0.1), float32(1.1), -1},
+		{float32(1.1), float32(0.1), 1},
+	}
+	for _, test := range tests {
+		actual := Float32Comparator(test[0], test[1])
+		expected := test[2]
+		if actual != expected {
+			t.Errorf("Got %v expected %v", actual, expected)
+		}
+	}
+}
+
+func TestFloat64Comparator(t *testing.T) {
+	tests := [][]interface{}{
+		{float64(1.1), float64(1.1), 0},
+		{float64(0.1), float64(1.1), -1},
+		{float64(1.1), float64(0.1), 1},
+	}
+	for _, test := range tests {
+		actual := Float64Comparator(test[0], test[1])
+		expected := test[2]
+		if actual != expected {
+			t.Errorf("Got %v expected %v", actual, expected)
+		}
+	}
+}
+
+func TestByteComparator(t *testing.T) {
+	tests := [][]interface{}{
+		{byte(1), byte(1), 0},
+		{byte(0), byte(1), -1},
+		{byte(1), byte(0), 1},
+	}
+	for _, test := range tests {
+		actual := ByteComparator(test[0], test[1])
+		expected := test[2]
+		if actual != expected {
+			t.Errorf("Got %v expected %v", actual, expected)
+		}
+	}
+}
+
+func TestRuneComparator(t *testing.T) {
+	tests := [][]interface{}{
+		{rune(1), rune(1), 0},
+		{rune(0), rune(1), -1},
+		{rune(1), rune(0), 1},
+	}
+	for _, test := range tests {
+		actual := RuneComparator(test[0], test[1])
+		expected := test[2]
+		if actual != expected {
+			t.Errorf("Got %v expected %v", actual, expected)
+		}
+	}
+}
