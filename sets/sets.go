@@ -25,4 +25,5 @@ type Set interface {
 	// Size() int
 	// Clear()
 	// Values() []interface{}
+	// String() string
 }
