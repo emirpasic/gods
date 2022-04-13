@@ -1,5 +1,7 @@
 version: 2.1
 
+orbs:
+  codecov: codecov/codecov@3.2.2
 jobs:
   test:
     parameters:
@@ -28,9 +30,10 @@ jobs:
           name: Calculate test coverage
           command: |
             mkdir -p $TEST_RESULTS
-            go test -coverprofile=c.out ./... > /dev/null
-            go tool cover -html=c.out -o coverage.html
+            go test -coverprofile=coverage.out ./... > /dev/null
+            go tool cover -html=coverage.out -o coverage.html
             mv coverage.html $TEST_RESULTS
+      - codecov/upload
       - run:
           name: Lint (golint)
           command: |
