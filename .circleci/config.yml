@@ -28,9 +28,14 @@ jobs:
           name: Calculate test coverage
           command: |
             mkdir -p $TEST_RESULTS
-            go test -coverprofile=c.out ./... > /dev/null
-            go tool cover -html=c.out -o coverage.html
+            go test -coverprofile=coverage.out ./... > /dev/null
+            go test -race -coverprofile=coverage.txt -covermode=atomic ./... > /dev/null
+            go tool cover -html=coverage.out -o coverage.html
             mv coverage.html $TEST_RESULTS
+      - run:
+          name: Upload test coverage
+          command: |
+            bash <(curl -s https://codecov.io/bash)
       - run:
           name: Lint (golint)
           command: |
@@ -67,4 +72,4 @@ workflows:
           matrix:
             parameters:
               # To test with and without generics (versions prior to 1.18)
-              version: ["1.18", "1.17"]
+              version: [ "1.18", "1.17" ]
