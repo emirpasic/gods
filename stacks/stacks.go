@@ -22,4 +22,5 @@ type Stack interface {
 	// Size() int
 	// Clear()
 	// Values() []interface{}
+	// String() string
 }

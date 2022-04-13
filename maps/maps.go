@@ -29,6 +29,7 @@ type Map interface {
 	// Size() int
 	// Clear()
 	// Values() []interface{}
+	// String() string
 }
 
 // BidiMap interface that all bidirectional maps implement (extends the Map interface)
