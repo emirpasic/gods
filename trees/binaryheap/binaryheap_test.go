@@ -18,11 +18,11 @@ func TestBinaryHeapPush(t *testing.T) {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
 
-	heap.Push(3) // [3]
-	heap.Push(2) // [2,3]
-	heap.Push(1) // [1,3,2](2 swapped with 1, hence last)
+	heap.Push(3)
+	heap.Push(2)
+	heap.Push(1)
 
-	if actualValue := heap.Values(); actualValue[0].(int) != 1 || actualValue[1].(int) != 3 || actualValue[2].(int) != 2 {
+	if actualValue := heap.Values(); actualValue[0].(int) != 1 || actualValue[1].(int) != 2 || actualValue[2].(int) != 3 {
 		t.Errorf("Got %v expected %v", actualValue, "[1,2,3]")
 	}
 	if actualValue := heap.Empty(); actualValue != false {
@@ -56,10 +56,10 @@ func TestBinaryHeapPop(t *testing.T) {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
 
-	heap.Push(3) // [3]
-	heap.Push(2) // [2,3]
-	heap.Push(1) // [1,3,2](2 swapped with 1, hence last)
-	heap.Pop()   // [3,2]
+	heap.Push(3)
+	heap.Push(2)
+	heap.Push(1)
+	heap.Pop()
 
 	if actualValue, ok := heap.Peek(); actualValue != 2 || !ok {
 		t.Errorf("Got %v expected %v", actualValue, 2)
@@ -110,9 +110,9 @@ func TestBinaryHeapIteratorOnEmpty(t *testing.T) {
 
 func TestBinaryHeapIteratorNext(t *testing.T) {
 	heap := NewWithIntComparator()
-	heap.Push(3) // [3]
-	heap.Push(2) // [2,3]
-	heap.Push(1) // [1,3,2](2 swapped with 1, hence last)
+	heap.Push(3)
+	heap.Push(2)
+	heap.Push(1)
 
 	it := heap.Iterator()
 	count := 0
@@ -126,11 +126,11 @@ func TestBinaryHeapIteratorNext(t *testing.T) {
 				t.Errorf("Got %v expected %v", actualValue, expectedValue)
 			}
 		case 1:
-			if actualValue, expectedValue := value, 3; actualValue != expectedValue {
+			if actualValue, expectedValue := value, 2; actualValue != expectedValue {
 				t.Errorf("Got %v expected %v", actualValue, expectedValue)
 			}
 		case 2:
-			if actualValue, expectedValue := value, 2; actualValue != expectedValue {
+			if actualValue, expectedValue := value, 3; actualValue != expectedValue {
 				t.Errorf("Got %v expected %v", actualValue, expectedValue)
 			}
 		default:
@@ -147,9 +147,9 @@ func TestBinaryHeapIteratorNext(t *testing.T) {
 
 func TestBinaryHeapIteratorPrev(t *testing.T) {
 	heap := NewWithIntComparator()
-	heap.Push(3) // [3]
-	heap.Push(2) // [2,3]
-	heap.Push(1) // [1,3,2](2 swapped with 1, hence last)
+	heap.Push(3)
+	heap.Push(2)
+	heap.Push(1)
 
 	it := heap.Iterator()
 	for it.Next() {
@@ -165,11 +165,11 @@ func TestBinaryHeapIteratorPrev(t *testing.T) {
 				t.Errorf("Got %v expected %v", actualValue, expectedValue)
 			}
 		case 1:
-			if actualValue, expectedValue := value, 3; actualValue != expectedValue {
+			if actualValue, expectedValue := value, 2; actualValue != expectedValue {
 				t.Errorf("Got %v expected %v", actualValue, expectedValue)
 			}
 		case 2:
-			if actualValue, expectedValue := value, 2; actualValue != expectedValue {
+			if actualValue, expectedValue := value, 3; actualValue != expectedValue {
 				t.Errorf("Got %v expected %v", actualValue, expectedValue)
 			}
 		default:
@@ -213,17 +213,17 @@ func TestBinaryHeapIteratorEnd(t *testing.T) {
 		t.Errorf("Got %v expected %v", index, 0)
 	}
 
-	heap.Push(3) // [3]
-	heap.Push(2) // [2,3]
-	heap.Push(1) // [1,3,2](2 swapped with 1, hence last)
+	heap.Push(3)
+	heap.Push(2)
+	heap.Push(1)
 	it.End()
 	if index := it.Index(); index != heap.Size() {
 		t.Errorf("Got %v expected %v", index, heap.Size())
 	}
 
 	it.Prev()
-	if index, value := it.Index(), it.Value(); index != heap.Size()-1 || value != 2 {
-		t.Errorf("Got %v,%v expected %v,%v", index, value, heap.Size()-1, 2)
+	if index, value := it.Index(), it.Value(); index != heap.Size()-1 || value != 3 {
+		t.Errorf("Got %v,%v expected %v,%v", index, value, heap.Size()-1, 3)
 	}
 }
 
@@ -233,9 +233,9 @@ func TestBinaryHeapIteratorFirst(t *testing.T) {
 	if actualValue, expectedValue := it.First(), false; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
-	heap.Push(3) // [3]
-	heap.Push(2) // [2,3]
-	heap.Push(1) // [1,3,2](2 swapped with 1, hence last)
+	heap.Push(3)
+	heap.Push(2)
+	heap.Push(1)
 	if actualValue, expectedValue := it.First(), true; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
@@ -252,12 +252,12 @@ func TestBinaryHeapIteratorLast(t *testing.T) {
 	}
 	tree.Push(2)
 	tree.Push(3)
-	tree.Push(1) // [1,3,2](2 swapped with 1, hence last)
+	tree.Push(1)
 	if actualValue, expectedValue := it.Last(), true; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
-	if index, value := it.Index(), it.Value(); index != 2 || value != 2 {
-		t.Errorf("Got %v,%v expected %v,%v", index, value, 2, 2)
+	if index, value := it.Index(), it.Value(); index != 2 || value != 3 {
+		t.Errorf("Got %v,%v expected %v,%v", index, value, 2, 3)
 	}
 }
 
@@ -370,13 +370,13 @@ func TestBinaryHeapIteratorPrevTo(t *testing.T) {
 func TestBinaryHeapSerialization(t *testing.T) {
 	heap := NewWithStringComparator()
 
-	heap.Push("c") // ["c"]
-	heap.Push("b") // ["b","c"]
-	heap.Push("a") // ["a","c","b"]("b" swapped with "a", hence last)
+	heap.Push("c")
+	heap.Push("b")
+	heap.Push("a")
 
 	var err error
 	assert := func() {
-		if actualValue := heap.Values(); actualValue[0].(string) != "a" || actualValue[1].(string) != "c" || actualValue[2].(string) != "b" {
+		if actualValue := heap.Values(); actualValue[0].(string) != "a" || actualValue[1].(string) != "b" || actualValue[2].(string) != "c" {
 			t.Errorf("Got %v expected %v", actualValue, "[1,3,2]")
 		}
 		if actualValue := heap.Size(); actualValue != 3 {

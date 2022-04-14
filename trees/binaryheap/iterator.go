@@ -4,7 +4,9 @@
 
 package binaryheap
 
-import "github.com/emirpasic/gods/containers"
+import (
+	"github.com/emirpasic/gods/containers"
+)
 
 // Assert Iterator implementation
 var _ containers.ReverseIteratorWithIndex = (*Iterator)(nil)
@@ -44,7 +46,19 @@ func (iterator *Iterator) Prev() bool {
 // Value returns the current element's value.
 // Does not modify the state of the iterator.
 func (iterator *Iterator) Value() interface{} {
-	value, _ := iterator.heap.list.Get(iterator.index)
+	start, end := evaluateRange(iterator.index)
+	if end > iterator.heap.Size() {
+		end = iterator.heap.Size()
+	}
+	tmpHeap := NewWith(iterator.heap.Comparator)
+	for n := start; n < end; n++ {
+		value, _ := iterator.heap.list.Get(n)
+		tmpHeap.Push(value)
+	}
+	for n := 0; n < iterator.index-start; n++ {
+		tmpHeap.Pop()
+	}
+	value, _ := tmpHeap.Pop()
 	return value
 }
 
@@ -108,4 +122,22 @@ func (iterator *Iterator) PrevTo(f func(index int, value interface{}) bool) bool
 		}
 	}
 	return false
+}
+
+// numOfBits counts the number of bits of an int
+func numOfBits(n int) uint {
+	var count uint
+	for n != 0 {
+		count++
+		n >>= 1
+	}
+	return count
+}
+
+// evaluateRange evaluates the index range [start,end) of same level nodes in the heap as the index
+func evaluateRange(index int) (start int, end int) {
+	bits := numOfBits(index+1) - 1
+	start = 1<<bits - 1
+	end = start + 1<<bits
+	return
 }
