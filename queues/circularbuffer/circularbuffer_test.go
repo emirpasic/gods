@@ -48,122 +48,80 @@ func TestQueuePeek(t *testing.T) {
 }
 
 func TestQueueDequeue(t *testing.T) {
-	queue := New(3)
-	if actualValue, expectedValue := queue.Empty(), true; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
-	if actualValue, expectedValue := queue.Full(), false; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
-	if actualValue, expectedValue := queue.Size(), 0; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
-	queue.Enqueue(1)
-	if actualValue, expectedValue := queue.Size(), 1; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	assert := func(actualValue interface{}, expectedValue interface{}) {
+		if actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
 	}
 
+	queue := New(3)
+	assert(queue.Empty(), true)
+	assert(queue.Empty(), true)
+	assert(queue.Full(), false)
+	assert(queue.Size(), 0)
+	queue.Enqueue(1)
+	assert(queue.Size(), 1)
 	queue.Enqueue(2)
-	if actualValue, expectedValue := queue.Size(), 2; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
+	assert(queue.Size(), 2)
 
 	queue.Enqueue(3)
-	if actualValue, expectedValue := queue.Size(), 3; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
-	if actualValue, expectedValue := queue.Empty(), false; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
-	if actualValue, expectedValue := queue.Full(), true; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
+	assert(queue.Size(), 3)
+	assert(queue.Empty(), false)
+	assert(queue.Full(), true)
 
 	queue.Dequeue()
-	if actualValue, expectedValue := queue.Size(), 2; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
+	assert(queue.Size(), 2)
 
 	if actualValue, ok := queue.Peek(); actualValue != 2 || !ok {
 		t.Errorf("Got %v expected %v", actualValue, 2)
 	}
-	if actualValue, expectedValue := queue.Size(), 2; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
+	assert(queue.Size(), 2)
 
 	if actualValue, ok := queue.Dequeue(); actualValue != 2 || !ok {
 		t.Errorf("Got %v expected %v", actualValue, 2)
 	}
-	if actualValue, expectedValue := queue.Size(), 1; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
+	assert(queue.Size(), 1)
 
 	if actualValue, ok := queue.Dequeue(); actualValue != 3 || !ok {
 		t.Errorf("Got %v expected %v", actualValue, 3)
 	}
-	if actualValue, expectedValue := queue.Size(), 0; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
-	if actualValue, expectedValue := queue.Empty(), true; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
-	if actualValue, expectedValue := queue.Full(), false; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
+	assert(queue.Size(), 0)
+	assert(queue.Empty(), true)
+	assert(queue.Full(), false)
 
 	if actualValue, ok := queue.Dequeue(); actualValue != nil || ok {
 		t.Errorf("Got %v expected %v", actualValue, nil)
 	}
-	if actualValue, expectedValue := queue.Size(), 0; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
+	assert(queue.Size(), 0)
 
-	if actualValue := queue.Empty(); actualValue != true {
-		t.Errorf("Got %v expected %v", actualValue, true)
-	}
-	if actualValue := queue.Full(); actualValue != false {
-		t.Errorf("Got %v expected %v", actualValue, false)
-	}
-	if actualValue := queue.Values(); len(actualValue) != 0 {
-		t.Errorf("Got %v expected %v", actualValue, "[]")
-	}
+	assert(queue.Empty(), true)
+	assert(queue.Full(), false)
+	assert(len(queue.Values()), 0)
 }
 
 func TestQueueDequeueFull(t *testing.T) {
+	assert := func(actualValue interface{}, expectedValue interface{}) {
+		if actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+	}
+
 	queue := New(2)
-	if actualValue, expectedValue := queue.Empty(), true; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
-	if actualValue, expectedValue := queue.Full(), false; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
-	if actualValue, expectedValue := queue.Size(), 0; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
+	assert(queue.Empty(), true)
+	assert(queue.Full(), false)
+	assert(queue.Size(), 0)
 
 	queue.Enqueue(1)
-	if actualValue, expectedValue := queue.Size(), 1; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
+	assert(queue.Size(), 1)
 
 	queue.Enqueue(2)
-	if actualValue, expectedValue := queue.Size(), 2; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
-	if actualValue, expectedValue := queue.Full(), true; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
+	assert(queue.Size(), 2)
+	assert(queue.Full(), true)
 	if actualValue, ok := queue.Peek(); actualValue != 1 || !ok {
 		t.Errorf("Got %v expected %v", actualValue, 2)
 	}
-
 	queue.Enqueue(3) // overwrites 1
-	if actualValue, expectedValue := queue.Size(), 2; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
-	if actualValue, ok := queue.Peek(); actualValue != 2 || !ok {
-		t.Errorf("Got %v expected %v", actualValue, 2)
-	}
+	assert(queue.Size(), 2)
 
 	if actualValue, ok := queue.Dequeue(); actualValue != 2 || !ok {
 		t.Errorf("Got %v expected %v", actualValue, 2)
@@ -182,22 +140,14 @@ func TestQueueDequeueFull(t *testing.T) {
 	if actualValue, ok := queue.Dequeue(); actualValue != 3 || !ok {
 		t.Errorf("Got %v expected %v", actualValue, 3)
 	}
-	if actualValue, expectedValue := queue.Size(), 0; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
+	assert(queue.Size(), 0)
 
 	if actualValue, ok := queue.Dequeue(); actualValue != nil || ok {
 		t.Errorf("Got %v expected %v", actualValue, nil)
 	}
-	if actualValue, expectedValue := queue.Empty(), true; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
-	if actualValue, expectedValue := queue.Full(), false; actualValue != expectedValue {
-		t.Errorf("Got %v expected %v", actualValue, expectedValue)
-	}
-	if actualValue := queue.Values(); len(actualValue) != 0 {
-		t.Errorf("Got %v expected %v", actualValue, "[]")
-	}
+	assert(queue.Empty(), true)
+	assert(queue.Full(), false)
+	assert(len(queue.Values()), 0)
 }
 
 func TestQueueIteratorOnEmpty(t *testing.T) {
@@ -474,6 +424,12 @@ func TestQueueIteratorPrevTo(t *testing.T) {
 }
 
 func TestQueueIterator(t *testing.T) {
+	assert := func(actualValue interface{}, expectedValue interface{}) {
+		if actualValue != expectedValue {
+			t.Errorf("Got %v expected %v", actualValue, expectedValue)
+		}
+	}
+
 	queue := New(2)
 
 	queue.Enqueue("a")
@@ -486,53 +442,39 @@ func TestQueueIterator(t *testing.T) {
 		t.Errorf("Got %v expected %v", actualIndex, expectedIndex)
 	}
 
-	if !it.Next() {
-		t.Errorf("Still has some")
-	}
+	assert(it.Next(), true)
 
 	if actualValue, actualIndex, expectedValue, expectedIndex := it.Value(), it.Index(), "b", 0; actualValue != expectedValue || actualIndex != expectedIndex {
 		t.Errorf("Got %v expected %v, Got %v expected %v", actualValue, expectedValue, actualIndex, expectedIndex)
 	}
 
-	if !it.Next() {
-		t.Errorf("Still has some")
-	}
+	assert(it.Next(), true)
 
 	if actualValue, actualIndex, expectedValue, expectedIndex := it.Value(), it.Index(), "c", 1; actualValue != expectedValue || actualIndex != expectedIndex {
 		t.Errorf("Got %v expected %v, Got %v expected %v", actualValue, expectedValue, actualIndex, expectedIndex)
 	}
 
-	if it.Next() {
-		t.Errorf("Should have reached the end")
-	}
+	assert(it.Next(), false)
 
 	if actualIndex, expectedIndex := it.Index(), 2; actualIndex != expectedIndex {
 		t.Errorf("Got %v expected %v", actualIndex, expectedIndex)
 	}
 
-	if it.Next() {
-		t.Errorf("Should have reached the end")
-	}
+	assert(it.Next(), false)
 
-	if !it.Prev() {
-		t.Errorf("Still has some")
-	}
+	assert(it.Prev(), true)
 
 	if actualValue, actualIndex, expectedValue, expectedIndex := it.Value(), it.Index(), "c", 1; actualValue != expectedValue || actualIndex != expectedIndex {
 		t.Errorf("Got %v expected %v, Got %v expected %v", actualValue, expectedValue, actualIndex, expectedIndex)
 	}
 
-	if !it.Prev() {
-		t.Errorf("Still has some")
-	}
+	assert(it.Prev(), true)
 
 	if actualValue, actualIndex, expectedValue, expectedIndex := it.Value(), it.Index(), "b", 0; actualValue != expectedValue || actualIndex != expectedIndex {
 		t.Errorf("Got %v expected %v, Got %v expected %v", actualValue, expectedValue, actualIndex, expectedIndex)
 	}
 
-	if it.Prev() {
-		t.Errorf("Nothing before this")
-	}
+	assert(it.Prev(), false)
 
 	if actualIndex, expectedIndex := it.Index(), -1; actualIndex != expectedIndex {
 		t.Errorf("Got %v expected %v", actualIndex, expectedIndex)
