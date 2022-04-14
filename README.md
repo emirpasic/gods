@@ -40,6 +40,7 @@ Implementation of various data structures and algorithms in Go.
     - [LinkedListQueue](#linkedlistqueue)
     - [ArrayQueue](#arrayqueue)
     - [CircularBuffer](#circularbuffer)
+    - [PriorityQueue](#priorityqueue)
 - [Functions](#functions)
     - [Comparator](#comparator)
     - [Iterator](#iterator)
@@ -102,6 +103,7 @@ Containers are either ordered or unordered. All ordered containers provide [stat
 |   | [LinkedListQueue](#linkedlistqueue)   | yes | yes | no | index |
 |   | [ArrayQueue](#arrayqueue)             | yes | yes* | no | index |
 |   | [CircularBuffer](#circularbuffer)     | yes | yes* | no | index |
+|   | [PriorityQueue](#priorityqueue)       | yes | yes* | no | index |
 |   |                                       |  | <sub><sup>*reversible</sup></sub> |  | <sub><sup>*bidirectional</sup></sub> |
 
 ### Lists
@@ -981,6 +983,55 @@ func main() {
     queue.Clear()          // empty
     queue.Empty()          // true
     _ = queue.Size()       // 0
+}
+```
+
+#### PriorityQueue
+
+A priority queue is a special type of [queue](#queues) in which each element is associated with a priority value. And, elements are served on the basis of their priority. That is, higher priority elements are served first. However, if elements with the same priority occur, they are served according to their order in the queue.
+
+Implements [Queue](#queues), [ReverseIteratorWithIndex](#iteratorwithindex), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
+
+```go
+package main
+
+import (
+  pq "github.com/emirpasic/gods/queues/priorityqueue"
+  "github.com/emirpasic/gods/utils"
+)
+
+// Element is an entry in the priority queue
+type Element struct {
+    name     string
+    priority int
+}
+
+// Comparator function (sort by element's priority value in descending order)
+func byPriority(a, b interface{}) int {
+    priorityA := a.(Element).priority
+    priorityB := b.(Element).priority
+    return -utils.IntComparator(priorityA, priorityB) // "-" descending order
+}
+
+// PriorityQueueExample to demonstrate basic usage of BinaryHeap
+func main() {
+    a := Element{name: "a", priority: 1}
+    b := Element{name: "b", priority: 2}
+    c := Element{name: "c", priority: 3}
+    
+    queue := pq.NewWith(byPriority) // empty
+    queue.Enqueue(a)                // {a 1}
+    queue.Enqueue(c)                // {c 3}, {a 1}
+    queue.Enqueue(b)                // {c 3}, {b 2}, {a 1}
+    _ = queue.Values()              // [{c 3} {b 2} {a 1}]
+    _, _ = queue.Peek()             // {c 3} true
+    _, _ = queue.Dequeue()          // {c 3} true
+    _, _ = queue.Dequeue()          // {b 2} true
+    _, _ = queue.Dequeue()          // {a 1} true
+    _, _ = queue.Dequeue()          // <nil> false (nothing to dequeue)
+    queue.Clear()                   // empty
+    _ = queue.Empty()               // true
+    _ = queue.Size()                // 0
 }
 ```
 
