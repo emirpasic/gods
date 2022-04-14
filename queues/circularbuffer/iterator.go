@@ -1,25 +1,23 @@
-// Copyright (c) 2015, Emir Pasic. All rights reserved.
+// Copyright (c) 2021, Emir Pasic. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package binaryheap
+package circularbuffer
 
-import (
-	"github.com/emirpasic/gods/containers"
-)
+import "github.com/emirpasic/gods/containers"
 
 // Assert Iterator implementation
 var _ containers.ReverseIteratorWithIndex = (*Iterator)(nil)
 
 // Iterator returns a stateful iterator whose values can be fetched by an index.
 type Iterator struct {
-	heap  *Heap
+	queue *Queue
 	index int
 }
 
 // Iterator returns a stateful iterator whose values can be fetched by an index.
-func (heap *Heap) Iterator() Iterator {
-	return Iterator{heap: heap, index: -1}
+func (queue *Queue) Iterator() Iterator {
+	return Iterator{queue: queue, index: -1}
 }
 
 // Next moves the iterator to the next element and returns true if there was a next element in the container.
@@ -27,10 +25,10 @@ func (heap *Heap) Iterator() Iterator {
 // If Next() was called for the first time, then it will point the iterator to the first element if it exists.
 // Modifies the state of the iterator.
 func (iterator *Iterator) Next() bool {
-	if iterator.index < iterator.heap.Size() {
+	if iterator.index < iterator.queue.size {
 		iterator.index++
 	}
-	return iterator.heap.withinRange(iterator.index)
+	return iterator.queue.withinRange(iterator.index)
 }
 
 // Prev moves the iterator to the previous element and returns true if there was a previous element in the container.
@@ -40,25 +38,14 @@ func (iterator *Iterator) Prev() bool {
 	if iterator.index >= 0 {
 		iterator.index--
 	}
-	return iterator.heap.withinRange(iterator.index)
+	return iterator.queue.withinRange(iterator.index)
 }
 
 // Value returns the current element's value.
 // Does not modify the state of the iterator.
 func (iterator *Iterator) Value() interface{} {
-	start, end := evaluateRange(iterator.index)
-	if end > iterator.heap.Size() {
-		end = iterator.heap.Size()
-	}
-	tmpHeap := NewWith(iterator.heap.Comparator)
-	for n := start; n < end; n++ {
-		value, _ := iterator.heap.list.Get(n)
-		tmpHeap.Push(value)
-	}
-	for n := 0; n < iterator.index-start; n++ {
-		tmpHeap.Pop()
-	}
-	value, _ := tmpHeap.Pop()
+	index := (iterator.index + iterator.queue.start) % iterator.queue.maxSize
+	value := iterator.queue.values[index]
 	return value
 }
 
@@ -77,7 +64,7 @@ func (iterator *Iterator) Begin() {
 // End moves the iterator past the last element (one-past-the-end).
 // Call Prev() to fetch the last element if any.
 func (iterator *Iterator) End() {
-	iterator.index = iterator.heap.Size()
+	iterator.index = iterator.queue.size
 }
 
 // First moves the iterator to the first element and returns true if there was a first element in the container.
@@ -122,22 +109,4 @@ func (iterator *Iterator) PrevTo(f func(index int, value interface{}) bool) bool
 		}
 	}
 	return false
-}
-
-// numOfBits counts the number of bits of an int
-func numOfBits(n int) uint {
-	var count uint
-	for n != 0 {
-		count++
-		n >>= 1
-	}
-	return count
-}
-
-// evaluateRange evaluates the index range [start,end) of same level nodes in the heap as the index
-func evaluateRange(index int) (start int, end int) {
-	bits := numOfBits(index+1) - 1
-	start = 1<<bits - 1
-	end = start + 1<<bits
-	return
 }

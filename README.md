@@ -39,6 +39,8 @@ Implementation of various data structures and algorithms in Go.
   - [Queues](#queues)
     - [LinkedListQueue](#linkedlistqueue)
     - [ArrayQueue](#arrayqueue)
+    - [CircularBuffer](#circularbuffer)
+    - [PriorityQueue](#priorityqueue)
 - [Functions](#functions)
     - [Comparator](#comparator)
     - [Iterator](#iterator)
@@ -67,40 +69,42 @@ type Container interface {
 	Size() int
 	Clear()
 	Values() []interface{}
-    String() string
+	String() string
 }
 ```
 
 Containers are either ordered or unordered. All ordered containers provide [stateful iterators](#iterator) and some of them allow [enumerable functions](#enumerable).
 
-| **Data** | **Structure** | **Ordered** | **[Iterator](#iterator)** | **[Enumerable](#enumerable)** | **Referenced by** |
-| :--- | :--- | :---: | :---: | :---: | :---: |
+| **Data** | **Structure**                         | **Ordered** | **[Iterator](#iterator)** | **[Enumerable](#enumerable)** | **Referenced by** |
+| :--- |:--------------------------------------| :---: | :---: | :---: | :---: |
 | [Lists](#lists) |
-|   | [ArrayList](#arraylist) | yes | yes* | yes | index |
+|   | [ArrayList](#arraylist)               | yes | yes* | yes | index |
 |   | [SinglyLinkedList](#singlylinkedlist) | yes | yes | yes | index |
 |   | [DoublyLinkedList](#doublylinkedlist) | yes | yes* | yes | index |
 | [Sets](#sets) |
-|   | [HashSet](#hashset) | no | no | no | index |
-|   | [TreeSet](#treeset) | yes | yes* | yes | index |
-|   | [LinkedHashSet](#linkedhashset) | yes | yes* | yes | index |
+|   | [HashSet](#hashset)                   | no | no | no | index |
+|   | [TreeSet](#treeset)                   | yes | yes* | yes | index |
+|   | [LinkedHashSet](#linkedhashset)       | yes | yes* | yes | index |
 | [Stacks](#stacks) |
-|   | [LinkedListStack](#linkedliststack) | yes | yes | no | index |
-|   | [ArrayStack](#arraystack) | yes | yes* | no | index |
+|   | [LinkedListStack](#linkedliststack)   | yes | yes | no | index |
+|   | [ArrayStack](#arraystack)             | yes | yes* | no | index |
 | [Maps](#maps) |
-|   | [HashMap](#hashmap) | no | no | no | key |
-|   | [TreeMap](#treemap) | yes | yes* | yes | key |
-|   | [LinkedHashMap](#linkedhashmap) | yes | yes* | yes | key |
-|   | [HashBidiMap](#hashbidimap) | no | no | no | key* |
-|   | [TreeBidiMap](#treebidimap) | yes | yes* | yes | key* |
+|   | [HashMap](#hashmap)                   | no | no | no | key |
+|   | [TreeMap](#treemap)                   | yes | yes* | yes | key |
+|   | [LinkedHashMap](#linkedhashmap)       | yes | yes* | yes | key |
+|   | [HashBidiMap](#hashbidimap)           | no | no | no | key* |
+|   | [TreeBidiMap](#treebidimap)           | yes | yes* | yes | key* |
 | [Trees](#trees) |
-|   | [RedBlackTree](#redblacktree) | yes | yes* | no | key |
-|   | [AVLTree](#avltree) | yes | yes* | no | key |
-|   | [BTree](#btree) | yes | yes* | no | key |
-|   | [BinaryHeap](#binaryheap) | yes | yes* | no | index |
+|   | [RedBlackTree](#redblacktree)         | yes | yes* | no | key |
+|   | [AVLTree](#avltree)                   | yes | yes* | no | key |
+|   | [BTree](#btree)                       | yes | yes* | no | key |
+|   | [BinaryHeap](#binaryheap)             | yes | yes* | no | index |
 | [Queues](#queues) |
-|   | [LinkedListQueue](#linkedlistqueue) | yes | yes | no | index |
-|   | [ArrayQueue](#arrayqueue) | yes | yes* | no | index |
-|   |  |  | <sub><sup>*reversible</sup></sub> |  | <sub><sup>*bidirectional</sup></sub> |
+|   | [LinkedListQueue](#linkedlistqueue)   | yes | yes | no | index |
+|   | [ArrayQueue](#arrayqueue)             | yes | yes* | no | index |
+|   | [CircularBuffer](#circularbuffer)     | yes | yes* | no | index |
+|   | [PriorityQueue](#priorityqueue)       | yes | yes* | no | index |
+|   |                                       |  | <sub><sup>*reversible</sup></sub> |  | <sub><sup>*bidirectional</sup></sub> |
 
 ### Lists
 
@@ -946,6 +950,88 @@ func main() {
     queue.Clear()          // empty
     queue.Empty()          // true
     _ = queue.Size()       // 0
+}
+```
+
+#### CircularBuffer
+
+A circular buffer, circular [queue](#queues), cyclic buffer or ring buffer is a data structure that uses a single, fixed-size buffer as if it were connected end-to-end. This structure lends itself easily to buffering data streams.
+
+<p align="center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Circular_Buffer_Animation.gif/400px-Circular_Buffer_Animation.gif" width="300px" height="300px" /></p>
+
+Implements [Queue](#queues), [ReverseIteratorWithIndex](#iteratorwithindex), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
+
+```go
+package main
+
+import cb "github.com/emirpasic/gods/queues/circularbuffer"
+
+// CircularBufferExample to demonstrate basic usage of CircularBuffer
+func main() {
+    queue := cb.New(3)     // empty (max size is 3)
+    queue.Enqueue(1)       // 1
+    queue.Enqueue(2)       // 1, 2
+    queue.Enqueue(3)       // 1, 2, 3
+    _ = queue.Values()     // 1, 2, 3
+    queue.Enqueue(3)       // 4, 2, 3
+    _, _ = queue.Peek()    // 4,true
+    _, _ = queue.Dequeue() // 4, true
+    _, _ = queue.Dequeue() // 2, true
+    _, _ = queue.Dequeue() // 3, true
+    _, _ = queue.Dequeue() // nil, false (nothing to deque)
+    queue.Enqueue(1)       // 1
+    queue.Clear()          // empty
+    queue.Empty()          // true
+    _ = queue.Size()       // 0
+}
+```
+
+#### PriorityQueue
+
+A priority queue is a special type of [queue](#queues) in which each element is associated with a priority value. And, elements are served on the basis of their priority. That is, higher priority elements are served first. However, if elements with the same priority occur, they are served according to their order in the queue.
+
+Implements [Queue](#queues), [ReverseIteratorWithIndex](#iteratorwithindex), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
+
+```go
+package main
+
+import (
+  pq "github.com/emirpasic/gods/queues/priorityqueue"
+  "github.com/emirpasic/gods/utils"
+)
+
+// Element is an entry in the priority queue
+type Element struct {
+    name     string
+    priority int
+}
+
+// Comparator function (sort by element's priority value in descending order)
+func byPriority(a, b interface{}) int {
+    priorityA := a.(Element).priority
+    priorityB := b.(Element).priority
+    return -utils.IntComparator(priorityA, priorityB) // "-" descending order
+}
+
+// PriorityQueueExample to demonstrate basic usage of BinaryHeap
+func main() {
+    a := Element{name: "a", priority: 1}
+    b := Element{name: "b", priority: 2}
+    c := Element{name: "c", priority: 3}
+    
+    queue := pq.NewWith(byPriority) // empty
+    queue.Enqueue(a)                // {a 1}
+    queue.Enqueue(c)                // {c 3}, {a 1}
+    queue.Enqueue(b)                // {c 3}, {b 2}, {a 1}
+    _ = queue.Values()              // [{c 3} {b 2} {a 1}]
+    _, _ = queue.Peek()             // {c 3} true
+    _, _ = queue.Dequeue()          // {c 3} true
+    _, _ = queue.Dequeue()          // {b 2} true
+    _, _ = queue.Dequeue()          // {a 1} true
+    _, _ = queue.Dequeue()          // <nil> false (nothing to dequeue)
+    queue.Clear()                   // empty
+    _ = queue.Empty()               // true
+    _ = queue.Size()                // 0
 }
 ```
 
