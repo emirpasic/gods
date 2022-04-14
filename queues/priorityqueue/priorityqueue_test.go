@@ -101,6 +101,11 @@ func TestBinaryQueueEnqueueBulk(t *testing.T) {
 	if actualValue, ok := queue.Dequeue(); actualValue != 20 || !ok {
 		t.Errorf("Got %v expected %v", actualValue, 20)
 	}
+
+	queue.Clear()
+	if actualValue := queue.Empty(); !actualValue {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
 }
 
 func TestBinaryQueueDequeue(t *testing.T) {
