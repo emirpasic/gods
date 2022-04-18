@@ -82,8 +82,8 @@ func (list *List) Contains(values ...interface{}) bool {
 
 	for _, searchValue := range values {
 		found := false
-		for _, element := range list.elements {
-			if element == searchValue {
+		for index := 0; index < list.size; index++ {
+			if list.elements[index] == searchValue {
 				found = true
 				break
 			}
