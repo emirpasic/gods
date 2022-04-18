@@ -164,6 +164,9 @@ func TestListContains(t *testing.T) {
 	if actualValue := list.Contains("a"); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
+	if actualValue := list.Contains(nil); actualValue != false {
+		t.Errorf("Got %v expected %v", actualValue, false)
+	}
 	if actualValue := list.Contains("a", "b", "c"); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
