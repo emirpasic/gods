@@ -7,6 +7,7 @@ package hashmap
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -117,6 +118,21 @@ func TestMapRemove(t *testing.T) {
 	}
 	if actualValue := m.Empty(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+}
+
+func TestMapGetDefault(t *testing.T) {
+	m := New()
+	m.Put("c", 3)
+	m.Put("a", 1)
+	m.Put("b", 2)
+	val1 := m.GetDefault("c", 8)
+	if !reflect.DeepEqual(val1, 3) {
+		t.Errorf("Got %v expected %v", val1, 3)
+	}
+	val2 := m.GetDefault("e", 8)
+	if !reflect.DeepEqual(val2, 8) {
+		t.Errorf("Got %v expected %v", val2, 8)
 	}
 }
 

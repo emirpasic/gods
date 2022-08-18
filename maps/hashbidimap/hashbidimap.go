@@ -59,6 +59,16 @@ func (m *Map) GetKey(value interface{}) (key interface{}, found bool) {
 	return m.inverseMap.Get(value)
 }
 
+// Get searches the element in the map by key and returns its value of default value given by second argument if key is not found in map.
+func (m *Map) GetDefault(key interface{}, defaultValue interface{}) (value interface{}) {
+	var found bool = false
+	value, found = m.Get(key)
+	if !found {
+		value = defaultValue
+	}
+	return
+}
+
 // Remove removes the element from the map by key.
 func (m *Map) Remove(key interface{}) {
 	if value, found := m.forwardMap.Get(key); found {

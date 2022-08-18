@@ -19,10 +19,11 @@ package treebidimap
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/emirpasic/gods/maps"
 	"github.com/emirpasic/gods/trees/redblacktree"
 	"github.com/emirpasic/gods/utils"
-	"strings"
 )
 
 // Assert Map implementation
@@ -81,6 +82,16 @@ func (m *Map) Get(key interface{}) (value interface{}, found bool) {
 		return d.(*data).value, true
 	}
 	return nil, false
+}
+
+// Get searches the element in the map by key and returns its value of default value given by second argument if key is not found in map.
+func (m *Map) GetDefault(key interface{}, defaultValue interface{}) (value interface{}) {
+	var found bool = false
+	value, found = m.Get(key)
+	if !found {
+		value = defaultValue
+	}
+	return
 }
 
 // GetKey searches the element in the map by value and returns its key or nil if value is not found in map.
