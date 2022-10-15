@@ -148,7 +148,7 @@ func (t *Tree) Right() *Node {
 	return t.bottom(1)
 }
 
-// Floor Finds floor node of the input key, return the floor node or nil if no ceiling is found.
+// Floor Finds floor node of the input key, return the floor node or nil if no floor is found.
 // Second return parameter is true if floor was found, otherwise false.
 //
 // Floor node is defined as the largest node that is smaller than or equal to the given node.
