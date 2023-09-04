@@ -177,7 +177,7 @@ func (list *List) Values() []interface{} {
 	return values
 }
 
-//IndexOf returns index of provided element
+// IndexOf returns index of provided element
 func (list *List) IndexOf(value interface{}) int {
 	if list.size == 0 {
 		return -1
@@ -252,15 +252,14 @@ func (list *List) Insert(index int, values ...interface{}) {
 		return
 	}
 
-	list.size += len(values)
-
 	var beforeElement *element
 	var foundElement *element
 	// determine traversal direction, last to first or first to last
 	if list.size-index < index {
 		foundElement = list.last
+		beforeElement = list.last.prev
 		for e := list.size - 1; e != index; e, foundElement = e-1, foundElement.prev {
-			beforeElement = foundElement.prev
+			beforeElement = beforeElement.prev
 		}
 	} else {
 		foundElement = list.first
@@ -294,6 +293,8 @@ func (list *List) Insert(index int, values ...interface{}) {
 		oldNextElement.prev = beforeElement
 		beforeElement.next = oldNextElement
 	}
+
+	list.size += len(values)
 }
 
 // Set value at specified index position
