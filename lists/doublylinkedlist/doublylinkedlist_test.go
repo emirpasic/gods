@@ -213,17 +213,24 @@ func TestListIndexOf(t *testing.T) {
 
 func TestListInsert(t *testing.T) {
 	list := New()
-	list.Insert(0, "b", "c")
+	list.Insert(0, "b", "c", "d")
 	list.Insert(0, "a")
 	list.Insert(10, "x") // ignore
-	if actualValue := list.Size(); actualValue != 3 {
-		t.Errorf("Got %v expected %v", actualValue, 3)
-	}
-	list.Insert(3, "d") // append
 	if actualValue := list.Size(); actualValue != 4 {
 		t.Errorf("Got %v expected %v", actualValue, 4)
 	}
-	if actualValue, expectedValue := fmt.Sprintf("%s%s%s%s", list.Values()...), "abcd"; actualValue != expectedValue {
+	list.Insert(4, "g") // append
+	if actualValue := list.Size(); actualValue != 5 {
+		t.Errorf("Got %v expected %v", actualValue, 5)
+	}
+	if actualValue, expectedValue := fmt.Sprintf("%s%s%s%s%s", list.Values()...), "abcdg"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+	list.Insert(4, "e", "f") // last to first traversal
+	if actualValue := list.Size(); actualValue != 7 {
+		t.Errorf("Got %v expected %v", actualValue, 7)
+	}
+	if actualValue, expectedValue := fmt.Sprintf("%s%s%s%s%s%s%s", list.Values()...), "abcdefg"; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
 	}
 }
