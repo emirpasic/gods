@@ -467,10 +467,11 @@ func TestSetSerialization(t *testing.T) {
 		t.Errorf("Got error %v", err)
 	}
 
-	err = json.Unmarshal([]byte(`[1,2,3]`), &set)
+	err = json.Unmarshal([]byte(`["a","b","c"]`), &set)
 	if err != nil {
 		t.Errorf("Got error %v", err)
 	}
+	assert()
 }
 
 func TestSetString(t *testing.T) {

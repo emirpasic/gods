@@ -16,7 +16,7 @@ var _ containers.JSONDeserializer = (*Map[string, int])(nil)
 
 // ToJSON outputs the JSON representation of the map.
 func (m *Map[K, V]) ToJSON() ([]byte, error) {
-	return json.Marshal(m.forwardMap)
+	return m.forwardMap.ToJSON()
 }
 
 // FromJSON populates the map from the input JSON representation.

@@ -578,20 +578,26 @@ func TestMapSerialization(t *testing.T) {
 		original.Put("b", "2")
 		original.Put("a", "1")
 
-		assertSerialization(original, "A", t)
-
 		serialized, err := original.ToJSON()
 		if err != nil {
 			t.Errorf("Got error %v", err)
 		}
-		assertSerialization(original, "B", t)
 
 		deserialized := New[string, string]()
 		err = deserialized.FromJSON(serialized)
 		if err != nil {
 			t.Errorf("Got error %v", err)
 		}
-		assertSerialization(deserialized, "C", t)
+
+		if original.Size() != deserialized.Size() {
+			t.Errorf("Got map of size %d, expected %d", original.Size(), deserialized.Size())
+		}
+		original.Each(func(key string, expected string) {
+			actual, ok := deserialized.Get(key)
+			if !ok || actual != expected {
+				t.Errorf("Did not find expected value %v for key %v in deserialied map (got %q)", expected, key, actual)
+			}
+		})
 	}
 
 	m := New[string, float64]()
@@ -615,29 +621,6 @@ func TestMapString(t *testing.T) {
 	c.Put("a", "a")
 	if !strings.HasPrefix(c.String(), "TreeBidiMap") {
 		t.Errorf("String should start with container name")
-	}
-}
-
-// noinspection GoBoolExpressions
-func assertSerialization(m *Map[string, string], txt string, t *testing.T) {
-	if actualValue := m.Keys(); false ||
-		actualValue[0] != "a" ||
-		actualValue[1] != "b" ||
-		actualValue[2] != "c" ||
-		actualValue[3] != "d" ||
-		actualValue[4] != "e" {
-		t.Errorf("[%s] Got %v expected %v", txt, actualValue, "[a,b,c,d,e]")
-	}
-	if actualValue := m.Values(); false ||
-		actualValue[0] != "1" ||
-		actualValue[1] != "2" ||
-		actualValue[2] != "3" ||
-		actualValue[3] != "4" ||
-		actualValue[4] != "5" {
-		t.Errorf("[%s] Got %v expected %v", txt, actualValue, "[1,2,3,4,5]")
-	}
-	if actualValue, expectedValue := m.Size(), 5; actualValue != expectedValue {
-		t.Errorf("[%s] Got %v expected %v", txt, actualValue, expectedValue)
 	}
 }
 
