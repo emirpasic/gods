@@ -6,13 +6,14 @@ package circularbuffer
 
 import (
 	"encoding/json"
-	"fmt"
 	"strings"
 	"testing"
+
+	"github.com/emirpasic/gods/testutils"
 )
 
 func TestQueueEnqueue(t *testing.T) {
-	queue := New(3)
+	queue := New[int](3)
 	if actualValue := queue.Empty(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
@@ -20,7 +21,7 @@ func TestQueueEnqueue(t *testing.T) {
 	queue.Enqueue(2)
 	queue.Enqueue(3)
 
-	if actualValue := queue.Values(); actualValue[0].(int) != 1 || actualValue[1].(int) != 2 || actualValue[2].(int) != 3 {
+	if actualValue := queue.Values(); actualValue[0] != 1 || actualValue[1] != 2 || actualValue[2] != 3 {
 		t.Errorf("Got %v expected %v", actualValue, "[1,2,3]")
 	}
 	if actualValue := queue.Empty(); actualValue != false {
@@ -35,8 +36,8 @@ func TestQueueEnqueue(t *testing.T) {
 }
 
 func TestQueuePeek(t *testing.T) {
-	queue := New(3)
-	if actualValue, ok := queue.Peek(); actualValue != nil || ok {
+	queue := New[int](3)
+	if actualValue, ok := queue.Peek(); actualValue != 0 || ok {
 		t.Errorf("Got %v expected %v", actualValue, nil)
 	}
 	queue.Enqueue(1)
@@ -54,7 +55,7 @@ func TestQueueDequeue(t *testing.T) {
 		}
 	}
 
-	queue := New(3)
+	queue := New[int](3)
 	assert(queue.Empty(), true)
 	assert(queue.Empty(), true)
 	assert(queue.Full(), false)
@@ -89,7 +90,7 @@ func TestQueueDequeue(t *testing.T) {
 	assert(queue.Empty(), true)
 	assert(queue.Full(), false)
 
-	if actualValue, ok := queue.Dequeue(); actualValue != nil || ok {
+	if actualValue, ok := queue.Dequeue(); actualValue != 0 || ok {
 		t.Errorf("Got %v expected %v", actualValue, nil)
 	}
 	assert(queue.Size(), 0)
@@ -106,7 +107,7 @@ func TestQueueDequeueFull(t *testing.T) {
 		}
 	}
 
-	queue := New(2)
+	queue := New[int](2)
 	assert(queue.Empty(), true)
 	assert(queue.Full(), false)
 	assert(queue.Size(), 0)
@@ -142,7 +143,7 @@ func TestQueueDequeueFull(t *testing.T) {
 	}
 	assert(queue.Size(), 0)
 
-	if actualValue, ok := queue.Dequeue(); actualValue != nil || ok {
+	if actualValue, ok := queue.Dequeue(); actualValue != 0 || ok {
 		t.Errorf("Got %v expected %v", actualValue, nil)
 	}
 	assert(queue.Empty(), true)
@@ -151,7 +152,7 @@ func TestQueueDequeueFull(t *testing.T) {
 }
 
 func TestQueueIteratorOnEmpty(t *testing.T) {
-	queue := New(3)
+	queue := New[int](3)
 	it := queue.Iterator()
 	for it.Next() {
 		t.Errorf("Shouldn't iterate on empty queue")
@@ -159,7 +160,7 @@ func TestQueueIteratorOnEmpty(t *testing.T) {
 }
 
 func TestQueueIteratorNext(t *testing.T) {
-	queue := New(3)
+	queue := New[string](3)
 	queue.Enqueue("a")
 	queue.Enqueue("b")
 	queue.Enqueue("c")
@@ -202,7 +203,7 @@ func TestQueueIteratorNext(t *testing.T) {
 }
 
 func TestQueueIteratorPrev(t *testing.T) {
-	queue := New(3)
+	queue := New[string](3)
 	queue.Enqueue("a")
 	queue.Enqueue("b")
 	queue.Enqueue("c")
@@ -241,7 +242,7 @@ func TestQueueIteratorPrev(t *testing.T) {
 }
 
 func TestQueueIteratorBegin(t *testing.T) {
-	queue := New(3)
+	queue := New[string](3)
 	it := queue.Iterator()
 	it.Begin()
 	queue.Enqueue("a")
@@ -257,7 +258,7 @@ func TestQueueIteratorBegin(t *testing.T) {
 }
 
 func TestQueueIteratorEnd(t *testing.T) {
-	queue := New(3)
+	queue := New[string](3)
 	it := queue.Iterator()
 
 	if index := it.Index(); index != -1 {
@@ -284,7 +285,7 @@ func TestQueueIteratorEnd(t *testing.T) {
 }
 
 func TestQueueIteratorFirst(t *testing.T) {
-	queue := New(3)
+	queue := New[string](3)
 	it := queue.Iterator()
 	if actualValue, expectedValue := it.First(), false; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
@@ -301,7 +302,7 @@ func TestQueueIteratorFirst(t *testing.T) {
 }
 
 func TestQueueIteratorLast(t *testing.T) {
-	queue := New(3)
+	queue := New[string](3)
 	it := queue.Iterator()
 	if actualValue, expectedValue := it.Last(), false; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
@@ -319,13 +320,13 @@ func TestQueueIteratorLast(t *testing.T) {
 
 func TestQueueIteratorNextTo(t *testing.T) {
 	// Sample seek function, i.e. string starting with "b"
-	seek := func(index int, value interface{}) bool {
-		return strings.HasSuffix(value.(string), "b")
+	seek := func(index int, value string) bool {
+		return strings.HasSuffix(value, "b")
 	}
 
 	// NextTo (empty)
 	{
-		queue := New(3)
+		queue := New[string](3)
 		it := queue.Iterator()
 		for it.NextTo(seek) {
 			t.Errorf("Shouldn't iterate on empty queue")
@@ -334,7 +335,7 @@ func TestQueueIteratorNextTo(t *testing.T) {
 
 	// NextTo (not found)
 	{
-		queue := New(3)
+		queue := New[string](3)
 		queue.Enqueue("xx")
 		queue.Enqueue("yy")
 		it := queue.Iterator()
@@ -345,7 +346,7 @@ func TestQueueIteratorNextTo(t *testing.T) {
 
 	// NextTo (found)
 	{
-		queue := New(3)
+		queue := New[string](3)
 		queue.Enqueue("aa")
 		queue.Enqueue("bb")
 		queue.Enqueue("cc")
@@ -354,13 +355,13 @@ func TestQueueIteratorNextTo(t *testing.T) {
 		if !it.NextTo(seek) {
 			t.Errorf("Shouldn't iterate on empty queue")
 		}
-		if index, value := it.Index(), it.Value(); index != 1 || value.(string) != "bb" {
+		if index, value := it.Index(), it.Value(); index != 1 || value != "bb" {
 			t.Errorf("Got %v,%v expected %v,%v", index, value, 1, "bb")
 		}
 		if !it.Next() {
 			t.Errorf("Should go to first element")
 		}
-		if index, value := it.Index(), it.Value(); index != 2 || value.(string) != "cc" {
+		if index, value := it.Index(), it.Value(); index != 2 || value != "cc" {
 			t.Errorf("Got %v,%v expected %v,%v", index, value, 2, "cc")
 		}
 		if it.Next() {
@@ -371,13 +372,13 @@ func TestQueueIteratorNextTo(t *testing.T) {
 
 func TestQueueIteratorPrevTo(t *testing.T) {
 	// Sample seek function, i.e. string starting with "b"
-	seek := func(index int, value interface{}) bool {
-		return strings.HasSuffix(value.(string), "b")
+	seek := func(index int, value string) bool {
+		return strings.HasSuffix(value, "b")
 	}
 
 	// PrevTo (empty)
 	{
-		queue := New(3)
+		queue := New[string](3)
 		it := queue.Iterator()
 		it.End()
 		for it.PrevTo(seek) {
@@ -387,7 +388,7 @@ func TestQueueIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (not found)
 	{
-		queue := New(3)
+		queue := New[string](3)
 		queue.Enqueue("xx")
 		queue.Enqueue("yy")
 		it := queue.Iterator()
@@ -399,7 +400,7 @@ func TestQueueIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (found)
 	{
-		queue := New(3)
+		queue := New[string](3)
 		queue.Enqueue("aa")
 		queue.Enqueue("bb")
 		queue.Enqueue("cc")
@@ -408,13 +409,13 @@ func TestQueueIteratorPrevTo(t *testing.T) {
 		if !it.PrevTo(seek) {
 			t.Errorf("Shouldn't iterate on empty queue")
 		}
-		if index, value := it.Index(), it.Value(); index != 1 || value.(string) != "bb" {
+		if index, value := it.Index(), it.Value(); index != 1 || value != "bb" {
 			t.Errorf("Got %v,%v expected %v,%v", index, value, 1, "bb")
 		}
 		if !it.Prev() {
 			t.Errorf("Should go to first element")
 		}
-		if index, value := it.Index(), it.Value(); index != 0 || value.(string) != "aa" {
+		if index, value := it.Index(), it.Value(); index != 0 || value != "aa" {
 			t.Errorf("Got %v,%v expected %v,%v", index, value, 0, "aa")
 		}
 		if it.Prev() {
@@ -430,7 +431,7 @@ func TestQueueIterator(t *testing.T) {
 		}
 	}
 
-	queue := New(2)
+	queue := New[string](2)
 
 	queue.Enqueue("a")
 	queue.Enqueue("b")
@@ -482,16 +483,14 @@ func TestQueueIterator(t *testing.T) {
 }
 
 func TestQueueSerialization(t *testing.T) {
-	queue := New(3)
+	queue := New[string](3)
 	queue.Enqueue("a")
 	queue.Enqueue("b")
 	queue.Enqueue("c")
 
 	var err error
 	assert := func() {
-		if actualValue, expectedValue := fmt.Sprintf("%s%s%s", queue.Values()...), "abc"; actualValue != expectedValue {
-			t.Errorf("Got %v expected %v", actualValue, expectedValue)
-		}
+		testutils.SameElements(t, queue.Values(), []string{"a", "b", "c"})
 		if actualValue, expectedValue := queue.Size(), 3; actualValue != expectedValue {
 			t.Errorf("Got %v expected %v", actualValue, expectedValue)
 		}
@@ -520,14 +519,14 @@ func TestQueueSerialization(t *testing.T) {
 }
 
 func TestQueueString(t *testing.T) {
-	c := New(3)
+	c := New[int](3)
 	c.Enqueue(1)
 	if !strings.HasPrefix(c.String(), "CircularBuffer") {
 		t.Errorf("String should start with container name")
 	}
 }
 
-func benchmarkEnqueue(b *testing.B, queue *Queue, size int) {
+func benchmarkEnqueue(b *testing.B, queue *Queue[int], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			queue.Enqueue(n)
@@ -535,7 +534,7 @@ func benchmarkEnqueue(b *testing.B, queue *Queue, size int) {
 	}
 }
 
-func benchmarkDequeue(b *testing.B, queue *Queue, size int) {
+func benchmarkDequeue(b *testing.B, queue *Queue[int], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			queue.Dequeue()
@@ -546,7 +545,7 @@ func benchmarkDequeue(b *testing.B, queue *Queue, size int) {
 func BenchmarkArrayQueueDequeue100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	queue := New(3)
+	queue := New[int](3)
 	for n := 0; n < size; n++ {
 		queue.Enqueue(n)
 	}
@@ -557,7 +556,7 @@ func BenchmarkArrayQueueDequeue100(b *testing.B) {
 func BenchmarkArrayQueueDequeue1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	queue := New(3)
+	queue := New[int](3)
 	for n := 0; n < size; n++ {
 		queue.Enqueue(n)
 	}
@@ -568,7 +567,7 @@ func BenchmarkArrayQueueDequeue1000(b *testing.B) {
 func BenchmarkArrayQueueDequeue10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	queue := New(3)
+	queue := New[int](3)
 	for n := 0; n < size; n++ {
 		queue.Enqueue(n)
 	}
@@ -579,7 +578,7 @@ func BenchmarkArrayQueueDequeue10000(b *testing.B) {
 func BenchmarkArrayQueueDequeue100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	queue := New(3)
+	queue := New[int](3)
 	for n := 0; n < size; n++ {
 		queue.Enqueue(n)
 	}
@@ -590,7 +589,7 @@ func BenchmarkArrayQueueDequeue100000(b *testing.B) {
 func BenchmarkArrayQueueEnqueue100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	queue := New(3)
+	queue := New[int](3)
 	b.StartTimer()
 	benchmarkEnqueue(b, queue, size)
 }
@@ -598,7 +597,7 @@ func BenchmarkArrayQueueEnqueue100(b *testing.B) {
 func BenchmarkArrayQueueEnqueue1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	queue := New(3)
+	queue := New[int](3)
 	for n := 0; n < size; n++ {
 		queue.Enqueue(n)
 	}
@@ -609,7 +608,7 @@ func BenchmarkArrayQueueEnqueue1000(b *testing.B) {
 func BenchmarkArrayQueueEnqueue10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	queue := New(3)
+	queue := New[int](3)
 	for n := 0; n < size; n++ {
 		queue.Enqueue(n)
 	}
@@ -620,7 +619,7 @@ func BenchmarkArrayQueueEnqueue10000(b *testing.B) {
 func BenchmarkArrayQueueEnqueue100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	queue := New(3)
+	queue := New[int](3)
 	for n := 0; n < size; n++ {
 		queue.Enqueue(n)
 	}

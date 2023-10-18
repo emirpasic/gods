@@ -1,3 +1,3 @@
 module github.com/emirpasic/gods
 
-go 1.2
+go 1.21

@@ -10,10 +10,10 @@ import (
 )
 
 // Assert Enumerable implementation
-var _ containers.EnumerableWithIndex = (*Set)(nil)
+var _ containers.EnumerableWithIndex[int] = (*Set[int])(nil)
 
 // Each calls the given function once for each element, passing that element's index and value.
-func (set *Set) Each(f func(index int, value interface{})) {
+func (set *Set[T]) Each(f func(index int, value T)) {
 	iterator := set.Iterator()
 	for iterator.Next() {
 		f(iterator.Index(), iterator.Value())
@@ -22,8 +22,8 @@ func (set *Set) Each(f func(index int, value interface{})) {
 
 // Map invokes the given function once for each element and returns a
 // container containing the values returned by the given function.
-func (set *Set) Map(f func(index int, value interface{}) interface{}) *Set {
-	newSet := &Set{tree: rbt.NewWith(set.tree.Comparator)}
+func (set *Set[T]) Map(f func(index int, value T) T) *Set[T] {
+	newSet := &Set[T]{tree: rbt.NewWith[T, struct{}](set.tree.Comparator)}
 	iterator := set.Iterator()
 	for iterator.Next() {
 		newSet.Add(f(iterator.Index(), iterator.Value()))
@@ -32,8 +32,8 @@ func (set *Set) Map(f func(index int, value interface{}) interface{}) *Set {
 }
 
 // Select returns a new container containing all elements for which the given function returns a true value.
-func (set *Set) Select(f func(index int, value interface{}) bool) *Set {
-	newSet := &Set{tree: rbt.NewWith(set.tree.Comparator)}
+func (set *Set[T]) Select(f func(index int, value T) bool) *Set[T] {
+	newSet := &Set[T]{tree: rbt.NewWith[T, struct{}](set.tree.Comparator)}
 	iterator := set.Iterator()
 	for iterator.Next() {
 		if f(iterator.Index(), iterator.Value()) {
@@ -45,7 +45,7 @@ func (set *Set) Select(f func(index int, value interface{}) bool) *Set {
 
 // Any passes each element of the container to the given function and
 // returns true if the function ever returns true for any element.
-func (set *Set) Any(f func(index int, value interface{}) bool) bool {
+func (set *Set[T]) Any(f func(index int, value T) bool) bool {
 	iterator := set.Iterator()
 	for iterator.Next() {
 		if f(iterator.Index(), iterator.Value()) {
@@ -57,7 +57,7 @@ func (set *Set) Any(f func(index int, value interface{}) bool) bool {
 
 // All passes each element of the container to the given function and
 // returns true if the function returns true for all elements.
-func (set *Set) All(f func(index int, value interface{}) bool) bool {
+func (set *Set[T]) All(f func(index int, value T) bool) bool {
 	iterator := set.Iterator()
 	for iterator.Next() {
 		if !f(iterator.Index(), iterator.Value()) {
@@ -70,12 +70,13 @@ func (set *Set) All(f func(index int, value interface{}) bool) bool {
 // Find passes each element of the container to the given function and returns
 // the first (index,value) for which the function is true or -1,nil otherwise
 // if no element matches the criteria.
-func (set *Set) Find(f func(index int, value interface{}) bool) (int, interface{}) {
+func (set *Set[T]) Find(f func(index int, value T) bool) (int, T) {
 	iterator := set.Iterator()
 	for iterator.Next() {
 		if f(iterator.Index(), iterator.Value()) {
 			return iterator.Index(), iterator.Value()
 		}
 	}
-	return -1, nil
+	var t T
+	return -1, t
 }

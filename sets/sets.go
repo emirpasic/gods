@@ -9,18 +9,17 @@
 // Reference: https://en.wikipedia.org/wiki/Set_%28abstract_data_type%29
 package sets
 
-import "github.com/emirpasic/gods/containers"
+import (
+	"github.com/emirpasic/gods/containers"
+)
 
 // Set interface that all sets implement
-type Set interface {
-	Add(elements ...interface{})
-	Remove(elements ...interface{})
-	Contains(elements ...interface{}) bool
-	// Intersection(another *Set) *Set
-	// Union(another *Set) *Set
-	// Difference(another *Set) *Set
+type Set[T comparable] interface {
+	Add(elements ...T)
+	Remove(elements ...T)
+	Contains(elements ...T) bool
 
-	containers.Container
+	containers.Container[T]
 	// Empty() bool
 	// Size() int
 	// Clear()

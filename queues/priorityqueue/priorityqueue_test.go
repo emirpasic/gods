@@ -5,9 +5,9 @@
 package priorityqueue
 
 import (
+	"cmp"
 	"encoding/json"
 	"fmt"
-	"github.com/emirpasic/gods/utils"
 	"math/rand"
 	"strings"
 	"testing"
@@ -23,15 +23,12 @@ func (element Element) String() string {
 }
 
 // Comparator function (sort by priority value in descending order)
-func byPriority(a, b interface{}) int {
-	return -utils.IntComparator( // Note "-" for descending order
-		a.(Element).priority,
-		b.(Element).priority,
-	)
+func byPriority(a, b Element) int {
+	return -cmp.Compare(a.priority, b.priority) // Note "-" for descending order
 }
 
 func TestBinaryQueueEnqueue(t *testing.T) {
-	queue := NewWith(byPriority)
+	queue := NewWith[Element](byPriority)
 
 	if actualValue := queue.Empty(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
@@ -53,15 +50,15 @@ func TestBinaryQueueEnqueue(t *testing.T) {
 		value := it.Value()
 		switch index {
 		case 0:
-			if actualValue, expectedValue := value.(Element).name, "c"; actualValue != expectedValue {
+			if actualValue, expectedValue := value.name, "c"; actualValue != expectedValue {
 				t.Errorf("Got %v expected %v", actualValue, expectedValue)
 			}
 		case 1:
-			if actualValue, expectedValue := value.(Element).name, "b"; actualValue != expectedValue {
+			if actualValue, expectedValue := value.name, "b"; actualValue != expectedValue {
 				t.Errorf("Got %v expected %v", actualValue, expectedValue)
 			}
 		case 2:
-			if actualValue, expectedValue := value.(Element).name, "a"; actualValue != expectedValue {
+			if actualValue, expectedValue := value.name, "a"; actualValue != expectedValue {
 				t.Errorf("Got %v expected %v", actualValue, expectedValue)
 			}
 		default:
@@ -72,13 +69,13 @@ func TestBinaryQueueEnqueue(t *testing.T) {
 		}
 	}
 
-	if actualValue := queue.Values(); actualValue[0].(Element).name != "c" || actualValue[1].(Element).name != "b" || actualValue[2].(Element).name != "a" {
+	if actualValue := queue.Values(); actualValue[0].name != "c" || actualValue[1].name != "b" || actualValue[2].name != "a" {
 		t.Errorf("Got %v expected %v", actualValue, `[{3 c} {2 b} {1 a}]`)
 	}
 }
 
 func TestBinaryQueueEnqueueBulk(t *testing.T) {
-	queue := NewWith(utils.IntComparator)
+	queue := New[int]()
 
 	queue.Enqueue(15)
 	queue.Enqueue(20)
@@ -109,7 +106,7 @@ func TestBinaryQueueEnqueueBulk(t *testing.T) {
 }
 
 func TestBinaryQueueDequeue(t *testing.T) {
-	queue := NewWith(utils.IntComparator)
+	queue := New[int]()
 
 	if actualValue := queue.Empty(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
@@ -126,7 +123,7 @@ func TestBinaryQueueDequeue(t *testing.T) {
 	if actualValue, ok := queue.Dequeue(); actualValue != 3 || !ok {
 		t.Errorf("Got %v expected %v", actualValue, 3)
 	}
-	if actualValue, ok := queue.Dequeue(); actualValue != nil || ok {
+	if actualValue, ok := queue.Dequeue(); actualValue != 0 || ok {
 		t.Errorf("Got %v expected %v", actualValue, nil)
 	}
 	if actualValue := queue.Empty(); actualValue != true {
@@ -138,7 +135,7 @@ func TestBinaryQueueDequeue(t *testing.T) {
 }
 
 func TestBinaryQueueRandom(t *testing.T) {
-	queue := NewWith(utils.IntComparator)
+	queue := New[int]()
 
 	rand.Seed(3)
 	for i := 0; i < 10000; i++ {
@@ -149,7 +146,7 @@ func TestBinaryQueueRandom(t *testing.T) {
 	prev, _ := queue.Dequeue()
 	for !queue.Empty() {
 		curr, _ := queue.Dequeue()
-		if prev.(int) > curr.(int) {
+		if prev > curr {
 			t.Errorf("Queue property invalidated. prev: %v current: %v", prev, curr)
 		}
 		prev = curr
@@ -157,7 +154,7 @@ func TestBinaryQueueRandom(t *testing.T) {
 }
 
 func TestBinaryQueueIteratorOnEmpty(t *testing.T) {
-	queue := NewWith(utils.IntComparator)
+	queue := New[int]()
 	it := queue.Iterator()
 	for it.Next() {
 		t.Errorf("Shouldn't iterate on empty queue")
@@ -165,7 +162,7 @@ func TestBinaryQueueIteratorOnEmpty(t *testing.T) {
 }
 
 func TestBinaryQueueIteratorNext(t *testing.T) {
-	queue := NewWith(utils.IntComparator)
+	queue := New[int]()
 	queue.Enqueue(3)
 	queue.Enqueue(2)
 	queue.Enqueue(1)
@@ -202,7 +199,7 @@ func TestBinaryQueueIteratorNext(t *testing.T) {
 }
 
 func TestBinaryQueueIteratorPrev(t *testing.T) {
-	queue := NewWith(utils.IntComparator)
+	queue := New[int]()
 	queue.Enqueue(3)
 	queue.Enqueue(2)
 	queue.Enqueue(1)
@@ -241,7 +238,7 @@ func TestBinaryQueueIteratorPrev(t *testing.T) {
 }
 
 func TestBinaryQueueIteratorBegin(t *testing.T) {
-	queue := NewWith(utils.IntComparator)
+	queue := New[int]()
 	it := queue.Iterator()
 	it.Begin()
 	queue.Enqueue(2)
@@ -257,7 +254,7 @@ func TestBinaryQueueIteratorBegin(t *testing.T) {
 }
 
 func TestBinaryQueueIteratorEnd(t *testing.T) {
-	queue := NewWith(utils.IntComparator)
+	queue := New[int]()
 	it := queue.Iterator()
 
 	if index := it.Index(); index != -1 {
@@ -284,7 +281,7 @@ func TestBinaryQueueIteratorEnd(t *testing.T) {
 }
 
 func TestBinaryQueueIteratorFirst(t *testing.T) {
-	queue := NewWith(utils.IntComparator)
+	queue := New[int]()
 	it := queue.Iterator()
 	if actualValue, expectedValue := it.First(), false; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
@@ -301,7 +298,7 @@ func TestBinaryQueueIteratorFirst(t *testing.T) {
 }
 
 func TestBinaryQueueIteratorLast(t *testing.T) {
-	tree := NewWith(utils.IntComparator)
+	tree := New[int]()
 	it := tree.Iterator()
 	if actualValue, expectedValue := it.Last(), false; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
@@ -319,13 +316,13 @@ func TestBinaryQueueIteratorLast(t *testing.T) {
 
 func TestBinaryQueueIteratorNextTo(t *testing.T) {
 	// Sample seek function, i.e. string starting with "b"
-	seek := func(index int, value interface{}) bool {
-		return strings.HasSuffix(value.(string), "b")
+	seek := func(index int, value string) bool {
+		return strings.HasSuffix(value, "b")
 	}
 
 	// NextTo (empty)
 	{
-		tree := NewWith(utils.StringComparator)
+		tree := New[string]()
 		it := tree.Iterator()
 		for it.NextTo(seek) {
 			t.Errorf("Shouldn't iterate on empty list")
@@ -334,7 +331,7 @@ func TestBinaryQueueIteratorNextTo(t *testing.T) {
 
 	// NextTo (not found)
 	{
-		tree := NewWith(utils.StringComparator)
+		tree := New[string]()
 		tree.Enqueue("xx")
 		tree.Enqueue("yy")
 		it := tree.Iterator()
@@ -345,7 +342,7 @@ func TestBinaryQueueIteratorNextTo(t *testing.T) {
 
 	// NextTo (found)
 	{
-		tree := NewWith(utils.StringComparator)
+		tree := New[string]()
 		tree.Enqueue("aa")
 		tree.Enqueue("bb")
 		tree.Enqueue("cc")
@@ -354,13 +351,13 @@ func TestBinaryQueueIteratorNextTo(t *testing.T) {
 		if !it.NextTo(seek) {
 			t.Errorf("Shouldn't iterate on empty list")
 		}
-		if index, value := it.Index(), it.Value(); index != 1 || value.(string) != "bb" {
+		if index, value := it.Index(), it.Value(); index != 1 || value != "bb" {
 			t.Errorf("Got %v,%v expected %v,%v", index, value, 1, "bb")
 		}
 		if !it.Next() {
 			t.Errorf("Should go to first element")
 		}
-		if index, value := it.Index(), it.Value(); index != 2 || value.(string) != "cc" {
+		if index, value := it.Index(), it.Value(); index != 2 || value != "cc" {
 			t.Errorf("Got %v,%v expected %v,%v", index, value, 2, "cc")
 		}
 		if it.Next() {
@@ -371,13 +368,13 @@ func TestBinaryQueueIteratorNextTo(t *testing.T) {
 
 func TestBinaryQueueIteratorPrevTo(t *testing.T) {
 	// Sample seek function, i.e. string starting with "b"
-	seek := func(index int, value interface{}) bool {
-		return strings.HasSuffix(value.(string), "b")
+	seek := func(index int, value string) bool {
+		return strings.HasSuffix(value, "b")
 	}
 
 	// PrevTo (empty)
 	{
-		tree := NewWith(utils.StringComparator)
+		tree := New[string]()
 		it := tree.Iterator()
 		it.End()
 		for it.PrevTo(seek) {
@@ -387,7 +384,7 @@ func TestBinaryQueueIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (not found)
 	{
-		tree := NewWith(utils.StringComparator)
+		tree := New[string]()
 		tree.Enqueue("xx")
 		tree.Enqueue("yy")
 		it := tree.Iterator()
@@ -399,7 +396,7 @@ func TestBinaryQueueIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (found)
 	{
-		tree := NewWith(utils.StringComparator)
+		tree := New[string]()
 		tree.Enqueue("aa")
 		tree.Enqueue("bb")
 		tree.Enqueue("cc")
@@ -408,13 +405,13 @@ func TestBinaryQueueIteratorPrevTo(t *testing.T) {
 		if !it.PrevTo(seek) {
 			t.Errorf("Shouldn't iterate on empty list")
 		}
-		if index, value := it.Index(), it.Value(); index != 1 || value.(string) != "bb" {
+		if index, value := it.Index(), it.Value(); index != 1 || value != "bb" {
 			t.Errorf("Got %v,%v expected %v,%v", index, value, 1, "bb")
 		}
 		if !it.Prev() {
 			t.Errorf("Should go to first element")
 		}
-		if index, value := it.Index(), it.Value(); index != 0 || value.(string) != "aa" {
+		if index, value := it.Index(), it.Value(); index != 0 || value != "aa" {
 			t.Errorf("Got %v,%v expected %v,%v", index, value, 0, "aa")
 		}
 		if it.Prev() {
@@ -424,7 +421,7 @@ func TestBinaryQueueIteratorPrevTo(t *testing.T) {
 }
 
 func TestBinaryQueueSerialization(t *testing.T) {
-	queue := NewWith(utils.StringComparator)
+	queue := New[string]()
 
 	queue.Enqueue("c")
 	queue.Enqueue("b")
@@ -432,7 +429,7 @@ func TestBinaryQueueSerialization(t *testing.T) {
 
 	var err error
 	assert := func() {
-		if actualValue := queue.Values(); actualValue[0].(string) != "a" || actualValue[1].(string) != "b" || actualValue[2].(string) != "c" {
+		if actualValue := queue.Values(); actualValue[0] != "a" || actualValue[1] != "b" || actualValue[2] != "c" {
 			t.Errorf("Got %v expected %v", actualValue, "[1,3,2]")
 		}
 		if actualValue := queue.Size(); actualValue != 3 {
@@ -466,14 +463,14 @@ func TestBinaryQueueSerialization(t *testing.T) {
 }
 
 func TestBTreeString(t *testing.T) {
-	c := NewWith(byPriority)
+	c := New[int]()
 	c.Enqueue(1)
 	if !strings.HasPrefix(c.String(), "PriorityQueue") {
 		t.Errorf("String should start with container name")
 	}
 }
 
-func benchmarkEnqueue(b *testing.B, queue *Queue, size int) {
+func benchmarkEnqueue(b *testing.B, queue *Queue[Element], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			queue.Enqueue(Element{})
@@ -481,7 +478,7 @@ func benchmarkEnqueue(b *testing.B, queue *Queue, size int) {
 	}
 }
 
-func benchmarkDequeue(b *testing.B, queue *Queue, size int) {
+func benchmarkDequeue(b *testing.B, queue *Queue[Element], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			queue.Dequeue()
@@ -492,7 +489,7 @@ func benchmarkDequeue(b *testing.B, queue *Queue, size int) {
 func BenchmarkBinaryQueueDequeue100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	queue := NewWith(byPriority)
+	queue := NewWith[Element](byPriority)
 	for n := 0; n < size; n++ {
 		queue.Enqueue(Element{})
 	}
@@ -503,7 +500,7 @@ func BenchmarkBinaryQueueDequeue100(b *testing.B) {
 func BenchmarkBinaryQueueDequeue1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	queue := NewWith(byPriority)
+	queue := NewWith[Element](byPriority)
 	for n := 0; n < size; n++ {
 		queue.Enqueue(Element{})
 	}
@@ -514,7 +511,7 @@ func BenchmarkBinaryQueueDequeue1000(b *testing.B) {
 func BenchmarkBinaryQueueDequeue10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	queue := NewWith(byPriority)
+	queue := NewWith[Element](byPriority)
 	for n := 0; n < size; n++ {
 		queue.Enqueue(Element{})
 	}
@@ -525,7 +522,7 @@ func BenchmarkBinaryQueueDequeue10000(b *testing.B) {
 func BenchmarkBinaryQueueDequeue100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	queue := NewWith(byPriority)
+	queue := NewWith[Element](byPriority)
 	for n := 0; n < size; n++ {
 		queue.Enqueue(Element{})
 	}
@@ -544,7 +541,7 @@ func BenchmarkBinaryQueueEnqueue100(b *testing.B) {
 func BenchmarkBinaryQueueEnqueue1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	queue := NewWith(byPriority)
+	queue := NewWith[Element](byPriority)
 	for n := 0; n < size; n++ {
 		queue.Enqueue(Element{})
 	}
@@ -555,7 +552,7 @@ func BenchmarkBinaryQueueEnqueue1000(b *testing.B) {
 func BenchmarkBinaryQueueEnqueue10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	queue := NewWith(byPriority)
+	queue := NewWith[Element](byPriority)
 	for n := 0; n < size; n++ {
 		queue.Enqueue(Element{})
 	}
@@ -566,7 +563,7 @@ func BenchmarkBinaryQueueEnqueue10000(b *testing.B) {
 func BenchmarkBinaryQueueEnqueue100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	queue := NewWith(byPriority)
+	queue := NewWith[Element](byPriority)
 	for n := 0; n < size; n++ {
 		queue.Enqueue(Element{})
 	}

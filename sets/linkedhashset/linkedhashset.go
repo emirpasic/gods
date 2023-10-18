@@ -15,27 +15,28 @@ package linkedhashset
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/emirpasic/gods/lists/doublylinkedlist"
 	"github.com/emirpasic/gods/sets"
-	"strings"
 )
 
 // Assert Set implementation
-var _ sets.Set = (*Set)(nil)
+var _ sets.Set[int] = (*Set[int])(nil)
 
 // Set holds elements in go's native map
-type Set struct {
-	table    map[interface{}]struct{}
-	ordering *doublylinkedlist.List
+type Set[T comparable] struct {
+	table    map[T]struct{}
+	ordering *doublylinkedlist.List[T]
 }
 
 var itemExists = struct{}{}
 
 // New instantiates a new empty set and adds the passed values, if any, to the set
-func New(values ...interface{}) *Set {
-	set := &Set{
-		table:    make(map[interface{}]struct{}),
-		ordering: doublylinkedlist.New(),
+func New[T comparable](values ...T) *Set[T] {
+	set := &Set[T]{
+		table:    make(map[T]struct{}),
+		ordering: doublylinkedlist.New[T](),
 	}
 	if len(values) > 0 {
 		set.Add(values...)
@@ -45,7 +46,7 @@ func New(values ...interface{}) *Set {
 
 // Add adds the items (one or more) to the set.
 // Note that insertion-order is not affected if an element is re-inserted into the set.
-func (set *Set) Add(items ...interface{}) {
+func (set *Set[T]) Add(items ...T) {
 	for _, item := range items {
 		if _, contains := set.table[item]; !contains {
 			set.table[item] = itemExists
@@ -56,7 +57,7 @@ func (set *Set) Add(items ...interface{}) {
 
 // Remove removes the items (one or more) from the set.
 // Slow operation, worst-case O(n^2).
-func (set *Set) Remove(items ...interface{}) {
+func (set *Set[T]) Remove(items ...T) {
 	for _, item := range items {
 		if _, contains := set.table[item]; contains {
 			delete(set.table, item)
@@ -69,7 +70,7 @@ func (set *Set) Remove(items ...interface{}) {
 // Contains check if items (one or more) are present in the set.
 // All items have to be present in the set for the method to return true.
 // Returns true if no arguments are passed at all, i.e. set is always superset of empty set.
-func (set *Set) Contains(items ...interface{}) bool {
+func (set *Set[T]) Contains(items ...T) bool {
 	for _, item := range items {
 		if _, contains := set.table[item]; !contains {
 			return false
@@ -79,24 +80,24 @@ func (set *Set) Contains(items ...interface{}) bool {
 }
 
 // Empty returns true if set does not contain any elements.
-func (set *Set) Empty() bool {
+func (set *Set[T]) Empty() bool {
 	return set.Size() == 0
 }
 
 // Size returns number of elements within the set.
-func (set *Set) Size() int {
+func (set *Set[T]) Size() int {
 	return set.ordering.Size()
 }
 
 // Clear clears all values in the set.
-func (set *Set) Clear() {
-	set.table = make(map[interface{}]struct{})
+func (set *Set[T]) Clear() {
+	set.table = make(map[T]struct{})
 	set.ordering.Clear()
 }
 
 // Values returns all items in the set.
-func (set *Set) Values() []interface{} {
-	values := make([]interface{}, set.Size())
+func (set *Set[T]) Values() []T {
+	values := make([]T, set.Size())
 	it := set.Iterator()
 	for it.Next() {
 		values[it.Index()] = it.Value()
@@ -105,7 +106,7 @@ func (set *Set) Values() []interface{} {
 }
 
 // String returns a string representation of container
-func (set *Set) String() string {
+func (set *Set[T]) String() string {
 	str := "LinkedHashSet\n"
 	items := []string{}
 	it := set.Iterator()
@@ -119,8 +120,8 @@ func (set *Set) String() string {
 // Intersection returns the intersection between two sets.
 // The new set consists of all elements that are both in "set" and "another".
 // Ref: https://en.wikipedia.org/wiki/Intersection_(set_theory)
-func (set *Set) Intersection(another *Set) *Set {
-	result := New()
+func (set *Set[T]) Intersection(another *Set[T]) *Set[T] {
+	result := New[T]()
 
 	// Iterate over smaller set (optimization)
 	if set.Size() <= another.Size() {
@@ -143,8 +144,8 @@ func (set *Set) Intersection(another *Set) *Set {
 // Union returns the union of two sets.
 // The new set consists of all elements that are in "set" or "another" (possibly both).
 // Ref: https://en.wikipedia.org/wiki/Union_(set_theory)
-func (set *Set) Union(another *Set) *Set {
-	result := New()
+func (set *Set[T]) Union(another *Set[T]) *Set[T] {
+	result := New[T]()
 
 	for item := range set.table {
 		result.Add(item)
@@ -159,8 +160,8 @@ func (set *Set) Union(another *Set) *Set {
 // Difference returns the difference between two sets.
 // The new set consists of all elements that are in "set" but not in "another".
 // Ref: https://proofwiki.org/wiki/Definition:Set_Difference
-func (set *Set) Difference(another *Set) *Set {
-	result := New()
+func (set *Set[T]) Difference(another *Set[T]) *Set[T] {
+	result := New[T]()
 
 	for item := range set.table {
 		if _, contains := another.table[item]; !contains {

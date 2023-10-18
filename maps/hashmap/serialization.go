@@ -6,42 +6,30 @@ package hashmap
 
 import (
 	"encoding/json"
+
 	"github.com/emirpasic/gods/containers"
-	"github.com/emirpasic/gods/utils"
 )
 
 // Assert Serialization implementation
-var _ containers.JSONSerializer = (*Map)(nil)
-var _ containers.JSONDeserializer = (*Map)(nil)
+var _ containers.JSONSerializer = (*Map[string, int])(nil)
+var _ containers.JSONDeserializer = (*Map[string, int])(nil)
 
 // ToJSON outputs the JSON representation of the map.
-func (m *Map) ToJSON() ([]byte, error) {
-	elements := make(map[string]interface{})
-	for key, value := range m.m {
-		elements[utils.ToString(key)] = value
-	}
-	return json.Marshal(&elements)
+func (m *Map[K, V]) ToJSON() ([]byte, error) {
+	return json.Marshal(m.m)
 }
 
 // FromJSON populates the map from the input JSON representation.
-func (m *Map) FromJSON(data []byte) error {
-	elements := make(map[string]interface{})
-	err := json.Unmarshal(data, &elements)
-	if err == nil {
-		m.Clear()
-		for key, value := range elements {
-			m.m[key] = value
-		}
-	}
-	return err
+func (m *Map[K, V]) FromJSON(data []byte) error {
+	return json.Unmarshal(data, &m.m)
 }
 
 // UnmarshalJSON @implements json.Unmarshaler
-func (m *Map) UnmarshalJSON(bytes []byte) error {
+func (m *Map[K, V]) UnmarshalJSON(bytes []byte) error {
 	return m.FromJSON(bytes)
 }
 
 // MarshalJSON @implements json.Marshaler
-func (m *Map) MarshalJSON() ([]byte, error) {
+func (m *Map[K, V]) MarshalJSON() ([]byte, error) {
 	return m.ToJSON()
 }

@@ -6,21 +6,22 @@ package treeset
 
 import (
 	"encoding/json"
+
 	"github.com/emirpasic/gods/containers"
 )
 
 // Assert Serialization implementation
-var _ containers.JSONSerializer = (*Set)(nil)
-var _ containers.JSONDeserializer = (*Set)(nil)
+var _ containers.JSONSerializer = (*Set[int])(nil)
+var _ containers.JSONDeserializer = (*Set[int])(nil)
 
 // ToJSON outputs the JSON representation of the set.
-func (set *Set) ToJSON() ([]byte, error) {
+func (set *Set[T]) ToJSON() ([]byte, error) {
 	return json.Marshal(set.Values())
 }
 
 // FromJSON populates the set from the input JSON representation.
-func (set *Set) FromJSON(data []byte) error {
-	elements := []interface{}{}
+func (set *Set[T]) FromJSON(data []byte) error {
+	var elements []T
 	err := json.Unmarshal(data, &elements)
 	if err == nil {
 		set.Clear()
@@ -30,11 +31,11 @@ func (set *Set) FromJSON(data []byte) error {
 }
 
 // UnmarshalJSON @implements json.Unmarshaler
-func (set *Set) UnmarshalJSON(bytes []byte) error {
+func (set *Set[T]) UnmarshalJSON(bytes []byte) error {
 	return set.FromJSON(bytes)
 }
 
 // MarshalJSON @implements json.Marshaler
-func (set *Set) MarshalJSON() ([]byte, error) {
+func (set *Set[T]) MarshalJSON() ([]byte, error) {
 	return set.ToJSON()
 }

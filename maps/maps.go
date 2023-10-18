@@ -18,13 +18,13 @@ package maps
 import "github.com/emirpasic/gods/containers"
 
 // Map interface that all maps implement
-type Map interface {
-	Put(key interface{}, value interface{})
-	Get(key interface{}) (value interface{}, found bool)
-	Remove(key interface{})
-	Keys() []interface{}
+type Map[K comparable, V any] interface {
+	Put(key K, value V)
+	Get(key K) (value V, found bool)
+	Remove(key K)
+	Keys() []K
 
-	containers.Container
+	containers.Container[V]
 	// Empty() bool
 	// Size() int
 	// Clear()
@@ -33,8 +33,8 @@ type Map interface {
 }
 
 // BidiMap interface that all bidirectional maps implement (extends the Map interface)
-type BidiMap interface {
-	GetKey(value interface{}) (key interface{}, found bool)
+type BidiMap[K comparable, V comparable] interface {
+	GetKey(value V) (key K, found bool)
 
-	Map
+	Map[K, V]
 }

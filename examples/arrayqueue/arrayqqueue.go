@@ -8,7 +8,7 @@ import aq "github.com/emirpasic/gods/queues/arrayqueue"
 
 // ArrayQueueExample to demonstrate basic usage of ArrayQueue
 func main() {
-	queue := aq.New()      // empty
+	queue := aq.New[int]() // empty
 	queue.Enqueue(1)       // 1
 	queue.Enqueue(2)       // 1, 2
 	_ = queue.Values()     // 1, 2 (FIFO order)

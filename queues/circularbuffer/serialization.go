@@ -6,21 +6,22 @@ package circularbuffer
 
 import (
 	"encoding/json"
+
 	"github.com/emirpasic/gods/containers"
 )
 
 // Assert Serialization implementation
-var _ containers.JSONSerializer = (*Queue)(nil)
-var _ containers.JSONDeserializer = (*Queue)(nil)
+var _ containers.JSONSerializer = (*Queue[int])(nil)
+var _ containers.JSONDeserializer = (*Queue[int])(nil)
 
 // ToJSON outputs the JSON representation of queue's elements.
-func (queue *Queue) ToJSON() ([]byte, error) {
+func (queue *Queue[T]) ToJSON() ([]byte, error) {
 	return json.Marshal(queue.values[:queue.maxSize])
 }
 
 // FromJSON populates list's elements from the input JSON representation.
-func (queue *Queue) FromJSON(data []byte) error {
-	var values []interface{}
+func (queue *Queue[T]) FromJSON(data []byte) error {
+	var values []T
 	err := json.Unmarshal(data, &values)
 	if err == nil {
 		for _, value := range values {
@@ -31,11 +32,11 @@ func (queue *Queue) FromJSON(data []byte) error {
 }
 
 // UnmarshalJSON @implements json.Unmarshaler
-func (queue *Queue) UnmarshalJSON(bytes []byte) error {
+func (queue *Queue[T]) UnmarshalJSON(bytes []byte) error {
 	return queue.FromJSON(bytes)
 }
 
 // MarshalJSON @implements json.Marshaler
-func (queue *Queue) MarshalJSON() ([]byte, error) {
+func (queue *Queue[T]) MarshalJSON() ([]byte, error) {
 	return queue.ToJSON()
 }

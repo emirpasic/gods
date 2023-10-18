@@ -13,12 +13,12 @@ package queues
 import "github.com/emirpasic/gods/containers"
 
 // Queue interface that all queues implement
-type Queue interface {
-	Enqueue(value interface{})
-	Dequeue() (value interface{}, ok bool)
-	Peek() (value interface{}, ok bool)
+type Queue[T comparable] interface {
+	Enqueue(value T)
+	Dequeue() (value T, ok bool)
+	Peek() (value T, ok bool)
 
-	containers.Container
+	containers.Container[T]
 	// Empty() bool
 	// Size() int
 	// Clear()
