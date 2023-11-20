@@ -973,7 +973,7 @@ func main() {
     queue.Enqueue(2)       // 1, 2
     queue.Enqueue(3)       // 1, 2, 3
     _ = queue.Values()     // 1, 2, 3
-    queue.Enqueue(3)       // 4, 2, 3
+    queue.Enqueue(4)       // 4, 2, 3
     _, _ = queue.Peek()    // 4,true
     _, _ = queue.Dequeue() // 4, true
     _, _ = queue.Dequeue() // 2, true
