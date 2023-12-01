@@ -136,6 +136,8 @@ func (list *List) Remove(index int) {
 		element.next.prev = element.prev
 	}
 
+	element.prev = nil
+	element.next = nil
 	element = nil
 
 	list.size--

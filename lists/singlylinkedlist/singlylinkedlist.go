@@ -117,6 +117,7 @@ func (list *List) Remove(index int) {
 		beforeElement.next = element.next
 	}
 
+	element.next = nil
 	element = nil
 
 	list.size--
@@ -158,7 +159,7 @@ func (list *List) Values() []interface{} {
 	return values
 }
 
-//IndexOf returns index of provided element
+// IndexOf returns index of provided element
 func (list *List) IndexOf(value interface{}) int {
 	if list.size == 0 {
 		return -1
