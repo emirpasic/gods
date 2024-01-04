@@ -9,7 +9,7 @@
 // Reference: https://en.wikipedia.org/wiki/Stack_%28abstract_data_type%29
 package stacks
 
-import "github.com/emirpasic/gods/containers"
+import "github.com/emirpasic/gods/v2/containers"
 
 // Stack interface that all stacks implement
 type Stack[T any] interface {

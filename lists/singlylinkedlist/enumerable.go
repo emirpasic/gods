@@ -4,7 +4,7 @@
 
 package singlylinkedlist
 
-import "github.com/emirpasic/gods/containers"
+import "github.com/emirpasic/gods/v2/containers"
 
 // Assert Enumerable implementation
 var _ containers.EnumerableWithIndex[int] = (*List[int])(nil)

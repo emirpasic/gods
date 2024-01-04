@@ -10,7 +10,7 @@ import (
 	"encoding/json"
 	"slices"
 
-	"github.com/emirpasic/gods/containers"
+	"github.com/emirpasic/gods/v2/containers"
 )
 
 // Assert Serialization implementation

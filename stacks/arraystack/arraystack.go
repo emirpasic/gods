@@ -13,8 +13,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emirpasic/gods/lists/arraylist"
-	"github.com/emirpasic/gods/stacks"
+	"github.com/emirpasic/gods/v2/lists/arraylist"
+	"github.com/emirpasic/gods/v2/stacks"
 )
 
 // Assert Stack implementation

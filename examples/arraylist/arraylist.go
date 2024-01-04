@@ -7,7 +7,7 @@ package main
 import (
 	"cmp"
 
-	"github.com/emirpasic/gods/lists/arraylist"
+	"github.com/emirpasic/gods/v2/lists/arraylist"
 )
 
 // ArrayListExample to demonstrate basic usage of ArrayList

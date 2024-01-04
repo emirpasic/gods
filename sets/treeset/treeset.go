@@ -15,9 +15,9 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/emirpasic/gods/sets"
-	rbt "github.com/emirpasic/gods/trees/redblacktree"
-	"github.com/emirpasic/gods/utils"
+	"github.com/emirpasic/gods/v2/sets"
+	rbt "github.com/emirpasic/gods/v2/trees/redblacktree"
+	"github.com/emirpasic/gods/v2/utils"
 )
 
 // Assert Set implementation

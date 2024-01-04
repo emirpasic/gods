@@ -4,7 +4,7 @@
 
 package btree
 
-import "github.com/emirpasic/gods/containers"
+import "github.com/emirpasic/gods/v2/containers"
 
 // Assert Iterator implementation
 var _ containers.ReverseIteratorWithKey[string, int] = (*Iterator[string, int])(nil)

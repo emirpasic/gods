@@ -4,7 +4,7 @@
 
 package linkedliststack
 
-import "github.com/emirpasic/gods/containers"
+import "github.com/emirpasic/gods/v2/containers"
 
 // Assert Iterator implementation
 var _ containers.IteratorWithIndex[int] = (*Iterator[int])(nil)

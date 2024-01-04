@@ -10,8 +10,8 @@
 package lists
 
 import (
-	"github.com/emirpasic/gods/containers"
-	"github.com/emirpasic/gods/utils"
+	"github.com/emirpasic/gods/v2/containers"
+	"github.com/emirpasic/gods/v2/utils"
 )
 
 // List interface that all lists implement

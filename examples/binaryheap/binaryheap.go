@@ -7,7 +7,7 @@ package main
 import (
 	"cmp"
 
-	"github.com/emirpasic/gods/trees/binaryheap"
+	"github.com/emirpasic/gods/v2/trees/binaryheap"
 )
 
 // BinaryHeapExample to demonstrate basic usage of BinaryHeap

@@ -20,9 +20,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emirpasic/gods/queues"
-	"github.com/emirpasic/gods/trees/binaryheap"
-	"github.com/emirpasic/gods/utils"
+	"github.com/emirpasic/gods/v2/queues"
+	"github.com/emirpasic/gods/v2/trees/binaryheap"
+	"github.com/emirpasic/gods/v2/utils"
 )
 
 // Assert Queue implementation
