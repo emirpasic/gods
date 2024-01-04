@@ -7,9 +7,11 @@ package treemap
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/emirpasic/gods/utils"
+	"reflect"
 	"strings"
 	"testing"
+
+	"github.com/emirpasic/gods/utils"
 )
 
 func TestMapPut(t *testing.T) {
@@ -388,6 +390,21 @@ func TestMapFind(t *testing.T) {
 	})
 	if foundKey != nil || foundValue != nil {
 		t.Errorf("Got %v at %v expected %v at %v", foundValue, foundKey, nil, nil)
+	}
+}
+
+func TestMapGetDefault(t *testing.T) {
+	m := NewWithStringComparator()
+	m.Put("c", 3)
+	m.Put("a", 1)
+	m.Put("b", 2)
+	val1 := m.GetDefault("c", 8)
+	if !reflect.DeepEqual(val1, 3) {
+		t.Errorf("Got %v expected %v", val1, 3)
+	}
+	val2 := m.GetDefault("e", 8)
+	if !reflect.DeepEqual(val2, 8) {
+		t.Errorf("Got %v expected %v", val2, 8)
 	}
 }
 

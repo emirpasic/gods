@@ -53,6 +53,16 @@ func (m *Map) Get(key interface{}) (value interface{}, found bool) {
 	return
 }
 
+// Get searches the element in the map by key and returns its value of default value given by second argument if key is not found in map.
+func (m *Map) GetDefault(key interface{}, defaultValue interface{}) (value interface{}) {
+	var found bool = false
+	value, found = m.Get(key)
+	if !found {
+		value = defaultValue
+	}
+	return
+}
+
 // Remove removes the element from the map by key.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (m *Map) Remove(key interface{}) {

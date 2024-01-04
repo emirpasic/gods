@@ -21,6 +21,7 @@ import "github.com/emirpasic/gods/containers"
 type Map interface {
 	Put(key interface{}, value interface{})
 	Get(key interface{}) (value interface{}, found bool)
+	GetDefault(key interface{}, defaultValue interface{}) (value interface{})
 	Remove(key interface{})
 	Keys() []interface{}
 

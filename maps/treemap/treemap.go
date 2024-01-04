@@ -13,10 +13,11 @@ package treemap
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/emirpasic/gods/maps"
 	rbt "github.com/emirpasic/gods/trees/redblacktree"
 	"github.com/emirpasic/gods/utils"
-	"strings"
 )
 
 // Assert Map implementation
@@ -53,6 +54,16 @@ func (m *Map) Put(key interface{}, value interface{}) {
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (m *Map) Get(key interface{}) (value interface{}, found bool) {
 	return m.tree.Get(key)
+}
+
+// Get searches the element in the map by key and returns its value of default value given by second argument if key is not found in map.
+func (m *Map) GetDefault(key interface{}, defaultValue interface{}) (value interface{}) {
+	var found bool = false
+	value, found = m.Get(key)
+	if !found {
+		value = defaultValue
+	}
+	return
 }
 
 // Remove removes the element from the map by key.

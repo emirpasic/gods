@@ -436,6 +436,7 @@ Implements [Container](#containers) interface.
 type Map interface {
 	Put(key interface{}, value interface{})
 	Get(key interface{}) (value interface{}, found bool)
+	GetDefault(key interface{}, defaultValue interface{}) (value interface{})
 	Remove(key interface{})
 	Keys() []interface{}
 
@@ -476,6 +477,8 @@ func main() {
 	m.Put(1, "a")      // 2->b, 1->a (random order)
 	_, _ = m.Get(2)    // b, true
 	_, _ = m.Get(3)    // nil, false
+	_ = m.GetDefault(2, "8")  // b 
+	_ = m.GetDefault(3, "8")  // 8 
 	_ = m.Values()     // []interface {}{"b", "a"} (random order)
 	_ = m.Keys()       // []interface {}{1, 2} (random order)
 	m.Remove(1)        // 2->b
@@ -503,6 +506,8 @@ func main() {
 	m.Put(1, "a")                       // 1->a, 2->b (in order)
 	_, _ = m.Get(2)                     // b, true
 	_, _ = m.Get(3)                     // nil, false
+    _ = m.GetDefault(2, "8")            // b 
+	_ = m.GetDefault(3, "8")            // 8 
 	_ = m.Values()                      // []interface {}{"a", "b"} (in order)
 	_ = m.Keys()                        // []interface {}{1, 2} (in order)
 	m.Remove(1)                         // 2->b
@@ -534,6 +539,8 @@ func main() {
 	m.Put(1, "a")            // 2->b, 1->a (insertion-order)
 	_, _ = m.Get(2)          // b, true
 	_, _ = m.Get(3)          // nil, false
+	_ = m.GetDefault(2, "8") // b 
+	_ = m.GetDefault(3, "8") // 8 
 	_ = m.Values()           // []interface {}{"b", "a"} (insertion-order)
 	_ = m.Keys()             // []interface {}{2, 1} (insertion-order)
 	m.Remove(1)              // 2->b
@@ -564,6 +571,8 @@ func main() {
 	_, _ = m.GetKey("a")   // 1, true
 	_, _ = m.Get(2)        // b, true
 	_, _ = m.Get(3)        // nil, false
+    _ = m.GetDefault(2, "8")  // b 
+	_ = m.GetDefault(3, "8")  // 8 
 	_ = m.Values()         // []interface {}{"a", "b"} (random order)
 	_ = m.Keys()           // []interface {}{1, 2} (random order)
 	m.Remove(1)            // 2->b
@@ -596,6 +605,8 @@ func main() {
 	_, _ = m.GetKey("a") // 1, true
 	_, _ = m.Get(2)      // b, true
 	_, _ = m.Get(3)      // nil, false
+	_ = m.GetDefault(2, "8")  // b 
+	_ = m.GetDefault(3, "8")  // 8 
 	_ = m.Values()       // []interface {}{"a", "b"} (ordered)
 	_ = m.Keys()         // []interface {}{1, 2} (ordered)
 	m.Remove(1)          // 2->b

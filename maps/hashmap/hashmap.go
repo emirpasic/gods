@@ -13,6 +13,7 @@ package hashmap
 
 import (
 	"fmt"
+
 	"github.com/emirpasic/gods/maps"
 )
 
@@ -38,6 +39,16 @@ func (m *Map) Put(key interface{}, value interface{}) {
 // Second return parameter is true if key was found, otherwise false.
 func (m *Map) Get(key interface{}) (value interface{}, found bool) {
 	value, found = m.m[key]
+	return
+}
+
+// Get searches the element in the map by key and returns its value of default value given by second argument if key is not found in map.
+func (m *Map) GetDefault(key interface{}, defaultValue interface{}) (value interface{}) {
+	var found bool = false
+	value, found = m.Get(key)
+	if !found {
+		value = defaultValue
+	}
 	return
 }
 
