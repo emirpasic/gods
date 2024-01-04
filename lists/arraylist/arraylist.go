@@ -49,6 +49,22 @@ func (list *List) Add(values ...interface{}) {
 	}
 }
 
+// Reverse reverse the list
+func (list *List) Reverse() {
+	var s = list.Size()
+
+	if s < 1 {
+		return
+	}
+
+	var temp = list.elements[0]
+	for i := 0; i < s / 2; i++ {
+		temp = list.elements[i]
+		list.elements[i] = list.elements[s - 1 - i]
+		list.elements[s - 1 - i] = temp
+	}
+}
+
 // Get returns the element at index.
 // Second return parameter is true if index is within bounds of the array and array is not empty, otherwise false.
 func (list *List) Get(index int) (interface{}, bool) {
@@ -125,6 +141,17 @@ func (list *List) Size() int {
 	return list.size
 }
 
+// Count returns number of occurences of a given value in the list
+func (list *List) Count(value interface{}) int {
+	var count = 0
+	for i := 0; i < list.Size(); i++ {
+		if list.elements[i] == value {
+			count++
+		}
+	}
+	return count
+} 
+
 // Clear removes all elements from the list.
 func (list *List) Clear() {
 	list.size = 0
@@ -180,6 +207,15 @@ func (list *List) Set(index int, value interface{}) {
 	}
 
 	list.elements[index] = value
+}
+
+// Replace replaces all occurences of "value" by "by"
+func (list *List) Replace(value interface{}, by interface{}) {
+	for i := 0; i < list.Size(); i++ {
+		if list.elements[i] == value {
+			list.elements[i] = by
+		}
+	}
 }
 
 // String returns a string representation of container
