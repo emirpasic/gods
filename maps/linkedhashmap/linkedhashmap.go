@@ -1,4 +1,4 @@
-// Copyright (c) 2015, Emir Pasic. All rights reserved.
+// Copyright (c) 2015, Emir Pasic & Eren Dursun. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -13,9 +13,9 @@ package linkedhashmap
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/lists/doublylinkedlist"
-	"github.com/emirpasic/gods/maps"
 	"strings"
+
+	"github.com/emirpasic/gods/maps"
 )
 
 // Assert Map implementation
@@ -23,43 +23,78 @@ var _ maps.Map = (*Map)(nil)
 
 // Map holds the elements in a regular hash table, and uses doubly-linked list to store key ordering.
 type Map struct {
-	table    map[interface{}]interface{}
-	ordering *doublylinkedlist.List
+	table map[interface{}]*element
+	first *element
+	last  *element
+}
+
+type element struct {
+	key   interface{}
+	value interface{}
+	prev  *element
+	next  *element
 }
 
 // New instantiates a linked-hash-map.
 func New() *Map {
 	return &Map{
-		table:    make(map[interface{}]interface{}),
-		ordering: doublylinkedlist.New(),
+		table: make(map[interface{}]*element),
 	}
 }
 
 // Put inserts key-value pair into the map.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (m *Map) Put(key interface{}, value interface{}) {
-	if _, contains := m.table[key]; !contains {
-		m.ordering.Append(key)
+	if el, contains := m.table[key]; contains {
+		el.value = value
+	} else {
+		e := &element{
+			key:   key,
+			value: value,
+			prev:  m.last,
+		}
+
+		if m.Size() == 0 {
+			m.first = e
+			m.last = e
+		} else {
+			m.last.next = e
+			m.last = e
+		}
+		m.table[key] = e
 	}
-	m.table[key] = value
 }
 
 // Get searches the element in the map by key and returns its value or nil if key is not found in tree.
 // Second return parameter is true if key was found, otherwise false.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (m *Map) Get(key interface{}) (value interface{}, found bool) {
-	value = m.table[key]
-	found = value != nil
+	element := m.table[key]
+	if element != nil {
+		found = true
+		value = element.value
+	}
 	return
 }
 
 // Remove removes the element from the map by key.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (m *Map) Remove(key interface{}) {
-	if _, contains := m.table[key]; contains {
+	if element, contains := m.table[key]; contains {
+		if element == m.first {
+			m.first = element.next
+		}
+		if element == m.last {
+			m.last = element.prev
+		}
+		if element.prev != nil {
+			element.prev.next = element.next
+		}
+		if element.next != nil {
+			element.next.prev = element.prev
+		}
+		element = nil
 		delete(m.table, key)
-		index := m.ordering.IndexOf(key)
-		m.ordering.Remove(index)
 	}
 }
 
@@ -70,12 +105,19 @@ func (m *Map) Empty() bool {
 
 // Size returns number of elements in the map.
 func (m *Map) Size() int {
-	return m.ordering.Size()
+	return len(m.table)
 }
 
 // Keys returns all keys in-order
 func (m *Map) Keys() []interface{} {
-	return m.ordering.Values()
+	keys := make([]interface{}, m.Size())
+	count := 0
+	it := m.Iterator()
+	for it.Next() {
+		keys[count] = it.Key()
+		count++
+	}
+	return keys
 }
 
 // Values returns all values in-order based on the key.
@@ -92,8 +134,9 @@ func (m *Map) Values() []interface{} {
 
 // Clear removes all elements from the map.
 func (m *Map) Clear() {
-	m.table = make(map[interface{}]interface{})
-	m.ordering.Clear()
+	m.table = make(map[interface{}]*element)
+	m.first = nil
+	m.last = nil
 }
 
 // String returns a string representation of container
@@ -104,5 +147,4 @@ func (m *Map) String() string {
 		str += fmt.Sprintf("%v:%v ", it.Key(), it.Value())
 	}
 	return strings.TrimRight(str, " ") + "]"
-
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2015, Emir Pasic. All rights reserved.
+// Copyright (c) 2015, Emir Pasic & Eren Dursun. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -6,7 +6,6 @@ package linkedhashmap
 
 import (
 	"github.com/emirpasic/gods/containers"
-	"github.com/emirpasic/gods/lists/doublylinkedlist"
 )
 
 // Assert Iterator implementation
@@ -14,15 +13,17 @@ var _ containers.ReverseIteratorWithKey = (*Iterator)(nil)
 
 // Iterator holding the iterator's state
 type Iterator struct {
-	iterator doublylinkedlist.Iterator
-	table    map[interface{}]interface{}
+	m       *Map
+	index   int
+	element *element
 }
 
 // Iterator returns a stateful iterator whose elements are key/value pairs.
 func (m *Map) Iterator() Iterator {
 	return Iterator{
-		iterator: m.ordering.Iterator(),
-		table:    m.table}
+		m:     m,
+		index: -1,
+	}
 }
 
 // Next moves the iterator to the next element and returns true if there was a next element in the container.
@@ -30,53 +31,83 @@ func (m *Map) Iterator() Iterator {
 // If Next() was called for the first time, then it will point the iterator to the first element if it exists.
 // Modifies the state of the iterator.
 func (iterator *Iterator) Next() bool {
-	return iterator.iterator.Next()
+	if iterator.index < iterator.m.Size() {
+		iterator.index++
+	}
+	if !iterator.m.withinRange(iterator.index) {
+		iterator.element = nil
+		return false
+	}
+	if iterator.index != 0 {
+		iterator.element = iterator.element.next
+	} else {
+		iterator.element = iterator.m.first
+	}
+	return true
 }
 
 // Prev moves the iterator to the previous element and returns true if there was a previous element in the container.
 // If Prev() returns true, then previous element's key and value can be retrieved by Key() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator) Prev() bool {
-	return iterator.iterator.Prev()
+	if iterator.index >= 0 {
+		iterator.index--
+	}
+	if !iterator.m.withinRange(iterator.index) {
+		iterator.element = nil
+		return false
+	}
+	if iterator.index == iterator.m.Size()-1 {
+		iterator.element = iterator.m.last
+	} else {
+		iterator.element = iterator.element.prev
+	}
+	return iterator.m.withinRange(iterator.index)
 }
 
 // Value returns the current element's value.
 // Does not modify the state of the iterator.
 func (iterator *Iterator) Value() interface{} {
-	key := iterator.iterator.Value()
-	return iterator.table[key]
+	if iterator.element != nil {
+		return iterator.element.value
+	}
+	return nil
 }
 
 // Key returns the current element's key.
 // Does not modify the state of the iterator.
 func (iterator *Iterator) Key() interface{} {
-	return iterator.iterator.Value()
+	return iterator.element.key
 }
 
 // Begin resets the iterator to its initial state (one-before-first)
 // Call Next() to fetch the first element if any.
 func (iterator *Iterator) Begin() {
-	iterator.iterator.Begin()
+	iterator.index = -1
+	iterator.element = nil
 }
 
 // End moves the iterator past the last element (one-past-the-end).
 // Call Prev() to fetch the last element if any.
 func (iterator *Iterator) End() {
-	iterator.iterator.End()
+	iterator.index = iterator.m.Size()
+	iterator.element = nil
 }
 
 // First moves the iterator to the first element and returns true if there was a first element in the container.
 // If First() returns true, then first element's key and value can be retrieved by Key() and Value().
 // Modifies the state of the iterator
 func (iterator *Iterator) First() bool {
-	return iterator.iterator.First()
+	iterator.Begin()
+	return iterator.Next()
 }
 
 // Last moves the iterator to the last element and returns true if there was a last element in the container.
 // If Last() returns true, then last element's key and value can be retrieved by Key() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator) Last() bool {
-	return iterator.iterator.Last()
+	iterator.End()
+	return iterator.Prev()
 }
 
 // NextTo moves the iterator to the next element from current position that satisfies the condition given by the
@@ -105,4 +136,9 @@ func (iterator *Iterator) PrevTo(f func(key interface{}, value interface{}) bool
 		}
 	}
 	return false
+}
+
+// Check that the index is within bounds of the list
+func (m *Map) withinRange(index int) bool {
+	return index >= 0 && index < m.Size()
 }
