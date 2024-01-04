@@ -141,6 +141,29 @@ func (list *List) Remove(index int) {
 	list.size--
 }
 
+// Filter only keeps element for which hook returns true.
+func (list *List) Filter(hook func(value interface{}) bool) {
+
+	for element := list.first; element != nil; element = element.next {
+		if !hook(element.value) {
+			if element == list.first {
+				list.first = element.next
+			}
+			if element == list.last {
+				list.last = element.prev
+			}
+			if element.prev != nil {
+				element.prev.next = element.next
+			}
+			if element.next != nil {
+				element.next.prev = element.prev
+			}
+			list.size--
+		}
+	}
+	
+}
+
 // Contains check if values (one or more) are present in the set.
 // All values have to be present in the set for the method to return true.
 // Performance time complexity of n^2.

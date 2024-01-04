@@ -95,6 +95,22 @@ func TestListRemove(t *testing.T) {
 	}
 }
 
+func TestListFilter(t *testing.T) {
+	list := New()
+	list.Add("a")
+	list.Add("b", "c", "d", "e", "f")
+	list.Filter(func(v interface{}) bool { return v == "b" || v == "d" })
+	if actualValue, ok := list.Get(0); actualValue != "b" || !ok {
+		t.Errorf("Got %v expected %v", actualValue, "b")
+	}
+	if actualValue, ok := list.Get(1); actualValue != "d" || !ok {
+		t.Errorf("Got %v expected %v", actualValue, "d")
+	}
+	if actualValue := list.Size(); actualValue != 2 {
+		t.Errorf("Got %v expected %v", actualValue, 2)
+	}
+}
+
 func TestListGet(t *testing.T) {
 	list := New()
 	list.Add("a")
