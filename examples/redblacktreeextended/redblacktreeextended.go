@@ -6,53 +6,54 @@ package redblacktreeextended
 
 import (
 	"fmt"
-	rbt "github.com/emirpasic/gods/trees/redblacktree"
+
+	rbt "github.com/emirpasic/gods/v2/trees/redblacktree"
 )
 
 // RedBlackTreeExtended to demonstrate how to extend a RedBlackTree to include new functions
-type RedBlackTreeExtended struct {
-	*rbt.Tree
+type RedBlackTreeExtended[K comparable, V any] struct {
+	*rbt.Tree[K, V]
 }
 
 // GetMin gets the min value and flag if found
-func (tree *RedBlackTreeExtended) GetMin() (value interface{}, found bool) {
+func (tree *RedBlackTreeExtended[K, V]) GetMin() (value V, found bool) {
 	node, found := tree.getMinFromNode(tree.Root)
-	if node != nil {
+	if found {
 		return node.Value, found
 	}
-	return nil, false
+	return value, false
 }
 
 // GetMax gets the max value and flag if found
-func (tree *RedBlackTreeExtended) GetMax() (value interface{}, found bool) {
+func (tree *RedBlackTreeExtended[K, V]) GetMax() (value V, found bool) {
 	node, found := tree.getMaxFromNode(tree.Root)
-	if node != nil {
+	if found {
 		return node.Value, found
 	}
-	return nil, false
+	return value, false
 }
 
 // RemoveMin removes the min value and flag if found
-func (tree *RedBlackTreeExtended) RemoveMin() (value interface{}, deleted bool) {
+func (tree *RedBlackTreeExtended[K, V]) RemoveMin() (value V, deleted bool) {
 	node, found := tree.getMinFromNode(tree.Root)
 	if found {
 		tree.Remove(node.Key)
 		return node.Value, found
 	}
-	return nil, false
+	return value, false
 }
 
 // RemoveMax removes the max value and flag if found
-func (tree *RedBlackTreeExtended) RemoveMax() (value interface{}, deleted bool) {
+func (tree *RedBlackTreeExtended[K, V]) RemoveMax() (value V, deleted bool) {
 	node, found := tree.getMaxFromNode(tree.Root)
 	if found {
 		tree.Remove(node.Key)
 		return node.Value, found
 	}
-	return nil, false
+	return value, false
 }
 
-func (tree *RedBlackTreeExtended) getMinFromNode(node *rbt.Node) (foundNode *rbt.Node, found bool) {
+func (tree *RedBlackTreeExtended[K, V]) getMinFromNode(node *rbt.Node[K, V]) (foundNode *rbt.Node[K, V], found bool) {
 	if node == nil {
 		return nil, false
 	}
@@ -62,7 +63,7 @@ func (tree *RedBlackTreeExtended) getMinFromNode(node *rbt.Node) (foundNode *rbt
 	return tree.getMinFromNode(node.Left)
 }
 
-func (tree *RedBlackTreeExtended) getMaxFromNode(node *rbt.Node) (foundNode *rbt.Node, found bool) {
+func (tree *RedBlackTreeExtended[K, V]) getMaxFromNode(node *rbt.Node[K, V]) (foundNode *rbt.Node[K, V], found bool) {
 	if node == nil {
 		return nil, false
 	}
@@ -72,7 +73,7 @@ func (tree *RedBlackTreeExtended) getMaxFromNode(node *rbt.Node) (foundNode *rbt
 	return tree.getMaxFromNode(node.Right)
 }
 
-func print(tree *RedBlackTreeExtended) {
+func print(tree *RedBlackTreeExtended[int, string]) {
 	max, _ := tree.GetMax()
 	min, _ := tree.GetMin()
 	fmt.Printf("Value for max key: %v \n", max)
@@ -82,7 +83,7 @@ func print(tree *RedBlackTreeExtended) {
 
 // RedBlackTreeExtendedExample main method on how to use the custom red-black tree above
 func main() {
-	tree := RedBlackTreeExtended{rbt.NewWithIntComparator()}
+	tree := RedBlackTreeExtended[int, string]{rbt.New[int, string]()}
 
 	tree.Put(1, "a") // 1->x (in order)
 	tree.Put(2, "b") // 1->x, 2->b (in order)

@@ -6,7 +6,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/sets/treeset"
+
+	"github.com/emirpasic/gods/v2/sets/treeset"
 )
 
 // User model (id and name)
@@ -16,16 +17,12 @@ type User struct {
 }
 
 // Comparator function (sort by IDs)
-func byID(a, b interface{}) int {
-
-	// Type assertion, program will panic if this is not respected
-	c1 := a.(User)
-	c2 := b.(User)
+func byID(a, b User) int {
 
 	switch {
-	case c1.id > c2.id:
+	case a.id > b.id:
 		return 1
-	case c1.id < c2.id:
+	case a.id < b.id:
 		return -1
 	default:
 		return 0

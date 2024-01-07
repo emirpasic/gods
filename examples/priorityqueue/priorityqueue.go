@@ -5,8 +5,9 @@
 package main
 
 import (
-	pq "github.com/emirpasic/gods/queues/priorityqueue"
-	"github.com/emirpasic/gods/utils"
+	"cmp"
+
+	pq "github.com/emirpasic/gods/v2/queues/priorityqueue"
 )
 
 // Element is an entry in the priority queue
@@ -16,10 +17,8 @@ type Element struct {
 }
 
 // Comparator function (sort by element's priority value in descending order)
-func byPriority(a, b interface{}) int {
-	priorityA := a.(Element).priority
-	priorityB := b.(Element).priority
-	return -utils.IntComparator(priorityA, priorityB) // "-" descending order
+func byPriority(a, b Element) int {
+	return -cmp.Compare(a.priority, b.priority) // "-" descending order
 }
 
 // PriorityQueueExample to demonstrate basic usage of BinaryHeap

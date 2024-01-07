@@ -13,20 +13,23 @@ import (
 
 func TestSetNew(t *testing.T) {
 	set := New(2, 1)
+
 	if actualValue := set.Size(); actualValue != 2 {
 		t.Errorf("Got %v expected %v", actualValue, 2)
 	}
-	values := set.Values()
-	if actualValue := values[0]; actualValue != 2 {
-		t.Errorf("Got %v expected %v", actualValue, 2)
+	if actualValue := set.Contains(1); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
 	}
-	if actualValue := values[1]; actualValue != 1 {
-		t.Errorf("Got %v expected %v", actualValue, 1)
+	if actualValue := set.Contains(2); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+	if actualValue := set.Contains(3); actualValue != false {
+		t.Errorf("Got %v expected %v", actualValue, true)
 	}
 }
 
 func TestSetAdd(t *testing.T) {
-	set := New()
+	set := New[int]()
 	set.Add()
 	set.Add(1)
 	set.Add(2)
@@ -41,7 +44,7 @@ func TestSetAdd(t *testing.T) {
 }
 
 func TestSetContains(t *testing.T) {
-	set := New()
+	set := New[int]()
 	set.Add(3, 1, 2)
 	set.Add(2, 3)
 	set.Add()
@@ -60,7 +63,7 @@ func TestSetContains(t *testing.T) {
 }
 
 func TestSetRemove(t *testing.T) {
-	set := New()
+	set := New[int]()
 	set.Add(3, 1, 2)
 	set.Remove()
 	if actualValue := set.Size(); actualValue != 3 {
@@ -80,9 +83,9 @@ func TestSetRemove(t *testing.T) {
 }
 
 func TestSetEach(t *testing.T) {
-	set := New()
+	set := New[string]()
 	set.Add("c", "a", "b")
-	set.Each(func(index int, value interface{}) {
+	set.Each(func(index int, value string) {
 		switch index {
 		case 0:
 			if actualValue, expectedValue := value, "c"; actualValue != expectedValue {
@@ -103,10 +106,10 @@ func TestSetEach(t *testing.T) {
 }
 
 func TestSetMap(t *testing.T) {
-	set := New()
+	set := New[string]()
 	set.Add("c", "a", "b")
-	mappedSet := set.Map(func(index int, value interface{}) interface{} {
-		return "mapped: " + value.(string)
+	mappedSet := set.Map(func(index int, value string) string {
+		return "mapped: " + value
 	})
 	if actualValue, expectedValue := mappedSet.Contains("mapped: c", "mapped: b", "mapped: a"), true; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
@@ -120,10 +123,10 @@ func TestSetMap(t *testing.T) {
 }
 
 func TestSetSelect(t *testing.T) {
-	set := New()
+	set := New[string]()
 	set.Add("c", "a", "b")
-	selectedSet := set.Select(func(index int, value interface{}) bool {
-		return value.(string) >= "a" && value.(string) <= "b"
+	selectedSet := set.Select(func(index int, value string) bool {
+		return value >= "a" && value <= "b"
 	})
 	if actualValue, expectedValue := selectedSet.Contains("a", "b"), true; actualValue != expectedValue {
 		fmt.Println("A: ", selectedSet.Contains("b"))
@@ -138,16 +141,16 @@ func TestSetSelect(t *testing.T) {
 }
 
 func TestSetAny(t *testing.T) {
-	set := New()
+	set := New[string]()
 	set.Add("c", "a", "b")
-	any := set.Any(func(index int, value interface{}) bool {
-		return value.(string) == "c"
+	any := set.Any(func(index int, value string) bool {
+		return value == "c"
 	})
 	if any != true {
 		t.Errorf("Got %v expected %v", any, true)
 	}
-	any = set.Any(func(index int, value interface{}) bool {
-		return value.(string) == "x"
+	any = set.Any(func(index int, value string) bool {
+		return value == "x"
 	})
 	if any != false {
 		t.Errorf("Got %v expected %v", any, false)
@@ -155,16 +158,16 @@ func TestSetAny(t *testing.T) {
 }
 
 func TestSetAll(t *testing.T) {
-	set := New()
+	set := New[string]()
 	set.Add("c", "a", "b")
-	all := set.All(func(index int, value interface{}) bool {
-		return value.(string) >= "a" && value.(string) <= "c"
+	all := set.All(func(index int, value string) bool {
+		return value >= "a" && value <= "c"
 	})
 	if all != true {
 		t.Errorf("Got %v expected %v", all, true)
 	}
-	all = set.All(func(index int, value interface{}) bool {
-		return value.(string) >= "a" && value.(string) <= "b"
+	all = set.All(func(index int, value string) bool {
+		return value >= "a" && value <= "b"
 	})
 	if all != false {
 		t.Errorf("Got %v expected %v", all, false)
@@ -172,29 +175,29 @@ func TestSetAll(t *testing.T) {
 }
 
 func TestSetFind(t *testing.T) {
-	set := New()
+	set := New[string]()
 	set.Add("c", "a", "b")
-	foundIndex, foundValue := set.Find(func(index int, value interface{}) bool {
-		return value.(string) == "c"
+	foundIndex, foundValue := set.Find(func(index int, value string) bool {
+		return value == "c"
 	})
 	if foundValue != "c" || foundIndex != 0 {
 		t.Errorf("Got %v at %v expected %v at %v", foundValue, foundIndex, "c", 0)
 	}
-	foundIndex, foundValue = set.Find(func(index int, value interface{}) bool {
-		return value.(string) == "x"
+	foundIndex, foundValue = set.Find(func(index int, value string) bool {
+		return value == "x"
 	})
-	if foundValue != nil || foundIndex != -1 {
+	if foundValue != "" || foundIndex != -1 {
 		t.Errorf("Got %v at %v expected %v at %v", foundValue, foundIndex, nil, nil)
 	}
 }
 
 func TestSetChaining(t *testing.T) {
-	set := New()
+	set := New[string]()
 	set.Add("c", "a", "b")
 }
 
 func TestSetIteratorPrevOnEmpty(t *testing.T) {
-	set := New()
+	set := New[string]()
 	it := set.Iterator()
 	for it.Prev() {
 		t.Errorf("Shouldn't iterate on empty set")
@@ -202,7 +205,7 @@ func TestSetIteratorPrevOnEmpty(t *testing.T) {
 }
 
 func TestSetIteratorNext(t *testing.T) {
-	set := New()
+	set := New[string]()
 	set.Add("c", "a", "b")
 	it := set.Iterator()
 	count := 0
@@ -236,7 +239,7 @@ func TestSetIteratorNext(t *testing.T) {
 }
 
 func TestSetIteratorPrev(t *testing.T) {
-	set := New()
+	set := New[string]()
 	set.Add("c", "a", "b")
 	it := set.Iterator()
 	for it.Prev() {
@@ -272,7 +275,7 @@ func TestSetIteratorPrev(t *testing.T) {
 }
 
 func TestSetIteratorBegin(t *testing.T) {
-	set := New()
+	set := New[string]()
 	it := set.Iterator()
 	it.Begin()
 	set.Add("a", "b", "c")
@@ -286,7 +289,7 @@ func TestSetIteratorBegin(t *testing.T) {
 }
 
 func TestSetIteratorEnd(t *testing.T) {
-	set := New()
+	set := New[string]()
 	it := set.Iterator()
 
 	if index := it.Index(); index != -1 {
@@ -311,7 +314,7 @@ func TestSetIteratorEnd(t *testing.T) {
 }
 
 func TestSetIteratorFirst(t *testing.T) {
-	set := New()
+	set := New[string]()
 	set.Add("a", "b", "c")
 	it := set.Iterator()
 	if actualValue, expectedValue := it.First(), true; actualValue != expectedValue {
@@ -323,7 +326,7 @@ func TestSetIteratorFirst(t *testing.T) {
 }
 
 func TestSetIteratorLast(t *testing.T) {
-	set := New()
+	set := New[string]()
 	set.Add("a", "b", "c")
 	it := set.Iterator()
 	if actualValue, expectedValue := it.Last(), true; actualValue != expectedValue {
@@ -336,13 +339,13 @@ func TestSetIteratorLast(t *testing.T) {
 
 func TestSetIteratorNextTo(t *testing.T) {
 	// Sample seek function, i.e. string starting with "b"
-	seek := func(index int, value interface{}) bool {
-		return strings.HasSuffix(value.(string), "b")
+	seek := func(index int, value string) bool {
+		return strings.HasSuffix(value, "b")
 	}
 
 	// NextTo (empty)
 	{
-		set := New()
+		set := New[string]()
 		it := set.Iterator()
 		for it.NextTo(seek) {
 			t.Errorf("Shouldn't iterate on empty set")
@@ -351,7 +354,7 @@ func TestSetIteratorNextTo(t *testing.T) {
 
 	// NextTo (not found)
 	{
-		set := New()
+		set := New[string]()
 		set.Add("xx", "yy")
 		it := set.Iterator()
 		for it.NextTo(seek) {
@@ -361,20 +364,20 @@ func TestSetIteratorNextTo(t *testing.T) {
 
 	// NextTo (found)
 	{
-		set := New()
+		set := New[string]()
 		set.Add("aa", "bb", "cc")
 		it := set.Iterator()
 		it.Begin()
 		if !it.NextTo(seek) {
 			t.Errorf("Shouldn't iterate on empty set")
 		}
-		if index, value := it.Index(), it.Value(); index != 1 || value.(string) != "bb" {
+		if index, value := it.Index(), it.Value(); index != 1 || value != "bb" {
 			t.Errorf("Got %v,%v expected %v,%v", index, value, 1, "bb")
 		}
 		if !it.Next() {
 			t.Errorf("Should go to first element")
 		}
-		if index, value := it.Index(), it.Value(); index != 2 || value.(string) != "cc" {
+		if index, value := it.Index(), it.Value(); index != 2 || value != "cc" {
 			t.Errorf("Got %v,%v expected %v,%v", index, value, 2, "cc")
 		}
 		if it.Next() {
@@ -385,13 +388,13 @@ func TestSetIteratorNextTo(t *testing.T) {
 
 func TestSetIteratorPrevTo(t *testing.T) {
 	// Sample seek function, i.e. string starting with "b"
-	seek := func(index int, value interface{}) bool {
-		return strings.HasSuffix(value.(string), "b")
+	seek := func(index int, value string) bool {
+		return strings.HasSuffix(value, "b")
 	}
 
 	// PrevTo (empty)
 	{
-		set := New()
+		set := New[string]()
 		it := set.Iterator()
 		it.End()
 		for it.PrevTo(seek) {
@@ -401,7 +404,7 @@ func TestSetIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (not found)
 	{
-		set := New()
+		set := New[string]()
 		set.Add("xx", "yy")
 		it := set.Iterator()
 		it.End()
@@ -412,20 +415,20 @@ func TestSetIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (found)
 	{
-		set := New()
+		set := New[string]()
 		set.Add("aa", "bb", "cc")
 		it := set.Iterator()
 		it.End()
 		if !it.PrevTo(seek) {
 			t.Errorf("Shouldn't iterate on empty set")
 		}
-		if index, value := it.Index(), it.Value(); index != 1 || value.(string) != "bb" {
+		if index, value := it.Index(), it.Value(); index != 1 || value != "bb" {
 			t.Errorf("Got %v,%v expected %v,%v", index, value, 1, "bb")
 		}
 		if !it.Prev() {
 			t.Errorf("Should go to first element")
 		}
-		if index, value := it.Index(), it.Value(); index != 0 || value.(string) != "aa" {
+		if index, value := it.Index(), it.Value(); index != 0 || value != "aa" {
 			t.Errorf("Got %v,%v expected %v,%v", index, value, 0, "aa")
 		}
 		if it.Prev() {
@@ -435,7 +438,7 @@ func TestSetIteratorPrevTo(t *testing.T) {
 }
 
 func TestSetSerialization(t *testing.T) {
-	set := New()
+	set := New[string]()
 	set.Add("a", "b", "c")
 
 	var err error
@@ -464,14 +467,15 @@ func TestSetSerialization(t *testing.T) {
 		t.Errorf("Got error %v", err)
 	}
 
-	err = json.Unmarshal([]byte(`[1,2,3]`), &set)
+	err = json.Unmarshal([]byte(`["a","b","c"]`), &set)
 	if err != nil {
 		t.Errorf("Got error %v", err)
 	}
+	assert()
 }
 
 func TestSetString(t *testing.T) {
-	c := New()
+	c := New[int]()
 	c.Add(1)
 	if !strings.HasPrefix(c.String(), "LinkedHashSet") {
 		t.Errorf("String should start with container name")
@@ -479,8 +483,8 @@ func TestSetString(t *testing.T) {
 }
 
 func TestSetIntersection(t *testing.T) {
-	set := New()
-	another := New()
+	set := New[string]()
+	another := New[string]()
 
 	intersection := set.Intersection(another)
 	if actualValue, expectedValue := intersection.Size(), 0; actualValue != expectedValue {
@@ -501,8 +505,8 @@ func TestSetIntersection(t *testing.T) {
 }
 
 func TestSetUnion(t *testing.T) {
-	set := New()
-	another := New()
+	set := New[string]()
+	another := New[string]()
 
 	union := set.Union(another)
 	if actualValue, expectedValue := union.Size(), 0; actualValue != expectedValue {
@@ -523,8 +527,8 @@ func TestSetUnion(t *testing.T) {
 }
 
 func TestSetDifference(t *testing.T) {
-	set := New()
-	another := New()
+	set := New[string]()
+	another := New[string]()
 
 	difference := set.Difference(another)
 	if actualValue, expectedValue := difference.Size(), 0; actualValue != expectedValue {
@@ -544,7 +548,7 @@ func TestSetDifference(t *testing.T) {
 	}
 }
 
-func benchmarkContains(b *testing.B, set *Set, size int) {
+func benchmarkContains(b *testing.B, set *Set[int], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			set.Contains(n)
@@ -552,7 +556,7 @@ func benchmarkContains(b *testing.B, set *Set, size int) {
 	}
 }
 
-func benchmarkAdd(b *testing.B, set *Set, size int) {
+func benchmarkAdd(b *testing.B, set *Set[int], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			set.Add(n)
@@ -560,7 +564,7 @@ func benchmarkAdd(b *testing.B, set *Set, size int) {
 	}
 }
 
-func benchmarkRemove(b *testing.B, set *Set, size int) {
+func benchmarkRemove(b *testing.B, set *Set[int], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			set.Remove(n)
@@ -571,7 +575,7 @@ func benchmarkRemove(b *testing.B, set *Set, size int) {
 func BenchmarkHashSetContains100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	set := New()
+	set := New[int]()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -582,7 +586,7 @@ func BenchmarkHashSetContains100(b *testing.B) {
 func BenchmarkHashSetContains1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	set := New()
+	set := New[int]()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -593,7 +597,7 @@ func BenchmarkHashSetContains1000(b *testing.B) {
 func BenchmarkHashSetContains10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	set := New()
+	set := New[int]()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -604,7 +608,7 @@ func BenchmarkHashSetContains10000(b *testing.B) {
 func BenchmarkHashSetContains100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	set := New()
+	set := New[int]()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -615,7 +619,7 @@ func BenchmarkHashSetContains100000(b *testing.B) {
 func BenchmarkHashSetAdd100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	set := New()
+	set := New[int]()
 	b.StartTimer()
 	benchmarkAdd(b, set, size)
 }
@@ -623,7 +627,7 @@ func BenchmarkHashSetAdd100(b *testing.B) {
 func BenchmarkHashSetAdd1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	set := New()
+	set := New[int]()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -634,7 +638,7 @@ func BenchmarkHashSetAdd1000(b *testing.B) {
 func BenchmarkHashSetAdd10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	set := New()
+	set := New[int]()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -645,7 +649,7 @@ func BenchmarkHashSetAdd10000(b *testing.B) {
 func BenchmarkHashSetAdd100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	set := New()
+	set := New[int]()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -656,7 +660,7 @@ func BenchmarkHashSetAdd100000(b *testing.B) {
 func BenchmarkHashSetRemove100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	set := New()
+	set := New[int]()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -667,7 +671,7 @@ func BenchmarkHashSetRemove100(b *testing.B) {
 func BenchmarkHashSetRemove1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	set := New()
+	set := New[int]()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -678,7 +682,7 @@ func BenchmarkHashSetRemove1000(b *testing.B) {
 func BenchmarkHashSetRemove10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	set := New()
+	set := New[int]()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -689,7 +693,7 @@ func BenchmarkHashSetRemove10000(b *testing.B) {
 func BenchmarkHashSetRemove100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	set := New()
+	set := New[int]()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}

@@ -6,12 +6,13 @@ package main
 
 import (
 	"fmt"
-	avl "github.com/emirpasic/gods/trees/avltree"
+
+	avl "github.com/emirpasic/gods/v2/trees/avltree"
 )
 
 // AVLTreeExample to demonstrate basic usage of AVLTree
 func main() {
-	tree := avl.NewWithIntComparator() // empty(keys are of type int)
+	tree := avl.New[int, string]() // empty(keys are of type int)
 
 	tree.Put(1, "x") // 1->x
 	tree.Put(2, "b") // 1->x, 2->b (in order)

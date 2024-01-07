@@ -5,16 +5,17 @@
 package main
 
 import (
-	"github.com/emirpasic/gods/lists/arraylist"
-	"github.com/emirpasic/gods/utils"
+	"cmp"
+
+	"github.com/emirpasic/gods/v2/lists/arraylist"
 )
 
 // ArrayListExample to demonstrate basic usage of ArrayList
 func main() {
-	list := arraylist.New()
+	list := arraylist.New[string]()
 	list.Add("a")                         // ["a"]
 	list.Add("c", "b")                    // ["a","c","b"]
-	list.Sort(utils.StringComparator)     // ["a","b","c"]
+	list.Sort(cmp.Compare[string])        // ["a","b","c"]
 	_, _ = list.Get(0)                    // "a",true
 	_, _ = list.Get(100)                  // nil,false
 	_ = list.Contains("a", "b", "c")      // true

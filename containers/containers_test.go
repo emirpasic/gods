@@ -7,34 +7,34 @@
 package containers
 
 import (
+	"cmp"
 	"fmt"
-	"github.com/emirpasic/gods/utils"
 	"strings"
 	"testing"
 )
 
 // For testing purposes
-type ContainerTest struct {
-	values []interface{}
+type ContainerTest[T any] struct {
+	values []T
 }
 
-func (container ContainerTest) Empty() bool {
+func (container ContainerTest[T]) Empty() bool {
 	return len(container.values) == 0
 }
 
-func (container ContainerTest) Size() int {
+func (container ContainerTest[T]) Size() int {
 	return len(container.values)
 }
 
-func (container ContainerTest) Clear() {
-	container.values = []interface{}{}
+func (container ContainerTest[T]) Clear() {
+	container.values = []T{}
 }
 
-func (container ContainerTest) Values() []interface{} {
+func (container ContainerTest[T]) Values() []T {
 	return container.values
 }
 
-func (container ContainerTest) String() string {
+func (container ContainerTest[T]) String() string {
 	str := "ContainerTest\n"
 	var values []string
 	for _, value := range container.values {
@@ -45,24 +45,32 @@ func (container ContainerTest) String() string {
 }
 
 func TestGetSortedValuesInts(t *testing.T) {
-	container := ContainerTest{}
-	GetSortedValues(container, utils.IntComparator)
-	container.values = []interface{}{5, 1, 3, 2, 4}
-	values := GetSortedValues(container, utils.IntComparator)
+	container := ContainerTest[int]{}
+	GetSortedValues(container)
+	container.values = []int{5, 1, 3, 2, 4}
+	values := GetSortedValues(container)
 	for i := 1; i < container.Size(); i++ {
-		if values[i-1].(int) > values[i].(int) {
+		if values[i-1] > values[i] {
 			t.Errorf("Not sorted!")
 		}
 	}
 }
 
-func TestGetSortedValuesStrings(t *testing.T) {
-	container := ContainerTest{}
-	GetSortedValues(container, utils.StringComparator)
-	container.values = []interface{}{"g", "a", "d", "e", "f", "c", "b"}
-	values := GetSortedValues(container, utils.StringComparator)
+type NotInt struct {
+	i int
+}
+
+func TestGetSortedValuesNotInts(t *testing.T) {
+	container := ContainerTest[NotInt]{}
+	GetSortedValuesFunc(container, func(x, y NotInt) int {
+		return cmp.Compare(x.i, y.i)
+	})
+	container.values = []NotInt{{5}, {1}, {3}, {2}, {4}}
+	values := GetSortedValuesFunc(container, func(x, y NotInt) int {
+		return cmp.Compare(x.i, y.i)
+	})
 	for i := 1; i < container.Size(); i++ {
-		if values[i-1].(string) > values[i].(string) {
+		if values[i-1].i > values[i].i {
 			t.Errorf("Not sorted!")
 		}
 	}
