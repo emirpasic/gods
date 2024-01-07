@@ -1041,7 +1041,7 @@ Various helper functions used throughout the library.
 
 ### Comparator
 
-Some data structures (e.g. TreeMap, TreeSet) require a comparator function to automatically keep their elements sorted upon insertion. This comparator is necessary during the initalization.
+Some data structures (e.g. TreeMap, TreeSet) require a comparator function to automatically keep their elements sorted upon insertion. This comparator is necessary during the initialization.
 
 Comparator is defined as:
 
