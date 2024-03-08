@@ -30,7 +30,7 @@ import (
 var _ trees.Tree[int] = (*Tree[string, int])(nil)
 
 // Tree holds elements of the B-tree
-type Tree[K comparable, V any] struct {
+type Tree[K any, V any] struct {
 	Root       *Node[K, V]         // Root node
 	Comparator utils.Comparator[K] // Key comparator
 	size       int                 // Total number of keys in the tree
@@ -38,14 +38,14 @@ type Tree[K comparable, V any] struct {
 }
 
 // Node is a single element within the tree
-type Node[K comparable, V any] struct {
+type Node[K any, V any] struct {
 	Parent   *Node[K, V]
 	Entries  []*Entry[K, V] // Contained keys in node
 	Children []*Node[K, V]  // Children nodes
 }
 
 // Entry represents the key-value pair contained within nodes
-type Entry[K comparable, V any] struct {
+type Entry[K any, V any] struct {
 	Key   K
 	Value V
 }
@@ -56,7 +56,7 @@ func New[K cmp.Ordered, V any](order int) *Tree[K, V] {
 }
 
 // NewWith instantiates a B-tree with the order (maximum number of children) and a custom key comparator.
-func NewWith[K comparable, V any](order int, comparator utils.Comparator[K]) *Tree[K, V] {
+func NewWith[K any, V any](order int, comparator utils.Comparator[K]) *Tree[K, V] {
 	if order < 3 {
 		panic("Invalid order, should be at least 3")
 	}
@@ -411,7 +411,7 @@ func (tree *Tree[K, V]) splitRoot() {
 	tree.Root = newRoot
 }
 
-func setParent[K comparable, V any](nodes []*Node[K, V], parent *Node[K, V]) {
+func setParent[K any, V any](nodes []*Node[K, V], parent *Node[K, V]) {
 	for _, node := range nodes {
 		node.Parent = parent
 	}

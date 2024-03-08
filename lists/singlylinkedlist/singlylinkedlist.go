@@ -22,20 +22,28 @@ import (
 var _ lists.List[int] = (*List[int])(nil)
 
 // List holds the elements, where each element points to the next element
-type List[T comparable] struct {
+type List[T any] struct {
 	first *element[T]
 	last  *element[T]
 	size  int
+	equal func(a, b T) bool
 }
 
-type element[T comparable] struct {
+type element[T any] struct {
 	value T
 	next  *element[T]
 }
 
 // New instantiates a new list and adds the passed values, if any, to the list
 func New[T comparable](values ...T) *List[T] {
-	list := &List[T]{}
+	equal := func(a, b T) bool { return a == b }
+	return NewWith(equal, values...)
+}
+
+// NewWith instantiates a new list with the custom equal
+// function and adds the passed values, if any, to the list.
+func NewWith[T any](equal func(a, b T) bool, values ...T) *List[T] {
+	list := &List[T]{equal: equal}
 	if len(values) > 0 {
 		list.Add(values...)
 	}
@@ -139,7 +147,7 @@ func (list *List[T]) Contains(values ...T) bool {
 	for _, value := range values {
 		found := false
 		for element := list.first; element != nil; element = element.next {
-			if element.value == value {
+			if list.equal(element.value, value) {
 				found = true
 				break
 			}
@@ -166,7 +174,7 @@ func (list *List[T]) IndexOf(value T) int {
 		return -1
 	}
 	for index, element := range list.Values() {
-		if element == value {
+		if list.equal(element, value) {
 			return index
 		}
 	}

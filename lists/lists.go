@@ -15,7 +15,7 @@ import (
 )
 
 // List interface that all lists implement
-type List[T comparable] interface {
+type List[T any] interface {
 	Get(index int) (T, bool)
 	Remove(index int)
 	Add(values ...T)

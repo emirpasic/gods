@@ -22,7 +22,7 @@ import (
 var _ queues.Queue[int] = (*Queue[int])(nil)
 
 // Queue holds values in a slice.
-type Queue[T comparable] struct {
+type Queue[T any] struct {
 	values  []T
 	start   int
 	end     int
@@ -33,7 +33,7 @@ type Queue[T comparable] struct {
 
 // New instantiates a new empty queue with the specified size of maximum number of elements that it can hold.
 // This max size of the buffer cannot be changed.
-func New[T comparable](maxSize int) *Queue[T] {
+func New[T any](maxSize int) *Queue[T] {
 	if maxSize < 1 {
 		panic("Invalid maxSize, should be at least 1")
 	}

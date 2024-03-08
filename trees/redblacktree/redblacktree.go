@@ -29,14 +29,14 @@ const (
 )
 
 // Tree holds elements of the red-black tree
-type Tree[K comparable, V any] struct {
+type Tree[K any, V any] struct {
 	Root       *Node[K, V]
 	size       int
 	Comparator utils.Comparator[K]
 }
 
 // Node is a single element within the tree
-type Node[K comparable, V any] struct {
+type Node[K any, V any] struct {
 	Key    K
 	Value  V
 	color  color
@@ -51,7 +51,7 @@ func New[K cmp.Ordered, V any]() *Tree[K, V] {
 }
 
 // NewWith instantiates a red-black tree with the custom comparator.
-func NewWith[K comparable, V any](comparator utils.Comparator[K]) *Tree[K, V] {
+func NewWith[K any, V any](comparator utils.Comparator[K]) *Tree[K, V] {
 	return &Tree[K, V]{Comparator: comparator}
 }
 
@@ -292,7 +292,7 @@ func (node *Node[K, V]) String() string {
 	return fmt.Sprintf("%v", node.Key)
 }
 
-func output[K comparable, V any](node *Node[K, V], prefix string, isTail bool, str *string) {
+func output[K any, V any](node *Node[K, V], prefix string, isTail bool, str *string) {
 	if node.Right != nil {
 		newPrefix := prefix
 		if isTail {
@@ -537,7 +537,7 @@ func (tree *Tree[K, V]) deleteCase6(node *Node[K, V]) {
 	}
 }
 
-func nodeColor[K comparable, V any](node *Node[K, V]) color {
+func nodeColor[K any, V any](node *Node[K, V]) color {
 	if node == nil {
 		return black
 	}

@@ -24,7 +24,7 @@ import (
 var _ sets.Set[int] = (*Set[int])(nil)
 
 // Set holds elements in a red-black tree
-type Set[T comparable] struct {
+type Set[T any] struct {
 	tree *rbt.Tree[T, struct{}]
 }
 
@@ -35,7 +35,7 @@ func New[T cmp.Ordered](values ...T) *Set[T] {
 }
 
 // NewWith instantiates a new empty set with the custom comparator.
-func NewWith[T comparable](comparator utils.Comparator[T], values ...T) *Set[T] {
+func NewWith[T any](comparator utils.Comparator[T], values ...T) *Set[T] {
 	set := &Set[T]{tree: rbt.NewWith[T, struct{}](comparator)}
 	if len(values) > 0 {
 		set.Add(values...)

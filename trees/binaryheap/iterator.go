@@ -12,7 +12,7 @@ import (
 var _ containers.ReverseIteratorWithIndex[int] = (*Iterator[int])(nil)
 
 // Iterator returns a stateful iterator whose values can be fetched by an index.
-type Iterator[T comparable] struct {
+type Iterator[T any] struct {
 	heap  *Heap[T]
 	index int
 }

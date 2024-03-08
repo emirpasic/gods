@@ -13,7 +13,7 @@ package queues
 import "github.com/emirpasic/gods/v2/containers"
 
 // Queue interface that all queues implement
-type Queue[T comparable] interface {
+type Queue[T any] interface {
 	Enqueue(value T)
 	Dequeue() (value T, ok bool)
 	Peek() (value T, ok bool)

@@ -14,7 +14,7 @@ import (
 )
 
 // Set interface that all sets implement
-type Set[T comparable] interface {
+type Set[T any] interface {
 	Add(elements ...T)
 	Remove(elements ...T)
 	Contains(elements ...T) bool

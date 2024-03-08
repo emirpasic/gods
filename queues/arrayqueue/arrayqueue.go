@@ -21,13 +21,18 @@ import (
 var _ queues.Queue[int] = (*Queue[int])(nil)
 
 // Queue holds elements in an array-list
-type Queue[T comparable] struct {
+type Queue[T any] struct {
 	list *arraylist.List[T]
 }
 
 // New instantiates a new empty queue
 func New[T comparable]() *Queue[T] {
 	return &Queue[T]{list: arraylist.New[T]()}
+}
+
+// NewWith instantiates a new empty queue with the custom equal function.
+func NewWith[T comparable](equal func(a, b T) bool) *Queue[T] {
+	return &Queue[T]{list: arraylist.NewWith(equal)}
 }
 
 // Enqueue adds a value to the end of the queue

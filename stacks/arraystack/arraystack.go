@@ -21,13 +21,18 @@ import (
 var _ stacks.Stack[int] = (*Stack[int])(nil)
 
 // Stack holds elements in an array-list
-type Stack[T comparable] struct {
+type Stack[T any] struct {
 	list *arraylist.List[T]
 }
 
 // New instantiates a new empty stack
 func New[T comparable]() *Stack[T] {
 	return &Stack[T]{list: arraylist.New[T]()}
+}
+
+// NewWith instantiates a new empty stack with the custom equals function.
+func NewWith[T any](equal func(a, b T) bool) *Stack[T] {
+	return &Stack[T]{list: arraylist.NewWith[T](equal)}
 }
 
 // Push adds a value onto the top of the stack

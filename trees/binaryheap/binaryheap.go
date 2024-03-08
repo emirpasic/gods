@@ -25,7 +25,7 @@ import (
 var _ trees.Tree[int] = (*Heap[int])(nil)
 
 // Heap holds elements in an array-list
-type Heap[T comparable] struct {
+type Heap[T any] struct {
 	list       *arraylist.List[T]
 	Comparator utils.Comparator[T]
 }
@@ -36,8 +36,9 @@ func New[T cmp.Ordered]() *Heap[T] {
 }
 
 // NewWith instantiates a new empty heap tree with the custom comparator.
-func NewWith[T comparable](comparator utils.Comparator[T]) *Heap[T] {
-	return &Heap[T]{list: arraylist.New[T](), Comparator: comparator}
+func NewWith[T any](comparator utils.Comparator[T]) *Heap[T] {
+	equal := func(a, b T) bool { return comparator(a, b) == 0 }
+	return &Heap[T]{list: arraylist.NewWith[T](equal), Comparator: comparator}
 }
 
 // Push adds a value onto the heap and bubbles it up accordingly.
