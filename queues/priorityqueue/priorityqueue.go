@@ -29,7 +29,7 @@ import (
 var _ queues.Queue[int] = (*Queue[int])(nil)
 
 // Queue holds elements in an array-list
-type Queue[T comparable] struct {
+type Queue[T any] struct {
 	heap       *binaryheap.Heap[T]
 	Comparator utils.Comparator[T]
 }
@@ -39,7 +39,7 @@ func New[T cmp.Ordered]() *Queue[T] {
 }
 
 // NewWith instantiates a new empty queue with the custom comparator.
-func NewWith[T comparable](comparator utils.Comparator[T]) *Queue[T] {
+func NewWith[T any](comparator utils.Comparator[T]) *Queue[T] {
 	return &Queue[T]{heap: binaryheap.NewWith(comparator), Comparator: comparator}
 }
 

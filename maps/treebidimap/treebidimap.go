@@ -32,7 +32,7 @@ import (
 var _ maps.BidiMap[string, int] = (*Map[string, int])(nil)
 
 // Map holds the elements in two red-black trees.
-type Map[K, V comparable] struct {
+type Map[K, V any] struct {
 	forwardMap redblacktree.Tree[K, V]
 	inverseMap redblacktree.Tree[V, K]
 }
@@ -46,7 +46,7 @@ func New[K, V cmp.Ordered]() *Map[K, V] {
 }
 
 // NewWith instantiates a bidirectional map.
-func NewWith[K, V comparable](keyComparator utils.Comparator[K], valueComparator utils.Comparator[V]) *Map[K, V] {
+func NewWith[K, V any](keyComparator utils.Comparator[K], valueComparator utils.Comparator[V]) *Map[K, V] {
 	return &Map[K, V]{
 		forwardMap: *redblacktree.NewWith[K, V](keyComparator),
 		inverseMap: *redblacktree.NewWith[V, K](valueComparator),

@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 
 	"github.com/emirpasic/gods/v2/containers"
+	"github.com/emirpasic/gods/v2/internal/treeenc"
 )
 
 // Assert Serialization implementation
@@ -16,25 +17,25 @@ var _ containers.JSONDeserializer = (*Tree[string, int])(nil)
 
 // ToJSON outputs the JSON representation of the tree.
 func (tree *Tree[K, V]) ToJSON() ([]byte, error) {
-	elements := make(map[K]V)
+	elements := make(map[*treeenc.KeyMarshaler[K]]V)
 	it := tree.Iterator()
 	for it.Next() {
-		elements[it.Key()] = it.Value()
+		elements[&treeenc.KeyMarshaler[K]{Key: it.Key()}] = it.Value()
 	}
 	return json.Marshal(&elements)
 }
 
 // FromJSON populates the tree from the input JSON representation.
 func (tree *Tree[K, V]) FromJSON(data []byte) error {
-	elements := make(map[K]V)
+	elements := make(map[treeenc.KeyUnmarshaler[K]]V)
 	err := json.Unmarshal(data, &elements)
 	if err != nil {
 		return err
 	}
 
 	tree.Clear()
-	for key, value := range elements {
-		tree.Put(key, value)
+	for ku, value := range elements {
+		tree.Put(*ku.Key, value)
 	}
 
 	return err

@@ -10,7 +10,7 @@ import "github.com/emirpasic/gods/v2/containers"
 var _ containers.ReverseIteratorWithKey[string, int] = (*Iterator[string, int])(nil)
 
 // Iterator holding the iterator's state
-type Iterator[K comparable, V any] struct {
+type Iterator[K any, V any] struct {
 	tree     *Tree[K, V]
 	node     *Node[K, V]
 	position position

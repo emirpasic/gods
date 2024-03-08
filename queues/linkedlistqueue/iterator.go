@@ -10,7 +10,7 @@ import "github.com/emirpasic/gods/v2/containers"
 var _ containers.IteratorWithIndex[int] = (*Iterator[int])(nil)
 
 // Iterator returns a stateful iterator whose values can be fetched by an index.
-type Iterator[T comparable] struct {
+type Iterator[T any] struct {
 	queue *Queue[T]
 	index int
 }

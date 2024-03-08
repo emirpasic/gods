@@ -25,7 +25,7 @@ import (
 var _ maps.Map[string, int] = (*Map[string, int])(nil)
 
 // Map holds the elements in a red-black tree
-type Map[K comparable, V any] struct {
+type Map[K any, V any] struct {
 	tree *rbt.Tree[K, V]
 }
 
@@ -35,7 +35,7 @@ func New[K cmp.Ordered, V any]() *Map[K, V] {
 }
 
 // NewWith instantiates a tree map with the custom comparator.
-func NewWith[K comparable, V any](comparator utils.Comparator[K]) *Map[K, V] {
+func NewWith[K any, V any](comparator utils.Comparator[K]) *Map[K, V] {
 	return &Map[K, V]{tree: rbt.NewWith[K, V](comparator)}
 }
 

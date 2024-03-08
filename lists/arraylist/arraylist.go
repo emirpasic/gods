@@ -22,9 +22,10 @@ import (
 var _ lists.List[int] = (*List[int])(nil)
 
 // List holds the elements in a slice
-type List[T comparable] struct {
+type List[T any] struct {
 	elements []T
 	size     int
+	equal    func(a, b T) bool
 }
 
 const (
@@ -34,7 +35,14 @@ const (
 
 // New instantiates a new list and adds the passed values, if any, to the list
 func New[T comparable](values ...T) *List[T] {
-	list := &List[T]{}
+	equal := func(a, b T) bool { return a == b }
+	return NewWith(equal, values...)
+}
+
+// NewWith instantiates a new list with the custom equal
+// function and adds the passed values, if any, to the list.
+func NewWith[T any](equal func(a, b T) bool, values ...T) *List[T] {
+	list := &List[T]{equal: equal}
 	if len(values) > 0 {
 		list.Add(values...)
 	}
@@ -85,7 +93,7 @@ func (list *List[T]) Contains(values ...T) bool {
 	for _, searchValue := range values {
 		found := false
 		for index := 0; index < list.size; index++ {
-			if list.elements[index] == searchValue {
+			if list.equal(list.elements[index], searchValue) {
 				found = true
 				break
 			}
@@ -99,7 +107,7 @@ func (list *List[T]) Contains(values ...T) bool {
 
 // Values returns all elements in the list.
 func (list *List[T]) Values() []T {
-	newElements := make([]T, list.size, list.size)
+	newElements := make([]T, list.size)
 	copy(newElements, list.elements[:list.size])
 	return newElements
 }
@@ -110,7 +118,7 @@ func (list *List[T]) IndexOf(value T) int {
 		return -1
 	}
 	for index, element := range list.elements {
-		if element == value {
+		if list.equal(element, value) {
 			return index
 		}
 	}

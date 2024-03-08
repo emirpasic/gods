@@ -10,7 +10,7 @@ import "github.com/emirpasic/gods/v2/containers"
 var _ containers.ReverseIteratorWithIndex[int] = (*Iterator[int])(nil)
 
 // Iterator holding the iterator's state
-type Iterator[T comparable] struct {
+type Iterator[T any] struct {
 	list  *List[T]
 	index int
 }

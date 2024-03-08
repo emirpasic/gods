@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 
 	"github.com/emirpasic/gods/v2/containers"
+	"github.com/emirpasic/gods/v2/internal/treeenc"
 )
 
 // Assert Serialization implementation
@@ -21,15 +22,15 @@ func (m *Map[K, V]) ToJSON() ([]byte, error) {
 
 // FromJSON populates the map from the input JSON representation.
 func (m *Map[K, V]) FromJSON(data []byte) error {
-	var elements map[K]V
+	var elements map[treeenc.KeyUnmarshaler[K]]V
 	err := json.Unmarshal(data, &elements)
 	if err != nil {
 		return err
 	}
 
 	m.Clear()
-	for key, value := range elements {
-		m.Put(key, value)
+	for ku, value := range elements {
+		m.Put(*ku.Key, value)
 	}
 
 	return nil

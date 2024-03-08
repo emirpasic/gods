@@ -13,7 +13,7 @@ import (
 var _ containers.ReverseIteratorWithIndex[int] = (*Iterator[int])(nil)
 
 // Iterator returns a stateful iterator whose values can be fetched by an index.
-type Iterator[T comparable] struct {
+type Iterator[T any] struct {
 	index    int
 	iterator *rbt.Iterator[T, struct{}]
 	tree     *rbt.Tree[T, struct{}]
