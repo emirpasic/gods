@@ -642,6 +642,31 @@ func TestListSerialization(t *testing.T) {
 	assert()
 }
 
+func TestListSerializationCapacity(t *testing.T) {
+	nums := make([]int, 100)
+	for i := 0; i < 100; i++ {
+		nums[i] = i
+	}
+	list := New(nums...)
+
+	var err error
+	assert := func() {
+		if actualCapacity, expectedCapacity := cap(list.elements), 100; actualCapacity != expectedCapacity {
+			t.Errorf("Got cap=%d expected cap=%d", actualCapacity, expectedCapacity)
+		}
+		if actualLength, expectedLength := len(list.elements), 100; actualLength != expectedLength {
+			t.Errorf("Got len=%d expected len=%d", actualLength, expectedLength)
+		}
+	}
+
+	bytes, err := list.ToJSON()
+	err = list.FromJSON(bytes)
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
+	assert()
+}
+
 func TestListString(t *testing.T) {
 	c := New[int]()
 	c.Add(1)
