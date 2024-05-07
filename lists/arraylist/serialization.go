@@ -24,6 +24,7 @@ func (list *List[T]) FromJSON(data []byte) error {
 	err := json.Unmarshal(data, &list.elements)
 	if err == nil {
 		list.size = len(list.elements)
+		list.elements = list.elements[:len(list.elements):len(list.elements)]
 	}
 	return err
 }
