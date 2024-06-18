@@ -25,7 +25,7 @@ func (list *List[T]) Iterator() *Iterator[T] {
 // If Next() was called for the first time, then it will point the iterator to the first element if it exists.
 // Modifies the state of the iterator.
 func (iterator *Iterator[T]) Next() bool {
-	if iterator.index < iterator.list.size {
+	if iterator.index < iterator.list.Size() {
 		iterator.index++
 	}
 	return iterator.list.withinRange(iterator.index)
@@ -62,7 +62,7 @@ func (iterator *Iterator[T]) Begin() {
 // End moves the iterator past the last element (one-past-the-end).
 // Call Prev() to fetch the last element if any.
 func (iterator *Iterator[T]) End() {
-	iterator.index = iterator.list.size
+	iterator.index = iterator.list.Size()
 }
 
 // First moves the iterator to the first element and returns true if there was a first element in the container.
