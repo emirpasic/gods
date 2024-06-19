@@ -68,10 +68,7 @@ func (list *List[T]) Remove(index int) {
 		return
 	}
 
-	clear(list.elements[index : index+1])
-	copy(list.elements[index:], list.elements[index+1:len(list.elements)]) // shift to the left by one (slow operation, need ways to optimize this)
-	list.elements = list.elements[:len(list.elements)-1]
-
+	list.elements = slices.Delete(list.elements, index, index+1)
 	list.shrink()
 }
 
