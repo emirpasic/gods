@@ -124,7 +124,8 @@ func (list *List[T]) Size() int {
 
 // Clear removes all elements from the list.
 func (list *List[T]) Clear() {
-	list.elements = []T{}
+	clear(list.elements[:cap(list.elements)])
+	list.elements = list.elements[:0]
 }
 
 // Sort sorts values (in-place) using.
