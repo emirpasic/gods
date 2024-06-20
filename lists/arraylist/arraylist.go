@@ -78,14 +78,7 @@ func (list *List[T]) Remove(index int) {
 // Returns true if no arguments are passed at all, i.e. set is always super-set of empty set.
 func (list *List[T]) Contains(values ...T) bool {
 	for _, searchValue := range values {
-		found := false
-		for index := range list.elements {
-			if list.elements[index] == searchValue {
-				found = true
-				break
-			}
-		}
-		if !found {
+		if !slices.Contains(list.elements, searchValue) {
 			return false
 		}
 	}
@@ -94,22 +87,12 @@ func (list *List[T]) Contains(values ...T) bool {
 
 // Values returns all elements in the list.
 func (list *List[T]) Values() []T {
-	newElements := make([]T, len(list.elements))
-	copy(newElements, list.elements)
-	return newElements
+	return slices.Clone(list.elements)
 }
 
 // IndexOf returns index of provided element
 func (list *List[T]) IndexOf(value T) int {
-	if len(list.elements) == 0 {
-		return -1
-	}
-	for index, element := range list.elements {
-		if element == value {
-			return index
-		}
-	}
-	return -1
+	return slices.Index(list.elements, value)
 }
 
 // Empty returns true if list does not contain any elements.
