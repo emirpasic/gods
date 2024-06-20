@@ -130,7 +130,6 @@ func (list *List[T]) Swap(i, j int) {
 // Does not do anything if position is negative or bigger than list's size
 // Note: position equal to list's size is valid, i.e. append.
 func (list *List[T]) Insert(index int, values ...T) {
-
 	if !list.withinRange(index) {
 		// Append
 		if index == len(list.elements) {
@@ -139,10 +138,9 @@ func (list *List[T]) Insert(index int, values ...T) {
 		return
 	}
 
-	l := len(values)
-	list.growBy(l)
-	copy(list.elements[index+l:], list.elements[index:len(list.elements)-l])
-	copy(list.elements[index:], values)
+	l := len(list.elements)
+	list.growBy(len(values))
+	list.elements = slices.Insert(list.elements[:l], index, values...)
 }
 
 // Set the value at specified index
