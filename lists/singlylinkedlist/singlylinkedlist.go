@@ -153,7 +153,7 @@ func (list *List[T]) Contains(values ...T) bool {
 
 // Values returns all elements in the list.
 func (list *List[T]) Values() []T {
-	values := make([]T, list.size, list.size)
+	values := make([]T, list.size)
 	for e, element := 0, list.first; element != nil; e, element = e+1, element.next {
 		values[e] = element.value
 	}
@@ -162,12 +162,9 @@ func (list *List[T]) Values() []T {
 
 // IndexOf returns index of provided element
 func (list *List[T]) IndexOf(value T) int {
-	if list.size == 0 {
-		return -1
-	}
-	for index, element := range list.Values() {
-		if element == value {
-			return index
+	for e, element := 0, list.first; element != nil; e, element = e+1, element.next {
+		if element.value == value {
+			return e
 		}
 	}
 	return -1
