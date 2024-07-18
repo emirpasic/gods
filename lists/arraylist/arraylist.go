@@ -24,7 +24,6 @@ var _ lists.List[int] = (*List[int])(nil)
 // List holds the elements in a slice
 type List[T comparable] struct {
 	elements []T
-	size     int
 }
 
 const (
@@ -43,10 +42,10 @@ func New[T comparable](values ...T) *List[T] {
 
 // Add appends a value at the end of the list
 func (list *List[T]) Add(values ...T) {
+	l := len(list.elements)
 	list.growBy(len(values))
-	for _, value := range values {
-		list.elements[list.size] = value
-		list.size++
+	for i := range values {
+		list.elements[l+i] = values[i]
 	}
 }
 
@@ -69,10 +68,7 @@ func (list *List[T]) Remove(index int) {
 		return
 	}
 
-	clear(list.elements[index : index+1])
-	copy(list.elements[index:], list.elements[index+1:list.size]) // shift to the left by one (slow operation, need ways to optimize this)
-	list.size--
-
+	list.elements = slices.Delete(list.elements, index, index+1)
 	list.shrink()
 }
 
@@ -81,16 +77,8 @@ func (list *List[T]) Remove(index int) {
 // Performance time complexity of n^2.
 // Returns true if no arguments are passed at all, i.e. set is always super-set of empty set.
 func (list *List[T]) Contains(values ...T) bool {
-
 	for _, searchValue := range values {
-		found := false
-		for index := 0; index < list.size; index++ {
-			if list.elements[index] == searchValue {
-				found = true
-				break
-			}
-		}
-		if !found {
+		if !slices.Contains(list.elements, searchValue) {
 			return false
 		}
 	}
@@ -99,38 +87,28 @@ func (list *List[T]) Contains(values ...T) bool {
 
 // Values returns all elements in the list.
 func (list *List[T]) Values() []T {
-	newElements := make([]T, list.size, list.size)
-	copy(newElements, list.elements[:list.size])
-	return newElements
+	return slices.Clone(list.elements)
 }
 
 // IndexOf returns index of provided element
 func (list *List[T]) IndexOf(value T) int {
-	if list.size == 0 {
-		return -1
-	}
-	for index, element := range list.elements {
-		if element == value {
-			return index
-		}
-	}
-	return -1
+	return slices.Index(list.elements, value)
 }
 
 // Empty returns true if list does not contain any elements.
 func (list *List[T]) Empty() bool {
-	return list.size == 0
+	return len(list.elements) == 0
 }
 
 // Size returns number of elements within the list.
 func (list *List[T]) Size() int {
-	return list.size
+	return len(list.elements)
 }
 
 // Clear removes all elements from the list.
 func (list *List[T]) Clear() {
-	list.size = 0
-	list.elements = []T{}
+	clear(list.elements[:cap(list.elements)])
+	list.elements = list.elements[:0]
 }
 
 // Sort sorts values (in-place) using.
@@ -138,7 +116,7 @@ func (list *List[T]) Sort(comparator utils.Comparator[T]) {
 	if len(list.elements) < 2 {
 		return
 	}
-	slices.SortFunc(list.elements[:list.size], comparator)
+	slices.SortFunc(list.elements, comparator)
 }
 
 // Swap swaps the two values at the specified positions.
@@ -152,20 +130,17 @@ func (list *List[T]) Swap(i, j int) {
 // Does not do anything if position is negative or bigger than list's size
 // Note: position equal to list's size is valid, i.e. append.
 func (list *List[T]) Insert(index int, values ...T) {
-
 	if !list.withinRange(index) {
 		// Append
-		if index == list.size {
+		if index == len(list.elements) {
 			list.Add(values...)
 		}
 		return
 	}
 
-	l := len(values)
-	list.growBy(l)
-	list.size += l
-	copy(list.elements[index+l:], list.elements[index:list.size-l])
-	copy(list.elements[index:], values)
+	l := len(list.elements)
+	list.growBy(len(values))
+	list.elements = slices.Insert(list.elements[:l], index, values...)
 }
 
 // Set the value at specified index
@@ -175,7 +150,7 @@ func (list *List[T]) Set(index int, value T) {
 
 	if !list.withinRange(index) {
 		// Append
-		if index == list.size {
+		if index == len(list.elements) {
 			list.Add(value)
 		}
 		return
@@ -187,8 +162,8 @@ func (list *List[T]) Set(index int, value T) {
 // String returns a string representation of container
 func (list *List[T]) String() string {
 	str := "ArrayList\n"
-	values := make([]string, 0, list.size)
-	for _, value := range list.elements[:list.size] {
+	values := make([]string, 0, len(list.elements))
+	for _, value := range list.elements {
 		values = append(values, fmt.Sprintf("%v", value))
 	}
 	str += strings.Join(values, ", ")
@@ -197,11 +172,11 @@ func (list *List[T]) String() string {
 
 // Check that the index is within bounds of the list
 func (list *List[T]) withinRange(index int) bool {
-	return index >= 0 && index < list.size
+	return index >= 0 && index < len(list.elements)
 }
 
-func (list *List[T]) resize(cap int) {
-	newElements := make([]T, cap, cap)
+func (list *List[T]) resize(len, cap int) {
+	newElements := make([]T, len, cap)
 	copy(newElements, list.elements)
 	list.elements = newElements
 }
@@ -210,9 +185,12 @@ func (list *List[T]) resize(cap int) {
 func (list *List[T]) growBy(n int) {
 	// When capacity is reached, grow by a factor of growthFactor and add number of elements
 	currentCapacity := cap(list.elements)
-	if list.size+n >= currentCapacity {
+
+	if newLength := len(list.elements) + n; newLength >= currentCapacity {
 		newCapacity := int(growthFactor * float32(currentCapacity+n))
-		list.resize(newCapacity)
+		list.resize(newLength, newCapacity)
+	} else {
+		list.elements = list.elements[:newLength]
 	}
 }
 
@@ -223,7 +201,7 @@ func (list *List[T]) shrink() {
 	}
 	// Shrink when size is at shrinkFactor * capacity
 	currentCapacity := cap(list.elements)
-	if list.size <= int(float32(currentCapacity)*shrinkFactor) {
-		list.resize(list.size)
+	if len(list.elements) <= int(float32(currentCapacity)*shrinkFactor) {
+		list.resize(len(list.elements), len(list.elements))
 	}
 }
