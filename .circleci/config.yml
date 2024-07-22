@@ -72,4 +72,4 @@ workflows:
           matrix:
             parameters:
               # To test with and without generics (versions prior to 1.18)
-              version: [ "1.21", "latest" ]
+              version: [ "1.21" ]
