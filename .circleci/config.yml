@@ -5,7 +5,7 @@ jobs:
     parameters:
       version:
         type: string
-        default: latest
+        default: "1.19"
     docker:
       - image: cimg/go:<<parameters.version>>
     environment:
