@@ -10,6 +10,7 @@
 package avltree
 
 import (
+	"bytes"
 	"cmp"
 	"fmt"
 
@@ -211,11 +212,12 @@ func (tree *Tree[K, V]) Clear() {
 
 // String returns a string representation of container
 func (tree *Tree[K, V]) String() string {
-	str := "AVLTree\n"
+	var buf bytes.Buffer
+	buf.WriteString("AVLTree\n")
 	if !tree.Empty() {
-		output(tree.Root, "", true, &str)
+		output(&buf, tree.Root, "", true)
 	}
-	return str
+	return buf.String()
 }
 
 func (n *Node[K, V]) String() string {
@@ -442,7 +444,7 @@ func (n *Node[K, V]) walk1(a int) *Node[K, V] {
 	return p
 }
 
-func output[K comparable, V any](node *Node[K, V], prefix string, isTail bool, str *string) {
+func output[K comparable, V any](buf *bytes.Buffer, node *Node[K, V], prefix string, isTail bool) {
 	if node.Children[1] != nil {
 		newPrefix := prefix
 		if isTail {
@@ -450,15 +452,16 @@ func output[K comparable, V any](node *Node[K, V], prefix string, isTail bool, s
 		} else {
 			newPrefix += "    "
 		}
-		output(node.Children[1], newPrefix, false, str)
+		output(buf, node.Children[1], newPrefix, false)
 	}
-	*str += prefix
+	buf.WriteString(prefix)
 	if isTail {
-		*str += "└── "
+		buf.WriteString("└── ")
 	} else {
-		*str += "┌── "
+		buf.WriteString("┌── ")
 	}
-	*str += node.String() + "\n"
+	buf.WriteString(node.String() + "\n")
+
 	if node.Children[0] != nil {
 		newPrefix := prefix
 		if isTail {
@@ -466,6 +469,6 @@ func output[K comparable, V any](node *Node[K, V], prefix string, isTail bool, s
 		} else {
 			newPrefix += "│   "
 		}
-		output(node.Children[0], newPrefix, true, str)
+		output(buf, node.Children[0], newPrefix, true)
 	}
 }
