@@ -78,8 +78,7 @@ func (list *List[T]) Prepend(values ...T) {
 // Get returns the element at index.
 // Second return parameter is true if index is within bounds of the array and array is not empty, otherwise false.
 func (list *List[T]) Get(index int) (T, bool) {
-
-	if !list.withinRange(index) {
+	if !list.withinRange(index) || list.first == nil {
 		var t T
 		return t, false
 	}
