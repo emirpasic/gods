@@ -15,7 +15,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emirpasic/gods/v2/lists/doublylinkedlist"
 	"github.com/emirpasic/gods/v2/maps"
 )
 
@@ -24,42 +23,78 @@ var _ maps.Map[string, int] = (*Map[string, int])(nil)
 
 // Map holds the elements in a regular hash table, and uses doubly-linked list to store key ordering.
 type Map[K comparable, V any] struct {
-	table    map[K]V
-	ordering *doublylinkedlist.List[K]
+	table map[K]*element[K, V]
+	first *element[K, V]
+	last  *element[K, V]
+}
+
+type element[K comparable, V any] struct {
+	key   K
+	value V
+	prev  *element[K, V]
+	next  *element[K, V]
 }
 
 // New instantiates a linked-hash-map.
 func New[K comparable, V any]() *Map[K, V] {
 	return &Map[K, V]{
-		table:    make(map[K]V),
-		ordering: doublylinkedlist.New[K](),
+		table: make(map[K]*element[K, V]),
 	}
 }
 
 // Put inserts key-value pair into the map.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (m *Map[K, V]) Put(key K, value V) {
-	if _, contains := m.table[key]; !contains {
-		m.ordering.Append(key)
+	if el, contains := m.table[key]; contains {
+		el.value = value
+	} else {
+		e := &element[K, V]{
+			key:   key,
+			value: value,
+			prev:  m.last,
+		}
+
+		if m.Size() == 0 {
+			m.first = e
+			m.last = e
+		} else {
+			m.last.next = e
+			m.last = e
+		}
+		m.table[key] = e
 	}
-	m.table[key] = value
 }
 
 // Get searches the element in the map by key and returns its value or nil if key is not found in tree.
 // Second return parameter is true if key was found, otherwise false.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (m *Map[K, V]) Get(key K) (value V, found bool) {
-	value, found = m.table[key]
-	return value, found
+	element := m.table[key]
+	if element != nil {
+		found = true
+		value = element.value
+	}
+	return
 }
 
 // Remove removes the element from the map by key.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
 func (m *Map[K, V]) Remove(key K) {
-	if _, contains := m.table[key]; contains {
+	if element, contains := m.table[key]; contains {
+		if element == m.first {
+			m.first = element.next
+		}
+		if element == m.last {
+			m.last = element.prev
+		}
+		if element.prev != nil {
+			element.prev.next = element.next
+		}
+		if element.next != nil {
+			element.next.prev = element.prev
+		}
+		element = nil
 		delete(m.table, key)
-		index := m.ordering.IndexOf(key)
-		m.ordering.Remove(index)
 	}
 }
 
@@ -70,12 +105,19 @@ func (m *Map[K, V]) Empty() bool {
 
 // Size returns number of elements in the map.
 func (m *Map[K, V]) Size() int {
-	return m.ordering.Size()
+	return len(m.table)
 }
 
 // Keys returns all keys in-order
 func (m *Map[K, V]) Keys() []K {
-	return m.ordering.Values()
+	keys := make([]K, m.Size())
+	count := 0
+	it := m.Iterator()
+	for it.Next() {
+		keys[count] = it.Key()
+		count++
+	}
+	return keys
 }
 
 // Values returns all values in-order based on the key.
@@ -92,8 +134,9 @@ func (m *Map[K, V]) Values() []V {
 
 // Clear removes all elements from the map.
 func (m *Map[K, V]) Clear() {
-	clear(m.table)
-	m.ordering.Clear()
+	m.table = make(map[K]*element[K, V])
+	m.first = nil
+	m.last = nil
 }
 
 // String returns a string representation of container
@@ -104,5 +147,4 @@ func (m *Map[K, V]) String() string {
 		str += fmt.Sprintf("%v:%v ", it.Key(), it.Value())
 	}
 	return strings.TrimRight(str, " ") + "]"
-
 }
