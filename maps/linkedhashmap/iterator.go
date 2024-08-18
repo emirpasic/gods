@@ -6,7 +6,6 @@ package linkedhashmap
 
 import (
 	"github.com/emirpasic/gods/v2/containers"
-	"github.com/emirpasic/gods/v2/lists/doublylinkedlist"
 )
 
 // Assert Iterator implementation
@@ -14,15 +13,16 @@ var _ containers.ReverseIteratorWithKey[string, int] = (*Iterator[string, int])(
 
 // Iterator holding the iterator's state
 type Iterator[K comparable, V any] struct {
-	iterator doublylinkedlist.Iterator[K]
-	table    map[K]V
+	m       *Map[K, V]
+	index   int
+	element *element[K, V]
 }
 
 // Iterator returns a stateful iterator whose elements are key/value pairs.
 func (m *Map[K, V]) Iterator() *Iterator[K, V] {
 	return &Iterator[K, V]{
-		iterator: m.ordering.Iterator(),
-		table:    m.table,
+		m:     m,
+		index: -1,
 	}
 }
 
@@ -31,53 +31,84 @@ func (m *Map[K, V]) Iterator() *Iterator[K, V] {
 // If Next() was called for the first time, then it will point the iterator to the first element if it exists.
 // Modifies the state of the iterator.
 func (iterator *Iterator[K, V]) Next() bool {
-	return iterator.iterator.Next()
+	if iterator.index < iterator.m.Size() {
+		iterator.index++
+	}
+	if !iterator.m.withinRange(iterator.index) {
+		iterator.element = nil
+		return false
+	}
+	if iterator.index != 0 {
+		iterator.element = iterator.element.next
+	} else {
+		iterator.element = iterator.m.first
+	}
+	return true
 }
 
 // Prev moves the iterator to the previous element and returns true if there was a previous element in the container.
 // If Prev() returns true, then previous element's key and value can be retrieved by Key() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator[K, V]) Prev() bool {
-	return iterator.iterator.Prev()
+	if iterator.index >= 0 {
+		iterator.index--
+	}
+	if !iterator.m.withinRange(iterator.index) {
+		iterator.element = nil
+		return false
+	}
+	if iterator.index == iterator.m.Size()-1 {
+		iterator.element = iterator.m.last
+	} else {
+		iterator.element = iterator.element.prev
+	}
+	return iterator.m.withinRange(iterator.index)
 }
 
 // Value returns the current element's value.
 // Does not modify the state of the iterator.
 func (iterator *Iterator[K, V]) Value() V {
-	key := iterator.iterator.Value()
-	return iterator.table[key]
+	if iterator.element != nil {
+		return iterator.element.value
+	}
+	var v V
+	return v
 }
 
 // Key returns the current element's key.
 // Does not modify the state of the iterator.
 func (iterator *Iterator[K, V]) Key() K {
-	return iterator.iterator.Value()
+	return iterator.element.key
 }
 
 // Begin resets the iterator to its initial state (one-before-first)
 // Call Next() to fetch the first element if any.
 func (iterator *Iterator[K, V]) Begin() {
-	iterator.iterator.Begin()
+	iterator.index = -1
+	iterator.element = nil
 }
 
 // End moves the iterator past the last element (one-past-the-end).
 // Call Prev() to fetch the last element if any.
 func (iterator *Iterator[K, V]) End() {
-	iterator.iterator.End()
+	iterator.index = iterator.m.Size()
+	iterator.element = nil
 }
 
 // First moves the iterator to the first element and returns true if there was a first element in the container.
 // If First() returns true, then first element's key and value can be retrieved by Key() and Value().
 // Modifies the state of the iterator
 func (iterator *Iterator[K, V]) First() bool {
-	return iterator.iterator.First()
+	iterator.Begin()
+	return iterator.Next()
 }
 
 // Last moves the iterator to the last element and returns true if there was a last element in the container.
 // If Last() returns true, then last element's key and value can be retrieved by Key() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator[K, V]) Last() bool {
-	return iterator.iterator.Last()
+	iterator.End()
+	return iterator.Prev()
 }
 
 // NextTo moves the iterator to the next element from current position that satisfies the condition given by the
@@ -106,4 +137,9 @@ func (iterator *Iterator[K, V]) PrevTo(f func(key K, value V) bool) bool {
 		}
 	}
 	return false
+}
+
+// Check that the index is within bounds of the list
+func (m *Map[K, V]) withinRange(index int) bool {
+	return index >= 0 && index < m.Size()
 }
