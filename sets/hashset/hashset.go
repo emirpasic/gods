@@ -155,7 +155,7 @@ func (set *Set[T]) Difference(another *Set[T]) *Set[T] {
 	result := New[T]()
 
 	for _, item := range set.Values() {
-		if _, contains := another.items[item]; !contains {
+		if !another.Contains(item) {
 			result.Add(item)
 		}
 	}
