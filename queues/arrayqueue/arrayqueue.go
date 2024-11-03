@@ -40,7 +40,7 @@ func (queue *Queue[T]) Enqueue(value T) {
 func (queue *Queue[T]) Dequeue() (value T, ok bool) {
 	value, ok = queue.list.Get(0)
 	if ok {
-		queue.list.Remove(0)
+		queue.list.RemoveFirstNElements(1)
 	}
 	return
 }
