@@ -27,6 +27,50 @@ func (tree *Tree[K, V]) Iterator() *Iterator[K, V] {
 	return &Iterator[K, V]{tree: tree, node: nil, position: begin}
 }
 
+func (tree *Tree[K, V]) FloorIterator(key K) *Iterator[K, V] {
+	found := false
+	var floor *Node[K, V]
+	node := tree.Root
+	for node != nil {
+		compare := tree.Comparator(key, node.Key)
+		switch {
+		case compare == 0:
+			return &Iterator[K, V]{tree: tree, node: node, position: between}
+		case compare < 0:
+			node = node.Left
+		case compare > 0:
+			floor, found = node, true
+			node = node.Right
+		}
+	}
+	if found {
+		return &Iterator[K, V]{tree: tree, node: floor, position: between}
+	}
+	return &Iterator[K, V]{tree: tree, node: nil, position: begin}
+}
+
+func (tree *Tree[K, V]) CeilingIterator(key K) *Iterator[K, V] {
+	found := false
+	var ceiling *Node[K, V]
+	node := tree.Root
+	for node != nil {
+		compare := tree.Comparator(key, node.Key)
+		switch {
+		case compare == 0:
+			return &Iterator[K, V]{tree: tree, node: node, position: between}
+		case compare < 0:
+			ceiling, found = node, true
+			node = node.Left
+		case compare > 0:
+			node = node.Right
+		}
+	}
+	if found {
+		return &Iterator[K, V]{tree: tree, node: ceiling, position: between}
+	}
+	return &Iterator[K, V]{tree: tree, node: nil, position: end}
+}
+
 // IteratorAt returns a stateful iterator whose elements are key/value pairs that is initialised at a particular node.
 func (tree *Tree[K, V]) IteratorAt(node *Node[K, V]) *Iterator[K, V] {
 	return &Iterator[K, V]{tree: tree, node: node, position: between}

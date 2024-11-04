@@ -14,7 +14,8 @@ var _ containers.ReverseIteratorWithKey[string, int] = (*Iterator[string, int])(
 
 // Iterator holding the iterator's state
 type Iterator[K comparable, V any] struct {
-	iterator *rbt.Iterator[K, V]
+	iterator  *rbt.Iterator[K, V]
+	rgitfirst bool
 }
 
 // Iterator returns a stateful iterator whose elements are key/value pairs.
@@ -22,11 +23,31 @@ func (m *Map[K, V]) Iterator() *Iterator[K, V] {
 	return &Iterator[K, V]{iterator: m.tree.Iterator()}
 }
 
+func (m *Map[K, V]) FloorIterator(key K) *Iterator[K, V] {
+	it := &Iterator[K, V]{iterator: m.tree.FloorIterator(key)}
+	if it.iterator.Node() != nil {
+		it.rgitfirst = true
+	}
+	return it
+}
+
+func (m *Map[K, V]) CeilingIterator(key K) *Iterator[K, V] {
+	it := &Iterator[K, V]{iterator: m.tree.CeilingIterator(key)}
+	if it.iterator.Node() != nil {
+		it.rgitfirst = true
+	}
+	return it
+}
+
 // Next moves the iterator to the next element and returns true if there was a next element in the container.
 // If Next() returns true, then next element's key and value can be retrieved by Key() and Value().
 // If Next() was called for the first time, then it will point the iterator to the first element if it exists.
 // Modifies the state of the iterator.
 func (iterator *Iterator[K, V]) Next() bool {
+	if iterator.rgitfirst {
+		iterator.rgitfirst = false
+		return true
+	}
 	return iterator.iterator.Next()
 }
 
@@ -34,6 +55,10 @@ func (iterator *Iterator[K, V]) Next() bool {
 // If Prev() returns true, then previous element's key and value can be retrieved by Key() and Value().
 // Modifies the state of the iterator.
 func (iterator *Iterator[K, V]) Prev() bool {
+	if iterator.rgitfirst {
+		iterator.rgitfirst = false
+		return true
+	}
 	return iterator.iterator.Prev()
 }
 
