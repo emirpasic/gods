@@ -2,18 +2,19 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package treemap
+package treemap_test
 
 import (
 	"encoding/json"
 	"strings"
 	"testing"
 
+	"github.com/emirpasic/gods/v2/maps/treemap"
 	"github.com/emirpasic/gods/v2/testutils"
 )
 
 func TestMapPut(t *testing.T) {
-	m := New[int, string]()
+	m := treemap.New[int, string]()
 	m.Put(5, "e")
 	m.Put(6, "f")
 	m.Put(7, "g")
@@ -51,7 +52,7 @@ func TestMapPut(t *testing.T) {
 }
 
 func TestMapMin(t *testing.T) {
-	m := New[int, string]()
+	m := treemap.New[int, string]()
 
 	if k, v, ok := m.Min(); k != 0 || v != "" || ok {
 		t.Errorf("Got %v->%v->%v expected %v->%v-%v", k, v, ok, 0, "", false)
@@ -80,7 +81,7 @@ func TestMapMin(t *testing.T) {
 }
 
 func TestMapMax(t *testing.T) {
-	m := New[int, string]()
+	m := treemap.New[int, string]()
 
 	if k, v, ok := m.Max(); k != 0 || v != "" || ok {
 		t.Errorf("Got %v->%v->%v expected %v->%v-%v", k, v, ok, 0, "", false)
@@ -109,7 +110,7 @@ func TestMapMax(t *testing.T) {
 }
 
 func TestMapClear(t *testing.T) {
-	m := New[int, string]()
+	m := treemap.New[int, string]()
 	m.Put(5, "e")
 	m.Put(6, "f")
 	m.Put(7, "g")
@@ -124,7 +125,7 @@ func TestMapClear(t *testing.T) {
 }
 
 func TestMapRemove(t *testing.T) {
-	m := New[int, string]()
+	m := treemap.New[int, string]()
 	m.Put(5, "e")
 	m.Put(6, "f")
 	m.Put(7, "g")
@@ -183,7 +184,7 @@ func TestMapRemove(t *testing.T) {
 }
 
 func TestMapFloor(t *testing.T) {
-	m := New[int, string]()
+	m := treemap.New[int, string]()
 	m.Put(7, "g")
 	m.Put(3, "c")
 	m.Put(1, "a")
@@ -210,7 +211,7 @@ func TestMapFloor(t *testing.T) {
 }
 
 func TestMapCeiling(t *testing.T) {
-	m := New[int, string]()
+	m := treemap.New[int, string]()
 	m.Put(7, "g")
 	m.Put(3, "c")
 	m.Put(1, "a")
@@ -237,7 +238,7 @@ func TestMapCeiling(t *testing.T) {
 }
 
 func TestMapEach(t *testing.T) {
-	m := New[string, int]()
+	m := treemap.New[string, int]()
 	m.Put("c", 3)
 	m.Put("a", 1)
 	m.Put("b", 2)
@@ -267,7 +268,7 @@ func TestMapEach(t *testing.T) {
 }
 
 func TestMapMap(t *testing.T) {
-	m := New[string, int]()
+	m := treemap.New[string, int]()
 	m.Put("c", 3)
 	m.Put("a", 1)
 	m.Put("b", 2)
@@ -289,7 +290,7 @@ func TestMapMap(t *testing.T) {
 }
 
 func TestMapSelect(t *testing.T) {
-	m := New[string, int]()
+	m := treemap.New[string, int]()
 	m.Put("c", 3)
 	m.Put("a", 1)
 	m.Put("b", 2)
@@ -308,7 +309,7 @@ func TestMapSelect(t *testing.T) {
 }
 
 func TestMapAny(t *testing.T) {
-	m := New[string, int]()
+	m := treemap.New[string, int]()
 	m.Put("c", 3)
 	m.Put("a", 1)
 	m.Put("b", 2)
@@ -327,7 +328,7 @@ func TestMapAny(t *testing.T) {
 }
 
 func TestMapAll(t *testing.T) {
-	m := New[string, int]()
+	m := treemap.New[string, int]()
 	m.Put("c", 3)
 	m.Put("a", 1)
 	m.Put("b", 2)
@@ -346,7 +347,7 @@ func TestMapAll(t *testing.T) {
 }
 
 func TestMapFind(t *testing.T) {
-	m := New[string, int]()
+	m := treemap.New[string, int]()
 	m.Put("c", 3)
 	m.Put("a", 1)
 	m.Put("b", 2)
@@ -365,7 +366,7 @@ func TestMapFind(t *testing.T) {
 }
 
 func TestMapChaining(t *testing.T) {
-	m := New[string, int]()
+	m := treemap.New[string, int]()
 	m.Put("c", 3)
 	m.Put("a", 1)
 	m.Put("b", 2)
@@ -389,7 +390,7 @@ func TestMapChaining(t *testing.T) {
 }
 
 func TestMapIteratorNextOnEmpty(t *testing.T) {
-	m := New[string, int]()
+	m := treemap.New[string, int]()
 	it := m.Iterator()
 	it = m.Iterator()
 	for it.Next() {
@@ -398,7 +399,7 @@ func TestMapIteratorNextOnEmpty(t *testing.T) {
 }
 
 func TestMapIteratorPrevOnEmpty(t *testing.T) {
-	m := New[string, int]()
+	m := treemap.New[string, int]()
 	it := m.Iterator()
 	it = m.Iterator()
 	for it.Prev() {
@@ -407,7 +408,7 @@ func TestMapIteratorPrevOnEmpty(t *testing.T) {
 }
 
 func TestMapIteratorNext(t *testing.T) {
-	m := New[string, int]()
+	m := treemap.New[string, int]()
 	m.Put("c", 3)
 	m.Put("a", 1)
 	m.Put("b", 2)
@@ -444,7 +445,7 @@ func TestMapIteratorNext(t *testing.T) {
 }
 
 func TestMapIteratorPrev(t *testing.T) {
-	m := New[string, int]()
+	m := treemap.New[string, int]()
 	m.Put("c", 3)
 	m.Put("a", 1)
 	m.Put("b", 2)
@@ -483,7 +484,7 @@ func TestMapIteratorPrev(t *testing.T) {
 }
 
 func TestMapIteratorBegin(t *testing.T) {
-	m := New[int, string]()
+	m := treemap.New[int, string]()
 	it := m.Iterator()
 	it.Begin()
 	m.Put(3, "c")
@@ -499,7 +500,7 @@ func TestMapIteratorBegin(t *testing.T) {
 }
 
 func TestMapIteratorEnd(t *testing.T) {
-	m := New[int, string]()
+	m := treemap.New[int, string]()
 	it := m.Iterator()
 	m.Put(3, "c")
 	m.Put(1, "a")
@@ -512,7 +513,7 @@ func TestMapIteratorEnd(t *testing.T) {
 }
 
 func TestMapIteratorFirst(t *testing.T) {
-	m := New[int, string]()
+	m := treemap.New[int, string]()
 	m.Put(3, "c")
 	m.Put(1, "a")
 	m.Put(2, "b")
@@ -526,7 +527,7 @@ func TestMapIteratorFirst(t *testing.T) {
 }
 
 func TestMapIteratorLast(t *testing.T) {
-	m := New[int, string]()
+	m := treemap.New[int, string]()
 	m.Put(3, "c")
 	m.Put(1, "a")
 	m.Put(2, "b")
@@ -547,7 +548,7 @@ func TestMapIteratorNextTo(t *testing.T) {
 
 	// NextTo (empty)
 	{
-		m := New[int, string]()
+		m := treemap.New[int, string]()
 		it := m.Iterator()
 		for it.NextTo(seek) {
 			t.Errorf("Shouldn't iterate on empty map")
@@ -556,7 +557,7 @@ func TestMapIteratorNextTo(t *testing.T) {
 
 	// NextTo (not found)
 	{
-		m := New[int, string]()
+		m := treemap.New[int, string]()
 		m.Put(0, "xx")
 		m.Put(1, "yy")
 		it := m.Iterator()
@@ -567,7 +568,7 @@ func TestMapIteratorNextTo(t *testing.T) {
 
 	// NextTo (found)
 	{
-		m := New[int, string]()
+		m := treemap.New[int, string]()
 		m.Put(0, "aa")
 		m.Put(1, "bb")
 		m.Put(2, "cc")
@@ -599,7 +600,7 @@ func TestMapIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (empty)
 	{
-		m := New[int, string]()
+		m := treemap.New[int, string]()
 		it := m.Iterator()
 		it.End()
 		for it.PrevTo(seek) {
@@ -609,7 +610,7 @@ func TestMapIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (not found)
 	{
-		m := New[int, string]()
+		m := treemap.New[int, string]()
 		m.Put(0, "xx")
 		m.Put(1, "yy")
 		it := m.Iterator()
@@ -621,7 +622,7 @@ func TestMapIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (found)
 	{
-		m := New[int, string]()
+		m := treemap.New[int, string]()
 		m.Put(0, "aa")
 		m.Put(1, "bb")
 		m.Put(2, "cc")
@@ -647,7 +648,7 @@ func TestMapIteratorPrevTo(t *testing.T) {
 
 func TestMapSerialization(t *testing.T) {
 	for i := 0; i < 10; i++ {
-		original := New[string, string]()
+		original := treemap.New[string, string]()
 		original.Put("d", "4")
 		original.Put("e", "5")
 		original.Put("c", "3")
@@ -662,7 +663,7 @@ func TestMapSerialization(t *testing.T) {
 		}
 		assertSerialization(original, "B", t)
 
-		deserialized := New[string, string]()
+		deserialized := treemap.New[string, string]()
 		err = deserialized.FromJSON(serialized)
 		if err != nil {
 			t.Errorf("Got error %v", err)
@@ -670,7 +671,7 @@ func TestMapSerialization(t *testing.T) {
 		assertSerialization(deserialized, "C", t)
 	}
 
-	m := New[string, float64]()
+	m := treemap.New[string, float64]()
 	m.Put("a", 1.0)
 	m.Put("b", 2.0)
 	m.Put("c", 3.0)
@@ -687,7 +688,7 @@ func TestMapSerialization(t *testing.T) {
 }
 
 func TestMapString(t *testing.T) {
-	c := New[string, int]()
+	c := treemap.New[string, int]()
 	c.Put("a", 1)
 	if !strings.HasPrefix(c.String(), "TreeMap") {
 		t.Errorf("String should start with container name")
@@ -695,7 +696,7 @@ func TestMapString(t *testing.T) {
 }
 
 // noinspection GoBoolExpressions
-func assertSerialization(m *Map[string, string], txt string, t *testing.T) {
+func assertSerialization(m *treemap.Map[string, string], txt string, t *testing.T) {
 	if actualValue := m.Keys(); false ||
 		actualValue[0] != "a" ||
 		actualValue[1] != "b" ||
@@ -717,7 +718,7 @@ func assertSerialization(m *Map[string, string], txt string, t *testing.T) {
 	}
 }
 
-func benchmarkGet(b *testing.B, m *Map[int, struct{}], size int) {
+func benchmarkGet(b *testing.B, m *treemap.Map[int, struct{}], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			m.Get(n)
@@ -725,7 +726,7 @@ func benchmarkGet(b *testing.B, m *Map[int, struct{}], size int) {
 	}
 }
 
-func benchmarkPut(b *testing.B, m *Map[int, struct{}], size int) {
+func benchmarkPut(b *testing.B, m *treemap.Map[int, struct{}], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			m.Put(n, struct{}{})
@@ -733,7 +734,7 @@ func benchmarkPut(b *testing.B, m *Map[int, struct{}], size int) {
 	}
 }
 
-func benchmarkRemove(b *testing.B, m *Map[int, struct{}], size int) {
+func benchmarkRemove(b *testing.B, m *treemap.Map[int, struct{}], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			m.Remove(n)
@@ -744,7 +745,7 @@ func benchmarkRemove(b *testing.B, m *Map[int, struct{}], size int) {
 func BenchmarkTreeMapGet100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	m := New[int, struct{}]()
+	m := treemap.New[int, struct{}]()
 	for n := 0; n < size; n++ {
 		m.Put(n, struct{}{})
 	}
@@ -755,7 +756,7 @@ func BenchmarkTreeMapGet100(b *testing.B) {
 func BenchmarkTreeMapGet1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	m := New[int, struct{}]()
+	m := treemap.New[int, struct{}]()
 	for n := 0; n < size; n++ {
 		m.Put(n, struct{}{})
 	}
@@ -766,7 +767,7 @@ func BenchmarkTreeMapGet1000(b *testing.B) {
 func BenchmarkTreeMapGet10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	m := New[int, struct{}]()
+	m := treemap.New[int, struct{}]()
 	for n := 0; n < size; n++ {
 		m.Put(n, struct{}{})
 	}
@@ -777,7 +778,7 @@ func BenchmarkTreeMapGet10000(b *testing.B) {
 func BenchmarkTreeMapGet100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	m := New[int, struct{}]()
+	m := treemap.New[int, struct{}]()
 	for n := 0; n < size; n++ {
 		m.Put(n, struct{}{})
 	}
@@ -788,7 +789,7 @@ func BenchmarkTreeMapGet100000(b *testing.B) {
 func BenchmarkTreeMapPut100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	m := New[int, struct{}]()
+	m := treemap.New[int, struct{}]()
 	b.StartTimer()
 	benchmarkPut(b, m, size)
 }
@@ -796,7 +797,7 @@ func BenchmarkTreeMapPut100(b *testing.B) {
 func BenchmarkTreeMapPut1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	m := New[int, struct{}]()
+	m := treemap.New[int, struct{}]()
 	for n := 0; n < size; n++ {
 		m.Put(n, struct{}{})
 	}
@@ -807,7 +808,7 @@ func BenchmarkTreeMapPut1000(b *testing.B) {
 func BenchmarkTreeMapPut10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	m := New[int, struct{}]()
+	m := treemap.New[int, struct{}]()
 	for n := 0; n < size; n++ {
 		m.Put(n, struct{}{})
 	}
@@ -818,7 +819,7 @@ func BenchmarkTreeMapPut10000(b *testing.B) {
 func BenchmarkTreeMapPut100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	m := New[int, struct{}]()
+	m := treemap.New[int, struct{}]()
 	for n := 0; n < size; n++ {
 		m.Put(n, struct{}{})
 	}
@@ -829,7 +830,7 @@ func BenchmarkTreeMapPut100000(b *testing.B) {
 func BenchmarkTreeMapRemove100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	m := New[int, struct{}]()
+	m := treemap.New[int, struct{}]()
 	for n := 0; n < size; n++ {
 		m.Put(n, struct{}{})
 	}
@@ -840,7 +841,7 @@ func BenchmarkTreeMapRemove100(b *testing.B) {
 func BenchmarkTreeMapRemove1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	m := New[int, struct{}]()
+	m := treemap.New[int, struct{}]()
 	for n := 0; n < size; n++ {
 		m.Put(n, struct{}{})
 	}
@@ -851,7 +852,7 @@ func BenchmarkTreeMapRemove1000(b *testing.B) {
 func BenchmarkTreeMapRemove10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	m := New[int, struct{}]()
+	m := treemap.New[int, struct{}]()
 	for n := 0; n < size; n++ {
 		m.Put(n, struct{}{})
 	}
@@ -862,7 +863,7 @@ func BenchmarkTreeMapRemove10000(b *testing.B) {
 func BenchmarkTreeMapRemove100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	m := New[int, struct{}]()
+	m := treemap.New[int, struct{}]()
 	for n := 0; n < size; n++ {
 		m.Put(n, struct{}{})
 	}

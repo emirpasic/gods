@@ -2,18 +2,19 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package linkedliststack
+package linkedliststack_test
 
 import (
 	"encoding/json"
 	"strings"
 	"testing"
 
+	"github.com/emirpasic/gods/v2/stacks/linkedliststack"
 	"github.com/emirpasic/gods/v2/testutils"
 )
 
 func TestStackPush(t *testing.T) {
-	stack := New[int]()
+	stack := linkedliststack.New[int]()
 	if actualValue := stack.Empty(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
@@ -36,7 +37,7 @@ func TestStackPush(t *testing.T) {
 }
 
 func TestStackPeek(t *testing.T) {
-	stack := New[int]()
+	stack := linkedliststack.New[int]()
 	if actualValue, ok := stack.Peek(); actualValue != 0 || ok {
 		t.Errorf("Got %v expected %v", actualValue, nil)
 	}
@@ -49,7 +50,7 @@ func TestStackPeek(t *testing.T) {
 }
 
 func TestStackPop(t *testing.T) {
-	stack := New[int]()
+	stack := linkedliststack.New[int]()
 	stack.Push(1)
 	stack.Push(2)
 	stack.Push(3)
@@ -75,7 +76,7 @@ func TestStackPop(t *testing.T) {
 }
 
 func TestStackIterator(t *testing.T) {
-	stack := New[string]()
+	stack := linkedliststack.New[string]()
 	stack.Push("a")
 	stack.Push("b")
 	stack.Push("c")
@@ -119,7 +120,7 @@ func TestStackIterator(t *testing.T) {
 }
 
 func TestStackIteratorBegin(t *testing.T) {
-	stack := New[string]()
+	stack := linkedliststack.New[string]()
 	it := stack.Iterator()
 	it.Begin()
 	stack.Push("a")
@@ -135,7 +136,7 @@ func TestStackIteratorBegin(t *testing.T) {
 }
 
 func TestStackIteratorFirst(t *testing.T) {
-	stack := New[string]()
+	stack := linkedliststack.New[string]()
 	it := stack.Iterator()
 	if actualValue, expectedValue := it.First(), false; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
@@ -159,7 +160,7 @@ func TestStackIteratorNextTo(t *testing.T) {
 
 	// NextTo (empty)
 	{
-		stack := New[string]()
+		stack := linkedliststack.New[string]()
 		it := stack.Iterator()
 		for it.NextTo(seek) {
 			t.Errorf("Shouldn't iterate on empty stack")
@@ -168,7 +169,7 @@ func TestStackIteratorNextTo(t *testing.T) {
 
 	// NextTo (not found)
 	{
-		stack := New[string]()
+		stack := linkedliststack.New[string]()
 		stack.Push("xx")
 		stack.Push("yy")
 		it := stack.Iterator()
@@ -179,7 +180,7 @@ func TestStackIteratorNextTo(t *testing.T) {
 
 	// NextTo (found)
 	{
-		stack := New[string]()
+		stack := linkedliststack.New[string]()
 		stack.Push("aa")
 		stack.Push("bb")
 		stack.Push("cc")
@@ -204,7 +205,7 @@ func TestStackIteratorNextTo(t *testing.T) {
 }
 
 func TestStackSerialization(t *testing.T) {
-	stack := New[string]()
+	stack := linkedliststack.New[string]()
 	stack.Push("a")
 	stack.Push("b")
 	stack.Push("c")
@@ -241,14 +242,14 @@ func TestStackSerialization(t *testing.T) {
 }
 
 func TestStackString(t *testing.T) {
-	c := New[int]()
+	c := linkedliststack.New[int]()
 	c.Push(1)
 	if !strings.HasPrefix(c.String(), "LinkedListStack") {
 		t.Errorf("String should start with container name")
 	}
 }
 
-func benchmarkPush(b *testing.B, stack *Stack[int], size int) {
+func benchmarkPush(b *testing.B, stack *linkedliststack.Stack[int], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			stack.Push(n)
@@ -256,7 +257,7 @@ func benchmarkPush(b *testing.B, stack *Stack[int], size int) {
 	}
 }
 
-func benchmarkPop(b *testing.B, stack *Stack[int], size int) {
+func benchmarkPop(b *testing.B, stack *linkedliststack.Stack[int], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			stack.Pop()
@@ -267,7 +268,7 @@ func benchmarkPop(b *testing.B, stack *Stack[int], size int) {
 func BenchmarkLinkedListStackPop100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	stack := New[int]()
+	stack := linkedliststack.New[int]()
 	for n := 0; n < size; n++ {
 		stack.Push(n)
 	}
@@ -278,7 +279,7 @@ func BenchmarkLinkedListStackPop100(b *testing.B) {
 func BenchmarkLinkedListStackPop1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	stack := New[int]()
+	stack := linkedliststack.New[int]()
 	for n := 0; n < size; n++ {
 		stack.Push(n)
 	}
@@ -289,7 +290,7 @@ func BenchmarkLinkedListStackPop1000(b *testing.B) {
 func BenchmarkLinkedListStackPop10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	stack := New[int]()
+	stack := linkedliststack.New[int]()
 	for n := 0; n < size; n++ {
 		stack.Push(n)
 	}
@@ -300,7 +301,7 @@ func BenchmarkLinkedListStackPop10000(b *testing.B) {
 func BenchmarkLinkedListStackPop100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	stack := New[int]()
+	stack := linkedliststack.New[int]()
 	for n := 0; n < size; n++ {
 		stack.Push(n)
 	}
@@ -311,7 +312,7 @@ func BenchmarkLinkedListStackPop100000(b *testing.B) {
 func BenchmarkLinkedListStackPush100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	stack := New[int]()
+	stack := linkedliststack.New[int]()
 	b.StartTimer()
 	benchmarkPush(b, stack, size)
 }
@@ -319,7 +320,7 @@ func BenchmarkLinkedListStackPush100(b *testing.B) {
 func BenchmarkLinkedListStackPush1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	stack := New[int]()
+	stack := linkedliststack.New[int]()
 	for n := 0; n < size; n++ {
 		stack.Push(n)
 	}
@@ -330,7 +331,7 @@ func BenchmarkLinkedListStackPush1000(b *testing.B) {
 func BenchmarkLinkedListStackPush10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	stack := New[int]()
+	stack := linkedliststack.New[int]()
 	for n := 0; n < size; n++ {
 		stack.Push(n)
 	}
@@ -341,7 +342,7 @@ func BenchmarkLinkedListStackPush10000(b *testing.B) {
 func BenchmarkLinkedListStackPush100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	stack := New[int]()
+	stack := linkedliststack.New[int]()
 	for n := 0; n < size; n++ {
 		stack.Push(n)
 	}

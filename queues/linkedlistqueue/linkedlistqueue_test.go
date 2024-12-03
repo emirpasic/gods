@@ -2,18 +2,19 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package linkedlistqueue
+package linkedlistqueue_test
 
 import (
 	"encoding/json"
 	"strings"
 	"testing"
 
+	"github.com/emirpasic/gods/v2/queues/linkedlistqueue"
 	"github.com/emirpasic/gods/v2/testutils"
 )
 
 func TestQueueEnqueue(t *testing.T) {
-	queue := New[int]()
+	queue := linkedlistqueue.New[int]()
 	if actualValue := queue.Empty(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
@@ -36,7 +37,7 @@ func TestQueueEnqueue(t *testing.T) {
 }
 
 func TestQueuePeek(t *testing.T) {
-	queue := New[int]()
+	queue := linkedlistqueue.New[int]()
 	if actualValue, ok := queue.Peek(); actualValue != 0 || ok {
 		t.Errorf("Got %v expected %v", actualValue, nil)
 	}
@@ -49,7 +50,7 @@ func TestQueuePeek(t *testing.T) {
 }
 
 func TestQueueDequeue(t *testing.T) {
-	queue := New[int]()
+	queue := linkedlistqueue.New[int]()
 	queue.Enqueue(1)
 	queue.Enqueue(2)
 	queue.Enqueue(3)
@@ -75,7 +76,7 @@ func TestQueueDequeue(t *testing.T) {
 }
 
 func TestQueueIteratorOnEmpty(t *testing.T) {
-	queue := New[int]()
+	queue := linkedlistqueue.New[int]()
 	it := queue.Iterator()
 	for it.Next() {
 		t.Errorf("Shouldn't iterate on empty queue")
@@ -83,7 +84,7 @@ func TestQueueIteratorOnEmpty(t *testing.T) {
 }
 
 func TestQueueIteratorNext(t *testing.T) {
-	queue := New[string]()
+	queue := linkedlistqueue.New[string]()
 	queue.Enqueue("a")
 	queue.Enqueue("b")
 	queue.Enqueue("c")
@@ -126,7 +127,7 @@ func TestQueueIteratorNext(t *testing.T) {
 }
 
 func TestQueueIteratorBegin(t *testing.T) {
-	queue := New[string]()
+	queue := linkedlistqueue.New[string]()
 	it := queue.Iterator()
 	it.Begin()
 	queue.Enqueue("a")
@@ -142,7 +143,7 @@ func TestQueueIteratorBegin(t *testing.T) {
 }
 
 func TestQueueIteratorFirst(t *testing.T) {
-	queue := New[string]()
+	queue := linkedlistqueue.New[string]()
 	it := queue.Iterator()
 	if actualValue, expectedValue := it.First(), false; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
@@ -166,7 +167,7 @@ func TestQueueIteratorNextTo(t *testing.T) {
 
 	// NextTo (empty)
 	{
-		queue := New[string]()
+		queue := linkedlistqueue.New[string]()
 		it := queue.Iterator()
 		for it.NextTo(seek) {
 			t.Errorf("Shouldn't iterate on empty queue")
@@ -175,7 +176,7 @@ func TestQueueIteratorNextTo(t *testing.T) {
 
 	// NextTo (not found)
 	{
-		queue := New[string]()
+		queue := linkedlistqueue.New[string]()
 		queue.Enqueue("xx")
 		queue.Enqueue("yy")
 		it := queue.Iterator()
@@ -186,7 +187,7 @@ func TestQueueIteratorNextTo(t *testing.T) {
 
 	// NextTo (found)
 	{
-		queue := New[string]()
+		queue := linkedlistqueue.New[string]()
 		queue.Enqueue("aa")
 		queue.Enqueue("bb")
 		queue.Enqueue("cc")
@@ -211,7 +212,7 @@ func TestQueueIteratorNextTo(t *testing.T) {
 }
 
 func TestQueueSerialization(t *testing.T) {
-	queue := New[string]()
+	queue := linkedlistqueue.New[string]()
 	queue.Enqueue("a")
 	queue.Enqueue("b")
 	queue.Enqueue("c")
@@ -248,14 +249,14 @@ func TestQueueSerialization(t *testing.T) {
 }
 
 func TestQueueString(t *testing.T) {
-	c := New[int]()
+	c := linkedlistqueue.New[int]()
 	c.Enqueue(1)
 	if !strings.HasPrefix(c.String(), "LinkedListQueue") {
 		t.Errorf("String should start with container name")
 	}
 }
 
-func benchmarkEnqueue(b *testing.B, queue *Queue[int], size int) {
+func benchmarkEnqueue(b *testing.B, queue *linkedlistqueue.Queue[int], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			queue.Enqueue(n)
@@ -263,7 +264,7 @@ func benchmarkEnqueue(b *testing.B, queue *Queue[int], size int) {
 	}
 }
 
-func benchmarkDequeue(b *testing.B, queue *Queue[int], size int) {
+func benchmarkDequeue(b *testing.B, queue *linkedlistqueue.Queue[int], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			queue.Dequeue()
@@ -274,7 +275,7 @@ func benchmarkDequeue(b *testing.B, queue *Queue[int], size int) {
 func BenchmarkArrayQueueDequeue100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	queue := New[int]()
+	queue := linkedlistqueue.New[int]()
 	for n := 0; n < size; n++ {
 		queue.Enqueue(n)
 	}
@@ -285,7 +286,7 @@ func BenchmarkArrayQueueDequeue100(b *testing.B) {
 func BenchmarkArrayQueueDequeue1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	queue := New[int]()
+	queue := linkedlistqueue.New[int]()
 	for n := 0; n < size; n++ {
 		queue.Enqueue(n)
 	}
@@ -296,7 +297,7 @@ func BenchmarkArrayQueueDequeue1000(b *testing.B) {
 func BenchmarkArrayQueueDequeue10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	queue := New[int]()
+	queue := linkedlistqueue.New[int]()
 	for n := 0; n < size; n++ {
 		queue.Enqueue(n)
 	}
@@ -307,7 +308,7 @@ func BenchmarkArrayQueueDequeue10000(b *testing.B) {
 func BenchmarkArrayQueueDequeue100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	queue := New[int]()
+	queue := linkedlistqueue.New[int]()
 	for n := 0; n < size; n++ {
 		queue.Enqueue(n)
 	}
@@ -318,7 +319,7 @@ func BenchmarkArrayQueueDequeue100000(b *testing.B) {
 func BenchmarkArrayQueueEnqueue100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	queue := New[int]()
+	queue := linkedlistqueue.New[int]()
 	b.StartTimer()
 	benchmarkEnqueue(b, queue, size)
 }
@@ -326,7 +327,7 @@ func BenchmarkArrayQueueEnqueue100(b *testing.B) {
 func BenchmarkArrayQueueEnqueue1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	queue := New[int]()
+	queue := linkedlistqueue.New[int]()
 	for n := 0; n < size; n++ {
 		queue.Enqueue(n)
 	}
@@ -337,7 +338,7 @@ func BenchmarkArrayQueueEnqueue1000(b *testing.B) {
 func BenchmarkArrayQueueEnqueue10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	queue := New[int]()
+	queue := linkedlistqueue.New[int]()
 	for n := 0; n < size; n++ {
 		queue.Enqueue(n)
 	}
@@ -348,7 +349,7 @@ func BenchmarkArrayQueueEnqueue10000(b *testing.B) {
 func BenchmarkArrayQueueEnqueue100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	queue := New[int]()
+	queue := linkedlistqueue.New[int]()
 	for n := 0; n < size; n++ {
 		queue.Enqueue(n)
 	}

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package priorityqueue
+package priorityqueue_test
 
 import (
 	"cmp"
@@ -11,6 +11,8 @@ import (
 	"math/rand"
 	"strings"
 	"testing"
+
+	"github.com/emirpasic/gods/v2/queues/priorityqueue"
 )
 
 type Element struct {
@@ -28,7 +30,7 @@ func byPriority(a, b Element) int {
 }
 
 func TestBinaryQueueEnqueue(t *testing.T) {
-	queue := NewWith[Element](byPriority)
+	queue := priorityqueue.NewWith[Element](byPriority)
 
 	if actualValue := queue.Empty(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
@@ -75,7 +77,7 @@ func TestBinaryQueueEnqueue(t *testing.T) {
 }
 
 func TestBinaryQueueEnqueueBulk(t *testing.T) {
-	queue := New[int]()
+	queue := priorityqueue.New[int]()
 
 	queue.Enqueue(15)
 	queue.Enqueue(20)
@@ -106,7 +108,7 @@ func TestBinaryQueueEnqueueBulk(t *testing.T) {
 }
 
 func TestBinaryQueueDequeue(t *testing.T) {
-	queue := New[int]()
+	queue := priorityqueue.New[int]()
 
 	if actualValue := queue.Empty(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
@@ -135,7 +137,7 @@ func TestBinaryQueueDequeue(t *testing.T) {
 }
 
 func TestBinaryQueueRandom(t *testing.T) {
-	queue := New[int]()
+	queue := priorityqueue.New[int]()
 
 	rand.Seed(3)
 	for i := 0; i < 10000; i++ {
@@ -154,7 +156,7 @@ func TestBinaryQueueRandom(t *testing.T) {
 }
 
 func TestBinaryQueueIteratorOnEmpty(t *testing.T) {
-	queue := New[int]()
+	queue := priorityqueue.New[int]()
 	it := queue.Iterator()
 	for it.Next() {
 		t.Errorf("Shouldn't iterate on empty queue")
@@ -162,7 +164,7 @@ func TestBinaryQueueIteratorOnEmpty(t *testing.T) {
 }
 
 func TestBinaryQueueIteratorNext(t *testing.T) {
-	queue := New[int]()
+	queue := priorityqueue.New[int]()
 	queue.Enqueue(3)
 	queue.Enqueue(2)
 	queue.Enqueue(1)
@@ -199,7 +201,7 @@ func TestBinaryQueueIteratorNext(t *testing.T) {
 }
 
 func TestBinaryQueueIteratorPrev(t *testing.T) {
-	queue := New[int]()
+	queue := priorityqueue.New[int]()
 	queue.Enqueue(3)
 	queue.Enqueue(2)
 	queue.Enqueue(1)
@@ -238,7 +240,7 @@ func TestBinaryQueueIteratorPrev(t *testing.T) {
 }
 
 func TestBinaryQueueIteratorBegin(t *testing.T) {
-	queue := New[int]()
+	queue := priorityqueue.New[int]()
 	it := queue.Iterator()
 	it.Begin()
 	queue.Enqueue(2)
@@ -254,7 +256,7 @@ func TestBinaryQueueIteratorBegin(t *testing.T) {
 }
 
 func TestBinaryQueueIteratorEnd(t *testing.T) {
-	queue := New[int]()
+	queue := priorityqueue.New[int]()
 	it := queue.Iterator()
 
 	if index := it.Index(); index != -1 {
@@ -281,7 +283,7 @@ func TestBinaryQueueIteratorEnd(t *testing.T) {
 }
 
 func TestBinaryQueueIteratorFirst(t *testing.T) {
-	queue := New[int]()
+	queue := priorityqueue.New[int]()
 	it := queue.Iterator()
 	if actualValue, expectedValue := it.First(), false; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
@@ -298,7 +300,7 @@ func TestBinaryQueueIteratorFirst(t *testing.T) {
 }
 
 func TestBinaryQueueIteratorLast(t *testing.T) {
-	tree := New[int]()
+	tree := priorityqueue.New[int]()
 	it := tree.Iterator()
 	if actualValue, expectedValue := it.Last(), false; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
@@ -322,7 +324,7 @@ func TestBinaryQueueIteratorNextTo(t *testing.T) {
 
 	// NextTo (empty)
 	{
-		tree := New[string]()
+		tree := priorityqueue.New[string]()
 		it := tree.Iterator()
 		for it.NextTo(seek) {
 			t.Errorf("Shouldn't iterate on empty list")
@@ -331,7 +333,7 @@ func TestBinaryQueueIteratorNextTo(t *testing.T) {
 
 	// NextTo (not found)
 	{
-		tree := New[string]()
+		tree := priorityqueue.New[string]()
 		tree.Enqueue("xx")
 		tree.Enqueue("yy")
 		it := tree.Iterator()
@@ -342,7 +344,7 @@ func TestBinaryQueueIteratorNextTo(t *testing.T) {
 
 	// NextTo (found)
 	{
-		tree := New[string]()
+		tree := priorityqueue.New[string]()
 		tree.Enqueue("aa")
 		tree.Enqueue("bb")
 		tree.Enqueue("cc")
@@ -374,7 +376,7 @@ func TestBinaryQueueIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (empty)
 	{
-		tree := New[string]()
+		tree := priorityqueue.New[string]()
 		it := tree.Iterator()
 		it.End()
 		for it.PrevTo(seek) {
@@ -384,7 +386,7 @@ func TestBinaryQueueIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (not found)
 	{
-		tree := New[string]()
+		tree := priorityqueue.New[string]()
 		tree.Enqueue("xx")
 		tree.Enqueue("yy")
 		it := tree.Iterator()
@@ -396,7 +398,7 @@ func TestBinaryQueueIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (found)
 	{
-		tree := New[string]()
+		tree := priorityqueue.New[string]()
 		tree.Enqueue("aa")
 		tree.Enqueue("bb")
 		tree.Enqueue("cc")
@@ -421,7 +423,7 @@ func TestBinaryQueueIteratorPrevTo(t *testing.T) {
 }
 
 func TestBinaryQueueSerialization(t *testing.T) {
-	queue := New[string]()
+	queue := priorityqueue.New[string]()
 
 	queue.Enqueue("c")
 	queue.Enqueue("b")
@@ -464,14 +466,14 @@ func TestBinaryQueueSerialization(t *testing.T) {
 }
 
 func TestBTreeString(t *testing.T) {
-	c := New[int]()
+	c := priorityqueue.New[int]()
 	c.Enqueue(1)
 	if !strings.HasPrefix(c.String(), "PriorityQueue") {
 		t.Errorf("String should start with container name")
 	}
 }
 
-func benchmarkEnqueue(b *testing.B, queue *Queue[Element], size int) {
+func benchmarkEnqueue(b *testing.B, queue *priorityqueue.Queue[Element], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			queue.Enqueue(Element{})
@@ -479,7 +481,7 @@ func benchmarkEnqueue(b *testing.B, queue *Queue[Element], size int) {
 	}
 }
 
-func benchmarkDequeue(b *testing.B, queue *Queue[Element], size int) {
+func benchmarkDequeue(b *testing.B, queue *priorityqueue.Queue[Element], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			queue.Dequeue()
@@ -490,7 +492,7 @@ func benchmarkDequeue(b *testing.B, queue *Queue[Element], size int) {
 func BenchmarkBinaryQueueDequeue100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	queue := NewWith[Element](byPriority)
+	queue := priorityqueue.NewWith[Element](byPriority)
 	for n := 0; n < size; n++ {
 		queue.Enqueue(Element{})
 	}
@@ -501,7 +503,7 @@ func BenchmarkBinaryQueueDequeue100(b *testing.B) {
 func BenchmarkBinaryQueueDequeue1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	queue := NewWith[Element](byPriority)
+	queue := priorityqueue.NewWith[Element](byPriority)
 	for n := 0; n < size; n++ {
 		queue.Enqueue(Element{})
 	}
@@ -512,7 +514,7 @@ func BenchmarkBinaryQueueDequeue1000(b *testing.B) {
 func BenchmarkBinaryQueueDequeue10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	queue := NewWith[Element](byPriority)
+	queue := priorityqueue.NewWith[Element](byPriority)
 	for n := 0; n < size; n++ {
 		queue.Enqueue(Element{})
 	}
@@ -523,7 +525,7 @@ func BenchmarkBinaryQueueDequeue10000(b *testing.B) {
 func BenchmarkBinaryQueueDequeue100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	queue := NewWith[Element](byPriority)
+	queue := priorityqueue.NewWith[Element](byPriority)
 	for n := 0; n < size; n++ {
 		queue.Enqueue(Element{})
 	}
@@ -534,7 +536,7 @@ func BenchmarkBinaryQueueDequeue100000(b *testing.B) {
 func BenchmarkBinaryQueueEnqueue100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	queue := NewWith(byPriority)
+	queue := priorityqueue.NewWith(byPriority)
 	b.StartTimer()
 	benchmarkEnqueue(b, queue, size)
 }
@@ -542,7 +544,7 @@ func BenchmarkBinaryQueueEnqueue100(b *testing.B) {
 func BenchmarkBinaryQueueEnqueue1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	queue := NewWith[Element](byPriority)
+	queue := priorityqueue.NewWith[Element](byPriority)
 	for n := 0; n < size; n++ {
 		queue.Enqueue(Element{})
 	}
@@ -553,7 +555,7 @@ func BenchmarkBinaryQueueEnqueue1000(b *testing.B) {
 func BenchmarkBinaryQueueEnqueue10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	queue := NewWith[Element](byPriority)
+	queue := priorityqueue.NewWith[Element](byPriority)
 	for n := 0; n < size; n++ {
 		queue.Enqueue(Element{})
 	}
@@ -564,7 +566,7 @@ func BenchmarkBinaryQueueEnqueue10000(b *testing.B) {
 func BenchmarkBinaryQueueEnqueue100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	queue := NewWith[Element](byPriority)
+	queue := priorityqueue.NewWith[Element](byPriority)
 	for n := 0; n < size; n++ {
 		queue.Enqueue(Element{})
 	}

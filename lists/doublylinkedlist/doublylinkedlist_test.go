@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package doublylinkedlist
+package doublylinkedlist_test
 
 import (
 	"cmp"
@@ -10,16 +10,18 @@ import (
 	"slices"
 	"strings"
 	"testing"
+
+	"github.com/emirpasic/gods/v2/lists/doublylinkedlist"
 )
 
 func TestListNew(t *testing.T) {
-	list1 := New[int]()
+	list1 := doublylinkedlist.New[int]()
 
 	if actualValue := list1.Empty(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
 
-	list2 := New[int](1, 2)
+	list2 := doublylinkedlist.New[int](1, 2)
 
 	if actualValue := list2.Size(); actualValue != 2 {
 		t.Errorf("Got %v expected %v", actualValue, 2)
@@ -39,7 +41,7 @@ func TestListNew(t *testing.T) {
 }
 
 func TestListAdd(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	list.Add("a")
 	list.Add("b", "c")
 	if actualValue := list.Empty(); actualValue != false {
@@ -54,7 +56,7 @@ func TestListAdd(t *testing.T) {
 }
 
 func TestListAppendAndPrepend(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	list.Add("b")
 	list.Prepend("a")
 	list.Append("c")
@@ -76,7 +78,7 @@ func TestListAppendAndPrepend(t *testing.T) {
 }
 
 func TestListRemove(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	list.Add("a")
 	list.Add("b", "c")
 	list.Remove(2)
@@ -95,7 +97,7 @@ func TestListRemove(t *testing.T) {
 }
 
 func TestListGet(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	list.Add("a")
 	list.Add("b", "c")
 	if actualValue, ok := list.Get(0); actualValue != "a" || !ok {
@@ -117,7 +119,7 @@ func TestListGet(t *testing.T) {
 }
 
 func TestListSwap(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	list.Add("a")
 	list.Add("b", "c")
 	list.Swap(0, 1)
@@ -127,7 +129,7 @@ func TestListSwap(t *testing.T) {
 }
 
 func TestListSort(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	list.Sort(cmp.Compare[string])
 	list.Add("e", "f", "g", "a", "b", "c", "d")
 	list.Sort(cmp.Compare[string])
@@ -141,7 +143,7 @@ func TestListSort(t *testing.T) {
 }
 
 func TestListClear(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	list.Add("e", "f", "g", "a", "b", "c", "d")
 	list.Clear()
 	if actualValue := list.Empty(); actualValue != true {
@@ -153,7 +155,7 @@ func TestListClear(t *testing.T) {
 }
 
 func TestListContains(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	list.Add("a")
 	list.Add("b", "c")
 	if actualValue := list.Contains("a"); actualValue != true {
@@ -178,7 +180,7 @@ func TestListContains(t *testing.T) {
 }
 
 func TestListValues(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	list.Add("a")
 	list.Add("b", "c")
 	if actualValue, expectedValue := list.Values(), []string{"a", "b", "c"}; !slices.Equal(actualValue, expectedValue) {
@@ -187,7 +189,7 @@ func TestListValues(t *testing.T) {
 }
 
 func TestListInsert(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	list.Insert(0, "b", "c", "d")
 	list.Insert(0, "a")
 	list.Insert(10, "x") // ignore
@@ -211,7 +213,7 @@ func TestListInsert(t *testing.T) {
 }
 
 func TestListSet(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	list.Set(0, "a")
 	list.Set(1, "b")
 	if actualValue := list.Size(); actualValue != 2 {
@@ -232,7 +234,7 @@ func TestListSet(t *testing.T) {
 }
 
 func TestListEach(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	list.Add("a", "b", "c")
 	list.Each(func(index int, value string) {
 		switch index {
@@ -255,7 +257,7 @@ func TestListEach(t *testing.T) {
 }
 
 func TestListMap(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	list.Add("a", "b", "c")
 	mappedList := list.Map(func(index int, value string) string {
 		return "mapped: " + value
@@ -275,7 +277,7 @@ func TestListMap(t *testing.T) {
 }
 
 func TestListSelect(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	list.Add("a", "b", "c")
 	selectedList := list.Select(func(index int, value string) bool {
 		return value >= "a" && value <= "b"
@@ -292,7 +294,7 @@ func TestListSelect(t *testing.T) {
 }
 
 func TestListAny(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	list.Add("a", "b", "c")
 	any := list.Any(func(index int, value string) bool {
 		return value == "c"
@@ -308,7 +310,7 @@ func TestListAny(t *testing.T) {
 	}
 }
 func TestListAll(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	list.Add("a", "b", "c")
 	all := list.All(func(index int, value string) bool {
 		return value >= "a" && value <= "c"
@@ -324,7 +326,7 @@ func TestListAll(t *testing.T) {
 	}
 }
 func TestListFind(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	list.Add("a", "b", "c")
 	foundIndex, foundValue := list.Find(func(index int, value string) bool {
 		return value == "c"
@@ -340,7 +342,7 @@ func TestListFind(t *testing.T) {
 	}
 }
 func TestListChaining(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	list.Add("a", "b", "c")
 	chainedList := list.Select(func(index int, value string) bool {
 		return value > "a"
@@ -359,7 +361,7 @@ func TestListChaining(t *testing.T) {
 }
 
 func TestListIteratorNextOnEmpty(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	it := list.Iterator()
 	for it.Next() {
 		t.Errorf("Shouldn't iterate on empty list")
@@ -367,7 +369,7 @@ func TestListIteratorNextOnEmpty(t *testing.T) {
 }
 
 func TestListIteratorNext(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	list.Add("a", "b", "c")
 	it := list.Iterator()
 	count := 0
@@ -398,7 +400,7 @@ func TestListIteratorNext(t *testing.T) {
 }
 
 func TestListIteratorPrevOnEmpty(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	it := list.Iterator()
 	for it.Prev() {
 		t.Errorf("Shouldn't iterate on empty list")
@@ -406,7 +408,7 @@ func TestListIteratorPrevOnEmpty(t *testing.T) {
 }
 
 func TestListIteratorPrev(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	list.Add("a", "b", "c")
 	it := list.Iterator()
 	for it.Next() {
@@ -439,7 +441,7 @@ func TestListIteratorPrev(t *testing.T) {
 }
 
 func TestListIteratorBegin(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	it := list.Iterator()
 	it.Begin()
 	list.Add("a", "b", "c")
@@ -453,7 +455,7 @@ func TestListIteratorBegin(t *testing.T) {
 }
 
 func TestListIteratorEnd(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	it := list.Iterator()
 
 	if index := it.Index(); index != -1 {
@@ -478,7 +480,7 @@ func TestListIteratorEnd(t *testing.T) {
 }
 
 func TestListIteratorFirst(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	it := list.Iterator()
 	if actualValue, expectedValue := it.First(), false; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
@@ -493,7 +495,7 @@ func TestListIteratorFirst(t *testing.T) {
 }
 
 func TestListIteratorLast(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	it := list.Iterator()
 	if actualValue, expectedValue := it.Last(), false; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
@@ -515,7 +517,7 @@ func TestListIteratorNextTo(t *testing.T) {
 
 	// NextTo (empty)
 	{
-		list := New[string]()
+		list := doublylinkedlist.New[string]()
 		it := list.Iterator()
 		for it.NextTo(seek) {
 			t.Errorf("Shouldn't iterate on empty list")
@@ -524,7 +526,7 @@ func TestListIteratorNextTo(t *testing.T) {
 
 	// NextTo (not found)
 	{
-		list := New[string]()
+		list := doublylinkedlist.New[string]()
 		list.Add("xx", "yy")
 		it := list.Iterator()
 		for it.NextTo(seek) {
@@ -534,7 +536,7 @@ func TestListIteratorNextTo(t *testing.T) {
 
 	// NextTo (found)
 	{
-		list := New[string]()
+		list := doublylinkedlist.New[string]()
 		list.Add("aa", "bb", "cc")
 		it := list.Iterator()
 		it.Begin()
@@ -564,7 +566,7 @@ func TestListIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (empty)
 	{
-		list := New[string]()
+		list := doublylinkedlist.New[string]()
 		it := list.Iterator()
 		it.End()
 		for it.PrevTo(seek) {
@@ -574,7 +576,7 @@ func TestListIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (not found)
 	{
-		list := New[string]()
+		list := doublylinkedlist.New[string]()
 		list.Add("xx", "yy")
 		it := list.Iterator()
 		it.End()
@@ -585,7 +587,7 @@ func TestListIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (found)
 	{
-		list := New[string]()
+		list := doublylinkedlist.New[string]()
 		list.Add("aa", "bb", "cc")
 		it := list.Iterator()
 		it.End()
@@ -608,7 +610,7 @@ func TestListIteratorPrevTo(t *testing.T) {
 }
 
 func TestListSerialization(t *testing.T) {
-	list := New[string]()
+	list := doublylinkedlist.New[string]()
 	list.Add("a", "b", "c")
 
 	var err error
@@ -645,14 +647,14 @@ func TestListSerialization(t *testing.T) {
 }
 
 func TestListString(t *testing.T) {
-	c := New[int]()
+	c := doublylinkedlist.New[int]()
 	c.Add(1)
 	if !strings.HasPrefix(c.String(), "DoublyLinkedList") {
 		t.Errorf("String should start with container name")
 	}
 }
 
-func benchmarkGet(b *testing.B, list *List[int], size int) {
+func benchmarkGet(b *testing.B, list *doublylinkedlist.List[int], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			list.Get(n)
@@ -660,7 +662,7 @@ func benchmarkGet(b *testing.B, list *List[int], size int) {
 	}
 }
 
-func benchmarkAdd(b *testing.B, list *List[int], size int) {
+func benchmarkAdd(b *testing.B, list *doublylinkedlist.List[int], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			list.Add(n)
@@ -668,7 +670,7 @@ func benchmarkAdd(b *testing.B, list *List[int], size int) {
 	}
 }
 
-func benchmarkRemove(b *testing.B, list *List[int], size int) {
+func benchmarkRemove(b *testing.B, list *doublylinkedlist.List[int], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			list.Remove(n)
@@ -679,7 +681,7 @@ func benchmarkRemove(b *testing.B, list *List[int], size int) {
 func BenchmarkDoublyLinkedListGet100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	list := New[int]()
+	list := doublylinkedlist.New[int]()
 	for n := 0; n < size; n++ {
 		list.Add(n)
 	}
@@ -690,7 +692,7 @@ func BenchmarkDoublyLinkedListGet100(b *testing.B) {
 func BenchmarkDoublyLinkedListGet1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	list := New[int]()
+	list := doublylinkedlist.New[int]()
 	for n := 0; n < size; n++ {
 		list.Add(n)
 	}
@@ -701,7 +703,7 @@ func BenchmarkDoublyLinkedListGet1000(b *testing.B) {
 func BenchmarkDoublyLinkedListGet10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	list := New[int]()
+	list := doublylinkedlist.New[int]()
 	for n := 0; n < size; n++ {
 		list.Add(n)
 	}
@@ -712,7 +714,7 @@ func BenchmarkDoublyLinkedListGet10000(b *testing.B) {
 func BenchmarkDoublyLinkedListGet100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	list := New[int]()
+	list := doublylinkedlist.New[int]()
 	for n := 0; n < size; n++ {
 		list.Add(n)
 	}
@@ -723,7 +725,7 @@ func BenchmarkDoublyLinkedListGet100000(b *testing.B) {
 func BenchmarkDoublyLinkedListAdd100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	list := New[int]()
+	list := doublylinkedlist.New[int]()
 	b.StartTimer()
 	benchmarkAdd(b, list, size)
 }
@@ -731,7 +733,7 @@ func BenchmarkDoublyLinkedListAdd100(b *testing.B) {
 func BenchmarkDoublyLinkedListAdd1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	list := New[int]()
+	list := doublylinkedlist.New[int]()
 	for n := 0; n < size; n++ {
 		list.Add(n)
 	}
@@ -742,7 +744,7 @@ func BenchmarkDoublyLinkedListAdd1000(b *testing.B) {
 func BenchmarkDoublyLinkedListAdd10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	list := New[int]()
+	list := doublylinkedlist.New[int]()
 	for n := 0; n < size; n++ {
 		list.Add(n)
 	}
@@ -753,7 +755,7 @@ func BenchmarkDoublyLinkedListAdd10000(b *testing.B) {
 func BenchmarkDoublyLinkedListAdd100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	list := New[int]()
+	list := doublylinkedlist.New[int]()
 	for n := 0; n < size; n++ {
 		list.Add(n)
 	}
@@ -764,7 +766,7 @@ func BenchmarkDoublyLinkedListAdd100000(b *testing.B) {
 func BenchmarkDoublyLinkedListRemove100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	list := New[int]()
+	list := doublylinkedlist.New[int]()
 	for n := 0; n < size; n++ {
 		list.Add(n)
 	}
@@ -775,7 +777,7 @@ func BenchmarkDoublyLinkedListRemove100(b *testing.B) {
 func BenchmarkDoublyLinkedListRemove1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	list := New[int]()
+	list := doublylinkedlist.New[int]()
 	for n := 0; n < size; n++ {
 		list.Add(n)
 	}
@@ -786,7 +788,7 @@ func BenchmarkDoublyLinkedListRemove1000(b *testing.B) {
 func BenchmarkDoublyLinkedListRemove10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	list := New[int]()
+	list := doublylinkedlist.New[int]()
 	for n := 0; n < size; n++ {
 		list.Add(n)
 	}
@@ -797,7 +799,7 @@ func BenchmarkDoublyLinkedListRemove10000(b *testing.B) {
 func BenchmarkDoublyLinkedListRemove100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	list := New[int]()
+	list := doublylinkedlist.New[int]()
 	for n := 0; n < size; n++ {
 		list.Add(n)
 	}
