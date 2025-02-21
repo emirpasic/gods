@@ -124,6 +124,31 @@ func (list *List[T]) Remove(index int) {
 	list.size--
 }
 
+func (list *List[T]) RemoveElement(value T) {
+	var beforeElement *element[T]
+	element := list.first
+	if element == nil {
+		return
+	}
+	for e := 0; value != element.value; e, element = e+1, element.next {
+		beforeElement = element
+	}
+
+	if element == list.first {
+		list.first = element.next
+	}
+	if element == list.last {
+		list.last = beforeElement
+	}
+	if beforeElement != nil {
+		beforeElement.next = element.next
+	}
+
+	element = nil
+
+	list.size--
+}
+
 // Contains checks if values (one or more) are present in the set.
 // All values have to be present in the set for the method to return true.
 // Performance time complexity of n^2.
@@ -165,10 +190,17 @@ func (list *List[T]) IndexOf(value T) int {
 	if list.size == 0 {
 		return -1
 	}
-	for index, element := range list.Values() {
+	/*for index, element := range list.Values() {
 		if element == value {
 			return index
 		}
+	}*/
+	i := 0
+	for element := list.first; element != nil; element = element.next {
+		if element.value == value {
+			return i
+		}
+		i++
 	}
 	return -1
 }

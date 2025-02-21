@@ -105,6 +105,7 @@ func TestListRemoveElement(t *testing.T) {
 	list.RemoveElement("c")
 	list.RemoveElement("s") // no effect
 	list.RemoveElement("a")
+	list.RemoveElement("a")
 	if actualValue := list.Empty(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}

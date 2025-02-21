@@ -51,6 +51,10 @@ func (queue *Queue[T]) Peek() (value T, ok bool) {
 	return queue.list.Get(0)
 }
 
+func (queue *Queue[T]) Remove(value T) {
+	queue.list.RemoveElement(value)
+}
+
 // Empty returns true if queue does not contain any elements.
 func (queue *Queue[T]) Empty() bool {
 	return queue.list.Empty()
