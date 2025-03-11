@@ -88,7 +88,7 @@ func (list *List[T]) Get(index int) (T, bool) {
 		return t, false
 	}
 
-	// determine traveral direction, last to first or first to last
+	// determine traversal direction, last to first or first to last
 	if list.size-index < index {
 		element := list.last
 		for e := list.size - 1; e != index; e, element = e-1, element.prev {
