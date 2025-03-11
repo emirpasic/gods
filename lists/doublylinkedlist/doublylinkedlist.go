@@ -209,7 +209,7 @@ func (list *List[T]) Clear() {
 	list.last = nil
 }
 
-// Sort sorts values (in-place) using.
+// Sort sorts values (in-place) using a Comparator.
 func (list *List[T]) Sort(comparator utils.Comparator[T]) {
 
 	if list.size < 2 {
