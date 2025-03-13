@@ -48,6 +48,19 @@ func TestQueuePeek(t *testing.T) {
 	}
 }
 
+func TestQueueRemove(t *testing.T) {
+	queue := New[int]()
+	if actualValue, ok := queue.Peek(); actualValue != 0 || ok {
+		t.Errorf("Got %v expected %v", actualValue, nil)
+	}
+	queue.Enqueue(1)
+	queue.Enqueue(2)
+	queue.Enqueue(3)
+	if actualValue, ok := queue.Peek(); actualValue != 1 || !ok {
+		t.Errorf("Got %v expected %v", actualValue, 1)
+	}
+}
+
 func TestQueueDequeue(t *testing.T) {
 	queue := New[int]()
 	queue.Enqueue(1)

@@ -94,6 +94,30 @@ func TestListRemove(t *testing.T) {
 	}
 }
 
+func TestListRemoveElement(t *testing.T) {
+	list := New[string]()
+	list.Add("a")
+	list.Add("b", "c")
+	list.RemoveElement("b")
+	if actualValue, ok := list.Get(2); actualValue != "" || ok {
+		t.Errorf("Got %v expected %v", actualValue, "")
+	}
+	list.RemoveElement("c")
+	list.RemoveElement("s") // no effect
+	list.RemoveElement("a")
+	list.RemoveElement("a")
+	if actualValue := list.Empty(); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+	if actualValue := list.Size(); actualValue != 0 {
+		t.Errorf("Got %v expected %v", actualValue, 0)
+	}
+	list.Add("a")
+	if actualValue := list.Size(); actualValue != 1 {
+		t.Errorf("Got %v expected %v", actualValue, 0)
+	}
+}
+
 func TestListGet(t *testing.T) {
 	list := New[string]()
 	list.Add("a")
@@ -649,6 +673,22 @@ func TestListString(t *testing.T) {
 	c.Add(1)
 	if !strings.HasPrefix(c.String(), "DoublyLinkedList") {
 		t.Errorf("String should start with container name")
+	}
+}
+
+func TestListIndexOf(t *testing.T) {
+	c := New[int]()
+	c.Add(1, 3, 5, 7, 9)
+	idx := c.IndexOf(5)
+	if idx != 2 {
+		t.Errorf("IndexOf should return 3 for 5")
+	}
+
+	s := New[string]()
+	s.Add("a", "b", "c")
+	iidx := s.IndexOf("c")
+	if iidx != 2 {
+		t.Errorf("IndexOf should return 2 for c")
 	}
 }
 
