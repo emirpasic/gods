@@ -27,6 +27,51 @@ func (tree *Tree[K, V]) Iterator() *Iterator[K, V] {
 	return &Iterator[K, V]{tree: tree, node: nil, position: begin}
 }
 
+func (tree *Tree[K, V]) FloorIerator(key K) *Iterator[K, V] {
+	found := false
+	var floor *Node[K, V]
+	n := tree.Root
+	for n != nil {
+		c := tree.Comparator(key, n.Key)
+		switch {
+		case c == 0:
+			return &Iterator[K, V]{tree: tree, node: n, position: between}
+			return n, true
+		case c < 0:
+			n = n.Children[0]
+		case c > 0:
+			floor, found = n, true
+			n = n.Children[1]
+		}
+	}
+	if found {
+		return &Iterator[K, V]{tree: tree, node: n, position: between}
+	}
+	return &Iterator[K, V]{tree: tree, node: nil, position: begin}
+}
+
+func (tree *Tree[K, V]) CeilingIterator(key K) *Iterator[K, V] {
+	found := false
+	var floor *Node[K, V]
+	n := tree.Root
+	for n != nil {
+		c := tree.Comparator(key, n.Key)
+		switch {
+		case c == 0:
+			return &Iterator[K, V]{tree: tree, node: n, position: between}
+		case c < 0:
+			floor, found = n, true
+			n = n.Children[0]
+		case c > 0:
+			n = n.Children[1]
+		}
+	}
+	if found {
+		return &Iterator[K, V]{tree: tree, node: n, position: between}
+	}
+	return &Iterator[K, V]{tree: tree, node: nil, position: end}
+}
+
 // Next moves the iterator to the next element and returns true if there was a next element in the container.
 // If Next() returns true, then next element's key and value can be retrieved by Key() and Value().
 // If Next() was called for the first time, then it will point the iterator to the first element if it exists.
