@@ -1,35 +1,32 @@
-// Copyright (c) 2015, Emir Pasic. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
-
 package main
 
 import (
 	"fmt"
 
-	"github.com/emirpasic/gods/v2/sets/treeset"
+	"github.com/emirpasic/gods/sets/treeset"
 )
 
-// User model (id and name)
 type User struct {
 	id   int
 	name string
 }
 
-// Comparator function (sort by IDs)
-func byID(a, b User) int {
+// Custom comparator (sort by IDs)
+func byID(a, b interface{}) int {
+	// Type assertion, program will panic if this is not respected
+	c1 := a.(User)
+	c2 := b.(User)
 
 	switch {
-	case a.id > b.id:
+	case c1.id > c2.id:
 		return 1
-	case a.id < b.id:
+	case c1.id < c2.id:
 		return -1
 	default:
 		return 0
 	}
 }
 
-// CustomComparatorExample to demonstrate basic usage of CustomComparator
 func main() {
 	set := treeset.NewWith(byID)
 
