@@ -2,18 +2,19 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package linkedhashmap
+package linkedhashmap_test
 
 import (
 	"encoding/json"
 	"strings"
 	"testing"
 
+	"github.com/emirpasic/gods/v2/maps/linkedhashmap"
 	"github.com/emirpasic/gods/v2/testutils"
 )
 
 func TestMapPut(t *testing.T) {
-	m := New[int, string]()
+	m := linkedhashmap.New[int, string]()
 	m.Put(5, "e")
 	m.Put(6, "f")
 	m.Put(7, "g")
@@ -51,7 +52,7 @@ func TestMapPut(t *testing.T) {
 }
 
 func TestMapRemove(t *testing.T) {
-	m := New[int, string]()
+	m := linkedhashmap.New[int, string]()
 	m.Put(5, "e")
 	m.Put(6, "f")
 	m.Put(7, "g")
@@ -110,7 +111,7 @@ func TestMapRemove(t *testing.T) {
 }
 
 func TestMapEach(t *testing.T) {
-	m := New[string, int]()
+	m := linkedhashmap.New[string, int]()
 	m.Put("c", 1)
 	m.Put("a", 2)
 	m.Put("b", 3)
@@ -140,7 +141,7 @@ func TestMapEach(t *testing.T) {
 }
 
 func TestMapMap(t *testing.T) {
-	m := New[string, int]()
+	m := linkedhashmap.New[string, int]()
 	m.Put("c", 3)
 	m.Put("a", 1)
 	m.Put("b", 2)
@@ -162,7 +163,7 @@ func TestMapMap(t *testing.T) {
 }
 
 func TestMapSelect(t *testing.T) {
-	m := New[string, int]()
+	m := linkedhashmap.New[string, int]()
 	m.Put("c", 3)
 	m.Put("b", 1)
 	m.Put("a", 2)
@@ -181,7 +182,7 @@ func TestMapSelect(t *testing.T) {
 }
 
 func TestMapAny(t *testing.T) {
-	m := New[string, int]()
+	m := linkedhashmap.New[string, int]()
 	m.Put("c", 3)
 	m.Put("a", 1)
 	m.Put("b", 2)
@@ -200,7 +201,7 @@ func TestMapAny(t *testing.T) {
 }
 
 func TestMapAll(t *testing.T) {
-	m := New[string, int]()
+	m := linkedhashmap.New[string, int]()
 	m.Put("c", 3)
 	m.Put("a", 1)
 	m.Put("b", 2)
@@ -219,7 +220,7 @@ func TestMapAll(t *testing.T) {
 }
 
 func TestMapFind(t *testing.T) {
-	m := New[string, int]()
+	m := linkedhashmap.New[string, int]()
 	m.Put("c", 3)
 	m.Put("a", 1)
 	m.Put("b", 2)
@@ -238,7 +239,7 @@ func TestMapFind(t *testing.T) {
 }
 
 func TestMapChaining(t *testing.T) {
-	m := New[string, int]()
+	m := linkedhashmap.New[string, int]()
 	m.Put("c", 3)
 	m.Put("a", 1)
 	m.Put("b", 2)
@@ -262,7 +263,7 @@ func TestMapChaining(t *testing.T) {
 }
 
 func TestMapIteratorNextOnEmpty(t *testing.T) {
-	m := New[string, int]()
+	m := linkedhashmap.New[string, int]()
 	it := m.Iterator()
 	it = m.Iterator()
 	for it.Next() {
@@ -271,7 +272,7 @@ func TestMapIteratorNextOnEmpty(t *testing.T) {
 }
 
 func TestMapIteratorPrevOnEmpty(t *testing.T) {
-	m := New[string, int]()
+	m := linkedhashmap.New[string, int]()
 	it := m.Iterator()
 	it = m.Iterator()
 	for it.Prev() {
@@ -280,7 +281,7 @@ func TestMapIteratorPrevOnEmpty(t *testing.T) {
 }
 
 func TestMapIteratorNext(t *testing.T) {
-	m := New[string, int]()
+	m := linkedhashmap.New[string, int]()
 	m.Put("c", 1)
 	m.Put("a", 2)
 	m.Put("b", 3)
@@ -317,7 +318,7 @@ func TestMapIteratorNext(t *testing.T) {
 }
 
 func TestMapIteratorPrev(t *testing.T) {
-	m := New[string, int]()
+	m := linkedhashmap.New[string, int]()
 	m.Put("c", 1)
 	m.Put("a", 2)
 	m.Put("b", 3)
@@ -356,7 +357,7 @@ func TestMapIteratorPrev(t *testing.T) {
 }
 
 func TestMapIteratorBegin(t *testing.T) {
-	m := New[int, string]()
+	m := linkedhashmap.New[int, string]()
 	it := m.Iterator()
 	it.Begin()
 	m.Put(3, "c")
@@ -372,7 +373,7 @@ func TestMapIteratorBegin(t *testing.T) {
 }
 
 func TestMapIteratorEnd(t *testing.T) {
-	m := New[int, string]()
+	m := linkedhashmap.New[int, string]()
 	it := m.Iterator()
 	m.Put(3, "c")
 	m.Put(1, "a")
@@ -385,7 +386,7 @@ func TestMapIteratorEnd(t *testing.T) {
 }
 
 func TestMapIteratorFirst(t *testing.T) {
-	m := New[int, string]()
+	m := linkedhashmap.New[int, string]()
 	m.Put(3, "c")
 	m.Put(1, "a")
 	m.Put(2, "b")
@@ -399,7 +400,7 @@ func TestMapIteratorFirst(t *testing.T) {
 }
 
 func TestMapIteratorLast(t *testing.T) {
-	m := New[int, string]()
+	m := linkedhashmap.New[int, string]()
 	m.Put(3, "c")
 	m.Put(1, "a")
 	m.Put(2, "b")
@@ -420,7 +421,7 @@ func TestMapIteratorNextTo(t *testing.T) {
 
 	// NextTo (empty)
 	{
-		m := New[int, string]()
+		m := linkedhashmap.New[int, string]()
 		it := m.Iterator()
 		for it.NextTo(seek) {
 			t.Errorf("Shouldn't iterate on empty map")
@@ -429,7 +430,7 @@ func TestMapIteratorNextTo(t *testing.T) {
 
 	// NextTo (not found)
 	{
-		m := New[int, string]()
+		m := linkedhashmap.New[int, string]()
 		m.Put(0, "xx")
 		m.Put(1, "yy")
 		it := m.Iterator()
@@ -440,7 +441,7 @@ func TestMapIteratorNextTo(t *testing.T) {
 
 	// NextTo (found)
 	{
-		m := New[int, string]()
+		m := linkedhashmap.New[int, string]()
 		m.Put(0, "aa")
 		m.Put(1, "bb")
 		m.Put(2, "cc")
@@ -472,7 +473,7 @@ func TestMapIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (empty)
 	{
-		m := New[int, string]()
+		m := linkedhashmap.New[int, string]()
 		it := m.Iterator()
 		it.End()
 		for it.PrevTo(seek) {
@@ -482,7 +483,7 @@ func TestMapIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (not found)
 	{
-		m := New[int, string]()
+		m := linkedhashmap.New[int, string]()
 		m.Put(0, "xx")
 		m.Put(1, "yy")
 		it := m.Iterator()
@@ -494,7 +495,7 @@ func TestMapIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (found)
 	{
-		m := New[int, string]()
+		m := linkedhashmap.New[int, string]()
 		m.Put(0, "aa")
 		m.Put(1, "bb")
 		m.Put(2, "cc")
@@ -520,7 +521,7 @@ func TestMapIteratorPrevTo(t *testing.T) {
 
 func TestMapSerialization(t *testing.T) {
 	for i := 0; i < 10; i++ {
-		original := New[string, string]()
+		original := linkedhashmap.New[string, string]()
 		original.Put("d", "4")
 		original.Put("e", "5")
 		original.Put("c", "3")
@@ -532,7 +533,7 @@ func TestMapSerialization(t *testing.T) {
 			t.Errorf("Got error %v", err)
 		}
 
-		deserialized := New[string, string]()
+		deserialized := linkedhashmap.New[string, string]()
 		err = deserialized.FromJSON(serialized)
 		if err != nil {
 			t.Errorf("Got error %v", err)
@@ -549,7 +550,7 @@ func TestMapSerialization(t *testing.T) {
 		})
 	}
 
-	m := New[string, float64]()
+	m := linkedhashmap.New[string, float64]()
 	m.Put("a", 1.0)
 	m.Put("b", 2.0)
 	m.Put("c", 3.0)
@@ -566,14 +567,14 @@ func TestMapSerialization(t *testing.T) {
 }
 
 func TestMapString(t *testing.T) {
-	c := New[string, int]()
+	c := linkedhashmap.New[string, int]()
 	c.Put("a", 1)
 	if !strings.HasPrefix(c.String(), "LinkedHashMap") {
 		t.Errorf("String should start with container name")
 	}
 }
 
-func benchmarkGet(b *testing.B, m *Map[int, int], size int) {
+func benchmarkGet(b *testing.B, m *linkedhashmap.Map[int, int], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			m.Get(n)
@@ -581,7 +582,7 @@ func benchmarkGet(b *testing.B, m *Map[int, int], size int) {
 	}
 }
 
-func benchmarkPut(b *testing.B, m *Map[int, int], size int) {
+func benchmarkPut(b *testing.B, m *linkedhashmap.Map[int, int], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			m.Put(n, n)
@@ -589,7 +590,7 @@ func benchmarkPut(b *testing.B, m *Map[int, int], size int) {
 	}
 }
 
-func benchmarkRemove(b *testing.B, m *Map[int, int], size int) {
+func benchmarkRemove(b *testing.B, m *linkedhashmap.Map[int, int], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			m.Remove(n)
@@ -600,7 +601,7 @@ func benchmarkRemove(b *testing.B, m *Map[int, int], size int) {
 func BenchmarkTreeMapGet100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	m := New[int, int]()
+	m := linkedhashmap.New[int, int]()
 	for n := 0; n < size; n++ {
 		m.Put(n, n)
 	}
@@ -611,7 +612,7 @@ func BenchmarkTreeMapGet100(b *testing.B) {
 func BenchmarkTreeMapGet1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	m := New[int, int]()
+	m := linkedhashmap.New[int, int]()
 	for n := 0; n < size; n++ {
 		m.Put(n, n)
 	}
@@ -622,7 +623,7 @@ func BenchmarkTreeMapGet1000(b *testing.B) {
 func BenchmarkTreeMapGet10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	m := New[int, int]()
+	m := linkedhashmap.New[int, int]()
 	for n := 0; n < size; n++ {
 		m.Put(n, n)
 	}
@@ -633,7 +634,7 @@ func BenchmarkTreeMapGet10000(b *testing.B) {
 func BenchmarkTreeMapGet100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	m := New[int, int]()
+	m := linkedhashmap.New[int, int]()
 	for n := 0; n < size; n++ {
 		m.Put(n, n)
 	}
@@ -644,7 +645,7 @@ func BenchmarkTreeMapGet100000(b *testing.B) {
 func BenchmarkTreeMapPut100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	m := New[int, int]()
+	m := linkedhashmap.New[int, int]()
 	b.StartTimer()
 	benchmarkPut(b, m, size)
 }
@@ -652,7 +653,7 @@ func BenchmarkTreeMapPut100(b *testing.B) {
 func BenchmarkTreeMapPut1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	m := New[int, int]()
+	m := linkedhashmap.New[int, int]()
 	for n := 0; n < size; n++ {
 		m.Put(n, n)
 	}
@@ -663,7 +664,7 @@ func BenchmarkTreeMapPut1000(b *testing.B) {
 func BenchmarkTreeMapPut10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	m := New[int, int]()
+	m := linkedhashmap.New[int, int]()
 	for n := 0; n < size; n++ {
 		m.Put(n, n)
 	}
@@ -674,7 +675,7 @@ func BenchmarkTreeMapPut10000(b *testing.B) {
 func BenchmarkTreeMapPut100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	m := New[int, int]()
+	m := linkedhashmap.New[int, int]()
 	for n := 0; n < size; n++ {
 		m.Put(n, n)
 	}
@@ -685,7 +686,7 @@ func BenchmarkTreeMapPut100000(b *testing.B) {
 func BenchmarkTreeMapRemove100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	m := New[int, int]()
+	m := linkedhashmap.New[int, int]()
 	for n := 0; n < size; n++ {
 		m.Put(n, n)
 	}
@@ -696,7 +697,7 @@ func BenchmarkTreeMapRemove100(b *testing.B) {
 func BenchmarkTreeMapRemove1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	m := New[int, int]()
+	m := linkedhashmap.New[int, int]()
 	for n := 0; n < size; n++ {
 		m.Put(n, n)
 	}
@@ -707,7 +708,7 @@ func BenchmarkTreeMapRemove1000(b *testing.B) {
 func BenchmarkTreeMapRemove10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	m := New[int, int]()
+	m := linkedhashmap.New[int, int]()
 	for n := 0; n < size; n++ {
 		m.Put(n, n)
 	}
@@ -718,7 +719,7 @@ func BenchmarkTreeMapRemove10000(b *testing.B) {
 func BenchmarkTreeMapRemove100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	m := New[int, int]()
+	m := linkedhashmap.New[int, int]()
 	for n := 0; n < size; n++ {
 		m.Put(n, n)
 	}

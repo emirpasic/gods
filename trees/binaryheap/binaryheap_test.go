@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package binaryheap
+package binaryheap_test
 
 import (
 	"encoding/json"
@@ -10,10 +10,12 @@ import (
 	"slices"
 	"strings"
 	"testing"
+
+	"github.com/emirpasic/gods/v2/trees/binaryheap"
 )
 
 func TestBinaryHeapPush(t *testing.T) {
-	heap := New[int]()
+	heap := binaryheap.New[int]()
 
 	if actualValue := heap.Empty(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
@@ -38,7 +40,7 @@ func TestBinaryHeapPush(t *testing.T) {
 }
 
 func TestBinaryHeapPushBulk(t *testing.T) {
-	heap := New[int]()
+	heap := binaryheap.New[int]()
 
 	heap.Push(15, 20, 3, 1, 2)
 
@@ -51,7 +53,7 @@ func TestBinaryHeapPushBulk(t *testing.T) {
 }
 
 func TestBinaryHeapPop(t *testing.T) {
-	heap := New[int]()
+	heap := binaryheap.New[int]()
 
 	if actualValue := heap.Empty(); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
@@ -83,7 +85,7 @@ func TestBinaryHeapPop(t *testing.T) {
 }
 
 func TestBinaryHeapRandom(t *testing.T) {
-	heap := New[int]()
+	heap := binaryheap.New[int]()
 
 	rand.Seed(3)
 	for i := 0; i < 10000; i++ {
@@ -102,7 +104,7 @@ func TestBinaryHeapRandom(t *testing.T) {
 }
 
 func TestBinaryHeapIteratorOnEmpty(t *testing.T) {
-	heap := New[int]()
+	heap := binaryheap.New[int]()
 	it := heap.Iterator()
 	for it.Next() {
 		t.Errorf("Shouldn't iterate on empty heap")
@@ -110,7 +112,7 @@ func TestBinaryHeapIteratorOnEmpty(t *testing.T) {
 }
 
 func TestBinaryHeapIteratorNext(t *testing.T) {
-	heap := New[int]()
+	heap := binaryheap.New[int]()
 	heap.Push(3)
 	heap.Push(2)
 	heap.Push(1)
@@ -147,7 +149,7 @@ func TestBinaryHeapIteratorNext(t *testing.T) {
 }
 
 func TestBinaryHeapIteratorPrev(t *testing.T) {
-	heap := New[int]()
+	heap := binaryheap.New[int]()
 	heap.Push(3)
 	heap.Push(2)
 	heap.Push(1)
@@ -186,7 +188,7 @@ func TestBinaryHeapIteratorPrev(t *testing.T) {
 }
 
 func TestBinaryHeapIteratorBegin(t *testing.T) {
-	heap := New[int]()
+	heap := binaryheap.New[int]()
 	it := heap.Iterator()
 	it.Begin()
 	heap.Push(2)
@@ -202,7 +204,7 @@ func TestBinaryHeapIteratorBegin(t *testing.T) {
 }
 
 func TestBinaryHeapIteratorEnd(t *testing.T) {
-	heap := New[int]()
+	heap := binaryheap.New[int]()
 	it := heap.Iterator()
 
 	if index := it.Index(); index != -1 {
@@ -229,7 +231,7 @@ func TestBinaryHeapIteratorEnd(t *testing.T) {
 }
 
 func TestBinaryHeapIteratorFirst(t *testing.T) {
-	heap := New[int]()
+	heap := binaryheap.New[int]()
 	it := heap.Iterator()
 	if actualValue, expectedValue := it.First(), false; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
@@ -246,7 +248,7 @@ func TestBinaryHeapIteratorFirst(t *testing.T) {
 }
 
 func TestBinaryHeapIteratorLast(t *testing.T) {
-	tree := New[int]()
+	tree := binaryheap.New[int]()
 	it := tree.Iterator()
 	if actualValue, expectedValue := it.Last(), false; actualValue != expectedValue {
 		t.Errorf("Got %v expected %v", actualValue, expectedValue)
@@ -270,7 +272,7 @@ func TestBinaryHeapIteratorNextTo(t *testing.T) {
 
 	// NextTo (empty)
 	{
-		tree := New[string]()
+		tree := binaryheap.New[string]()
 		it := tree.Iterator()
 		for it.NextTo(seek) {
 			t.Errorf("Shouldn't iterate on empty list")
@@ -279,7 +281,7 @@ func TestBinaryHeapIteratorNextTo(t *testing.T) {
 
 	// NextTo (not found)
 	{
-		tree := New[string]()
+		tree := binaryheap.New[string]()
 		tree.Push("xx")
 		tree.Push("yy")
 		it := tree.Iterator()
@@ -290,7 +292,7 @@ func TestBinaryHeapIteratorNextTo(t *testing.T) {
 
 	// NextTo (found)
 	{
-		tree := New[string]()
+		tree := binaryheap.New[string]()
 		tree.Push("aa")
 		tree.Push("bb")
 		tree.Push("cc")
@@ -322,7 +324,7 @@ func TestBinaryHeapIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (empty)
 	{
-		tree := New[string]()
+		tree := binaryheap.New[string]()
 		it := tree.Iterator()
 		it.End()
 		for it.PrevTo(seek) {
@@ -332,7 +334,7 @@ func TestBinaryHeapIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (not found)
 	{
-		tree := New[string]()
+		tree := binaryheap.New[string]()
 		tree.Push("xx")
 		tree.Push("yy")
 		it := tree.Iterator()
@@ -344,7 +346,7 @@ func TestBinaryHeapIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (found)
 	{
-		tree := New[string]()
+		tree := binaryheap.New[string]()
 		tree.Push("aa")
 		tree.Push("bb")
 		tree.Push("cc")
@@ -369,7 +371,7 @@ func TestBinaryHeapIteratorPrevTo(t *testing.T) {
 }
 
 func TestBinaryHeapSerialization(t *testing.T) {
-	heap := New[string]()
+	heap := binaryheap.New[string]()
 
 	heap.Push("c")
 	heap.Push("b")
@@ -404,7 +406,7 @@ func TestBinaryHeapSerialization(t *testing.T) {
 		t.Errorf("Got error %v", err)
 	}
 
-	intHeap := New[int]()
+	intHeap := binaryheap.New[int]()
 	err = json.Unmarshal([]byte(`[1,2,3]`), &intHeap)
 	if err != nil {
 		t.Errorf("Got error %v", err)
@@ -415,14 +417,14 @@ func TestBinaryHeapSerialization(t *testing.T) {
 }
 
 func TestBTreeString(t *testing.T) {
-	c := New[int]()
+	c := binaryheap.New[int]()
 	c.Push(1)
 	if !strings.HasPrefix(c.String(), "BinaryHeap") {
 		t.Errorf("String should start with container name")
 	}
 }
 
-func benchmarkPush(b *testing.B, heap *Heap[int], size int) {
+func benchmarkPush(b *testing.B, heap *binaryheap.Heap[int], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			heap.Push(n)
@@ -430,7 +432,7 @@ func benchmarkPush(b *testing.B, heap *Heap[int], size int) {
 	}
 }
 
-func benchmarkPop(b *testing.B, heap *Heap[int], size int) {
+func benchmarkPop(b *testing.B, heap *binaryheap.Heap[int], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			heap.Pop()
@@ -441,7 +443,7 @@ func benchmarkPop(b *testing.B, heap *Heap[int], size int) {
 func BenchmarkBinaryHeapPop100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	heap := New[int]()
+	heap := binaryheap.New[int]()
 	for n := 0; n < size; n++ {
 		heap.Push(n)
 	}
@@ -452,7 +454,7 @@ func BenchmarkBinaryHeapPop100(b *testing.B) {
 func BenchmarkBinaryHeapPop1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	heap := New[int]()
+	heap := binaryheap.New[int]()
 	for n := 0; n < size; n++ {
 		heap.Push(n)
 	}
@@ -463,7 +465,7 @@ func BenchmarkBinaryHeapPop1000(b *testing.B) {
 func BenchmarkBinaryHeapPop10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	heap := New[int]()
+	heap := binaryheap.New[int]()
 	for n := 0; n < size; n++ {
 		heap.Push(n)
 	}
@@ -474,7 +476,7 @@ func BenchmarkBinaryHeapPop10000(b *testing.B) {
 func BenchmarkBinaryHeapPop100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	heap := New[int]()
+	heap := binaryheap.New[int]()
 	for n := 0; n < size; n++ {
 		heap.Push(n)
 	}
@@ -485,7 +487,7 @@ func BenchmarkBinaryHeapPop100000(b *testing.B) {
 func BenchmarkBinaryHeapPush100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	heap := New[int]()
+	heap := binaryheap.New[int]()
 	b.StartTimer()
 	benchmarkPush(b, heap, size)
 }
@@ -493,7 +495,7 @@ func BenchmarkBinaryHeapPush100(b *testing.B) {
 func BenchmarkBinaryHeapPush1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	heap := New[int]()
+	heap := binaryheap.New[int]()
 	for n := 0; n < size; n++ {
 		heap.Push(n)
 	}
@@ -504,7 +506,7 @@ func BenchmarkBinaryHeapPush1000(b *testing.B) {
 func BenchmarkBinaryHeapPush10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	heap := New[int]()
+	heap := binaryheap.New[int]()
 	for n := 0; n < size; n++ {
 		heap.Push(n)
 	}
@@ -515,7 +517,7 @@ func BenchmarkBinaryHeapPush10000(b *testing.B) {
 func BenchmarkBinaryHeapPush100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	heap := New[int]()
+	heap := binaryheap.New[int]()
 	for n := 0; n < size; n++ {
 		heap.Push(n)
 	}

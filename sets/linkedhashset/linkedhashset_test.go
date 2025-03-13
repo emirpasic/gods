@@ -2,17 +2,19 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package linkedhashset
+package linkedhashset_test
 
 import (
 	"encoding/json"
 	"fmt"
 	"strings"
 	"testing"
+
+	"github.com/emirpasic/gods/v2/sets/linkedhashset"
 )
 
 func TestSetNew(t *testing.T) {
-	set := New(2, 1)
+	set := linkedhashset.New(2, 1)
 
 	if actualValue := set.Size(); actualValue != 2 {
 		t.Errorf("Got %v expected %v", actualValue, 2)
@@ -29,7 +31,7 @@ func TestSetNew(t *testing.T) {
 }
 
 func TestSetAdd(t *testing.T) {
-	set := New[int]()
+	set := linkedhashset.New[int]()
 	set.Add()
 	set.Add(1)
 	set.Add(2)
@@ -44,7 +46,7 @@ func TestSetAdd(t *testing.T) {
 }
 
 func TestSetContains(t *testing.T) {
-	set := New[int]()
+	set := linkedhashset.New[int]()
 	set.Add(3, 1, 2)
 	set.Add(2, 3)
 	set.Add()
@@ -63,7 +65,7 @@ func TestSetContains(t *testing.T) {
 }
 
 func TestSetRemove(t *testing.T) {
-	set := New[int]()
+	set := linkedhashset.New[int]()
 	set.Add(3, 1, 2)
 	set.Remove()
 	if actualValue := set.Size(); actualValue != 3 {
@@ -83,7 +85,7 @@ func TestSetRemove(t *testing.T) {
 }
 
 func TestSetEach(t *testing.T) {
-	set := New[string]()
+	set := linkedhashset.New[string]()
 	set.Add("c", "a", "b")
 	set.Each(func(index int, value string) {
 		switch index {
@@ -106,7 +108,7 @@ func TestSetEach(t *testing.T) {
 }
 
 func TestSetMap(t *testing.T) {
-	set := New[string]()
+	set := linkedhashset.New[string]()
 	set.Add("c", "a", "b")
 	mappedSet := set.Map(func(index int, value string) string {
 		return "mapped: " + value
@@ -123,7 +125,7 @@ func TestSetMap(t *testing.T) {
 }
 
 func TestSetSelect(t *testing.T) {
-	set := New[string]()
+	set := linkedhashset.New[string]()
 	set.Add("c", "a", "b")
 	selectedSet := set.Select(func(index int, value string) bool {
 		return value >= "a" && value <= "b"
@@ -141,7 +143,7 @@ func TestSetSelect(t *testing.T) {
 }
 
 func TestSetAny(t *testing.T) {
-	set := New[string]()
+	set := linkedhashset.New[string]()
 	set.Add("c", "a", "b")
 	any := set.Any(func(index int, value string) bool {
 		return value == "c"
@@ -158,7 +160,7 @@ func TestSetAny(t *testing.T) {
 }
 
 func TestSetAll(t *testing.T) {
-	set := New[string]()
+	set := linkedhashset.New[string]()
 	set.Add("c", "a", "b")
 	all := set.All(func(index int, value string) bool {
 		return value >= "a" && value <= "c"
@@ -175,7 +177,7 @@ func TestSetAll(t *testing.T) {
 }
 
 func TestSetFind(t *testing.T) {
-	set := New[string]()
+	set := linkedhashset.New[string]()
 	set.Add("c", "a", "b")
 	foundIndex, foundValue := set.Find(func(index int, value string) bool {
 		return value == "c"
@@ -192,12 +194,12 @@ func TestSetFind(t *testing.T) {
 }
 
 func TestSetChaining(t *testing.T) {
-	set := New[string]()
+	set := linkedhashset.New[string]()
 	set.Add("c", "a", "b")
 }
 
 func TestSetIteratorPrevOnEmpty(t *testing.T) {
-	set := New[string]()
+	set := linkedhashset.New[string]()
 	it := set.Iterator()
 	for it.Prev() {
 		t.Errorf("Shouldn't iterate on empty set")
@@ -205,7 +207,7 @@ func TestSetIteratorPrevOnEmpty(t *testing.T) {
 }
 
 func TestSetIteratorNext(t *testing.T) {
-	set := New[string]()
+	set := linkedhashset.New[string]()
 	set.Add("c", "a", "b")
 	it := set.Iterator()
 	count := 0
@@ -239,7 +241,7 @@ func TestSetIteratorNext(t *testing.T) {
 }
 
 func TestSetIteratorPrev(t *testing.T) {
-	set := New[string]()
+	set := linkedhashset.New[string]()
 	set.Add("c", "a", "b")
 	it := set.Iterator()
 	for it.Prev() {
@@ -275,7 +277,7 @@ func TestSetIteratorPrev(t *testing.T) {
 }
 
 func TestSetIteratorBegin(t *testing.T) {
-	set := New[string]()
+	set := linkedhashset.New[string]()
 	it := set.Iterator()
 	it.Begin()
 	set.Add("a", "b", "c")
@@ -289,7 +291,7 @@ func TestSetIteratorBegin(t *testing.T) {
 }
 
 func TestSetIteratorEnd(t *testing.T) {
-	set := New[string]()
+	set := linkedhashset.New[string]()
 	it := set.Iterator()
 
 	if index := it.Index(); index != -1 {
@@ -314,7 +316,7 @@ func TestSetIteratorEnd(t *testing.T) {
 }
 
 func TestSetIteratorFirst(t *testing.T) {
-	set := New[string]()
+	set := linkedhashset.New[string]()
 	set.Add("a", "b", "c")
 	it := set.Iterator()
 	if actualValue, expectedValue := it.First(), true; actualValue != expectedValue {
@@ -326,7 +328,7 @@ func TestSetIteratorFirst(t *testing.T) {
 }
 
 func TestSetIteratorLast(t *testing.T) {
-	set := New[string]()
+	set := linkedhashset.New[string]()
 	set.Add("a", "b", "c")
 	it := set.Iterator()
 	if actualValue, expectedValue := it.Last(), true; actualValue != expectedValue {
@@ -345,7 +347,7 @@ func TestSetIteratorNextTo(t *testing.T) {
 
 	// NextTo (empty)
 	{
-		set := New[string]()
+		set := linkedhashset.New[string]()
 		it := set.Iterator()
 		for it.NextTo(seek) {
 			t.Errorf("Shouldn't iterate on empty set")
@@ -354,7 +356,7 @@ func TestSetIteratorNextTo(t *testing.T) {
 
 	// NextTo (not found)
 	{
-		set := New[string]()
+		set := linkedhashset.New[string]()
 		set.Add("xx", "yy")
 		it := set.Iterator()
 		for it.NextTo(seek) {
@@ -364,7 +366,7 @@ func TestSetIteratorNextTo(t *testing.T) {
 
 	// NextTo (found)
 	{
-		set := New[string]()
+		set := linkedhashset.New[string]()
 		set.Add("aa", "bb", "cc")
 		it := set.Iterator()
 		it.Begin()
@@ -394,7 +396,7 @@ func TestSetIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (empty)
 	{
-		set := New[string]()
+		set := linkedhashset.New[string]()
 		it := set.Iterator()
 		it.End()
 		for it.PrevTo(seek) {
@@ -404,7 +406,7 @@ func TestSetIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (not found)
 	{
-		set := New[string]()
+		set := linkedhashset.New[string]()
 		set.Add("xx", "yy")
 		it := set.Iterator()
 		it.End()
@@ -415,7 +417,7 @@ func TestSetIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (found)
 	{
-		set := New[string]()
+		set := linkedhashset.New[string]()
 		set.Add("aa", "bb", "cc")
 		it := set.Iterator()
 		it.End()
@@ -438,7 +440,7 @@ func TestSetIteratorPrevTo(t *testing.T) {
 }
 
 func TestSetSerialization(t *testing.T) {
-	set := New[string]()
+	set := linkedhashset.New[string]()
 	set.Add("a", "b", "c")
 
 	var err error
@@ -475,7 +477,7 @@ func TestSetSerialization(t *testing.T) {
 }
 
 func TestSetString(t *testing.T) {
-	c := New[int]()
+	c := linkedhashset.New[int]()
 	c.Add(1)
 	if !strings.HasPrefix(c.String(), "LinkedHashSet") {
 		t.Errorf("String should start with container name")
@@ -483,8 +485,8 @@ func TestSetString(t *testing.T) {
 }
 
 func TestSetIntersection(t *testing.T) {
-	set := New[string]()
-	another := New[string]()
+	set := linkedhashset.New[string]()
+	another := linkedhashset.New[string]()
 
 	intersection := set.Intersection(another)
 	if actualValue, expectedValue := intersection.Size(), 0; actualValue != expectedValue {
@@ -505,8 +507,8 @@ func TestSetIntersection(t *testing.T) {
 }
 
 func TestSetUnion(t *testing.T) {
-	set := New[string]()
-	another := New[string]()
+	set := linkedhashset.New[string]()
+	another := linkedhashset.New[string]()
 
 	union := set.Union(another)
 	if actualValue, expectedValue := union.Size(), 0; actualValue != expectedValue {
@@ -527,8 +529,8 @@ func TestSetUnion(t *testing.T) {
 }
 
 func TestSetDifference(t *testing.T) {
-	set := New[string]()
-	another := New[string]()
+	set := linkedhashset.New[string]()
+	another := linkedhashset.New[string]()
 
 	difference := set.Difference(another)
 	if actualValue, expectedValue := difference.Size(), 0; actualValue != expectedValue {
@@ -548,7 +550,7 @@ func TestSetDifference(t *testing.T) {
 	}
 }
 
-func benchmarkContains(b *testing.B, set *Set[int], size int) {
+func benchmarkContains(b *testing.B, set *linkedhashset.Set[int], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			set.Contains(n)
@@ -556,7 +558,7 @@ func benchmarkContains(b *testing.B, set *Set[int], size int) {
 	}
 }
 
-func benchmarkAdd(b *testing.B, set *Set[int], size int) {
+func benchmarkAdd(b *testing.B, set *linkedhashset.Set[int], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			set.Add(n)
@@ -564,7 +566,7 @@ func benchmarkAdd(b *testing.B, set *Set[int], size int) {
 	}
 }
 
-func benchmarkRemove(b *testing.B, set *Set[int], size int) {
+func benchmarkRemove(b *testing.B, set *linkedhashset.Set[int], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			set.Remove(n)
@@ -575,7 +577,7 @@ func benchmarkRemove(b *testing.B, set *Set[int], size int) {
 func BenchmarkHashSetContains100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	set := New[int]()
+	set := linkedhashset.New[int]()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -586,7 +588,7 @@ func BenchmarkHashSetContains100(b *testing.B) {
 func BenchmarkHashSetContains1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	set := New[int]()
+	set := linkedhashset.New[int]()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -597,7 +599,7 @@ func BenchmarkHashSetContains1000(b *testing.B) {
 func BenchmarkHashSetContains10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	set := New[int]()
+	set := linkedhashset.New[int]()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -608,7 +610,7 @@ func BenchmarkHashSetContains10000(b *testing.B) {
 func BenchmarkHashSetContains100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	set := New[int]()
+	set := linkedhashset.New[int]()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -619,7 +621,7 @@ func BenchmarkHashSetContains100000(b *testing.B) {
 func BenchmarkHashSetAdd100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	set := New[int]()
+	set := linkedhashset.New[int]()
 	b.StartTimer()
 	benchmarkAdd(b, set, size)
 }
@@ -627,7 +629,7 @@ func BenchmarkHashSetAdd100(b *testing.B) {
 func BenchmarkHashSetAdd1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	set := New[int]()
+	set := linkedhashset.New[int]()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -638,7 +640,7 @@ func BenchmarkHashSetAdd1000(b *testing.B) {
 func BenchmarkHashSetAdd10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	set := New[int]()
+	set := linkedhashset.New[int]()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -649,7 +651,7 @@ func BenchmarkHashSetAdd10000(b *testing.B) {
 func BenchmarkHashSetAdd100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	set := New[int]()
+	set := linkedhashset.New[int]()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -660,7 +662,7 @@ func BenchmarkHashSetAdd100000(b *testing.B) {
 func BenchmarkHashSetRemove100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	set := New[int]()
+	set := linkedhashset.New[int]()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -671,7 +673,7 @@ func BenchmarkHashSetRemove100(b *testing.B) {
 func BenchmarkHashSetRemove1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	set := New[int]()
+	set := linkedhashset.New[int]()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -682,7 +684,7 @@ func BenchmarkHashSetRemove1000(b *testing.B) {
 func BenchmarkHashSetRemove10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	set := New[int]()
+	set := linkedhashset.New[int]()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}
@@ -693,7 +695,7 @@ func BenchmarkHashSetRemove10000(b *testing.B) {
 func BenchmarkHashSetRemove100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	set := New[int]()
+	set := linkedhashset.New[int]()
 	for n := 0; n < size; n++ {
 		set.Add(n)
 	}

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package redblacktree
+package redblacktree_test
 
 import (
 	"encoding/json"
@@ -10,10 +10,12 @@ import (
 	"slices"
 	"strings"
 	"testing"
+
+	"github.com/emirpasic/gods/v2/trees/redblacktree"
 )
 
 func TestRedBlackTreeGet(t *testing.T) {
-	tree := New[int, string]()
+	tree := redblacktree.New[int, string]()
 
 	if actualValue := tree.Size(); actualValue != 0 {
 		t.Errorf("Got %v expected %v", actualValue, 0)
@@ -59,7 +61,7 @@ func TestRedBlackTreeGet(t *testing.T) {
 }
 
 func TestRedBlackTreePut(t *testing.T) {
-	tree := New[int, string]()
+	tree := redblacktree.New[int, string]()
 	tree.Put(5, "e")
 	tree.Put(6, "f")
 	tree.Put(7, "g")
@@ -100,7 +102,7 @@ func TestRedBlackTreePut(t *testing.T) {
 }
 
 func TestRedBlackTreeRemove(t *testing.T) {
-	tree := New[int, string]()
+	tree := redblacktree.New[int, string]()
 	tree.Put(5, "e")
 	tree.Put(6, "f")
 	tree.Put(7, "g")
@@ -164,7 +166,7 @@ func TestRedBlackTreeRemove(t *testing.T) {
 }
 
 func TestRedBlackTreeLeftAndRight(t *testing.T) {
-	tree := New[int, string]()
+	tree := redblacktree.New[int, string]()
 
 	if actualValue := tree.Left(); actualValue != nil {
 		t.Errorf("Got %v expected %v", actualValue, nil)
@@ -198,7 +200,7 @@ func TestRedBlackTreeLeftAndRight(t *testing.T) {
 }
 
 func TestRedBlackTreeCeilingAndFloor(t *testing.T) {
-	tree := New[int, string]()
+	tree := redblacktree.New[int, string]()
 
 	if node, found := tree.Floor(0); node != nil || found {
 		t.Errorf("Got %v expected %v", node, "<nil>")
@@ -231,7 +233,7 @@ func TestRedBlackTreeCeilingAndFloor(t *testing.T) {
 }
 
 func TestRedBlackTreeIteratorNextOnEmpty(t *testing.T) {
-	tree := New[int, string]()
+	tree := redblacktree.New[int, string]()
 	it := tree.Iterator()
 	for it.Next() {
 		t.Errorf("Shouldn't iterate on empty tree")
@@ -239,7 +241,7 @@ func TestRedBlackTreeIteratorNextOnEmpty(t *testing.T) {
 }
 
 func TestRedBlackTreeIteratorPrevOnEmpty(t *testing.T) {
-	tree := New[int, string]()
+	tree := redblacktree.New[int, string]()
 	it := tree.Iterator()
 	for it.Prev() {
 		t.Errorf("Shouldn't iterate on empty tree")
@@ -247,7 +249,7 @@ func TestRedBlackTreeIteratorPrevOnEmpty(t *testing.T) {
 }
 
 func TestRedBlackTreeIterator1Next(t *testing.T) {
-	tree := New[int, string]()
+	tree := redblacktree.New[int, string]()
 	tree.Put(5, "e")
 	tree.Put(6, "f")
 	tree.Put(7, "g")
@@ -278,7 +280,7 @@ func TestRedBlackTreeIterator1Next(t *testing.T) {
 }
 
 func TestRedBlackTreeIterator1Prev(t *testing.T) {
-	tree := New[int, string]()
+	tree := redblacktree.New[int, string]()
 	tree.Put(5, "e")
 	tree.Put(6, "f")
 	tree.Put(7, "g")
@@ -297,7 +299,7 @@ func TestRedBlackTreeIterator1Prev(t *testing.T) {
 	it := tree.Iterator()
 	for it.Next() {
 	}
-	countDown := tree.size
+	countDown := tree.Size()
 	for it.Prev() {
 		key := it.Key()
 		if actualValue, expectedValue := key, countDown; actualValue != expectedValue {
@@ -311,7 +313,7 @@ func TestRedBlackTreeIterator1Prev(t *testing.T) {
 }
 
 func TestRedBlackTreeIterator2Next(t *testing.T) {
-	tree := New[int, string]()
+	tree := redblacktree.New[int, string]()
 	tree.Put(3, "c")
 	tree.Put(1, "a")
 	tree.Put(2, "b")
@@ -330,14 +332,14 @@ func TestRedBlackTreeIterator2Next(t *testing.T) {
 }
 
 func TestRedBlackTreeIterator2Prev(t *testing.T) {
-	tree := New[int, string]()
+	tree := redblacktree.New[int, string]()
 	tree.Put(3, "c")
 	tree.Put(1, "a")
 	tree.Put(2, "b")
 	it := tree.Iterator()
 	for it.Next() {
 	}
-	countDown := tree.size
+	countDown := tree.Size()
 	for it.Prev() {
 		key := it.Key()
 		if actualValue, expectedValue := key, countDown; actualValue != expectedValue {
@@ -351,7 +353,7 @@ func TestRedBlackTreeIterator2Prev(t *testing.T) {
 }
 
 func TestRedBlackTreeIterator3Next(t *testing.T) {
-	tree := New[int, string]()
+	tree := redblacktree.New[int, string]()
 	tree.Put(1, "a")
 	it := tree.Iterator()
 	count := 0
@@ -368,12 +370,12 @@ func TestRedBlackTreeIterator3Next(t *testing.T) {
 }
 
 func TestRedBlackTreeIterator3Prev(t *testing.T) {
-	tree := New[int, string]()
+	tree := redblacktree.New[int, string]()
 	tree.Put(1, "a")
 	it := tree.Iterator()
 	for it.Next() {
 	}
-	countDown := tree.size
+	countDown := tree.Size()
 	for it.Prev() {
 		key := it.Key()
 		if actualValue, expectedValue := key, countDown; actualValue != expectedValue {
@@ -387,7 +389,7 @@ func TestRedBlackTreeIterator3Prev(t *testing.T) {
 }
 
 func TestRedBlackTreeIterator4Next(t *testing.T) {
-	tree := New[int, int]()
+	tree := redblacktree.New[int, int]()
 	tree.Put(13, 5)
 	tree.Put(8, 3)
 	tree.Put(17, 7)
@@ -423,7 +425,7 @@ func TestRedBlackTreeIterator4Next(t *testing.T) {
 }
 
 func TestRedBlackTreeIterator4Prev(t *testing.T) {
-	tree := New[int, int]()
+	tree := redblacktree.New[int, int]()
 	tree.Put(13, 5)
 	tree.Put(8, 3)
 	tree.Put(17, 7)
@@ -461,20 +463,20 @@ func TestRedBlackTreeIterator4Prev(t *testing.T) {
 }
 
 func TestRedBlackTreeIteratorBegin(t *testing.T) {
-	tree := New[int, string]()
+	tree := redblacktree.New[int, string]()
 	tree.Put(3, "c")
 	tree.Put(1, "a")
 	tree.Put(2, "b")
 	it := tree.Iterator()
 
-	if it.node != nil {
-		t.Errorf("Got %v expected %v", it.node, nil)
+	if it.Node() != nil {
+		t.Errorf("Got %v expected %v", it.Node(), nil)
 	}
 
 	it.Begin()
 
-	if it.node != nil {
-		t.Errorf("Got %v expected %v", it.node, nil)
+	if it.Node() != nil {
+		t.Errorf("Got %v expected %v", it.Node(), nil)
 	}
 
 	for it.Next() {
@@ -482,8 +484,8 @@ func TestRedBlackTreeIteratorBegin(t *testing.T) {
 
 	it.Begin()
 
-	if it.node != nil {
-		t.Errorf("Got %v expected %v", it.node, nil)
+	if it.Node() != nil {
+		t.Errorf("Got %v expected %v", it.Node(), nil)
 	}
 
 	it.Next()
@@ -493,24 +495,24 @@ func TestRedBlackTreeIteratorBegin(t *testing.T) {
 }
 
 func TestRedBlackTreeIteratorEnd(t *testing.T) {
-	tree := New[int, string]()
+	tree := redblacktree.New[int, string]()
 	it := tree.Iterator()
 
-	if it.node != nil {
-		t.Errorf("Got %v expected %v", it.node, nil)
+	if it.Node() != nil {
+		t.Errorf("Got %v expected %v", it.Node(), nil)
 	}
 
 	it.End()
-	if it.node != nil {
-		t.Errorf("Got %v expected %v", it.node, nil)
+	if it.Node() != nil {
+		t.Errorf("Got %v expected %v", it.Node(), nil)
 	}
 
 	tree.Put(3, "c")
 	tree.Put(1, "a")
 	tree.Put(2, "b")
 	it.End()
-	if it.node != nil {
-		t.Errorf("Got %v expected %v", it.node, nil)
+	if it.Node() != nil {
+		t.Errorf("Got %v expected %v", it.Node(), nil)
 	}
 
 	it.Prev()
@@ -520,7 +522,7 @@ func TestRedBlackTreeIteratorEnd(t *testing.T) {
 }
 
 func TestRedBlackTreeIteratorFirst(t *testing.T) {
-	tree := New[int, string]()
+	tree := redblacktree.New[int, string]()
 	tree.Put(3, "c")
 	tree.Put(1, "a")
 	tree.Put(2, "b")
@@ -534,7 +536,7 @@ func TestRedBlackTreeIteratorFirst(t *testing.T) {
 }
 
 func TestRedBlackTreeIteratorLast(t *testing.T) {
-	tree := New[int, string]()
+	tree := redblacktree.New[int, string]()
 	tree.Put(3, "c")
 	tree.Put(1, "a")
 	tree.Put(2, "b")
@@ -555,7 +557,7 @@ func TestRedBlackTreeIteratorNextTo(t *testing.T) {
 
 	// NextTo (empty)
 	{
-		tree := New[int, string]()
+		tree := redblacktree.New[int, string]()
 		it := tree.Iterator()
 		for it.NextTo(seek) {
 			t.Errorf("Shouldn't iterate on empty tree")
@@ -564,7 +566,7 @@ func TestRedBlackTreeIteratorNextTo(t *testing.T) {
 
 	// NextTo (not found)
 	{
-		tree := New[int, string]()
+		tree := redblacktree.New[int, string]()
 		tree.Put(0, "xx")
 		tree.Put(1, "yy")
 		it := tree.Iterator()
@@ -575,7 +577,7 @@ func TestRedBlackTreeIteratorNextTo(t *testing.T) {
 
 	// NextTo (found)
 	{
-		tree := New[int, string]()
+		tree := redblacktree.New[int, string]()
 		tree.Put(2, "cc")
 		tree.Put(0, "aa")
 		tree.Put(1, "bb")
@@ -607,7 +609,7 @@ func TestRedBlackTreeIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (empty)
 	{
-		tree := New[int, string]()
+		tree := redblacktree.New[int, string]()
 		it := tree.Iterator()
 		it.End()
 		for it.PrevTo(seek) {
@@ -617,7 +619,7 @@ func TestRedBlackTreeIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (not found)
 	{
-		tree := New[int, string]()
+		tree := redblacktree.New[int, string]()
 		tree.Put(0, "xx")
 		tree.Put(1, "yy")
 		it := tree.Iterator()
@@ -629,7 +631,7 @@ func TestRedBlackTreeIteratorPrevTo(t *testing.T) {
 
 	// PrevTo (found)
 	{
-		tree := New[int, string]()
+		tree := redblacktree.New[int, string]()
 		tree.Put(2, "cc")
 		tree.Put(0, "aa")
 		tree.Put(1, "bb")
@@ -654,7 +656,7 @@ func TestRedBlackTreeIteratorPrevTo(t *testing.T) {
 }
 
 func TestRedBlackTreeSerialization(t *testing.T) {
-	tree := New[string, string]()
+	tree := redblacktree.New[string, string]()
 	tree.Put("c", "3")
 	tree.Put("b", "2")
 	tree.Put("a", "1")
@@ -688,7 +690,7 @@ func TestRedBlackTreeSerialization(t *testing.T) {
 		t.Errorf("Got error %v", err)
 	}
 
-	intTree := New[string, int]()
+	intTree := redblacktree.New[string, int]()
 	err = json.Unmarshal([]byte(`{"a":1,"b":2}`), intTree)
 	if err != nil {
 		t.Errorf("Got error %v", err)
@@ -705,14 +707,14 @@ func TestRedBlackTreeSerialization(t *testing.T) {
 }
 
 func TestRedBlackTreeString(t *testing.T) {
-	c := New[string, int]()
+	c := redblacktree.New[string, int]()
 	c.Put("a", 1)
 	if !strings.HasPrefix(c.String(), "RedBlackTree") {
 		t.Errorf("String should start with container name")
 	}
 }
 
-func benchmarkGet(b *testing.B, tree *Tree[int, struct{}], size int) {
+func benchmarkGet(b *testing.B, tree *redblacktree.Tree[int, struct{}], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			tree.Get(n)
@@ -720,7 +722,7 @@ func benchmarkGet(b *testing.B, tree *Tree[int, struct{}], size int) {
 	}
 }
 
-func benchmarkPut(b *testing.B, tree *Tree[int, struct{}], size int) {
+func benchmarkPut(b *testing.B, tree *redblacktree.Tree[int, struct{}], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			tree.Put(n, struct{}{})
@@ -728,7 +730,7 @@ func benchmarkPut(b *testing.B, tree *Tree[int, struct{}], size int) {
 	}
 }
 
-func benchmarkRemove(b *testing.B, tree *Tree[int, struct{}], size int) {
+func benchmarkRemove(b *testing.B, tree *redblacktree.Tree[int, struct{}], size int) {
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < size; n++ {
 			tree.Remove(n)
@@ -739,7 +741,7 @@ func benchmarkRemove(b *testing.B, tree *Tree[int, struct{}], size int) {
 func BenchmarkRedBlackTreeGet100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	tree := New[int, struct{}]()
+	tree := redblacktree.New[int, struct{}]()
 	for n := 0; n < size; n++ {
 		tree.Put(n, struct{}{})
 	}
@@ -750,7 +752,7 @@ func BenchmarkRedBlackTreeGet100(b *testing.B) {
 func BenchmarkRedBlackTreeGet1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	tree := New[int, struct{}]()
+	tree := redblacktree.New[int, struct{}]()
 	for n := 0; n < size; n++ {
 		tree.Put(n, struct{}{})
 	}
@@ -761,7 +763,7 @@ func BenchmarkRedBlackTreeGet1000(b *testing.B) {
 func BenchmarkRedBlackTreeGet10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	tree := New[int, struct{}]()
+	tree := redblacktree.New[int, struct{}]()
 	for n := 0; n < size; n++ {
 		tree.Put(n, struct{}{})
 	}
@@ -772,7 +774,7 @@ func BenchmarkRedBlackTreeGet10000(b *testing.B) {
 func BenchmarkRedBlackTreeGet100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	tree := New[int, struct{}]()
+	tree := redblacktree.New[int, struct{}]()
 	for n := 0; n < size; n++ {
 		tree.Put(n, struct{}{})
 	}
@@ -783,7 +785,7 @@ func BenchmarkRedBlackTreeGet100000(b *testing.B) {
 func BenchmarkRedBlackTreePut100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	tree := New[int, struct{}]()
+	tree := redblacktree.New[int, struct{}]()
 	b.StartTimer()
 	benchmarkPut(b, tree, size)
 }
@@ -791,7 +793,7 @@ func BenchmarkRedBlackTreePut100(b *testing.B) {
 func BenchmarkRedBlackTreePut1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	tree := New[int, struct{}]()
+	tree := redblacktree.New[int, struct{}]()
 	for n := 0; n < size; n++ {
 		tree.Put(n, struct{}{})
 	}
@@ -802,7 +804,7 @@ func BenchmarkRedBlackTreePut1000(b *testing.B) {
 func BenchmarkRedBlackTreePut10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	tree := New[int, struct{}]()
+	tree := redblacktree.New[int, struct{}]()
 	for n := 0; n < size; n++ {
 		tree.Put(n, struct{}{})
 	}
@@ -813,7 +815,7 @@ func BenchmarkRedBlackTreePut10000(b *testing.B) {
 func BenchmarkRedBlackTreePut100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	tree := New[int, struct{}]()
+	tree := redblacktree.New[int, struct{}]()
 	for n := 0; n < size; n++ {
 		tree.Put(n, struct{}{})
 	}
@@ -824,7 +826,7 @@ func BenchmarkRedBlackTreePut100000(b *testing.B) {
 func BenchmarkRedBlackTreeRemove100(b *testing.B) {
 	b.StopTimer()
 	size := 100
-	tree := New[int, struct{}]()
+	tree := redblacktree.New[int, struct{}]()
 	for n := 0; n < size; n++ {
 		tree.Put(n, struct{}{})
 	}
@@ -835,7 +837,7 @@ func BenchmarkRedBlackTreeRemove100(b *testing.B) {
 func BenchmarkRedBlackTreeRemove1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
-	tree := New[int, struct{}]()
+	tree := redblacktree.New[int, struct{}]()
 	for n := 0; n < size; n++ {
 		tree.Put(n, struct{}{})
 	}
@@ -846,7 +848,7 @@ func BenchmarkRedBlackTreeRemove1000(b *testing.B) {
 func BenchmarkRedBlackTreeRemove10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
-	tree := New[int, struct{}]()
+	tree := redblacktree.New[int, struct{}]()
 	for n := 0; n < size; n++ {
 		tree.Put(n, struct{}{})
 	}
@@ -857,7 +859,7 @@ func BenchmarkRedBlackTreeRemove10000(b *testing.B) {
 func BenchmarkRedBlackTreeRemove100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
-	tree := New[int, struct{}]()
+	tree := redblacktree.New[int, struct{}]()
 	for n := 0; n < size; n++ {
 		tree.Put(n, struct{}{})
 	}

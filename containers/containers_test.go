@@ -4,13 +4,15 @@
 
 // All data structures must implement the container structure
 
-package containers
+package containers_test
 
 import (
 	"cmp"
 	"fmt"
 	"strings"
 	"testing"
+
+	"github.com/emirpasic/gods/v2/containers"
 )
 
 // For testing purposes
@@ -46,9 +48,9 @@ func (container ContainerTest[T]) String() string {
 
 func TestGetSortedValuesInts(t *testing.T) {
 	container := ContainerTest[int]{}
-	GetSortedValues(container)
+	containers.GetSortedValues(container)
 	container.values = []int{5, 1, 3, 2, 4}
-	values := GetSortedValues(container)
+	values := containers.GetSortedValues(container)
 	for i := 1; i < container.Size(); i++ {
 		if values[i-1] > values[i] {
 			t.Errorf("Not sorted!")
@@ -62,11 +64,11 @@ type NotInt struct {
 
 func TestGetSortedValuesNotInts(t *testing.T) {
 	container := ContainerTest[NotInt]{}
-	GetSortedValuesFunc(container, func(x, y NotInt) int {
+	containers.GetSortedValuesFunc(container, func(x, y NotInt) int {
 		return cmp.Compare(x.i, y.i)
 	})
 	container.values = []NotInt{{5}, {1}, {3}, {2}, {4}}
-	values := GetSortedValuesFunc(container, func(x, y NotInt) int {
+	values := containers.GetSortedValuesFunc(container, func(x, y NotInt) int {
 		return cmp.Compare(x.i, y.i)
 	})
 	for i := 1; i < container.Size(); i++ {
