@@ -72,6 +72,19 @@ func (list *List[T]) Remove(index int) {
 	list.shrink()
 }
 
+// RemoveFirstNElements removes the first n elements from the list.
+// if size of list is less than n, no elements are removed.
+// O(1) time complexity, ignoring shrinkage.
+func (list *List[T]) RemoveFirstNElements(n int) {
+
+	if list.Size() < n {
+		return
+	}
+
+	list.elements = list.elements[n:]
+	list.shrink()
+}
+
 // Contains checks if elements (one or more) are present in the set.
 // All elements have to be present in the set for the method to return true.
 // Performance time complexity of n^2.

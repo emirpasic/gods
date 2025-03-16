@@ -99,6 +99,25 @@ func TestListRemove(t *testing.T) {
 	}
 }
 
+func TestListRemoveFirstNElements(t *testing.T) {
+	list := New[string]()
+	list.Add("a", "b", "c")
+	list.RemoveFirstNElements(2)
+	if actualValue, ok := list.Get(0); actualValue != "c" || !ok {
+		t.Errorf("Got %v expected %v", actualValue, "c")
+	}
+
+	list.RemoveFirstNElements(2) // no effect
+	if actualValue := list.Size(); actualValue != 1 {
+		t.Errorf("Got %v expected %v", actualValue, 1)
+	}
+
+	list.RemoveFirstNElements(1)
+	if actualValue := list.Empty(); actualValue != true {
+		t.Errorf("Got %v expected %v", actualValue, true)
+	}
+}
+
 func TestListGet(t *testing.T) {
 	list := New[string]()
 	list.Add("a")
