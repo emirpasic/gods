@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"sync"
 	"testing"
 )
 
@@ -699,4 +700,97 @@ func BenchmarkHashSetRemove100000(b *testing.B) {
 	}
 	b.StartTimer()
 	benchmarkRemove(b, set, size)
+}
+
+func TestConcurrentAdd(t *testing.T) {
+	s := New(1)
+
+	size := 100000
+	wg := &sync.WaitGroup{}
+	wg.Add(2)
+
+	go func() {
+		defer wg.Done()
+		for i := 0; i < size; i += 2 {
+			s.Add(i)
+
+		}
+	}()
+	go func() {
+		defer wg.Done()
+		for i := 1; i < size; i += 2 {
+			s.Add(i)
+		}
+	}()
+
+	wg.Wait()
+	fmt.Println(s.Size())
+}
+
+func TestConcurrentRemove(t *testing.T) {
+	s := New(1)
+	size := 100000
+	for i := 0; i < size; i++ {
+		s.Add(i)
+	}
+	fmt.Println(s.Size())
+	wg := &sync.WaitGroup{}
+	wg.Add(2)
+
+	go func() {
+		defer wg.Done()
+		for i := 0; i < size; i += 2 {
+			s.Remove(i)
+		}
+	}()
+
+	go func() {
+		defer wg.Done()
+		for i := 1; i < size; i += 2 {
+			s.Remove(i)
+		}
+	}()
+
+	wg.Wait()
+
+	fmt.Println(s.Size())
+}
+
+func TestConcurrentRW(t *testing.T) {
+	s := New(1)
+	size := 1000
+	wg := &sync.WaitGroup{}
+	wg.Add(3)
+
+	go func() {
+		defer wg.Done()
+		for i := 0; i < size; i++ {
+			s.Add(i)
+		}
+	}()
+
+	go func() {
+		defer wg.Done()
+		for i := 0; i < size; i += 2 {
+			// _ = s.Contains(i)
+			// _ = s.Values()
+			// fmt.Println(s.String())
+			// s.Intersection(New(-1))
+			// s.Union(New(-1))
+			s.Difference(New(1))
+		}
+	}()
+
+	go func() {
+		defer wg.Done()
+		for i := 1; i < size; i += 2 {
+			// _ = s.Contains(i)
+			// _ = s.Values()
+			// fmt.Println(s.String())
+			// s.Intersection(New(-2))
+			// s.Union(New(-2))
+			s.Difference(New(2))
+		}
+	}()
+	wg.Wait()
 }

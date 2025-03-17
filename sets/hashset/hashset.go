@@ -12,6 +12,7 @@ package hashset
 import (
 	"fmt"
 	"strings"
+	"sync"
 
 	"github.com/emirpasic/gods/v2/sets"
 )
@@ -22,13 +23,14 @@ var _ sets.Set[int] = (*Set[int])(nil)
 // Set holds elements in go's native map
 type Set[T comparable] struct {
 	items map[T]struct{}
+	mux   *sync.RWMutex
 }
 
 var itemExists = struct{}{}
 
 // New instantiates a new empty set and adds the passed values, if any, to the set
 func New[T comparable](values ...T) *Set[T] {
-	set := &Set[T]{items: make(map[T]struct{})}
+	set := &Set[T]{items: make(map[T]struct{}), mux: &sync.RWMutex{}}
 	if len(values) > 0 {
 		set.Add(values...)
 	}
@@ -37,6 +39,8 @@ func New[T comparable](values ...T) *Set[T] {
 
 // Add adds the items (one or more) to the set.
 func (set *Set[T]) Add(items ...T) {
+	set.mux.Lock()
+	defer set.mux.Unlock()
 	for _, item := range items {
 		set.items[item] = itemExists
 	}
@@ -44,6 +48,8 @@ func (set *Set[T]) Add(items ...T) {
 
 // Remove removes the items (one or more) from the set.
 func (set *Set[T]) Remove(items ...T) {
+	set.mux.Lock()
+	defer set.mux.Unlock()
 	for _, item := range items {
 		delete(set.items, item)
 	}
@@ -53,6 +59,8 @@ func (set *Set[T]) Remove(items ...T) {
 // All items have to be present in the set for the method to return true.
 // Returns true if no arguments are passed at all, i.e. set is always superset of empty set.
 func (set *Set[T]) Contains(items ...T) bool {
+	set.mux.RLock()
+	defer set.mux.RUnlock()
 	for _, item := range items {
 		if _, contains := set.items[item]; !contains {
 			return false
@@ -78,6 +86,8 @@ func (set *Set[T]) Clear() {
 
 // Values returns all items in the set.
 func (set *Set[T]) Values() []T {
+	set.mux.RLock()
+	defer set.mux.RUnlock()
 	values := make([]T, set.Size())
 	count := 0
 	for item := range set.items {
@@ -91,7 +101,7 @@ func (set *Set[T]) Values() []T {
 func (set *Set[T]) String() string {
 	str := "HashSet\n"
 	items := []string{}
-	for k := range set.items {
+	for _, k := range set.Values() {
 		items = append(items, fmt.Sprintf("%v", k))
 	}
 	str += strings.Join(items, ", ")
@@ -106,14 +116,14 @@ func (set *Set[T]) Intersection(another *Set[T]) *Set[T] {
 
 	// Iterate over smaller set (optimization)
 	if set.Size() <= another.Size() {
-		for item := range set.items {
-			if _, contains := another.items[item]; contains {
+		for _, item := range set.Values() {
+			if another.Contains(item) {
 				result.Add(item)
 			}
 		}
 	} else {
-		for item := range another.items {
-			if _, contains := set.items[item]; contains {
+		for _, item := range another.Values() {
+			if set.Contains(item) {
 				result.Add(item)
 			}
 		}
@@ -128,7 +138,7 @@ func (set *Set[T]) Intersection(another *Set[T]) *Set[T] {
 func (set *Set[T]) Union(another *Set[T]) *Set[T] {
 	result := New[T]()
 
-	for item := range set.items {
+	for _, item := range set.Values() {
 		result.Add(item)
 	}
 	for item := range another.items {
@@ -144,8 +154,8 @@ func (set *Set[T]) Union(another *Set[T]) *Set[T] {
 func (set *Set[T]) Difference(another *Set[T]) *Set[T] {
 	result := New[T]()
 
-	for item := range set.items {
-		if _, contains := another.items[item]; !contains {
+	for _, item := range set.Values() {
+		if !another.Contains(item) {
 			result.Add(item)
 		}
 	}
