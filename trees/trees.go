@@ -12,11 +12,11 @@ package trees
 import "github.com/emirpasic/gods/v2/containers"
 
 // Tree interface that all trees implement
-type Tree[V any] interface {
-	containers.Container[V]
+type Tree[T any] interface {
+	containers.Container[T]
 	// Empty() bool
 	// Size() int
 	// Clear()
-	// Values() []interface{}
+	// Values() []T
 	// String() string
 }
