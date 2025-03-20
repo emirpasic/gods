@@ -12,6 +12,7 @@
 package linkedhashmap
 
 import (
+	"bytes"
 	"fmt"
 	"strings"
 
@@ -98,11 +99,13 @@ func (m *Map[K, V]) Clear() {
 
 // String returns a string representation of container
 func (m *Map[K, V]) String() string {
-	str := "LinkedHashMap\nmap["
-	it := m.Iterator()
+	var (
+		buf bytes.Buffer
+		it  = m.Iterator()
+	)
+	buf.WriteString("LinkedHashMap\nmap[")
 	for it.Next() {
-		str += fmt.Sprintf("%v:%v ", it.Key(), it.Value())
+		buf.WriteString(fmt.Sprintf("%v:%v ", it.Key(), it.Value()))
 	}
-	return strings.TrimRight(str, " ") + "]"
-
+	return strings.TrimRight(buf.String(), " ") + "]"
 }

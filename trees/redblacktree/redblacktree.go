@@ -12,6 +12,7 @@
 package redblacktree
 
 import (
+	"bytes"
 	"cmp"
 	"fmt"
 
@@ -281,18 +282,19 @@ func (tree *Tree[K, V]) Clear() {
 
 // String returns a string representation of container
 func (tree *Tree[K, V]) String() string {
-	str := "RedBlackTree\n"
+	var buf bytes.Buffer
+	buf.WriteString("RedBlackTree\n")
 	if !tree.Empty() {
-		output(tree.Root, "", true, &str)
+		output(&buf, tree.Root, "", true)
 	}
-	return str
+	return buf.String()
 }
 
 func (node *Node[K, V]) String() string {
 	return fmt.Sprintf("%v", node.Key)
 }
 
-func output[K comparable, V any](node *Node[K, V], prefix string, isTail bool, str *string) {
+func output[K comparable, V any](buf *bytes.Buffer, node *Node[K, V], prefix string, isTail bool) {
 	if node.Right != nil {
 		newPrefix := prefix
 		if isTail {
@@ -300,15 +302,16 @@ func output[K comparable, V any](node *Node[K, V], prefix string, isTail bool, s
 		} else {
 			newPrefix += "    "
 		}
-		output(node.Right, newPrefix, false, str)
+		output(buf, node.Right, newPrefix, false)
 	}
-	*str += prefix
+	buf.WriteString(prefix)
 	if isTail {
-		*str += "└── "
+		buf.WriteString("└── ")
 	} else {
-		*str += "┌── "
+		buf.WriteString("┌── ")
 	}
-	*str += node.String() + "\n"
+	buf.WriteString(node.String() + "\n")
+
 	if node.Left != nil {
 		newPrefix := prefix
 		if isTail {
@@ -316,7 +319,7 @@ func output[K comparable, V any](node *Node[K, V], prefix string, isTail bool, s
 		} else {
 			newPrefix += "│   "
 		}
-		output(node.Left, newPrefix, true, str)
+		output(buf, node.Left, newPrefix, true)
 	}
 }
 
