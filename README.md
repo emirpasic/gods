@@ -774,7 +774,7 @@ import (
 )
 
 func main() {
-	tree := btree.NewWithIntComparator(3) // empty (keys are of type int)
+	tree := btree.NewWithIntComparator() // empty (keys are of type int)
 
 	tree.Put(1, "x") // 1->x
 	tree.Put(2, "b") // 1->x, 2->b (in order)
