@@ -44,7 +44,7 @@ func (iterator *Iterator[T]) Prev() bool {
 // Value returns the current element's value.
 // Does not modify the state of the iterator.
 func (iterator *Iterator[T]) Value() T {
-	index := (iterator.index + iterator.queue.start) % iterator.queue.maxSize
+	index := (iterator.index + iterator.queue.start) % len(iterator.queue.values)
 	value := iterator.queue.values[index]
 	return value
 }

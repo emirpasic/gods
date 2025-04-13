@@ -16,7 +16,7 @@ var _ containers.JSONDeserializer = (*Queue[int])(nil)
 
 // ToJSON outputs the JSON representation of queue's elements.
 func (queue *Queue[T]) ToJSON() ([]byte, error) {
-	return json.Marshal(queue.values[:queue.maxSize])
+	return json.Marshal(queue.values)
 }
 
 // FromJSON populates list's elements from the input JSON representation.

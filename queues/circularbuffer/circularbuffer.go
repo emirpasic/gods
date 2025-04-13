@@ -23,12 +23,10 @@ var _ queues.Queue[int] = (*Queue[int])(nil)
 
 // Queue holds values in a slice.
 type Queue[T comparable] struct {
-	values  []T
-	start   int
-	end     int
-	full    bool
-	maxSize int
-	size    int
+	values []T // maintain this slices's capacity equal to its length
+	start  int
+	end    int
+	size   int
 }
 
 // New instantiates a new empty queue with the specified size of maximum number of elements that it can hold.
@@ -37,26 +35,26 @@ func New[T comparable](maxSize int) *Queue[T] {
 	if maxSize < 1 {
 		panic("Invalid maxSize, should be at least 1")
 	}
-	queue := &Queue[T]{maxSize: maxSize}
-	queue.Clear()
-	return queue
+	return &Queue[T]{
+		values: make([]T, maxSize),
+	}
 }
 
 // Enqueue adds a value to the end of the queue
 func (queue *Queue[T]) Enqueue(value T) {
 	if queue.Full() {
-		queue.Dequeue()
+		queue.start = queue.start + 1
+		if queue.start == len(queue.values) {
+			queue.start = 0
+		}
+		queue.size--
 	}
 	queue.values[queue.end] = value
 	queue.end = queue.end + 1
-	if queue.end >= queue.maxSize {
+	if queue.end >= len(queue.values) {
 		queue.end = 0
 	}
-	if queue.end == queue.start {
-		queue.full = true
-	}
-
-	queue.size = queue.calculateSize()
+	queue.size++
 }
 
 // Dequeue removes first element of the queue and returns it, or the 0-value if queue is empty.
@@ -68,11 +66,10 @@ func (queue *Queue[T]) Dequeue() (value T, ok bool) {
 
 	value, ok = queue.values[queue.start], true
 	queue.start = queue.start + 1
-	if queue.start >= queue.maxSize {
+	if queue.start >= len(queue.values) {
 		queue.start = 0
 	}
-	queue.full = false
-	queue.size = queue.size - 1
+	queue.size--
 
 	return
 }
@@ -88,12 +85,12 @@ func (queue *Queue[T]) Peek() (value T, ok bool) {
 
 // Empty returns true if queue does not contain any elements.
 func (queue *Queue[T]) Empty() bool {
-	return queue.Size() == 0
+	return queue.size == 0
 }
 
 // Full returns true if the queue is full, i.e. has reached the maximum number of elements that it can hold.
 func (queue *Queue[T]) Full() bool {
-	return queue.Size() == queue.maxSize
+	return queue.size == len(queue.values)
 }
 
 // Size returns number of elements within the queue.
@@ -103,18 +100,17 @@ func (queue *Queue[T]) Size() int {
 
 // Clear removes all elements from the queue.
 func (queue *Queue[T]) Clear() {
-	queue.values = make([]T, queue.maxSize, queue.maxSize)
+	clear(queue.values)
 	queue.start = 0
 	queue.end = 0
-	queue.full = false
 	queue.size = 0
 }
 
 // Values returns all elements in the queue (FIFO order).
 func (queue *Queue[T]) Values() []T {
-	values := make([]T, queue.Size(), queue.Size())
-	for i := 0; i < queue.Size(); i++ {
-		values[i] = queue.values[(queue.start+i)%queue.maxSize]
+	values := make([]T, queue.size)
+	for i := 0; i < queue.size; i++ {
+		values[i] = queue.values[(queue.start+i)%len(queue.values)]
 	}
 	return values
 }
@@ -133,16 +129,4 @@ func (queue *Queue[T]) String() string {
 // Check that the index is within bounds of the list
 func (queue *Queue[T]) withinRange(index int) bool {
 	return index >= 0 && index < queue.size
-}
-
-func (queue *Queue[T]) calculateSize() int {
-	if queue.end < queue.start {
-		return queue.maxSize - queue.start + queue.end
-	} else if queue.end == queue.start {
-		if queue.full {
-			return queue.maxSize
-		}
-		return 0
-	}
-	return queue.end - queue.start
 }
