@@ -87,7 +87,25 @@ func (set *Set[T]) Clear() {
 // Values returns all items in the set.
 func (set *Set[T]) Values() []T {
 	return set.tree.Keys()
+	
 }
+
+// Min returns the Minimum value in the set.
+func (set *Set[T]) Min() interface{} {
+	node := set.tree.Left()
+	if node != nil{
+		return node.key
+	}	
+}
+
+// Max returns the Maximum value in the set.
+func (set *Set[T]) Max() interface{} {
+	node := set.tree.Right()
+	if node != nil{
+		return node.key
+	}
+}
+
 
 // String returns a string representation of container
 func (set *Set[T]) String() string {
