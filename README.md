@@ -7,11 +7,8 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gods&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=gods)
 [![PyPI](https://img.shields.io/badge/License-BSD_2--Clause-green.svg)](https://github.com/emirpasic/gods/blob/master/LICENSE)
 
-# GoDS (Go Data Structures)
 
-Implementation of various data structures and algorithms in Go.
-
-## Data Structures
+## Data Structures:
 
 - [Containers](#containers)
   - [Lists](#lists)
@@ -59,7 +56,7 @@ Implementation of various data structures and algorithms in Go.
 - [Appendix](#appendix)
 
 
-## Containers
+## Containers:
 
 All data structures implement the container interface with the following methods:
 
@@ -106,7 +103,7 @@ Containers are either ordered or unordered. All ordered containers provide [stat
 |   | [PriorityQueue](#priorityqueue)       | yes | yes* | no | index |
 |   |                                       |  | <sub><sup>*reversible</sup></sub> |  | <sub><sup>*bidirectional</sup></sub> |
 
-### Lists
+### Lists:
 
 A list is a data structure that stores values and may have repeated values.
 
@@ -132,7 +129,7 @@ type List interface {
 }
 ```
 
-#### ArrayList
+#### ArrayList:
 
 A [list](#lists) backed by a dynamic array that grows and shrinks implicitly.
 
@@ -169,7 +166,7 @@ func main() {
 }
 ```
 
-#### SinglyLinkedList
+#### SinglyLinkedList:
 
 A [list](#lists) where each element points to the next element in the list.
 
@@ -206,7 +203,7 @@ func main() {
 }
 ```
 
-#### DoublyLinkedList
+#### DoublyLinkedList:
 
 A [list](#lists) where each element points to the next and previous elements in the list.
 
