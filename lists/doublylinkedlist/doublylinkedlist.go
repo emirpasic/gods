@@ -317,7 +317,6 @@ func (list *List[T]) Set(index int, value T) {
 	if list.size-index < index {
 		foundElement = list.last
 		for e := list.size - 1; e != index; {
-			fmt.Println("Set last", index, value, foundElement, foundElement.prev)
 			e, foundElement = e-1, foundElement.prev
 		}
 	} else {
