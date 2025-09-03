@@ -23,12 +23,19 @@ var _ lists.List[int] = (*List[int])(nil)
 
 // List holds the elements, where each element points to the next element
 type List[T comparable] struct {
+	SimpleList[T]
+}
+
+// SimpleList is like [List] but it doesn't have any method that require T to be comparable. That lets
+// SimpleList be used in places where [List] can't be used and it allows types like [linkedliststack.Stack] which
+// don't have any method that require comparable elements to not require their generic type to be comparable.
+type SimpleList[T any] struct {
 	first *element[T]
 	last  *element[T]
 	size  int
 }
 
-type element[T comparable] struct {
+type element[T any] struct {
 	value T
 	next  *element[T]
 }
@@ -42,8 +49,16 @@ func New[T comparable](values ...T) *List[T] {
 	return list
 }
 
+func NewSimpleList[T any](values ...T) *SimpleList[T] {
+	list := &SimpleList[T]{}
+	if len(values) > 0 {
+		list.Add(values...)
+	}
+	return list
+}
+
 // Add appends a value (one or more) at the end of the list (same as Append())
-func (list *List[T]) Add(values ...T) {
+func (list *SimpleList[T]) Add(values ...T) {
 	for _, value := range values {
 		newElement := &element[T]{value: value}
 		if list.size == 0 {
@@ -58,12 +73,12 @@ func (list *List[T]) Add(values ...T) {
 }
 
 // Append appends a value (one or more) at the end of the list (same as Add())
-func (list *List[T]) Append(values ...T) {
+func (list *SimpleList[T]) Append(values ...T) {
 	list.Add(values...)
 }
 
 // Prepend prepends a values (or more)
-func (list *List[T]) Prepend(values ...T) {
+func (list *SimpleList[T]) Prepend(values ...T) {
 	// in reverse to keep passed order i.e. ["c","d"] -> Prepend(["a","b"]) -> ["a","b","c",d"]
 	for v := len(values) - 1; v >= 0; v-- {
 		newElement := &element[T]{value: values[v], next: list.first}
@@ -77,7 +92,7 @@ func (list *List[T]) Prepend(values ...T) {
 
 // Get returns the element at index.
 // Second return parameter is true if index is within bounds of the array and array is not empty, otherwise false.
-func (list *List[T]) Get(index int) (T, bool) {
+func (list *SimpleList[T]) Get(index int) (T, bool) {
 
 	if !list.withinRange(index) {
 		var t T
@@ -92,7 +107,7 @@ func (list *List[T]) Get(index int) (T, bool) {
 }
 
 // Remove removes the element at the given index from the list.
-func (list *List[T]) Remove(index int) {
+func (list *SimpleList[T]) Remove(index int) {
 
 	if !list.withinRange(index) {
 		return
@@ -124,35 +139,8 @@ func (list *List[T]) Remove(index int) {
 	list.size--
 }
 
-// Contains checks if values (one or more) are present in the set.
-// All values have to be present in the set for the method to return true.
-// Performance time complexity of n^2.
-// Returns true if no arguments are passed at all, i.e. set is always super-set of empty set.
-func (list *List[T]) Contains(values ...T) bool {
-
-	if len(values) == 0 {
-		return true
-	}
-	if list.size == 0 {
-		return false
-	}
-	for _, value := range values {
-		found := false
-		for element := list.first; element != nil; element = element.next {
-			if element.value == value {
-				found = true
-				break
-			}
-		}
-		if !found {
-			return false
-		}
-	}
-	return true
-}
-
 // Values returns all elements in the list.
-func (list *List[T]) Values() []T {
+func (list *SimpleList[T]) Values() []T {
 	values := make([]T, list.size, list.size)
 	for e, element := 0, list.first; element != nil; e, element = e+1, element.next {
 		values[e] = element.value
@@ -160,54 +148,26 @@ func (list *List[T]) Values() []T {
 	return values
 }
 
-// IndexOf returns index of provided element
-func (list *List[T]) IndexOf(value T) int {
-	if list.size == 0 {
-		return -1
-	}
-	for index, element := range list.Values() {
-		if element == value {
-			return index
-		}
-	}
-	return -1
-}
 
 // Empty returns true if list does not contain any elements.
-func (list *List[T]) Empty() bool {
+func (list *SimpleList[T]) Empty() bool {
 	return list.size == 0
 }
 
 // Size returns number of elements within the list.
-func (list *List[T]) Size() int {
+func (list *SimpleList[T]) Size() int {
 	return list.size
 }
 
 // Clear removes all elements from the list.
-func (list *List[T]) Clear() {
+func (list *SimpleList[T]) Clear() {
 	list.size = 0
 	list.first = nil
 	list.last = nil
 }
 
-// Sort sort values (in-place) using.
-func (list *List[T]) Sort(comparator utils.Comparator[T]) {
-
-	if list.size < 2 {
-		return
-	}
-
-	values := list.Values()
-	slices.SortFunc(values, comparator)
-
-	list.Clear()
-
-	list.Add(values...)
-
-}
-
 // Swap swaps values of two elements at the given indices.
-func (list *List[T]) Swap(i, j int) {
+func (list *SimpleList[T]) Swap(i, j int) {
 	if list.withinRange(i) && list.withinRange(j) && i != j {
 		var element1, element2 *element[T]
 		for e, currentElement := 0, list.first; element1 == nil || element2 == nil; e, currentElement = e+1, currentElement.next {
@@ -225,7 +185,7 @@ func (list *List[T]) Swap(i, j int) {
 // Insert inserts values at specified index position shifting the value at that position (if any) and any subsequent elements to the right.
 // Does not do anything if position is negative or bigger than list's size
 // Note: position equal to list's size is valid, i.e. append.
-func (list *List[T]) Insert(index int, values ...T) {
+func (list *SimpleList[T]) Insert(index int, values ...T) {
 
 	if !list.withinRange(index) {
 		// Append
@@ -269,7 +229,7 @@ func (list *List[T]) Insert(index int, values ...T) {
 // Set value at specified index
 // Does not do anything if position is negative or bigger than list's size
 // Note: position equal to list's size is valid, i.e. append.
-func (list *List[T]) Set(index int, value T) {
+func (list *SimpleList[T]) Set(index int, value T) {
 
 	if !list.withinRange(index) {
 		// Append
@@ -287,7 +247,7 @@ func (list *List[T]) Set(index int, value T) {
 }
 
 // String returns a string representation of container
-func (list *List[T]) String() string {
+func (list *SimpleList[T]) String() string {
 	str := "SinglyLinkedList\n"
 	values := []string{}
 	for element := list.first; element != nil; element = element.next {
@@ -298,6 +258,62 @@ func (list *List[T]) String() string {
 }
 
 // Check that the index is within bounds of the list
-func (list *List[T]) withinRange(index int) bool {
+func (list *SimpleList[T]) withinRange(index int) bool {
 	return index >= 0 && index < list.size
+}
+
+// Contains checks if values (one or more) are present in the set.
+// All values have to be present in the set for the method to return true.
+// Performance time complexity of n^2.
+// Returns true if no arguments are passed at all, i.e. set is always super-set of empty set.
+func (list *List[T]) Contains(values ...T) bool {
+
+	if len(values) == 0 {
+		return true
+	}
+	if list.size == 0 {
+		return false
+	}
+	for _, value := range values {
+		found := false
+		for element := list.first; element != nil; element = element.next {
+			if element.value == value {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return false
+		}
+	}
+	return true
+}
+
+// Sort sort values (in-place) using.
+func (list *List[T]) Sort(comparator utils.Comparator[T]) {
+
+	if list.size < 2 {
+		return
+	}
+
+	values := list.Values()
+	slices.SortFunc(values, comparator)
+
+	list.Clear()
+
+	list.Add(values...)
+
+}
+
+// IndexOf returns index of provided element
+func (list *List[T]) IndexOf(value T) int {
+	if list.size == 0 {
+		return -1
+	}
+	for index, element := range list.Values() {
+		if element == value {
+			return index
+		}
+	}
+	return -1
 }
