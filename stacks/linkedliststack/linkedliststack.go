@@ -21,13 +21,13 @@ import (
 var _ stacks.Stack[int] = (*Stack[int])(nil)
 
 // Stack holds elements in a singly-linked-list
-type Stack[T comparable] struct {
-	list *singlylinkedlist.List[T]
+type Stack[T any] struct {
+	list *singlylinkedlist.SimpleList[T]
 }
 
 // New nnstantiates a new empty stack
-func New[T comparable]() *Stack[T] {
-	return &Stack[T]{list: singlylinkedlist.New[T]()}
+func New[T any]() *Stack[T] {
+	return &Stack[T]{list: singlylinkedlist.NewSimpleList[T]()}
 }
 
 // Push adds a value onto the top of the stack
