@@ -22,6 +22,7 @@ Implementation of various data structures and algorithms in Go.
     - [HashSet](#hashset)
     - [TreeSet](#treeset)
     - [LinkedHashSet](#linkedhashset)
+    - [BitSet](#bitset)
   - [Stacks](#stacks)
     - [LinkedListStack](#linkedliststack)
     - [ArrayStack](#arraystack)
@@ -85,6 +86,7 @@ Containers are either ordered or unordered. All ordered containers provide [stat
 |   | [HashSet](#hashset)                   | no | no | no | index |
 |   | [TreeSet](#treeset)                   | yes | yes* | yes | index |
 |   | [LinkedHashSet](#linkedhashset)       | yes | yes* | yes | index |
+|   | [BitSet](#bitset)                     | yes | no | no | index |
 | [Stacks](#stacks) |
 |   | [LinkedListStack](#linkedliststack)   | yes | yes | no | index |
 |   | [ArrayStack](#arraystack)             | yes | yes* | no | index |
@@ -348,6 +350,36 @@ func main() {
 	set.Clear()                // empty
 	set.Empty()                // true
 	set.Size()                 // 0
+}
+```
+
+#### BitSet
+
+A [set](#sets) backed by a bit array for non-negative integer elements. Each element is represented as a single bit, providing O(1) add, remove, and membership operations with minimal memory overhead. The backing array grows automatically to accommodate new elements. Set operations (intersection, union, difference) are performed at the word level using bitwise operations, making them significantly faster than hash-based alternatives.
+
+Implements [Set](#sets), [JSONSerializer](#jsonserializer) and [JSONDeserializer](#jsondeserializer) interfaces.
+
+```go
+package main
+
+import "github.com/emirpasic/gods/sets/bitset"
+
+func main() {
+	set := bitset.New()    // empty
+	set.Add(1)             // 1
+	set.Add(2, 2, 3, 4, 5) // 1, 2, 3, 4, 5 (in ascending order, duplicates ignored)
+	set.Remove(4)          // 1, 2, 3, 5 (in ascending order)
+	set.Remove(2, 3)       // 1, 5 (in ascending order)
+	set.Contains(1)        // true
+	set.Contains(1, 5)     // true
+	set.Contains(1, 6)     // false
+	_ = set.Values()       // []int{1, 5} (in ascending order)
+	set.Clear()            // empty
+	set.Empty()            // true
+	set.Size()             // 0
+
+	// Pre-allocate for a known universe size
+	set = bitset.NewWithCapacity(1000) // pre-allocated for elements 0-999
 }
 ```
 
