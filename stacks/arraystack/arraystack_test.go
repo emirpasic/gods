@@ -372,7 +372,7 @@ func TestStackSerialization(t *testing.T) {
 	err = stack.FromJSON(bytes)
 	assert()
 
-	bytes, err = json.Marshal([]interface{}{"a", "b", "c", stack})
+	bytes, err = json.Marshal([]any{"a", "b", "c", stack})
 	if err != nil {
 		t.Errorf("Got error %v", err)
 	}

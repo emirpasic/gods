@@ -10,7 +10,7 @@ import (
 )
 
 func TestToStringInts(t *testing.T) {
-	var value interface{}
+	var value any
 
 	value = int8(1)
 	if actualValue, expectedValue := ToString(value), "1"; actualValue != expectedValue {
@@ -39,7 +39,7 @@ func TestToStringInts(t *testing.T) {
 }
 
 func TestToStringUInts(t *testing.T) {
-	var value interface{}
+	var value any
 
 	value = uint8(1)
 	if actualValue, expectedValue := ToString(value), "1"; actualValue != expectedValue {
@@ -68,7 +68,7 @@ func TestToStringUInts(t *testing.T) {
 }
 
 func TestToStringFloats(t *testing.T) {
-	var value interface{}
+	var value any
 
 	value = float32(1.123456)
 	if actualValue, expectedValue := ToString(value), "1.123456"; !strings.HasPrefix(actualValue, expectedValue) {
@@ -81,7 +81,7 @@ func TestToStringFloats(t *testing.T) {
 }
 
 func TestToStringOther(t *testing.T) {
-	var value interface{}
+	var value any
 
 	value = "abc"
 	if actualValue, expectedValue := ToString(value), "abc"; actualValue != expectedValue {

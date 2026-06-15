@@ -168,7 +168,7 @@ func (tree *Tree[K, V]) Left() *Node[K, V] {
 }
 
 // LeftKey returns the left-most (min) key or nil if tree is empty.
-func (tree *Tree[K, V]) LeftKey() interface{} {
+func (tree *Tree[K, V]) LeftKey() any {
 	if left := tree.Left(); left != nil {
 		return left.Entries[0].Key
 	}
@@ -176,7 +176,7 @@ func (tree *Tree[K, V]) LeftKey() interface{} {
 }
 
 // LeftValue returns the left-most value or nil if tree is empty.
-func (tree *Tree[K, V]) LeftValue() interface{} {
+func (tree *Tree[K, V]) LeftValue() any {
 	if left := tree.Left(); left != nil {
 		return left.Entries[0].Value
 	}
@@ -189,7 +189,7 @@ func (tree *Tree[K, V]) Right() *Node[K, V] {
 }
 
 // RightKey returns the right-most (max) key or nil if tree is empty.
-func (tree *Tree[K, V]) RightKey() interface{} {
+func (tree *Tree[K, V]) RightKey() any {
 	if right := tree.Right(); right != nil {
 		return right.Entries[len(right.Entries)-1].Key
 	}
@@ -197,7 +197,7 @@ func (tree *Tree[K, V]) RightKey() interface{} {
 }
 
 // RightValue returns the right-most value or nil if tree is empty.
-func (tree *Tree[K, V]) RightValue() interface{} {
+func (tree *Tree[K, V]) RightValue() any {
 	if right := tree.Right(); right != nil {
 		return right.Entries[len(right.Entries)-1].Value
 	}

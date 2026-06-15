@@ -14,7 +14,7 @@ func TestTimeComparator(t *testing.T) {
 	now := time.Now()
 
 	// i1,i2,expected
-	tests := [][]interface{}{
+	tests := [][]any{
 		{now, now, 0},
 		{now.Add(24 * 7 * 2 * time.Hour), now, 1},
 		{now, now.Add(24 * 7 * 2 * time.Hour), -1},

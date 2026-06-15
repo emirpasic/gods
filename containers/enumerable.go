@@ -11,10 +11,10 @@ type EnumerableWithIndex[T any] interface {
 
 	// Map invokes the given function once for each element and returns a
 	// container containing the values returned by the given function.
-	// Map(func(index int, value interface{}) interface{}) Container
+	// Map(func(index int, value any) any) Container
 
 	// Select returns a new container containing all elements for which the given function returns a true value.
-	// Select(func(index int, value interface{}) bool) Container
+	// Select(func(index int, value any) bool) Container
 
 	// Any passes each element of the container to the given function and
 	// returns true if the function ever returns true for any element.
@@ -37,10 +37,10 @@ type EnumerableWithKey[K, V any] interface {
 
 	// Map invokes the given function once for each element and returns a container
 	// containing the values returned by the given function as key/value pairs.
-	// Map(func(key interface{}, value interface{}) (interface{}, interface{})) Container
+	// Map(func(key any, value any) (any, any)) Container
 
 	// Select returns a new container containing all elements for which the given function returns a true value.
-	// Select(func(key interface{}, value interface{}) bool) Container
+	// Select(func(key any, value any) bool) Container
 
 	// Any passes each element of the container to the given function and
 	// returns true if the function ever returns true for any element.

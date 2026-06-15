@@ -399,7 +399,7 @@ func TestBinaryHeapSerialization(t *testing.T) {
 	err = heap.FromJSON(bytes)
 	assert()
 
-	bytes, err = json.Marshal([]interface{}{"a", "b", "c", heap})
+	bytes, err = json.Marshal([]any{"a", "b", "c", heap})
 	if err != nil {
 		t.Errorf("Got error %v", err)
 	}
