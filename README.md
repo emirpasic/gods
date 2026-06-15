@@ -68,7 +68,7 @@ type Container interface {
 	Empty() bool
 	Size() int
 	Clear()
-	Values() []interface{}
+	Values() []any
 	String() string
 }
 ```
@@ -114,20 +114,20 @@ Implements [Container](#containers) interface.
 
 ```go
 type List interface {
-	Get(index int) (interface{}, bool)
+	Get(index int) (any, bool)
 	Remove(index int)
-	Add(values ...interface{})
-	Contains(values ...interface{}) bool
+	Add(values ...any)
+	Contains(values ...any) bool
 	Sort(comparator utils.Comparator)
 	Swap(index1, index2 int)
-	Insert(index int, values ...interface{})
-	Set(index int, value interface{})
+	Insert(index int, values ...any)
+	Set(index int, value any)
 
 	containers.Container
 	// Empty() bool
 	// Size() int
 	// Clear()
-	// Values() []interface{}
+	// Values() []any
     // String() string
 }
 ```
@@ -253,9 +253,9 @@ Implements [Container](#containers) interface.
 
 ```go
 type Set interface {
-	Add(elements ...interface{})
-	Remove(elements ...interface{})
-	Contains(elements ...interface{}) bool
+	Add(elements ...any)
+	Remove(elements ...any)
+	Contains(elements ...any) bool
     // Intersection(another *Set) *Set
     // Union(another *Set) *Set
     // Difference(another *Set) *Set
@@ -264,7 +264,7 @@ type Set interface {
 	// Empty() bool
 	// Size() int
 	// Clear()
-	// Values() []interface{}
+	// Values() []any
 	// String() string
 }
 ```
@@ -359,15 +359,15 @@ Implements [Container](#containers) interface.
 
 ```go
 type Stack interface {
-	Push(value interface{})
-	Pop() (value interface{}, ok bool)
-	Peek() (value interface{}, ok bool)
+	Push(value any)
+	Pop() (value any, ok bool)
+	Peek() (value any, ok bool)
 
 	containers.Container
 	// Empty() bool
 	// Size() int
 	// Clear()
-	// Values() []interface{}
+	// Values() []any
 	// String() string
 }
 ```
@@ -434,16 +434,16 @@ Implements [Container](#containers) interface.
 
 ```go
 type Map interface {
-	Put(key interface{}, value interface{})
-	Get(key interface{}) (value interface{}, found bool)
-	Remove(key interface{})
-	Keys() []interface{}
+	Put(key any, value any)
+	Get(key any) (value any, found bool)
+	Remove(key any)
+	Keys() []any
 
 	containers.Container
 	// Empty() bool
 	// Size() int
 	// Clear()
-	// Values() []interface{}
+	// Values() []any
 	// String() string
 }
 ```
@@ -452,7 +452,7 @@ A BidiMap is an extension to the Map. A bidirectional map (BidiMap), also called
 
 ```go
 type BidiMap interface {
-	GetKey(value interface{}) (key interface{}, found bool)
+	GetKey(value any) (key any, found bool)
 
 	Map
 }
@@ -617,7 +617,7 @@ type Tree interface {
 	// Empty() bool
 	// Size() int
 	// Clear()
-	// Values() []interface{}
+	// Values() []any
 	// String() string
 }
 ```
@@ -865,7 +865,7 @@ func main() {
 	heap.Size()                               // 0
 
 	// Max-heap
-	inverseIntComparator := func(a, b interface{}) int {
+	inverseIntComparator := func(a, b any) int {
 		return -utils.IntComparator(a, b)
 	}
 	heap = binaryheap.NewWith(inverseIntComparator) // empty (min-heap)
@@ -884,15 +884,15 @@ Implements [Container](#containers) interface.
 
 ```go
 type Queue interface {
-	Enqueue(value interface{})
-	Dequeue() (value interface{}, ok bool)
-	Peek() (value interface{}, ok bool)
+	Enqueue(value any)
+	Dequeue() (value any, ok bool)
+	Peek() (value any, ok bool)
 
 	containers.Container
 	// Empty() bool
 	// Size() int
 	// Clear()
-	// Values() []interface{}
+	// Values() []any
 	// String() string
 }
 ```
@@ -1007,7 +1007,7 @@ type Element struct {
 }
 
 // Comparator function (sort by element's priority value in descending order)
-func byPriority(a, b interface{}) int {
+func byPriority(a, b any) int {
     priorityA := a.(Element).priority
     priorityB := b.(Element).priority
     return -utils.IntComparator(priorityA, priorityB) // "-" descending order
@@ -1056,43 +1056,43 @@ positive , if a > b
 Comparator signature:
 
 ```go
-type Comparator func(a, b interface{}) int
+type Comparator func(a, b any) int
 ```
 
 All common comparators for builtin types are included in the library:
 
 ```go
-func StringComparator(a, b interface{}) int
+func StringComparator(a, b any) int
 
-func IntComparator(a, b interface{}) int
+func IntComparator(a, b any) int
 
-func Int8Comparator(a, b interface{}) int
+func Int8Comparator(a, b any) int
 
-func Int16Comparator(a, b interface{}) int
+func Int16Comparator(a, b any) int
 
-func Int32Comparator(a, b interface{}) int
+func Int32Comparator(a, b any) int
 
-func Int64Comparator(a, b interface{}) int
+func Int64Comparator(a, b any) int
 
-func UIntComparator(a, b interface{}) int
+func UIntComparator(a, b any) int
 
-func UInt8Comparator(a, b interface{}) int
+func UInt8Comparator(a, b any) int
 
-func UInt16Comparator(a, b interface{}) int
+func UInt16Comparator(a, b any) int
 
-func UInt32Comparator(a, b interface{}) int
+func UInt32Comparator(a, b any) int
 
-func UInt64Comparator(a, b interface{}) int
+func UInt64Comparator(a, b any) int
 
-func Float32Comparator(a, b interface{}) int
+func Float32Comparator(a, b any) int
 
-func Float64Comparator(a, b interface{}) int
+func Float64Comparator(a, b any) int
 
-func ByteComparator(a, b interface{}) int
+func ByteComparator(a, b any) int
 
-func RuneComparator(a, b interface{}) int
+func RuneComparator(a, b any) int
 
-func TimeComparator(a, b interface{}) int
+func TimeComparator(a, b any) int
 ```
 
 Writing custom comparators is easy:
@@ -1111,7 +1111,7 @@ type User struct {
 }
 
 // Custom comparator (sort by IDs)
-func byID(a, b interface{}) int {
+func byID(a, b any) int {
 
 	// Type assertion, program will panic if this is not respected
 	c1 := a.(User)
@@ -1176,7 +1176,7 @@ Seeking to a specific element:
 
 ```go
 // Seek function, i.e. find element starting with "b"
-seek := func(index int, value interface{}) bool {
+seek := func(index int, value any) bool {
     return strings.HasSuffix(value.(string), "b")
 }
 
@@ -1219,7 +1219,7 @@ Seeking to a specific element from the current iterator position:
 
 ```go
 // Seek function, i.e. find element starting with "b"
-seek := func(key interface{}, value interface{}) bool {
+seek := func(key any, value any) bool {
     return strings.HasSuffix(value.(string), "b")
 }
 
@@ -1256,7 +1256,7 @@ Seeking to a specific element:
 
 ```go
 // Seek function, i.e. find element starting with "b"
-seek := func(index int, value interface{}) bool {
+seek := func(index int, value any) bool {
     return strings.HasSuffix(value.(string), "b")
 }
 
@@ -1291,7 +1291,7 @@ if it.Last() {
 
 ```go
 // Seek function, i.e. find element starting with "b"
-seek := func(key interface{}, value interface{}) bool {
+seek := func(key any, value any) bool {
     return strings.HasSuffix(value.(string), "b")
 }
 
@@ -1316,7 +1316,7 @@ Enumerable functions for ordered containers that implement [EnumerableWithIndex]
 Calls the given function once for each element, passing that element's index and value.
 
 ```go
-Each(func(index int, value interface{}))
+Each(func(index int, value any))
 ```
 
 **Map**
@@ -1324,7 +1324,7 @@ Each(func(index int, value interface{}))
 Invokes the given function once for each element and returns a container containing the values returned by the given function.
 
 ```go
-Map(func(index int, value interface{}) interface{}) Container
+Map(func(index int, value any) any) Container
 ```
 
 **Select**
@@ -1332,7 +1332,7 @@ Map(func(index int, value interface{}) interface{}) Container
 Returns a new container containing all elements for which the given function returns a true value.
 
 ```go
-Select(func(index int, value interface{}) bool) Container
+Select(func(index int, value any) bool) Container
 ```
 
 **Any**
@@ -1340,7 +1340,7 @@ Select(func(index int, value interface{}) bool) Container
 Passes each element of the container to the given function and returns true if the function ever returns true for any element.
 
 ```go
-Any(func(index int, value interface{}) bool) bool
+Any(func(index int, value any) bool) bool
 ```
 
 **All**
@@ -1348,7 +1348,7 @@ Any(func(index int, value interface{}) bool) bool
 Passes each element of the container to the given function and returns true if the function returns true for all elements.
 
 ```go
-All(func(index int, value interface{}) bool) bool
+All(func(index int, value any) bool) bool
 ```
 
 **Find**
@@ -1356,7 +1356,7 @@ All(func(index int, value interface{}) bool) bool
 Passes each element of the container to the given function and returns the first (index,value) for which the function is true or -1,nil otherwise if no element matches the criteria.
 
 ```go
-Find(func(index int, value interface{}) bool) (int, interface{})}
+Find(func(index int, value any) bool) (int, any)}
 ```
 
 **Example:**
@@ -1371,7 +1371,7 @@ import (
 
 func printSet(txt string, set *treeset.Set) {
 	fmt.Print(txt, "[ ")
-	set.Each(func(index int, value interface{}) {
+	set.Each(func(index int, value any) {
 		fmt.Print(value, " ")
 	})
 	fmt.Println("]")
@@ -1382,36 +1382,36 @@ func main() {
 	set.Add(2, 3, 4, 2, 5, 6, 7, 8)
 	printSet("Initial", set) // [ 2 3 4 5 6 7 8 ]
 
-	even := set.Select(func(index int, value interface{}) bool {
+	even := set.Select(func(index int, value any) bool {
 		return value.(int)%2 == 0
 	})
 	printSet("Even numbers", even) // [ 2 4 6 8 ]
 
-	foundIndex, foundValue := set.Find(func(index int, value interface{}) bool {
+	foundIndex, foundValue := set.Find(func(index int, value any) bool {
 		return value.(int)%2 == 0 && value.(int)%3 == 0
 	})
 	if foundIndex != -1 {
 		fmt.Println("Number divisible by 2 and 3 found is", foundValue, "at index", foundIndex) // value: 6, index: 4
 	}
 
-	square := set.Map(func(index int, value interface{}) interface{} {
+	square := set.Map(func(index int, value any) any {
 		return value.(int) * value.(int)
 	})
 	printSet("Numbers squared", square) // [ 4 9 16 25 36 49 64 ]
 
-	bigger := set.Any(func(index int, value interface{}) bool {
+	bigger := set.Any(func(index int, value any) bool {
 		return value.(int) > 5
 	})
 	fmt.Println("Set contains a number bigger than 5 is ", bigger) // true
 
-	positive := set.All(func(index int, value interface{}) bool {
+	positive := set.All(func(index int, value any) bool {
 		return value.(int) > 0
 	})
 	fmt.Println("All numbers are positive is", positive) // true
 
-	evenNumbersSquared := set.Select(func(index int, value interface{}) bool {
+	evenNumbersSquared := set.Select(func(index int, value any) bool {
 		return value.(int)%2 == 0
-	}).Map(func(index int, value interface{}) interface{} {
+	}).Map(func(index int, value any) any {
 		return value.(int) * value.(int)
 	})
 	printSet("Chaining", evenNumbersSquared) // [ 4 16 36 64 ]
@@ -1427,7 +1427,7 @@ Enumerable functions for ordered containers whose values whose elements are key/
 Calls the given function once for each element, passing that element's key and value.
 
 ```go
-Each(func(key interface{}, value interface{}))
+Each(func(key any, value any))
 ```
 
 **Map**
@@ -1435,7 +1435,7 @@ Each(func(key interface{}, value interface{}))
 Invokes the given function once for each element and returns a container containing the values returned by the given function as key/value pairs.
 
 ```go
-Map(func(key interface{}, value interface{}) (interface{}, interface{})) Container
+Map(func(key any, value any) (any, any)) Container
 ```
 
 **Select**
@@ -1443,7 +1443,7 @@ Map(func(key interface{}, value interface{}) (interface{}, interface{})) Contain
 Returns a new container containing all elements for which the given function returns a true value.
 
 ```go
-Select(func(key interface{}, value interface{}) bool) Container
+Select(func(key any, value any) bool) Container
 ```
 
 **Any**
@@ -1451,7 +1451,7 @@ Select(func(key interface{}, value interface{}) bool) Container
 Passes each element of the container to the given function and returns true if the function ever returns true for any element.
 
 ```go
-Any(func(key interface{}, value interface{}) bool) bool
+Any(func(key any, value any) bool) bool
 ```
 
 **All**
@@ -1459,7 +1459,7 @@ Any(func(key interface{}, value interface{}) bool) bool
 Passes each element of the container to the given function and returns true if the function returns true for all elements.
 
 ```go
-All(func(key interface{}, value interface{}) bool) bool
+All(func(key any, value any) bool) bool
 ```
 
 **Find**
@@ -1467,7 +1467,7 @@ All(func(key interface{}, value interface{}) bool) bool
 Passes each element of the container to the given function and returns the first (key,value) for which the function is true or nil,nil otherwise if no element matches the criteria.
 
 ```go
-Find(func(key interface{}, value interface{}) bool) (interface{}, interface{})
+Find(func(key any, value any) bool) (any, any)
 ```
 
 **Example:**
@@ -1482,7 +1482,7 @@ import (
 
 func printMap(txt string, m *treemap.Map) {
 	fmt.Print(txt, " { ")
-	m.Each(func(key interface{}, value interface{}) {
+	m.Each(func(key any, value any) {
 		fmt.Print(key, ":", value, " ")
 	})
 	fmt.Println("}")
@@ -1499,36 +1499,36 @@ func main() {
 	m.Put("a", 1)
 	printMap("Initial", m) // { a:1 b:2 c:3 d:4 e:5 f:6 g:7 }
 
-	even := m.Select(func(key interface{}, value interface{}) bool {
+	even := m.Select(func(key any, value any) bool {
 		return value.(int) % 2 == 0
 	})
 	printMap("Elements with even values", even) // { b:2 d:4 f:6 }
 
-	foundKey, foundValue := m.Find(func(key interface{}, value interface{}) bool {
+	foundKey, foundValue := m.Find(func(key any, value any) bool {
 		return value.(int) % 2 == 0 && value.(int) % 3 == 0
 	})
 	if foundKey != nil {
 		fmt.Println("Element with value divisible by 2 and 3 found is", foundValue, "with key", foundKey) // value: 6, index: 4
 	}
 
-	square := m.Map(func(key interface{}, value interface{}) (interface{}, interface{}) {
+	square := m.Map(func(key any, value any) (any, any) {
 		return key.(string) + key.(string), value.(int) * value.(int)
 	})
 	printMap("Elements' values squared and letters duplicated", square) // { aa:1 bb:4 cc:9 dd:16 ee:25 ff:36 gg:49 }
 
-	bigger := m.Any(func(key interface{}, value interface{}) bool {
+	bigger := m.Any(func(key any, value any) bool {
 		return value.(int) > 5
 	})
 	fmt.Println("Map contains element whose value is bigger than 5 is", bigger) // true
 
-	positive := m.All(func(key interface{}, value interface{}) bool {
+	positive := m.All(func(key any, value any) bool {
 		return value.(int) > 0
 	})
 	fmt.Println("All map's elements have positive values is", positive) // true
 
-	evenNumbersSquared := m.Select(func(key interface{}, value interface{}) bool {
+	evenNumbersSquared := m.Select(func(key any, value any) bool {
 		return value.(int) % 2 == 0
-	}).Map(func(key interface{}, value interface{}) (interface{}, interface{}) {
+	}).Map(func(key any, value any) (any, any) {
 		return key, value.(int) * value.(int)
 	})
 	printMap("Chaining", evenNumbersSquared) // { b:4 d:16 f:36 }
@@ -1655,7 +1655,7 @@ package main
 import "github.com/emirpasic/gods/utils"
 
 func main() {
-	strings := []interface{}{}                  // []
+	strings := []any{}                  // []
 	strings = append(strings, "d")              // ["d"]
 	strings = append(strings, "a")              // ["d","a"]
 	strings = append(strings, "b")              // ["d","a",b"
@@ -1671,7 +1671,7 @@ Container specific operations:
 ```go
 // Returns sorted container''s elements with respect to the passed comparator.
 // Does not affect the ordering of elements within the container.
-func GetSortedValues(container Container, comparator utils.Comparator) []interface{}
+func GetSortedValues(container Container, comparator utils.Comparator) []any
 ```
 
 Usage:

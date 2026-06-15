@@ -106,7 +106,7 @@ func TestSetSerialization(t *testing.T) {
 	err = set.FromJSON(bytes)
 	assert()
 
-	bytes, err = json.Marshal([]interface{}{"a", "b", "c", set})
+	bytes, err = json.Marshal([]any{"a", "b", "c", set})
 	if err != nil {
 		t.Errorf("Got error %v", err)
 	}

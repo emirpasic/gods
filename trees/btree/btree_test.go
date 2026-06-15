@@ -21,7 +21,7 @@ func TestBTreeGet1(t *testing.T) {
 	tree.Put(6, "f")
 	tree.Put(7, "g")
 
-	tests := [][]interface{}{
+	tests := [][]any{
 		{0, "", false},
 		{1, "a", true},
 		{2, "b", true},
@@ -53,7 +53,7 @@ func TestBTreeGet2(t *testing.T) {
 	tree.Put(2, "b")
 	tree.Put(1, "a")
 
-	tests := [][]interface{}{
+	tests := [][]any{
 		{0, "", false},
 		{1, "a", true},
 		{2, "b", true},
@@ -1005,7 +1005,7 @@ func TestBTreeSearch(t *testing.T) {
 	{
 		tree := New[int, int](3)
 		tree.Root = &Node[int, int]{Entries: []*Entry[int, int]{}, Children: make([]*Node[int, int], 0)}
-		tests := [][]interface{}{
+		tests := [][]any{
 			{0, 0, false},
 		}
 		for _, test := range tests {
@@ -1021,7 +1021,7 @@ func TestBTreeSearch(t *testing.T) {
 	{
 		tree := New[int, int](3)
 		tree.Root = &Node[int, int]{Entries: []*Entry[int, int]{{2, 0}, {4, 1}, {6, 2}}, Children: []*Node[int, int]{}}
-		tests := [][]interface{}{
+		tests := [][]any{
 			{0, 0, false},
 			{1, 0, false},
 			{2, 0, true},
@@ -1202,7 +1202,7 @@ func TestBTreeSerialization(t *testing.T) {
 	err = tree.FromJSON(bytes)
 	assert()
 
-	bytes, err = json.Marshal([]interface{}{"a", "b", "c", tree})
+	bytes, err = json.Marshal([]any{"a", "b", "c", tree})
 	if err != nil {
 		t.Errorf("Got error %v", err)
 	}

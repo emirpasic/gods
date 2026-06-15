@@ -30,7 +30,7 @@ func TestMapPut(t *testing.T) {
 	testutils.SameElements(t, m.Values(), []string{"a", "b", "c", "d", "e", "f", "g"})
 
 	// key,expectedValue,expectedFound
-	tests1 := [][]interface{}{
+	tests1 := [][]any{
 		{1, "a", true},
 		{2, "b", true},
 		{3, "c", true},
@@ -74,7 +74,7 @@ func TestMapRemove(t *testing.T) {
 		t.Errorf("Got %v expected %v", actualValue, 4)
 	}
 
-	tests2 := [][]interface{}{
+	tests2 := [][]any{
 		{1, "a", true},
 		{2, "b", true},
 		{3, "c", true},
@@ -121,7 +121,7 @@ func TestMapGetKey(t *testing.T) {
 	m.Put(1, "a") //overwrite
 
 	// key,expectedValue,expectedFound
-	tests1 := [][]interface{}{
+	tests1 := [][]any{
 		{1, "a", true},
 		{2, "b", true},
 		{3, "c", true},
@@ -141,7 +141,7 @@ func TestMapGetKey(t *testing.T) {
 	}
 }
 
-func sameElements(a []interface{}, b []interface{}) bool {
+func sameElements(a []any, b []any) bool {
 	if len(a) != len(b) {
 		return false
 	}
@@ -605,7 +605,7 @@ func TestMapSerialization(t *testing.T) {
 	m.Put("b", 2.0)
 	m.Put("c", 3.0)
 
-	_, err := json.Marshal([]interface{}{"a", "b", "c", m})
+	_, err := json.Marshal([]any{"a", "b", "c", m})
 	if err != nil {
 		t.Errorf("Got error %v", err)
 	}
