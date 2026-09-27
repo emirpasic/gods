@@ -597,7 +597,7 @@ func benchmarkRemove(b *testing.B, m *Map[int, int], size int) {
 	}
 }
 
-func BenchmarkTreeMapGet100(b *testing.B) {
+func BenchmarkLinkedHashMapGet100(b *testing.B) {
 	b.StopTimer()
 	size := 100
 	m := New[int, int]()
@@ -608,7 +608,7 @@ func BenchmarkTreeMapGet100(b *testing.B) {
 	benchmarkGet(b, m, size)
 }
 
-func BenchmarkTreeMapGet1000(b *testing.B) {
+func BenchmarkLinkedHashMapGet1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
 	m := New[int, int]()
@@ -619,7 +619,7 @@ func BenchmarkTreeMapGet1000(b *testing.B) {
 	benchmarkGet(b, m, size)
 }
 
-func BenchmarkTreeMapGet10000(b *testing.B) {
+func BenchmarkLinkedHashMapGet10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
 	m := New[int, int]()
@@ -630,7 +630,7 @@ func BenchmarkTreeMapGet10000(b *testing.B) {
 	benchmarkGet(b, m, size)
 }
 
-func BenchmarkTreeMapGet100000(b *testing.B) {
+func BenchmarkLinkedHashMapGet100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
 	m := New[int, int]()
@@ -641,7 +641,7 @@ func BenchmarkTreeMapGet100000(b *testing.B) {
 	benchmarkGet(b, m, size)
 }
 
-func BenchmarkTreeMapPut100(b *testing.B) {
+func BenchmarkLinkedHashMapPut100(b *testing.B) {
 	b.StopTimer()
 	size := 100
 	m := New[int, int]()
@@ -649,7 +649,7 @@ func BenchmarkTreeMapPut100(b *testing.B) {
 	benchmarkPut(b, m, size)
 }
 
-func BenchmarkTreeMapPut1000(b *testing.B) {
+func BenchmarkLinkedHashMapPut1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
 	m := New[int, int]()
@@ -660,7 +660,7 @@ func BenchmarkTreeMapPut1000(b *testing.B) {
 	benchmarkPut(b, m, size)
 }
 
-func BenchmarkTreeMapPut10000(b *testing.B) {
+func BenchmarkLinkedHashMapPut10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
 	m := New[int, int]()
@@ -671,7 +671,7 @@ func BenchmarkTreeMapPut10000(b *testing.B) {
 	benchmarkPut(b, m, size)
 }
 
-func BenchmarkTreeMapPut100000(b *testing.B) {
+func BenchmarkLinkedHashMapPut100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
 	m := New[int, int]()
@@ -682,7 +682,7 @@ func BenchmarkTreeMapPut100000(b *testing.B) {
 	benchmarkPut(b, m, size)
 }
 
-func BenchmarkTreeMapRemove100(b *testing.B) {
+func BenchmarkLinkedHashMapRemove100(b *testing.B) {
 	b.StopTimer()
 	size := 100
 	m := New[int, int]()
@@ -693,7 +693,7 @@ func BenchmarkTreeMapRemove100(b *testing.B) {
 	benchmarkRemove(b, m, size)
 }
 
-func BenchmarkTreeMapRemove1000(b *testing.B) {
+func BenchmarkLinkedHashMapRemove1000(b *testing.B) {
 	b.StopTimer()
 	size := 1000
 	m := New[int, int]()
@@ -704,7 +704,7 @@ func BenchmarkTreeMapRemove1000(b *testing.B) {
 	benchmarkRemove(b, m, size)
 }
 
-func BenchmarkTreeMapRemove10000(b *testing.B) {
+func BenchmarkLinkedHashMapRemove10000(b *testing.B) {
 	b.StopTimer()
 	size := 10000
 	m := New[int, int]()
@@ -715,7 +715,7 @@ func BenchmarkTreeMapRemove10000(b *testing.B) {
 	benchmarkRemove(b, m, size)
 }
 
-func BenchmarkTreeMapRemove100000(b *testing.B) {
+func BenchmarkLinkedHashMapRemove100000(b *testing.B) {
 	b.StopTimer()
 	size := 100000
 	m := New[int, int]()
