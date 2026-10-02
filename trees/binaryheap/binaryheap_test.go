@@ -50,6 +50,58 @@ func TestBinaryHeapPushBulk(t *testing.T) {
 	}
 }
 
+func TestBinaryHeapPushBulkRegression(t *testing.T) {
+	// Test empty push
+	heap := New[int]()
+	heap.Push()
+	if !heap.Empty() {
+		t.Errorf("Expected heap to be empty, got size %d", heap.Size())
+	}
+
+	// Test odd and even bulk pushes (heapify internal node calculation)
+	testCases := [][]int{
+		{2, 1},
+		{3, 2, 1},
+		{4, 3, 2, 1},
+		{7, 6, 5, 4, 3, 2, 1},
+		{10, 9, 8, 7, 6, 5, 4, 3, 2, 1},
+	}
+
+	for _, tc := range testCases {
+		h := New[int]()
+		h.Push(tc...)
+		if h.Size() != len(tc) {
+			t.Errorf("Expected size %d, got %d", len(tc), h.Size())
+		}
+		prev, ok := h.Pop()
+		if !ok {
+			t.Errorf("Expected pop to succeed")
+		}
+		for !h.Empty() {
+			curr, ok := h.Pop()
+			if !ok {
+				t.Errorf("Expected pop to succeed")
+			}
+			if prev > curr {
+				t.Errorf("Heap property invalidated for input %v: %v > %v", tc, prev, curr)
+			}
+			prev = curr
+		}
+	}
+
+	// Test bulk push onto existing non-empty heap
+	h := New[int]()
+	h.Push(10, 20)
+	h.Push(5, 1, 15)
+	expectedOrder := []int{1, 5, 10, 15, 20}
+	for _, expected := range expectedOrder {
+		val, ok := h.Pop()
+		if !ok || val != expected {
+			t.Errorf("Expected %d, got %d (ok=%v)", expected, val, ok)
+		}
+	}
+}
+
 func TestBinaryHeapPop(t *testing.T) {
 	heap := New[int]()
 
