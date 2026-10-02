@@ -563,6 +563,29 @@ func TestMapSerialization(t *testing.T) {
 	if err != nil {
 		t.Errorf("Got error %v", err)
 	}
+
+	m2 := New[int, string]()
+	m2.Put(4, "d")
+	m2.Put(2, "b")
+	m2.Put(1, "a")
+
+	bytes2, err := json.Marshal(m2)
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
+	expectedJSON := `{"4":"d","2":"b","1":"a"}`
+	if string(bytes2) != expectedJSON {
+		t.Errorf("Got %s, expected %s", string(bytes2), expectedJSON)
+	}
+
+	deserialized2 := New[int, string]()
+	err = json.Unmarshal(bytes2, &deserialized2)
+	if err != nil {
+		t.Errorf("Got error %v", err)
+	}
+	if deserialized2.Size() != 3 {
+		t.Errorf("Got map of size %d, expected 3", deserialized2.Size())
+	}
 }
 
 func TestMapString(t *testing.T) {

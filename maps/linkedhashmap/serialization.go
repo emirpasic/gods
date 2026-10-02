@@ -8,6 +8,7 @@ import (
 	"bytes"
 	"cmp"
 	"encoding/json"
+	"fmt"
 	"slices"
 
 	"github.com/emirpasic/gods/v2/containers"
@@ -29,7 +30,7 @@ func (m *Map[K, V]) ToJSON() ([]byte, error) {
 	index := 0
 
 	for it.Next() {
-		km, err := json.Marshal(it.Key())
+		km, err := json.Marshal(fmt.Sprint(it.Key()))
 		if err != nil {
 			return nil, err
 		}
@@ -80,7 +81,7 @@ func (m *Map[K, V]) FromJSON(data []byte) error {
 	var keys []K
 	for key := range elements {
 		keys = append(keys, key)
-		esc, _ := json.Marshal(key)
+		esc, _ := json.Marshal(fmt.Sprint(key))
 		index[key] = bytes.Index(data, esc)
 	}
 
