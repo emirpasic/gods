@@ -414,6 +414,29 @@ func TestBinaryHeapSerialization(t *testing.T) {
 	}
 }
 
+func TestBinaryHeapFromJSONOrder(t *testing.T) {
+	for _, test := range []struct {
+		name string
+		heap *Heap[int]
+		data string
+		want []int
+	}{
+		{"min", New[int](), `[3,1,2]`, []int{1, 2, 3}},
+		{"max", NewWith(func(a, b int) int { return b - a }), `[1,3,2]`, []int{3, 2, 1}},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			if err := test.heap.FromJSON([]byte(test.data)); err != nil {
+				t.Fatal(err)
+			}
+			for _, want := range test.want {
+				if got, ok := test.heap.Pop(); !ok || got != want {
+					t.Errorf("Pop() = (%v, %v), want (%v, true)", got, ok, want)
+				}
+			}
+		})
+	}
+}
+
 func TestBTreeString(t *testing.T) {
 	c := New[int]()
 	c.Push(1)

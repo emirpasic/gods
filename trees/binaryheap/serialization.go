@@ -18,8 +18,15 @@ func (heap *Heap[T]) ToJSON() ([]byte, error) {
 }
 
 // FromJSON populates the heap from the input JSON representation.
+// Decoded values are ordered using the heap's comparator.
 func (heap *Heap[T]) FromJSON(data []byte) error {
-	return heap.list.FromJSON(data)
+	if err := heap.list.FromJSON(data); err != nil {
+		return err
+	}
+	for i := heap.list.Size()/2 - 1; i >= 0; i-- {
+		heap.bubbleDownIndex(i)
+	}
+	return nil
 }
 
 // UnmarshalJSON @implements json.Unmarshaler
