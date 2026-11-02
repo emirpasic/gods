@@ -246,6 +246,10 @@ func (list *List[T]) Swap(i, j int) {
 // Note: position equal to list's size is valid, i.e. append.
 func (list *List[T]) Insert(index int, values ...T) {
 
+	if len(values) == 0 {
+		return
+	}
+
 	if !list.withinRange(index) {
 		// Append
 		if index == list.size {
