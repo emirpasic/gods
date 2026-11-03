@@ -230,6 +230,20 @@ func TestListInsert(t *testing.T) {
 	}
 }
 
+func TestListInsertNoValues(t *testing.T) {
+	list := New[string]()
+	list.Add("a", "b", "c")
+	for index := 0; index <= list.Size(); index++ {
+		list.Insert(index) // no-op, must not panic
+	}
+	if actualValue := list.Size(); actualValue != 3 {
+		t.Errorf("Got %v expected %v", actualValue, 3)
+	}
+	if actualValue, expectedValue := strings.Join(list.Values(), ""), "abc"; actualValue != expectedValue {
+		t.Errorf("Got %v expected %v", actualValue, expectedValue)
+	}
+}
+
 func TestListSet(t *testing.T) {
 	list := New[string]()
 	list.Set(0, "a")
