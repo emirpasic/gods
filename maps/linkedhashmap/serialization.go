@@ -6,9 +6,7 @@ package linkedhashmap
 
 import (
 	"bytes"
-	"cmp"
 	"encoding/json"
-	"slices"
 
 	"github.com/emirpasic/gods/v2/containers"
 )
@@ -56,46 +54,58 @@ func (m *Map[K, V]) ToJSON() ([]byte, error) {
 }
 
 // FromJSON populates map from the input JSON representation.
-//func (m *Map[K, V]) FromJSON(data []byte) error {
-//	elements := make(map[string]interface{})
-//	err := json.Unmarshal(data, &elements)
-//	if err == nil {
-//		m.Clear()
-//		for key, value := range elements {
-//			m.Put(key, value)
-//		}
-//	}
-//	return err
-//}
-
-// FromJSON populates map from the input JSON representation.
 func (m *Map[K, V]) FromJSON(data []byte) error {
 	elements := make(map[K]V)
-	err := json.Unmarshal(data, &elements)
-	if err != nil {
+	if err := json.Unmarshal(data, &elements); err != nil {
 		return err
 	}
 
-	index := make(map[K]int)
-	var keys []K
-	for key := range elements {
-		keys = append(keys, key)
-		esc, _ := json.Marshal(key)
-		index[key] = bytes.Index(data, esc)
+	// Read only top-level keys in source order. Searching the input for a
+	// marshaled key can match a value or a nested key, and misses equivalent
+	// escaped spellings. Keep the values decoded above so duplicate keys retain
+	// encoding/json's map-value semantics.
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	if _, err := decoder.Token(); err != nil {
+		return err
 	}
+	keys := make([]K, 0, len(elements))
+	seen := make(map[K]bool, len(elements))
+	var keyMap map[K]json.RawMessage
+	for decoder.More() {
+		token, err := decoder.Token()
+		if err != nil {
+			return err
+		}
+		name := token.(string)
+		var value json.RawMessage
+		if err := decoder.Decode(&value); err != nil {
+			return err
+		}
 
-	byIndex := func(key1, key2 K) int {
-		return cmp.Compare(index[key1], index[key2])
+		// Let encoding/json convert object names to K, including named integer
+		// types and keys implementing encoding.TextUnmarshaler.
+		encodedName, err := json.Marshal(name)
+		if err != nil {
+			return err
+		}
+		member := append([]byte{'{'}, encodedName...)
+		member = append(member, ':', 'n', 'u', 'l', 'l', '}')
+		clear(keyMap)
+		if err := json.Unmarshal(member, &keyMap); err != nil {
+			return err
+		}
+		for key := range keyMap {
+			if !seen[key] {
+				keys = append(keys, key)
+				seen[key] = true
+			}
+		}
 	}
-
-	slices.SortFunc(keys, byIndex)
 
 	m.Clear()
-
 	for _, key := range keys {
 		m.Put(key, elements[key])
 	}
-
 	return nil
 }
 
